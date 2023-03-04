@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import * as rollupLinks from '../../src/utils/urls';
+import { greenBold, yellowBold } from './colorfulString';
 
 const markdownLinkRegExp = /(?<=\[[^\]]*]\()[^)]*/g;
 const mermaidLinkRegExp = /(?<=```mermaid[^`]*"#)[^"]+/gm;
@@ -56,12 +57,16 @@ function verifyAnchorsOnPage(page: string, slugs: Set<string>) {
 			const [linkPage, anchor] = href.split('#');
 			if (anchor && !slugsByPage.get(linkPage.slice('../'.length))!.has(anchor)) {
 				throw new Error(
-					`Page ${page} references anchor ${anchor} on page ${linkPage} but it cannot be found.`
+					`Page ${yellowBold(page)} references anchor ${yellowBold(anchor)} on page ${yellowBold(
+						linkPage
+					)} but it cannot be found.`
 				);
 			}
 		} else if (!(href.startsWith('https://') || href.startsWith('<https://'))) {
 			throw new Error(
-				`Unexpected internal link in ${page}: ${href}. Relative links should be of the form ../page/index.md, absolute links should start with https://.`
+				`Unexpected internal link in ${yellowBold(page)}: ${greenBold(
+					href
+				)}. Relative links should be of the form ../page/index.md, absolute links should start with https://.`
 			);
 		}
 	}
@@ -69,7 +74,9 @@ function verifyAnchorsOnPage(page: string, slugs: Set<string>) {
 		const anchor = match[0];
 		if (!slugs.has(anchor)) {
 			throw new Error(
-				`Page ${page} references anchor ${anchor} in a mermaid graph but it cannot be found on this page. Slugs found on this page:\n${[
+				`Page ${yellowBold(page)} references anchor ${yellowBold(
+					anchor
+				)} in a mermaid graph but it cannot be found on this page. Slugs found on this page:\n${[
 					...slugs
 				]
 					.sort()
