@@ -11,7 +11,7 @@ import { buildEnd, callback, transformPageData } from './verify-anchors';
 export default withMermaid(
 	defineConfig({
 		buildEnd,
-		description: 'compile JS code',
+		description: '编译 JS 代码',
 		head: [
 			['link', { href: '/favicon.png', rel: 'icon', type: 'image/png' }],
 			['link', { href: '/favicon.png', rel: 'apple-touch-icon', sizes: '128x128' }],
@@ -50,14 +50,14 @@ export default withMermaid(
 				text: 'Edit this page on GitHub'
 			},
 			footer: {
-				copyright: 'Copyright © 2015-present Rollup contributors',
-				message: 'Released under the MIT License.'
+				copyright: 'Copyright © 2015-present Rollup 社区贡献者',
+				message: '基于 MIT 协议发布'
 			},
 			logo: '/rollup-logo.svg',
 			nav: [
-				{ link: '/introduction/', text: 'guide' },
+				{ link: '/introduction/', text: '指南' },
 				{ link: '/repl/', text: 'repl' },
-				{ link: 'https://is.gd/rollup_chat', text: 'chat' },
+				{ link: 'https://is.gd/rollup_chat', text: '聊天' },
 				{ link: 'https://opencollective.com/rollup', text: 'opencollective' }
 			],
 			outline: 'deep',
@@ -66,57 +66,57 @@ export default withMermaid(
 					items: [
 						{
 							link: '/introduction/',
-							text: 'Introduction'
+							text: '简介'
 						},
 						{
 							link: '/command-line-interface/',
-							text: 'Command Line Interface'
+							text: '命令行接口'
 						},
 						{
 							link: '/javascript-api/',
 							text: 'Javascript API'
 						}
 					],
-					text: 'Getting started'
+					text: '起步'
 				},
 				{
 					items: [
 						{
 							link: '/tutorial/',
-							text: 'Tutorial'
+							text: '教程'
 						},
 						{
 							link: '/es-module-syntax/',
-							text: 'ES Module Syntax'
+							text: 'ES 模块语法'
 						},
 						{
 							link: '/faqs/',
-							text: 'Frequently Asked Questions'
+							text: '常见问题'
 						},
 						{
 							link: '/troubleshooting/',
-							text: 'Troubleshooting'
+							text: '故障排除'
 						},
 						{
 							link: '/migration/',
-							text: 'Migrating to Rollup 3'
+							text: '迁移到 Rollup 3'
 						},
 						{
 							link: '/tools/',
-							text: 'Other Tools'
+							text: '其它工具'
 						}
 					],
-					text: 'More info'
+					text: '更多信息'
 				},
 				{
 					items: [
 						{
 							link: '/configuration-options/',
-							text: 'Configuration Options'
+							text: '配置选项'
 						},
 						{
 							link: '/plugin-development/',
-							text: 'Plugin Development'
+							text: '插件开发'
 						}
 					],
 					text: 'API'
@@ -127,7 +127,7 @@ export default withMermaid(
 				{ icon: 'mastodon', link: 'https://m.webtoo.ls/@rollupjs' }
 			]
 		},
-		title: 'Rollup',
+		title: 'Rollup 中文文档',
 		transformPageData,
 		vite: {
 			optimizeDeps: { include: ['moment-mini', '@braintree/sanitize-url'] },

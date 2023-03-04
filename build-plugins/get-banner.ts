@@ -17,7 +17,7 @@ function generateBanner(commitHash: string, version: string): string {
 
 	https://github.com/rollup/rollup
 
-	Released under the MIT License.
+	基于 MIT 协议发布
 */`;
 }
 
