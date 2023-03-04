@@ -26,6 +26,8 @@
 
 本仓库是 Rollup 中文文档翻译的工作仓库，Fork 自 [Rollup 官方仓库](https://github.com/rollup/rollup) 并长期维护更新。
 
+![Alt](https://repobeats.axiom.co/api/embed/c6ea5931407031ccf67ed8e3cd5a1c608d58de26.svg 'Repobeats analytics image')
+
 ## Rollup 贡献者
 
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)]. <a href="https://github.com/rollup/rollup/graphs/contributors"><img src="https://opencollective.com/rollup/contributors.svg?width=890" /></a>
