@@ -6,7 +6,7 @@ title: 教程
 
 [[toc]]
 
-## 创建你的第一个 Bundle
+## 创建你的第一个 Bundle {#creating-your-first-bundle}
 
 _在开始之前，你需要安装 [Node.js](https://nodejs.org) 以便使用 [NPM](https://npmjs.com)。你还需要知道如何在你的机器上访问 [命令行](https://www.codecademy.com/learn/learn-the-command-line)。_
 
@@ -88,7 +88,7 @@ node
 
 恭喜! 你已经使用 Rollup 创建了你的第一个 bundle.
 
-## 使用配置文件
+## 使用配置文件 {#using-config-files}
 
 到目前为止，一切都很好，但随着我们添加更多选项，输入命令会变得有点烦人。
 
@@ -107,7 +107,7 @@ export default {
 };
 ```
 
-(你也可以使用CJS模块，例如 `module.exports = {/* config */}`)
+(你也可以使用 CJS 模块，例如 `module.exports = {/* config */}`)
 
 使用配置文件, 我们使用 `--config` 或者 `-c` :
 
@@ -122,7 +122,7 @@ rollup -c
 rollup -c -o bundle-2.js # `-o` 等价于 `--file`（曾用名为 "output"）
 ```
 
-_注意: Rollup本身会处理配置文件，这就是为什么我们可以使用 `export default` 语法的原因 – 代码没有被Babel或任何类似的工具转换，因此你只能使用在你当前使用的 Node 版本中支持的ES2015功能。_
+_注意: Rollup 本身会处理配置文件，这就是为什么我们可以使用 `export default` 语法的原因 –  代码没有被 Babel 或任何类似的工具转换，因此你只能使用在你当前使用的 Node 版本中支持的 ES2015 功能。_
 
 你也可以选择指定不同于默认的 `rollup.config.js` 的配置文件:
 
@@ -131,7 +131,7 @@ rollup --config rollup.config.dev.js
 rollup --config rollup.config.prod.js
 ```
 
-## 本地安装 Rollup
+## 本地安装 Rollup {#installing-rollup-locally}
 
 在团队或分布式环境中工作时，将 Rollup 添加为 _本地_ 依赖可能是明智的选择。本地安装 Rollup 可以避免多个贡献者单独安装 Rollup 的额外步骤，并确保所有贡献者使用相同版本的 Rollup。.
 
@@ -171,7 +171,7 @@ yarn rollup --config
 
 _注意: 一旦本地安装完成，当运行脚本命令时，不管是 NPM 还是 Yarn 都可以找到 Rollup 的可执行文件并执行。_
 
-## 使用插件
+## 使用插件 {#using-plugins}
 
 到目前为止，我们已经用入口文件和通过相对路径导入的模块创建了一个简单的 bundle。随着你构建更复杂的包，你通常需要更多的灵活性，例如导入使用 NPM 安装的模块、使用 Babel 编译代码、处理 JSON 文件等等。
 
@@ -242,7 +242,7 @@ module.exports = main;
 
 _注意: 结果中只导入了我们实际需要的数据 ——`name`、`devDependencies` 和 `package.json` 中其他内容都被忽略了。这就是 **tree-shaking** 的作用。_
 
-## 使用输出插件
+## 使用输出插件 {#using-output-plugins}
 
 某些插件也可以专门应用于某些输出. 有关特定输出插件可以做什么的详细信息，请参见 [plugin hooks](../plugin-development/index.md#build-hooks)。简而言之，这些插件只能在 Rollup 的主要分析完成后修改代码。如果使用不兼容的插件作为特定输出插件，Rollup 将会发出警告。一个可能的用例是压缩 bundle 以在浏览器中使用。
 
@@ -289,7 +289,7 @@ var version = (function () {
 })();
 ```
 
-## 代码切割
+## 代码切割 {#code-splitting}
 
 对于代码切割，有些情况下 Rollup 会自动将代码拆分成块，例如动态加载或多个入口点，还有一种方法可以显式地告诉 Rollup 将哪些模块拆分成单独的块，这是通过 [`output.manualChunks`](../configuration-options/index.md#output-manualchunks) 选项实现的。
 
