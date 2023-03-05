@@ -37,7 +37,7 @@ async function build() {
     // 启动一次打包
     bundle = await rollup(inputOptions);
 
-    // 一个文件名数组，表示此捆绑包所依赖的文件
+    // 一个文件名数组，表示此产物所依赖的文件
     console.log(bundle.watchFiles);
 
     await generateOutputs(bundle);
@@ -203,7 +203,7 @@ const watcher = rollup.watch(watchOptions);
 watcher.on('event', event => {
   // event.code 可以是以下之一：
   //   START        - 监视器正在（重新）启动
-  //   BUNDLE_START - 构建单个捆绑包
+  //   BUNDLE_START - 单次打包
   //                  * 如果存在，event.input 将是输入选项对象
   //                  * event.output 包含生成的输出的 "file"
   //                      或 "dir" 选项值的数组
@@ -220,7 +220,7 @@ watcher.on('event', event => {
   //                  或者如果你不生成输出，也应该调用。
   //                  这将允许插件通过
   //                  "closeBundle" 钩子清理资源。
-  //   END          - 完成所有捆绑包的构建
+  //   END          - 完成所有产物的构建
   //   ERROR        - 在打包时遇到错误
   //                  * event.error 包含抛出的错误
   //                  * 对于构建错误，event.result 为 null，
