@@ -36,7 +36,7 @@ import * as module from './module.js';
 
 从上面的示例中，`something` 将作为属性附加到导入的对象上，例如 `module.something`。如果存在默认导出，则可以通过 `module.default` 访问它。
 
-### Default Import {#default-import}
+### 默认导入 {#default-import}
 
 导入源模块的 **default export**。
 
@@ -44,7 +44,7 @@ import * as module from './module.js';
 import something from './module.js';
 ```
 
-### Empty Import {#empty-import}
+### 无命名导入 {#empty-import}
 
 加载模块代码，但不要使任何新对象可用。
 
@@ -54,9 +54,9 @@ import './module.js';
 
 这对于 polyfill 很有用，或者当导入代码的主要目的是处理 prototypes 时。
 
-### Dynamic Import {#dynamic-import}
+### 动态导入 {#dynamic-import}
 
-使用 [dynamic import API](https://github.com/tc39/proposal-dynamic-import#import) 导入模块。
+使用 [动态导入 API](https://github.com/tc39/proposal-dynamic-import#import) 导入模块。
 
 ```js
 import('./modules.js').then(({ default: DefaultExport, NamedExport }) => {
