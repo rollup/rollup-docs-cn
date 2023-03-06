@@ -311,7 +311,22 @@ interface SourceDescription {
 
 此钩子将等待直到所有导入都解析完毕，以便 `moduleInfo.importedIds`、`moduleInfo.dynamicallyImportedIds`、`moduleInfo.importedIdResolutions` 和 `moduleInfo.dynamicallyImportedIdResolutions` 中的信息是完整和准确的。但是请注意，导入模块的信息可能不完整，因为稍后可能会发现其他导入者。如果需要这些信息，请使用 [`buildEnd`](#buildend) 钩子。
 
-### 选项
+### moduleParsed
+
+|  |  |
+| --: | :-- |
+| 类型: | `(moduleInfo: ModuleInfo) => void` |
+| 类别: | 异步，并行 |
+| 上一个: | [`transform`](#transform)，当前处理的文件已被转换 |
+| 下一个: | [`resolveId`](#resolveid) 和 [`resolveDynamicImport`](#resolvedynamicimport)，并行解析所有已发现的静态和动态导入，如果存在，否则调用 [`buildEnd`](#buildend)。 |
+
+每次 Rollup 完全解析一个模块时，都会调用此钩子。有关传递给此钩子的信息，请参见 [`this.getModuleInfo`](#this-getmoduleinfo)。
+
+与 [`transform`](#transform) 钩子不同，此钩子永远不会被缓存，可以用于获取有关缓存和其他模块的信息，包括 `meta` 属性的最终形状、`code` 和 `ast`。
+
+此钩子将等待直到所有导入都已解析，以便 `moduleInfo.importedIds`、`moduleInfo.dynamicallyImportedIds`、`moduleInfo.importedIdResolutions` 和 `moduleInfo.dynamicallyImportedIdResolutions` 中的信息是完整且准确的。但是请注意，有关导入模块的信息可能不完整，因为可能稍后会发现其他导入者。如果需要此信息，请使用 [`buildEnd`](#buildend) 钩子。
+
+### options
 
 |            |                                             |
 | ---------: | :------------------------------------------ | ----- |
