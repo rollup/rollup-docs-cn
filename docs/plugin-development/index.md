@@ -302,8 +302,8 @@ interface SourceDescription {
 | --- | --- |
 | 类型： | `(moduleInfo: ModuleInfo) => void` |
 | 类别： | 异步，并行 |
-| 前置钩子： | [`transform`](#transform)，当前处理的文件已被转换 |
-| 后置钩子： | [`resolveId`](#resolveid) 和 [`resolveDynamicImport`](#resolvedynamicimport)，并行解析所有已发现的静态和动态导入，如果存在，否则为 [`buildEnd`](#buildend) |
+| 上一个钩子： | [`transform`](#transform)，当前处理的文件已被转换 |
+| 下一个钩子： | [`resolveId`](#resolveid) 和 [`resolveDynamicImport`](#resolvedynamicimport)，并行解析所有已发现的静态和动态导入，如果存在，否则为 [`buildEnd`](#buildend) |
 
 每次 Rollup 完全解析模块后都会调用此钩子。有关传递给此钩子的信息，请参见 [`this.getModuleInfo`](#this-getmoduleinfo)。
 
@@ -315,10 +315,10 @@ interface SourceDescription {
 
 |  |  |
 | --: | :-- |
-| 类型: | `(moduleInfo: ModuleInfo) => void` |
-| 类别: | 异步，并行 |
-| 上一个: | [`transform`](#transform)，当前处理的文件已被转换 |
-| 下一个: | [`resolveId`](#resolveid) 和 [`resolveDynamicImport`](#resolvedynamicimport)，并行解析所有已发现的静态和动态导入，如果存在，否则调用 [`buildEnd`](#buildend)。 |
+| 类型： | `(moduleInfo: ModuleInfo) => void` |
+| 类别： | 异步，并行 |
+| 上一个钩子： | [`transform`](#transform)，当前处理的文件已被转换 |
+| 下一个钩子： | [`resolveId`](#resolveid) 和 [`resolveDynamicImport`](#resolvedynamicimport)，并行解析所有已发现的静态和动态导入，如果存在，否则调用 [`buildEnd`](#buildend)。 |
 
 每次 Rollup 完全解析一个模块时，都会调用此钩子。有关传递给此钩子的信息，请参见 [`this.getModuleInfo`](#this-getmoduleinfo)。
 
@@ -328,12 +328,12 @@ interface SourceDescription {
 
 ### options
 
-|            |                                             |
-| ---------: | :------------------------------------------ | ----- |
-|     类型： | `(options: InputOptions) => InputOptions \  | null` |
-|     类别： | 异步，顺序执行                              |
-| 前置钩子： | 这是构建阶段的第一个钩子                    |
-| 后置钩子： | [`buildStart`](#buildstart)                 |
+|              |                                             |
+| -----------: | :------------------------------------------ | ----- |
+|       类型： | `(options: InputOptions) => InputOptions \  | null` |
+|       类别： | 异步，顺序执行                              |
+| 上一个钩子： | 这是构建阶段的第一个钩子                    |
+| 下一个钩子： | [`buildStart`](#buildstart)                 |
 
 替换或操作传递给 `rollup.rollup` 的选项对象。返回 `null` 不会替换任何内容。如果只需要读取选项，则建议使用 [`buildStart`](#buildstart) 钩子，因为该钩子可以访问所有 `options` 钩子的转换考虑后的选项。
 
@@ -345,8 +345,8 @@ interface SourceDescription {
 | --- | --- |
 | 类型： | `ResolveDynamicImportHook` |
 | 类别： | 异步，第一次 |
-| 前置钩子： | 导入文件的 [`moduleParsed`](#moduleparsed) 钩子 |
-| 后置钩子： | 如果钩子解析出尚未加载的 id，则为 [`load`](#load)，如果动态导入包含字符串并且未被钩子解析，则为 [`resolveId`](#resolveid)，否则为 [`buildEnd`](#buildend) |
+| 上一个钩子： | 导入文件的 [`moduleParsed`](#moduleparsed) 钩子 |
+| 下一个钩子： | 如果钩子解析出尚未加载的 id，则为 [`load`](#load)，如果动态导入包含字符串并且未被钩子解析，则为 [`resolveId`](#resolveid)，否则为 [`buildEnd`](#buildend) |
 
 ```typescript
 type ResolveDynamicImportHook = (
@@ -382,8 +382,8 @@ type ResolveDynamicImportHook = (
 | --: | :-- |
 | 类型: | `ResolveIdHook` |
 | 类别: | 异步，第一个执行的钩子 |
-| 前置钩子: | 如果我们正在解析入口点，则为[`buildStart`](#buildstart)，如果我们正在解析导入，则为[`moduleParsed`](#moduleparsed)，否则作为[`resolveDynamicImport`](#resolvedynamicimport)的后备。此外，此钩子可以通过调用[`this.emitFile`](#this-emitfile)来在构建阶段的插件钩子中触发以发出入口点，或随时调用[`this.resolve`](#this-resolve)手动解析 id。 |
-| 后置钩子: | 如果尚未加载解析的 id，则为[`load`](#load)，否则为[`buildEnd`](#buildend)。 |
+| 上一个钩子: | 如果我们正在解析入口点，则为[`buildStart`](#buildstart)，如果我们正在解析导入，则为[`moduleParsed`](#moduleparsed)，否则作为[`resolveDynamicImport`](#resolvedynamicimport)的后备。此外，此钩子可以通过调用[`this.emitFile`](#this-emitfile)来在构建阶段的插件钩子中触发以发出入口点，或随时调用[`this.resolve`](#this-resolve)手动解析 id。 |
+| 下一个钩子: | 如果尚未加载解析的 id，则为[`load`](#load)，否则为[`buildEnd`](#buildend)。 |
 
 ```typescript
 type ResolveIdHook = (
