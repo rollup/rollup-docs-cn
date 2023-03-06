@@ -6,18 +6,18 @@ title: Integrating Rollup With Other Tools
 
 [[toc]]
 
-## With NPM Packages
+## 与其他 NPM 包 {#with-npm-packages}
 
-At some point, it's likely that your project will depend on packages installed from NPM into your `node_modules` folder. Unlike other bundlers such as Webpack and Browserify, Rollup doesn't know "out of the box" how to handle these dependencies - we need to add some configuration.
+在某个时刻，你的项目可能会依赖于从 NPM 安装到 `node_modules` 文件夹中的软件包。与 Webpack 和 Browserify 等其他打包程序不同，Rollup 默认情况下不知道如何处理这些依赖项，我们需要添加一些配置。
 
-Let's add a simple dependency called [the-answer](https://www.npmjs.com/package/the-answer), which exports the answer to the question of life, the universe and everything:
+让我们添加一个名为 [the-answer](https://www.npmjs.com/package/the-answer) 的简单依赖项，它导出了生命、宇宙和一切问题的答案：
 
 ```shell
 npm install the-answer
-# or `npm i the-answer`
+# or `npm i the-answer` {#or-npm-i-the-answer}
 ```
 
-If we update our `src/main.js` file…
+如果我们更新了 `src/main.js` 文件…
 
 ```js
 // src/main.js
@@ -28,13 +28,13 @@ export default function () {
 }
 ```
 
-…and run Rollup…
+…然后运行 Rollup…
 
 ```shell
 npm run build
 ```
 
-…we'll see a warning like this:
+…我们会看到这样的警告：
 
 ```
 (!) Unresolved dependencies
@@ -42,17 +42,17 @@ https://github.com/rollup/rollup/wiki/Troubleshooting#treating-module-as-externa
 the-answer (imported by main.js)
 ```
 
-The resulting `bundle.js` will still work in Node.js, because the `import` declaration gets turned into a CommonJS `require` statement, but `the-answer` does _not_ get included in the bundle. For that, we need a plugin.
+生成的 `bundle.js` 仍然可以在 Node.js 中使用，因为 `import` 声明会被转换为 CommonJS 的 `require` 语句，但是 `the-answer` 不会被包含在 bundle 中。为此，我们需要一个插件。
 
-### @rollup/plugin-node-resolve
+### @rollup/plugin-node-resolve {#rollupplugin-node-resolve}
 
-The [@rollup/plugin-node-resolve](https://github.com/rollup/plugins/tree/master/packages/node-resolve) plugin teaches Rollup how to find external modules. Install it…
+[@rollup/plugin-node-resolve](https://github.com/rollup/plugins/tree/master/packages/node-resolve) 插件可以让 Rollup 找到外部模块。让我们安装它…
 
 ```shell
 npm install --save-dev @rollup/plugin-node-resolve
 ```
 
-…and add it to your config file:
+…然后将它添加到我们的配置文件中：
 
 ```js
 // rollup.config.js
@@ -68,28 +68,28 @@ export default {
 };
 ```
 
-This time, when you `npm run build`, no warning is emitted — the bundle contains the imported module.
+这一次，当你运行 `npm run build` 时，不会发出警告 - bundle 包含了导入的模块。
 
-### @rollup/plugin-commonjs
+### @rollup/plugin-commonjs {#rollupplugin-commonjs}
 
-Some libraries expose ES modules that you can import as-is — `the-answer` is one such module. But at the moment, the majority of packages on NPM are exposed as CommonJS modules instead. Until that changes, we need to convert CommonJS to ES2015 before Rollup can process them.
+一些库会暴露出 ES 模块，你可以直接导入它们，`the-answer` 就是这样的一个模块。但是目前，大多数 NPM 上的包都以 CommonJS 模块的方式暴露。在这种情况下，我们需要在 Rollup 处理它们之前将 CommonJS 转换为 ES2015。
 
-The [@rollup/plugin-commonjs](https://github.com/rollup/plugins/tree/master/packages/commonjs) plugin does exactly that.
+[@rollup/plugin-commonjs](https://github.com/rollup/plugins/tree/master/packages/commonjs) 插件就是用来做这件事的。
 
-Note that most of the time `@rollup/plugin-commonjs` should go _before_ other plugins that transform your modules — this is to prevent other plugins from making changes that break the CommonJS detection. An exception for this rule is the Babel plugin, if you're using it then place it before the commonjs one.
+请注意，大多数情况下，`@rollup/plugin-commonjs` 应该放在转换模块的其他插件之前 - 这是为了防止其他插件对 CommonJS 检测产生影响。一个例外是 Babel 插件，如果你使用它，请将它放在 commonjs 插件之前。
 
-## Peer dependencies
+## 对等依赖 {#peer-dependencies}
 
-Let's say that you're building a library that has a peer dependency, such as React or Lodash. If you set up externals as described above, your rollup will bundle _all_ imports:
+假设你正在构建一个具有对等依赖项（peer dependency）的库，例如 React 或 Lodash。如果按照上面描述的设置 externals，你的 rollup 将会打包 _所有_ 导入的依赖项：
 
 ```js
 import answer from 'the-answer';
 import _ from 'lodash';
 ```
 
-You can finely tune which imports are bundled and which are treated as external. For this example, we'll treat `lodash` as external, but not `the-answer`.
+您可以精细调整哪些导入将被打包，哪些将被视为外部导入。在此示例中，我们将把 `lodash` 视为外部导入，但不将 `the-answer` 视为外部导入。
 
-Here is the config file:
+以下是配置文件：
 
 ```js
 // rollup.config.js
@@ -103,18 +103,18 @@ export default {
 	},
 	plugins: [
 		resolve({
-			// pass custom options to the resolve plugin
+			// 将自定义选项传递给解析插件
 			moduleDirectories: ['node_modules']
 		})
 	],
-	// indicate which modules should be treated as external
+	// 指出哪些模块应该视为外部模块
 	external: ['lodash']
 };
 ```
 
-Voilà, `lodash` will now be treated as external, and not be bundled with your library.
+现在，`lodash` 将被视为外部导入，不会与您的库捆绑在一起。
 
-The `external` key accepts either an array of module names, or a function which takes the module name and returns true if it should be treated as external. For example:
+`external` 键接受模块名称的数组或一个函数，该函数接受模块名称并返回 true，如果应将其视为外部导入。例如：
 
 ```js
 export default {
@@ -123,19 +123,19 @@ export default {
 };
 ```
 
-You might use this form if you're using [babel-plugin-lodash](https://github.com/lodash/babel-plugin-lodash) to cherry-pick `lodash` modules. In this case, Babel will convert your import statements to look like this:
+如果您使用 [babel-plugin-lodash](https://github.com/lodash/babel-plugin-lodash) 来挑选 `lodash` 模块，则可能会使用此形式。在这种情况下，Babel 将转换您的导入语句，使之类似于：
 
 ```js
 import _merge from 'lodash/merge';
 ```
 
-The array form of `external` does not handle wildcards, so this import will only be treated as external in the functional form.
+数组形式的 `external` 不支持通配符，因此此导入语句只会在函数形式下被视为外部导入。
 
-## Babel
+## Babel {#babel}
 
-Many developers use [Babel](https://babeljs.io/) in their projects in order to use the latest JavaScript features that aren't yet supported by browsers and Node.js.
+许多开发人员在项目中使用 [Babel](https://babeljs.io/) 来使用尚未被浏览器和 Node.js 支持的最新 JavaScript 特性。
 
-The easiest way to use both Babel and Rollup is with [@rollup/plugin-babel](https://github.com/rollup/plugins/tree/master/packages/babel). First, install the plugin:
+使用 Babel 和 Rollup 最简单的方法是使用 [@rollup/plugin-babel](https://github.com/rollup/plugins/tree/master/packages/babel)。首先，安装该插件：
 
 ```shell
 npm i -D @rollup/plugin-babel @rollup/plugin-node-resolve
@@ -158,7 +158,7 @@ export default {
 };
 ```
 
-Before Babel will actually compile your code, it needs to be configured. Create a new file, `src/.babelrc.json`:
+在 Babel 实际编译代码之前，需要进行配置。创建一个名为 `src/.babelrc.json` 的新文件：
 
 ```json
 {
@@ -166,15 +166,15 @@ Before Babel will actually compile your code, it needs to be configured. Create 
 }
 ```
 
-We're putting our `.babelrc.json` file in `src`, rather than the project root. This allows us to have a different `.babelrc.json` for things like tests, if we need that later – See the [Babel documentation](https://babeljs.io/docs/en/config-files#project-wide-configuration) for more information on both project wide and file relative configuration.
+我们将 `.babelrc.json` 文件放在 `src` 目录中，而不是项目根目录中。如果以后需要，这可以让我们为诸如测试之类的事物拥有不同的 `.babelrc.json` 文件 - 有关项目范围和文件相对配置的更多信息，请参见 [Babel 文档](https://babeljs.io/docs/en/config-files#project-wide-configuration)。
 
-Now, before we run rollup, we need to install [`babel-core`](https://babeljs.io/docs/en/babel-core) and the [`env`](https://babeljs.io/docs/en/babel-preset-env) preset:
+现在，在运行 rollup 之前，我们需要安装 [`babel-core`](https://babeljs.io/docs/en/babel-core) 和 [`env`](https://babeljs.io/docs/en/babel-preset-env) 预设：
 
 ```shell
 npm i -D @babel/core @babel/preset-env
 ```
 
-Running Rollup now will create a bundle - except we're not actually using any ES2015 features. Let's change that by editing `src/main.js`:
+运行 Rollup 现在将进行一次打包 - 但目前我们并没有使用到任何 ES2015 特性。让我们通过编辑 `src/main.js` 来改变这一点：
 
 ```js
 // src/main.js
@@ -185,7 +185,7 @@ export default () => {
 };
 ```
 
-Run Rollup with `npm run build`, and check the bundle:
+使用 `npm run build` 来运行 Rollup 之后，我们可以来看看产物：
 
 ```js
 'use strict';
@@ -199,11 +199,11 @@ var main = function () {
 module.exports = main;
 ```
 
-## Gulp
+## Gulp {#gulp}
 
-Rollup returns Promises which are understood by gulp so integration is relatively painless.
+Rollup 返回的 Promise 被 gulp 所理解，因此集成相对容易。
 
-The syntax is very similar to the configuration file, but the properties are split across two different operations corresponding to the [JavaScript API](../javascript-api/index.md):
+语法与配置文件非常相似，但属性被分成两个不同的操作，对应于 [JavaScript API](../javascript-api/index.md)：
 
 ```js
 const gulp = require('gulp');
@@ -227,7 +227,7 @@ gulp.task('build', () => {
 });
 ```
 
-You may also use the `async/await` syntax:
+你也可能会用到 `async/await` 语法：
 
 ```js
 const gulp = require('gulp');
@@ -249,9 +249,9 @@ gulp.task('build', async function () {
 });
 ```
 
-## Deno
+## Deno {#deno}
 
-If you like to run Rollup in Deno you can use [esm.sh](https://esm.sh/) like so:
+如果你想要在 Deno 中使用 Rollup，你可以通过 [esm.sh](https://esm.sh/) 这样做：
 
 ```js
 import {rollup} from "https://esm.sh/rollup@2.61.1";
@@ -259,7 +259,7 @@ import {rollup} from "https://esm.sh/rollup@2.61.1";
 const bundle = await rollup({ //...
 ```
 
-Alternatively you can install rollup from npm and use the [node compatibility layer](https://deno.land/std@0.110.0/node):
+或者你可以从 npm 安装 rollup 并使用 [node 兼容层](https://deno.land/std@0.110.0/node)：
 
 ```js
 import {createRequire} from "https://deno.land/std@0.110.0/node/module.ts";
@@ -269,4 +269,4 @@ const {rollup} = require("rollup");
 const bundle = await rollup({ //...
 ```
 
-Be sure to run deno with the `--unstable` flag. And don't forget `--allow-read` and `--allow-write` if you plan on using `bundle.write()`.
+请确保使用 `--unstable` 标志运行 deno。如果您计划使用 `bundle.write()`，请不要忘记 `--allow-read` 和 `--allow-write`。
