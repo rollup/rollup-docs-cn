@@ -246,7 +246,7 @@ _注意： 结果中只导入了我们实际需要的数据 ——`name`、`devD
 
 某些插件也可以专门应用于某些输出. 有关特定输出插件可以做什么的详细信息，请参见 [插件钩子](../plugin-development/index.md#build-hooks)。简而言之，这些插件只能在 Rollup 的主要分析完成后修改代码。如果使用不兼容的插件作为特定输出插件，Rollup 将会发出警告。一个可能的用例是压缩产物以在浏览器中使用。
 
-让我们扩展上一个示例，提供一个最小化的构建和一个非最小化的构建。为此，我们需要安装 `@rollup/plugin-terser`:
+让我们扩展上一个示例，提供一个最小化的构建和一个非最小化的构建。为此，我们需要安装 `@rollup/plugin-terser`：
 
 ```shell
 npm install --save-dev @rollup/plugin-terser
