@@ -41,7 +41,7 @@ export default withMermaid(
 		},
 		themeConfig: {
 			algolia: {
-				apiKey: '3e413d036f6be638bb6107567aa0db55',
+				apiKey: '1ad354aec09a57f18f8d9bec8a913e52',
 				appId: 'EMNHQTRZYG',
 				indexName: 'rollup_docs_CN'
 			},
