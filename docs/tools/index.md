@@ -1,5 +1,5 @@
 ---
-title: Integrating Rollup With Other Tools
+title: Rollup 与其它工具的集成
 ---
 
 # {{ $frontmatter.title }}
