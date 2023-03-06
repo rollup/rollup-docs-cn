@@ -277,7 +277,7 @@ export default {
 };
 ```
 
-除了 `bundle.js`，Rollup 现在还将创建第二个文件 `bundle.min.js`:
+除了 `bundle.js`，Rollup 现在还将创建第二个文件 `bundle.min.js`：
 
 ```js
 var version = (function () {
@@ -293,7 +293,7 @@ var version = (function () {
 
 代码分割是指有些情况下 Rollup 会自动将代码拆分成块，例如动态加载或多个入口点，还有一种方法可以显式地告诉 Rollup 将哪些模块拆分成单独的块，这是通过 [`output.manualChunks`](../configuration-options/index.md#output-manualchunks) 选项实现的。
 
-要使用代码分割功能实现惰性动态加载（其中某些导入的模块仅在执行函数后加载），我们返回到原始示例，并修改 `src/main.js`，以动态加载 `src/foo.js` 而不是静态加载:
+要使用代码分割功能实现惰性动态加载（其中某些导入的模块仅在执行函数后加载），我们返回到原始示例，并修改 `src/main.js`，以动态加载 `src/foo.js` 而不是静态加载：
 
 ```js
 // src/main.js
@@ -302,7 +302,7 @@ export default function () {
 }
 ```
 
-Rollup 将使用动态导入创建一个仅在需要时加载的单独块。为了让 Rollup 知道在哪里放置第二个块，我们不使用 `--file` 选项，而是使用 `--dir` 选项设置一个输出文件夹:
+Rollup 将使用动态导入创建一个仅在需要时加载的单独块。为了让 Rollup 知道在哪里放置第二个块，我们不使用 `--file` 选项，而是使用 `--dir` 选项设置一个输出文件夹：
 
 ```shell
 rollup src/main.js -f cjs -d dist
@@ -316,7 +316,7 @@ rollup src/main.js -f cjs -d dist
 node -e "require('./dist/main.js')()"
 ```
 
-如果我们不使用 `--dir` 选项，Rollup 将再次将块打印到 `stdout`，并添加注释以突出显示块的边界:
+如果我们不使用 `--dir` 选项，Rollup 将再次将块打印到 `stdout`，并添加注释以突出显示块的边界：
 
 ```js
 //→ main.js:
@@ -350,7 +350,7 @@ export default function () {
 }
 ```
 
-如果我们给 Rollup 提供了两个入口，那么会创建三个块:
+如果我们给 Rollup 提供了两个入口，那么会创建三个块：
 
 ```shell
 rollup src/main.js src/main2.js -f cjs
@@ -393,7 +393,7 @@ exports.default = foo;
 
 你可以通过原生的 ES 模块、AMD 加载器或 SystemJS，为浏览器构建相同的代码。
 
-例如，使用 `-f es` 选项进行原生模块构建:
+例如，使用 `-f es` 选项进行原生模块构建：
 
 ```shell
 rollup src/main.js src/main2.js -f es -d dist
@@ -407,7 +407,7 @@ rollup src/main.js src/main2.js -f es -d dist
 </script>
 ```
 
-或者，使用 `-f system` 选项进行 SystemJS 构建:
+或者，使用 `-f system` 选项进行 SystemJS 构建：
 
 ```shell
 rollup src/main.js src/main2.js -f system -d dist
@@ -419,7 +419,7 @@ rollup src/main.js src/main2.js -f system -d dist
 npm install --save-dev systemjs
 ```
 
-然后根据需要在 HTML 页面中加载一个或两个入口点:
+然后根据需要在 HTML 页面中加载一个或两个入口点：
 
 ```html
 <!DOCTYPE html>
