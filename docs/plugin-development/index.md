@@ -1,42 +1,42 @@
 ---
-title: Plugin Development
+title: 插件开发
 ---
 
 # {{ $frontmatter.title }}
 
 [[toc]]
 
-## Plugins Overview
+## 插件概述 {#plugins-overview}
 
-A Rollup plugin is an object with one or more of the [properties](#properties), [build hooks](#build-hooks), and [output generation hooks](#output-generation-hooks) described below, and which follows our [conventions](#conventions). A plugin should be distributed as a package which exports a function that can be called with plugin specific options and returns such an object.
+Rollup 插件是一个对象，具有[属性](#properties)、[构建钩子](#build-hooks)和[输出生成钩子](#output-generation-hooks)中的一个或多个，并遵循我们的[约定](#conventions)。插件应作为一个导出一个函数的包进行发布，该函数可以使用插件特定的选项进行调用并返回此类对象。
 
-Plugins allow you to customise Rollup's behaviour by, for example, transpiling code before bundling, or finding third-party modules in your `node_modules` folder. For an example on how to use them, see [Using plugins](../tutorial/index.md#using-plugins).
+插件允许您通过例如在打包之前进行转译代码或在`node_modules`文件夹中查找第三方模块来自定义 Rollup 的行为。有关如何使用它们的示例，请参见[使用插件](../tutorial/index.md#using-plugins)。
 
-A List of Plugins may be found at [github.com/rollup/awesome](https://github.com/rollup/awesome). If you would like to make a suggestion for a plugin, please submit a Pull Request.
+插件列表可以在[github.com/rollup/awesome](https://github.com/rollup/awesome)上找到。如果您想建议一个插件，请提交一个 Pull Request。
 
-## A Simple Example
+## 一个简单的示例 {#a-simple-example}
 
-The following plugin will intercept any imports of `virtual-module` without accessing the file system. This is for instance necessary if you want to use Rollup in a browser. It can even be used to replace entry points as shown in the example.
+以下插件将拦截任何不通过访问文件系统的 `virtual-module` 导入。例如，如果您想在浏览器中使用 Rollup，则需要这样做。它甚至可以用来替换入口点，如示例所示。
 
 ```js
 // rollup-plugin-my-example.js
 export default function myExample () {
   return {
-    name: 'my-example', // this name will show up in warnings and errors
+    name: 'my-example', // 此名称将出现在警告和错误中
     resolveId ( source ) {
       if (source === 'virtual-module') {
-        // this signals that rollup should not ask other plugins or check
-        // the file system to find this id
+        // 这表示rollup不应询问其他插件或检查
+        // 文件系统以查找此ID
         return source;
       }
-      return null; // other ids should be handled as usually
+      return null; // 其他ID应按通常方式处理
     },
     load ( id ) {
       if (id === 'virtual-module') {
-        // the source code for "virtual-module"
+        // "virtual-module"的源代码
         return 'export default "This is virtual!"';
       }
-      return null; // other ids should be handled as usually
+      return null; // 其他ID应按通常方式处理
     }
   };
 }
@@ -44,7 +44,7 @@ export default function myExample () {
 // rollup.config.js
 import myExample from './rollup-plugin-my-example.js';
 export default ({
-  input: 'virtual-module', // resolved by our plugin
+  input: 'virtual-module', // 由我们的插件解析
   plugins: [myExample()],
   output: [{
     file: 'bundle.js',
@@ -53,46 +53,46 @@ export default ({
 });
 ```
 
-## Conventions
+### 约定 {#conventions}
 
-- Plugins should have a clear name with `rollup-plugin-` prefix.
-- Include `rollup-plugin` keyword in `package.json`.
-- Plugins should be tested. We recommend [mocha](https://github.com/mochajs/mocha) or [ava](https://github.com/avajs/ava) which support Promises out of the box.
-- Use asynchronous methods when it is possible, e.g. `fs.readFile` instead of `fs.readFileSync`.
-- Document your plugin in English.
-- Make sure your plugin outputs correct source mappings if appropriate.
-- If your plugin uses 'virtual modules' (e.g. for helper functions), prefix the module ID with `\0`. This prevents other plugins from trying to process it.
+- 插件应该有一个明确的名称，并以`rollup-plugin-`作为前缀。
+- 在`package.json`中包含`rollup-plugin`关键字。
+- 插件应该被测试，我们推荐 [mocha](https://github.com/mochajs/mocha) 或 [ava](https://github.com/avajs/ava)，它们支持 Promise。
+- 可能的话，使用异步方法，例如 `fs.readFile` 而不是 `fs.readFileSync`
+- 用英文文档描述你的插件。
+- 确保如果适当，你的插件输出正确的源映射。
+- 如果插件使用“虚拟模块”（例如用于辅助函数），请使用`\0`前缀模块 ID。这可以防止其他插件尝试处理它。
 
-## Properties
+## 属性 {#properties}
 
-### name
-
-|       |          |
-| ----: | :------- |
-| Type: | `string` |
-
-The name of the plugin, for use in error messages and warnings.
-
-### version
+### 名字 {#name}
 
 |       |          |
 | ----: | :------- |
-| Type: | `string` |
+| 类型: | `string` |
 
-The version of the plugin, for use in inter-plugin communication scenarios.
+插件的名称，用于错误消息和警告。
 
-## Build Hooks
+### 版本 {#version}
 
-To interact with the build process, your plugin object includes "hooks". Hooks are functions which are called at various stages of the build. Hooks can affect how a build is run, provide information about a build, or modify a build once complete. There are different kinds of hooks:
+|       |          |
+| ----: | :------- |
+| 类型: | `string` |
 
-- `async`: The hook may also return a Promise resolving to the same type of value; otherwise, the hook is marked as `sync`.
-- `first`: If several plugins implement this hook, the hooks are run sequentially until a hook returns a value other than `null` or `undefined`.
-- `sequential`: If several plugins implement this hook, all of them will be run in the specified plugin order. If a hook is `async`, subsequent hooks of this kind will wait until the current hook is resolved.
-- `parallel`: If several plugins implement this hook, all of them will be run in the specified plugin order. If a hook is `async`, subsequent hooks of this kind will be run in parallel and not wait for the current hook.
+插件的版本，用于插件间通信场景。
 
-Instead of a function, hooks can also be objects. In that case, the actual hook function (or value for `banner/footer/intro/outro`) must be specified as `handler`. This allows you to provide additional optional properties that change hook execution:
+## 构建钩子 {#build-hooks}
 
-- `order: "pre" | "post" | null`<br> If there are several plugins implementing this hook, either run this plugin first (`"pre"`), last (`"post"`), or in the user-specified position (no value or `null`).
+为了与构建过程交互，你的插件对象包括“钩子”。钩子是在构建的各个阶段调用的函数。钩子可以影响构建的运行方式，提供关于构建的信息，或在构建完成后修改构建。有不同种类的钩子：
+
+- `async`：该钩子也可以返回一个解析为相同类型的值的 Promise；否则，该钩子被标记为 `sync`。
+- `first`：如果有多个插件实现此钩子，则钩子按顺序运行，直到钩子返回一个不是 `null` 或 `undefined` 的值。
+- `sequential`：如果有多个插件实现此钩子，则所有这些钩子将按指定的插件顺序运行。如果钩子是 `async`，则此类后续钩子将等待当前钩子解决后再运行。
+- `parallel`：如果有多个插件实现此钩子，则所有这些钩子将按指定的插件顺序运行。如果钩子是 `async`，则此类后续钩子将并行运行，而不是等待当前钩子。
+
+钩子可以是函数，也可以是对象。在这种情况下，实际的钩子函数（或 `banner/footer/intro/outro` 的值）必须指定为 `handler`。这允许您提供更多的可选属性来改变钩子的执行：
+
+- `order: "pre" | "post" | null`<br> 如果有多个插件实现此钩子，则可以选择先运行此插件（“pre”），最后运行此插件（“post”），或在用户指定的位置运行此插件（没有值或 `null`）。
 
   ```js
   export default function resolveFirst() {
@@ -111,32 +111,7 @@ Instead of a function, hooks can also be objects. In that case, the actual hook 
   }
   ```
 
-  If several plugins use `"pre"` or `"post"`, Rollup runs them in the user-specified order. This option can be used for all plugin hooks. For parallel hooks, it changes the order in which the synchronous part of the hook is run.
-
-- `sequential: boolean`<br> Do not run this hook in parallel with the same hook of other plugins. Can only be used for `parallel` hooks. Using this option will make Rollup await the results of all previous plugins, then execute the plugin hook, and then run the remaining plugins in parallel again. E.g. when you have plugins `A`, `B`, `C`, `D`, `E` that all implement the same parallel hook and the middle plugin `C` has `sequential: true`, then Rollup will first run `A + B` in parallel, then `C` on its own, then `D + E` in parallel.
-
-  This can be useful when you need to run several command line tools in different [`writeBundle`](#writebundle) hooks that depend on each other (note that if possible, it is recommended to add/remove files in the sequential [`generateBundle`](#generatebundle) hook, though, which is faster, works with pure in-memory builds and permits other in-memory build plugins to see the files). You can combine this option with `order` for additional sorting.
-
-  ```js
-  import { resolve } from 'node:path';
-  import { readdir } from 'node:fs/promises';
-
-  export default function getFilesOnDisk() {
-  	return {
-  		name: 'getFilesOnDisk',
-  		writeBundle: {
-  			sequential: true,
-  			order: 'post',
-  			async handler({ dir }) {
-  				const topLevelFiles = await readdir(resolve(dir));
-  				console.log(topLevelFiles);
-  			}
-  		}
-  	};
-  }
-  ```
-
-Build hooks are run during the build phase, which is triggered by `rollup.rollup(inputOptions)`. They are mainly concerned with locating, providing and transforming input files before they are processed by Rollup. The first hook of the build phase is [`options`](#options), the last one is always [`buildEnd`](#buildend). If there is a build error, [`closeBundle`](#closebundle) will be called after that.
+构建钩子在构建阶段运行，由 `rollup.rollup(inputOptions)` 触发。它们主要关注在 Rollup 处理输入文件之前定位、提供和转换输入文件。
 
 <style>
 .legend-grid {
@@ -252,50 +227,50 @@ flowchart TB
     --> |unresolved|resolveid
 ```
 
-Additionally, in watch mode the [`watchChange`](#watchchange) hook can be triggered at any time to notify a new run will be triggered once the current run has generated its outputs. Also, when watcher closes, the [`closeWatcher`](#closewatcher) hook will be triggered.
+此外，在监视模式下，[`watchChange`](#watchchange) 钩子可以在任何时候触发，以通知当前运行生成输出后将触发新的运行。另外，当监视器关闭时，[`closeWatcher`](#closewatcher) 钩子将被触发。
 
-See [Output Generation Hooks](#output-generation-hooks) for hooks that run during the output generation phase to modify the generated output.
+有关在输出生成阶段运行以修改生成的输出的钩子，请参见 [输出生成钩子](#output-generation-hooks)。
 
 ### buildEnd
 
 |  |  |
 | --: | :-- |
-| Type: | `(error?: Error) => void` |
-| Kind: | async, parallel |
-| Previous: | [`moduleParsed`](#moduleparsed), [`resolveId`](#resolveid) or [`resolveDynamicImport`](#resolvedynamicimport) |
-| Next: | [`outputOptions`](#outputoptions) in the output generation phase as this is the last hook of the build phase |
+| 类型： | `(error?: Error) => void` |
+| 类别： | async, parallel |
+| 上一个钩子： | [`moduleParsed`](#moduleparsed)、[`resolveId`](#resolveid) 或 [`resolveDynamicImport`](#resolvedynamicimport) |
+| 下一个钩子： | 输出生成阶段的 [`outputOptions`](#outputoptions)，因为这是构建阶段的最后一个钩子 |
 
-Called when rollup has finished bundling, but before `generate` or `write` is called; you can also return a Promise. If an error occurred during the build, it is passed on to this hook.
+在 Rollup 完成捆绑但尚未调用 `generate` 或 `write` 之前调用；也可以返回一个 Promise。如果在构建过程中发生错误，则将其传递给此钩子。
 
 ### buildStart
 
-|  |  |
-| --: | :-- |
-| Type: | `(options: InputOptions) => void` |
-| Kind: | async, parallel |
-| Previous: | [`options`](#options) |
-| Next: | [`resolveId`](#resolveid) to resolve each entry point in parallel |
+|              |                                                |
+| -----------: | :--------------------------------------------- |
+|       类型： | `(options: InputOptions) => void`              |
+|       类别： | async, parallel                                |
+| 上一个钩子： | [`options`](#options)                          |
+| 下一个钩子： | 并行解析每个入口点的 [`resolveId`](#resolveid) |
 
-Called on each `rollup.rollup` build. This is the recommended hook to use when you need access to the options passed to `rollup.rollup()` as it takes the transformations by all [`options`](#options) hooks into account and also contains the right default values for unset options.
+在每个 `rollup.rollup` 构建上调用。当您需要访问传递给 `rollup.rollup()` 的选项时，建议使用此钩子，因为它考虑了所有 [`options`](#options) 钩子的转换，并且还包含未设置选项的正确默认值。
 
 ### closeWatcher
 
 |  |  |
 | --: | :-- |
-| Type: | `() => void` |
-| Kind: | async, parallel |
-| Previous/Next: | This hook can be triggered at any time both during the build and the output generation phases. If that is the case, the current build will still proceed but no new [`watchChange`](#watchchange) events will be triggered ever |
+| 类型： | `() => void` |
+| 类别： | async, parallel |
+| 上一个/下一个钩子： | 此钩子可以在构建和输出生成阶段的任何时候触发。如果是这种情况，则当前构建仍将继续，但永远不会触发新的 [`watchChange`](#watchchange) 事件 |
 
-Notifies a plugin when the watcher process will close so that all open resources can be closed too. If a Promise is returned, Rollup will wait for the Promise to resolve before closing the process. This hook cannot be used by output plugins.
+在观察器进程即将关闭时通知插件，以便可以关闭所有打开的资源。如果返回一个 Promise，则 Rollup 将在关闭进程之前等待 Promise 解决。输出插件无法使用此钩子。
 
 ### load
 
 |  |  |
 | --: | :-- |
-| Type: | `(id: string) => LoadResult` |
-| Kind: | async, first |
-| Previous: | [`resolveId`](#resolveid) or [`resolveDynamicImport`](#resolvedynamicimport) where the loaded id was resolved. Additionally, this hook can be triggered at any time from plugin hooks by calling [`this.load`](#this-load) to preload the module corresponding to an id |
-| Next: | [`transform`](#transform) to transform the loaded file if no cache was used, or there was no cached copy with the same `code`, otherwise [`shouldTransformCachedModule`](#shouldtransformcachedmodule) |
+| 类型： | `(id: string) => LoadResult` |
+| 类别： | async, first |
+| 上一个钩子： | 已解析加载的 id 的 [`resolveId`](#resolveid) 或 [`resolveDynamicImport`](#resolvedynamicimport)。此外，此钩子可以通过调用 [`this.load`](#this-load) 来从插件钩子中的任何位置触发预加载与 id 对应的模块 |
+| 下一个钩子： | 如果未使用缓存，或者没有具有相同 `code` 的缓存副本，则为 [`transform`](#transform)，否则为 [`shouldTransformCachedModule`](#shouldtransformcachedmodule) |
 
 ```typescript
 type LoadResult = string | null | SourceDescription;
@@ -311,54 +286,52 @@ interface SourceDescription {
 }
 ```
 
-Defines a custom loader. Returning `null` defers to other `load` functions (and eventually the default behavior of loading from the file system). To prevent additional parsing overhead in case e.g. this hook already used `this.parse` to generate an AST for some reason, this hook can optionally return a `{ code, ast, map }` object. The `ast` must be a standard ESTree AST with `start` and `end` properties for each node. If the transformation does not move code, you can preserve existing sourcemaps by setting `map` to `null`. Otherwise, you might need to generate the source map. See the section on [source code transformations](#source-code-transformations).
+定义自定义加载器。返回 `null` 将延迟到其他 `load` 函数（最终默认从文件系统加载）。为了避免额外的解析开销，例如该钩子已经使用 `this.parse` 生成了某些原因，该钩子可以选择返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个具有每个节点的 `start` 和 `end` 属性的标准 ESTree AST。如果转换不移动代码，则可以通过将 `map` 设置为 `null` 来保留现有的源码映射。否则，您可能需要生成源映射。有关 [源代码转换](#source-code-transformations) 的详细信息，请参见该部分。
 
-If `false` is returned for `moduleSideEffects` and no other module imports anything from this module, then this module will not be included in the bundle even if the module would have side effects. If `true` is returned, Rollup will use its default algorithm to include all statements in the module that have side effects (such as modifying a global or exported variable). If `"no-treeshake"` is returned, treeshaking will be turned off for this module and it will also be included in one of the generated chunks even if it is empty. If `null` is returned or the flag is omitted, then `moduleSideEffects` will be determined by the first `resolveId` hook that resolved this module, the [`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) option, or eventually default to `true`. The `transform` hook can override this.
+如果 `moduleSideEffects` 返回 `false`，并且没有其他模块从该模块导入任何内容，则即使该模块具有副作用，该模块也不会包含在捆绑包中。如果返回 `true`，则 Rollup 将使用其默认算法包含模块中具有副作用的所有语句（例如修改全局或导出变量）。如果返回 `"no-treeshake"`，则将关闭此模块的摇树优化，并且即使该模块为空，也将在生成的块之一中包含它。如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由第一个解析此模块的 `resolveId` 钩子，[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `true` 确定。`transform` 钩子可以覆盖此设置。
 
-`assertions` contain the import assertions that were used when this module was imported. At the moment, they do not influence rendering for bundled modules but rather serve documentation purposes. If `null` is returned or the flag is omitted, then `assertions` will be determined by the first `resolveId` hook that resolved this module, or the assertions present in the first import of this module. The `transform` hook can override this.
+`assertions` 包含导入此模块时使用的导入断言。目前，它们不会影响捆绑模块的呈现，而是用于文档目的。如果返回 `null` 或省略标志，则 `assertions` 将由第一个解析此模块的 `resolveId` 钩子或此模块的第一个导入中存在的断言确定。`transform` 钩子可以覆盖此设置。
 
-See [synthetic named exports](#synthetic-named-exports) for the effect of the `syntheticNamedExports` option. If `null` is returned or the flag is omitted, then `syntheticNamedExports` will be determined by the first `resolveId` hook that resolved this module or eventually default to `false`. The `transform` hook can override this.
+有关 `syntheticNamedExports` 选项的影响，请参见 [合成命名导出](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将由第一个解析此模块的 `resolveId` 钩子确定，或者最终默认为 `false`。`transform` 钩子可以覆盖此设置。
 
-See [custom module meta-data](#custom-module-meta-data) for how to use the `meta` option. If a `meta` object is returned by this hook, it will be merged shallowly with any `meta` object returned by the resolveId hook. If no hook returns a `meta` object it will default to an empty object. The `transform` hook can further add or replace properties of this object.
+有关如何使用 `meta` 选项的 [自定义模块元数据](#custom-module-meta-data)。如果此钩子返回 `meta` 对象，则该对象将与 `resolveId` 钩子返回的任何 `meta` 对象浅合并。如果没有钩子返回 `meta` 对象，则默认为一个空对象。`transform` 钩子可以进一步添加或替换该对象的属性。
 
-You can use [`this.getModuleInfo`](#this-getmoduleinfo) to find out the previous values of `assertions`, `meta`, `moduleSideEffects` and `syntheticNamedExports` inside this hook.
-
-### moduleParsed
+您可以使用 [`this.getModuleInfo`](#this-getmoduleinfo) 在此钩子中查找 `assertions`、`meta`、`moduleSideEffects` 和 `syntheticNamedExports` 的先前值。
 
 |  |  |
-| --: | :-- |
-| Type: | `(moduleInfo: ModuleInfo) => void` |
-| Kind: | async, parallel |
-| Previous: | [`transform`](#transform) where the currently handled file was transformed |
-| Next: | [`resolveId`](#resolveid) and [`resolveDynamicImport`](#resolvedynamicimport) to resolve all discovered static and dynamic imports in parallel if present, otherwise [`buildEnd`](#buildend) |
+| --- | --- |
+| 类型： | `(moduleInfo: ModuleInfo) => void` |
+| 类别： | 异步，并行 |
+| 前置钩子： | [`transform`](#transform)，当前处理的文件已被转换 |
+| 后置钩子： | [`resolveId`](#resolveid) 和 [`resolveDynamicImport`](#resolvedynamicimport)，并行解析所有已发现的静态和动态导入，如果存在，否则为 [`buildEnd`](#buildend) |
 
-This hook is called each time a module has been fully parsed by Rollup. See [`this.getModuleInfo`](#this-getmoduleinfo) for what information is passed to this hook.
+每次 Rollup 完全解析模块后都会调用此钩子。有关传递给此钩子的信息，请参见 [`this.getModuleInfo`](#this-getmoduleinfo)。
 
-In contrast to the [`transform`](#transform) hook, this hook is never cached and can be used to get information about both cached and other modules, including the final shape of the `meta` property, the `code` and the `ast`.
+与 [`transform`](#transform) 钩子不同，此钩子永远不会被缓存，并且可用于获取有关缓存和其他模块的信息，包括 `meta` 属性、`code` 和 `ast` 的最终形状。
 
-This hook will wait until all imports are resolved so that the information in `moduleInfo.importedIds`, `moduleInfo.dynamicallyImportedIds`, `moduleInfo.importedIdResolutions`, and `moduleInfo.dynamicallyImportedIdResolutions` is complete and accurate. Note however that information about importing modules may be incomplete as additional importers could be discovered later. If you need this information, use the [`buildEnd`](#buildend) hook.
+此钩子将等待直到所有导入都解析完毕，以便 `moduleInfo.importedIds`、`moduleInfo.dynamicallyImportedIds`、`moduleInfo.importedIdResolutions` 和 `moduleInfo.dynamicallyImportedIdResolutions` 中的信息是完整和准确的。但是请注意，导入模块的信息可能不完整，因为稍后可能会发现其他导入者。如果需要这些信息，请使用 [`buildEnd`](#buildend) 钩子。
 
-### options
+### 选项
 
-|           |                                                   |
-| --------: | :------------------------------------------------ |
-|     Type: | `(options: InputOptions) => InputOptions \| null` |
-|     Kind: | async, sequential                                 |
-| Previous: | This is the first hook of the build phase         |
-|     Next: | [`buildStart`](#buildstart)                       |
+|            |                                             |
+| ---------: | :------------------------------------------ | ----- |
+|     类型： | `(options: InputOptions) => InputOptions \  | null` |
+|     类别： | 异步，顺序执行                              |
+| 前置钩子： | 这是构建阶段的第一个钩子                    |
+| 后置钩子： | [`buildStart`](#buildstart)                 |
 
-Replaces or manipulates the options object passed to `rollup.rollup`. Returning `null` does not replace anything. If you just need to read the options, it is recommended to use the [`buildStart`](#buildstart) hook as that hook has access to the options after the transformations from all `options` hooks have been taken into account.
+替换或操作传递给 `rollup.rollup` 的选项对象。返回 `null` 不会替换任何内容。如果只需要读取选项，则建议使用 [`buildStart`](#buildstart) 钩子，因为该钩子可以访问所有 `options` 钩子的转换考虑后的选项。
 
-This is the only hook that does not have access to most [plugin context](#plugin-context) utility functions as it is run before rollup is fully configured.
+这是唯一一个没有访问大多数 [插件上下文](#plugin-context) 实用函数的钩子，因为它在 Rollup 完全配置之前运行。
 
 ### resolveDynamicImport
 
 |  |  |
-| --: | :-- |
-| Type: | `ResolveDynamicImportHook` |
-| Kind: | async, first |
-| Previous: | [`moduleParsed`](#moduleparsed) for the importing file |
-| Next: | [`load`](#load) if the hook resolved with an id that has not yet been loaded, [`resolveId`](#resolveid) if the dynamic import contains a string and was not resolved by the hook, otherwise [`buildEnd`](#buildend) |
+| --- | --- |
+| 类型： | `ResolveDynamicImportHook` |
+| 类别： | 异步，第一次 |
+| 前置钩子： | 导入文件的 [`moduleParsed`](#moduleparsed) 钩子 |
+| 后置钩子： | 如果钩子解析出尚未加载的 id，则为 [`load`](#load)，如果动态导入包含字符串并且未被钩子解析，则为 [`resolveId`](#resolveid)，否则为 [`buildEnd`](#buildend) |
 
 ```typescript
 type ResolveDynamicImportHook = (
@@ -370,32 +343,32 @@ type ResolveDynamicImportHook = (
 
 ::: tip
 
-The return type **ResolveIdResult** is the same as that of the [`resolveId`](#resolveid) hook.
+返回类型 **ResolveIdResult** 与 [`resolveId`](#resolveid) 钩子相同。
 
 :::
 
-Defines a custom resolver for dynamic imports. Returning `false` signals that the import should be kept as it is and not be passed to other resolvers thus making it external. Similar to the [`resolveId`](#resolveid) hook, you can also return an object to resolve the import to a different id while marking it as external at the same time.
+为动态导入定义自定义解析器。返回 `false` 表示应将导入保留，不要传递给其他解析器，从而使其成为外部导入。与 [`resolveId`](#resolveid) 钩子类似，您还可以返回一个对象，将导入解析为不同的 id，同时将其标记为外部导入。
 
-`assertions` tells you which import assertions were present in the import. I.e. `import("foo", {assert: {type: "json"}})` will pass along `assertions: {type: "json"}`.
+`assertions` 告诉您导入中存在哪些导入断言。即 `import("foo", {assert: {type: "json"}})` 将传递 `assertions: {type: "json"}`。
 
-In case a dynamic import is passed a string as argument, a string returned from this hook will be interpreted as an existing module id while returning `null` will defer to other resolvers and eventually to `resolveId` .
+如果动态导入作为字符串参数传递，则从此钩子返回的字符串将被解释为现有模块 id，而返回 `null` 将推迟到其他解析器，最终到达 `resolveId`。
 
-In case a dynamic import is not passed a string as argument, this hook gets access to the raw AST nodes to analyze and behaves slightly different in the following ways:
+如果动态导入未传递字符串作为参数，则此钩子可以访问原始 AST 节点以进行分析，并以以下方式略有不同：
 
-- If all plugins return `null`, the import is treated as `external` without a warning.
-- If a string is returned, this string is _not_ interpreted as a module id but is instead used as a replacement for the import argument. It is the responsibility of the plugin to make sure the generated code is valid.
-- To resolve such an import to an existing module, you can still return an object `{id, external}`.
+- 如果所有插件都返回 `null`，则将导入视为 `external`，而不会发出警告。
+- 如果返回字符串，则此字符串不会被解释为模块 id，而是用作导入参数的替换。插件有责任确保生成的代码有效。
+- 要将此类导入解析为现有模块，仍然可以返回对象 `{id，external}`。
 
-Note that the return value of this hook will not be passed to `resolveId` afterwards; if you need access to the static resolution algorithm, you can use [`this.resolve(source, importer)`](#this-resolve) on the plugin context.
+请注意，此钩子的返回值不会传递给 `resolveId`；如果需要访问静态解析算法，则可以在插件上下文中使用 [`this.resolve(source, importer)`](#this-resolve)。
 
 ### resolveId
 
 |  |  |
 | --: | :-- |
-| Type: | `ResolveIdHook` |
-| Kind: | async, first |
-| Previous: | [`buildStart`](#buildstart) if we are resolving an entry point, [`moduleParsed`](#moduleparsed) if we are resolving an import, or as fallback for [`resolveDynamicImport`](#resolvedynamicimport). Additionally, this hook can be triggered during the build phase from plugin hooks by calling [`this.emitFile`](#this-emitfile) to emit an entry point or at any time by calling [`this.resolve`](#this-resolve) to manually resolve an id |
-| Next: | [`load`](#load) if the resolved id has not yet been loaded, otherwise [`buildEnd`](#buildend) |
+| 类型: | `ResolveIdHook` |
+| 类别: | 异步，第一个执行的钩子 |
+| 前置钩子: | 如果我们正在解析入口点，则为[`buildStart`](#buildstart)，如果我们正在解析导入，则为[`moduleParsed`](#moduleparsed)，否则作为[`resolveDynamicImport`](#resolvedynamicimport)的后备。此外，此钩子可以通过调用[`this.emitFile`](#this-emitfile)来在构建阶段的插件钩子中触发以发出入口点，或随时调用[`this.resolve`](#this-resolve)手动解析 id。 |
+| 后置钩子: | 如果尚未加载解析的 id，则为[`load`](#load)，否则为[`buildEnd`](#buildend)。 |
 
 ```typescript
 type ResolveIdHook = (
@@ -421,23 +394,22 @@ interface PartialResolvedId {
 }
 ```
 
-Defines a custom resolver. A resolver can be useful for e.g. locating third-party dependencies. Here `source` is the importee exactly as it is written in the import statement, i.e. for
+定义一个自定义解析器。解析器可以用于定位第三方依赖项等。这里的 `source` 就是导入语句中的导入目标，例如：
 
 ```js
 import { foo } from '../bar.js';
 ```
 
-the source will be `"../bar.js"`.
+这个 source 的路径是 `"../bar.js"`.
 
-The `importer` is the fully resolved id of the importing module. When resolving entry points, importer will usually be `undefined`. An exception here are entry points generated via [`this.emitFile`](#this-emitfile) as here, you can provide an `importer` argument.
+`importer` 是导入模块的完全解析的 id。在解析入口点时，`importer` 通常为 `undefined`。这里的一个例外是通过 [`this.emitFile`](#this-emitfile) 生成的入口点，这里可以提供一个 `importer` 参数。
 
-For those cases, the `isEntry` option will tell you if we are resolving a user defined entry point, an emitted chunk, or if the `isEntry` parameter was provided for the [`this.resolve`](#this-resolve) context function.
+对于这些情况，`isEntry` 选项将告诉您我们正在解析用户定义的入口点、已发出的块，还是是否为 [`this.resolve`](#this-resolve) 上下文函数提供了 `isEntry` 参数。
 
-You can use this for instance as a mechanism to define custom proxy modules for entry points. The following plugin will proxy all entry points to inject a polyfill import.
+例如，您可以将其用作为入口点定义自定义代理模块的机制。以下插件将所有入口点代理到注入 polyfill 导入的模块中。
 
 ```js
-// We prefix the polyfill id with \0 to tell other plugins not to try to load or
-// transform it
+// 我们在 polyfill id 前面加上 \0，以告诉其他插件不要尝试加载或转换它
 const POLYFILL_ID = '\0polyfill';
 const PROXY_SUFFIX = '?inject-polyfill-proxy';
 
@@ -446,58 +418,39 @@ function injectPolyfillPlugin() {
 		name: 'inject-polyfill',
 		async resolveId(source, importer, options) {
 			if (source === POLYFILL_ID) {
-				// It is important that side effects are always respected
-				// for polyfills, otherwise using
-				// "treeshake.moduleSideEffects: false" may prevent the
-				// polyfill from being included.
+				// 确保 polyfill 的副作用始终被考虑，否则使用“treeshake.moduleSideEffects: false”可能会阻止 polyfill 被包含
 				return { id: POLYFILL_ID, moduleSideEffects: true };
 			}
 			if (options.isEntry) {
-				// Determine what the actual entry would have been. We need
-				// "skipSelf" to avoid an infinite loop.
+				// 确定实际的入口点是什么。我们需要“skipSelf”来避免无限循环
 				const resolution = await this.resolve(source, importer, {
 					skipSelf: true,
 					...options
 				});
-				// If it cannot be resolved or is external, just return it
-				// so that Rollup can display an error
+				// 如果无法解析或是外部引用，则直接返回，以便 Rollup 可以显示错误
 				if (!resolution || resolution.external) return resolution;
-				// In the load hook of the proxy, we need to know if the
-				// entry has a default export. There, however, we no longer
-				// have the full "resolution" object that may contain
-				// meta-data from other plugins that is only added on first
-				// load. Therefore we trigger loading here.
+				// 在代理的加载钩子中，我们需要知道入口点是否有默认导出。然而，我们不再拥有完整的“resolution”对象，该对象可能包含来自其他插件的元数据，这些元数据仅在第一次加载时添加。因此，我们在此处触发加载
 				const moduleInfo = await this.load(resolution);
-				// We need to make sure side effects in the original entry
-				// point are respected even for
-				// treeshake.moduleSideEffects: false. "moduleSideEffects"
-				// is a writable property on ModuleInfo.
+				// 我们需要确保原始入口点中的副作用即使对于 treeshake.moduleSideEffects: false 也要被考虑。 “moduleSideEffects”是 ModuleInfo 上的可写属性。
 				moduleInfo.moduleSideEffects = true;
-				// It is important that the new entry does not start with
-				// \0 and has the same directory as the original one to not
-				// mess up relative external import generation. Also
-				// keeping the name and just adding a "?query" to the end
-				// ensures that preserveModules will generate the original
-				// entry name for this entry.
+				// 重要的是，新的入口点不以 \0 开头，并且与原始入口点具有相同的目录，以避免破坏相对外部引用的生成。同时保留名称并仅在末尾添加一个“?query”确保 preserveModules 为此入口点生成原始入口点名称。
 				return `${resolution.id}${PROXY_SUFFIX}`;
 			}
 			return null;
 		},
 		load(id) {
 			if (id === POLYFILL_ID) {
-				// Replace with actual polyfill
+				// 用实际的 polyfill 替换
 				return "console.log('polyfill');";
 			}
 			if (id.endsWith(PROXY_SUFFIX)) {
 				const entryId = id.slice(0, -PROXY_SUFFIX.length);
-				// We know ModuleInfo.hasDefaultExport is reliable because
-				// we awaited this.load in resolveId
+				// 我们知道 ModuleInfo.hasDefaultExport 是可靠的，因为我们在 resolveId 中等待了 this.load
 				const { hasDefaultExport } = this.getModuleInfo(entryId);
 				let code =
 					`import ${JSON.stringify(POLYFILL_ID)};` +
 					`export * from ${JSON.stringify(entryId)};`;
-				// Namespace reexports do not reexport default, so we need
-				// special handling here
+				// 命名空间重新导出不会重新导出默认值，因此我们需要特殊处理
 				if (hasDefaultExport) {
 					code += `export { default } from ${JSON.stringify(entryId)};`;
 				}
