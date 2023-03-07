@@ -1,38 +1,38 @@
 ---
-title: Tutorial
+title: 教程
 ---
 
 # {{ $frontmatter.title }}
 
 [[toc]]
 
-## Creating Your First Bundle
+## 开始你的第一次打包 {#creating-your-first-bundle}
 
-_Before we begin, you'll need to have [Node.js](https://nodejs.org) installed so that you can use [NPM](https://npmjs.com). You'll also need to know how to access the [command line](https://www.codecademy.com/learn/learn-the-command-line) on your machine._
+_在开始之前，你需要安装 [Node.js](https://nodejs.org) 以便使用 [NPM](https://npmjs.com)。你还需要知道如何在你的机器上访问 [命令行](https://www.codecademy.com/learn/learn-the-command-line)。_
 
-The easiest way to use Rollup is via the Command Line Interface (or CLI). For now, we'll install it globally (later on we'll learn how to install it locally to your project so that your build process is portable, but don't worry about that yet). Type this into the command line:
+目前使用 Rollup 最简单的方法是通过命令行界面（CLI）操作。现在，我们将全局安装它（稍后我们将学习如何将它安装到你的项目中，以便你的构建过程具有可移植性，但暂时不用担心这个）。在命令行中输入以下内容：
 
 ```shell
 npm install rollup --global
 # or `npm i rollup -g` for short
 ```
 
-You can now run the `rollup` command. Try it!
+你现在可以运行 `rollup` 命令了， 试一试吧！
 
 ```shell
 rollup
 ```
 
-Because no arguments were passed, Rollup prints usage instructions. This is the same as running `rollup --help`, or `rollup -h`.
+因为没有传入参数，Rollup 会打印出使用说明。这和运行 `rollup --help`，或者 `rollup -h` 相同。
 
-Let's create a simple project:
+让我们创建一个简单的项目：
 
 ```shell
 mkdir -p my-rollup-project/src
 cd my-rollup-project
 ```
 
-First, we need an _entry point_. Paste this into a new file called `src/main.js`:
+首先，我们需要一个 _入口_。将这段代码复制到一个名为 `src/main.js` 的新文件中：
 
 ```js
 // src/main.js
@@ -42,20 +42,20 @@ export default function () {
 }
 ```
 
-Then, let's create the `foo.js` module that our entry point imports:
+接下来，让我们创建一个名为 `foo.js` 的模块，它在入口文件中被导入：
 
 ```js
 // src/foo.js
 export default 'hello world!';
 ```
 
-Now we're ready to create a bundle:
+现在我们已经准备好进行一次打包：
 
 ```shell
 rollup src/main.js -f cjs
 ```
 
-The `-f` option (short for `--format`) specifies what kind of bundle we're creating — in this case, CommonJS (which will run in Node.js). Because we didn't specify an output file, it will be printed straight to `stdout`:
+`-f` 选项 (是 `--format` 的缩写) 指定了产物的类型 — 在本例中是 CommonJS (可以在 Node.js 中运行)。 因为我们没有指定输出文件，所以它将直接打印到 `stdout`：
 
 ```js
 'use strict';
@@ -69,15 +69,15 @@ const main = function () {
 module.exports = main;
 ```
 
-You can save the bundle as a file like so:
+你也可以像这样将产物保存为文件：
 
 ```shell
 rollup src/main.js -o bundle.js -f cjs
 ```
 
-(You could also do `rollup src/main.js -f cjs > bundle.js`, but as we'll see later, this is less flexible if you're generating sourcemaps.)
+(你也可以使用 `rollup src/main.js -f cjs > bundle.js`，但是后面我们会看到，如果你需要生成 sourcemaps 的话，这种方式的灵活性会更低。)
 
-Try running the code:
+尝试运行这段代码：
 
 ```
 node
@@ -86,15 +86,15 @@ node
 'hello world!'
 ```
 
-Congratulations! You've created your first bundle with Rollup.
+恭喜！你已经使用 Rollup 完成了一次打包！
 
-## Using Config Files
+## 使用配置文件 {#using-config-files}
 
-So far, so good, but as we start adding more options it becomes a bit of a nuisance to type out the command.
+到目前为止，一切都很好，但随着我们添加更多选项，输入命令会变得有点麻烦。
 
-To save repeating ourselves, we can create a config file containing all the options we need. A config file is written in JavaScript and is more flexible than the raw CLI.
+为了避免重复输入，我们可以创建一个包含所有必要选项的配置文件。配置文件是用 JavaScript 编写的，比原始的 CLI 更加灵活。
 
-Create a file in the project root called `rollup.config.js`, and add the following code:
+在项目根目录中创建一个名为 `rollup.config.js` 的文件，并添加以下代码：
 
 ```js
 // rollup.config.js
@@ -107,59 +107,59 @@ export default {
 };
 ```
 
-(Note that you can use CJS modules and therefore `module.exports = {/* config */}`)
+(你也可以使用 CJS 模块，例如 `module.exports = {/* config */}`)
 
-To use the config file, we use the `--config` or `-c` flag:
+使用配置文件, 我们使用 `--config` 或者 `-c` ：
 
 ```shell
-rm bundle.js # so we can check the command works!
+rm bundle.js # 删除它我们可以检查命令是否正常！
 rollup -c
 ```
 
-You can override any of the options in the config file with the equivalent command line options:
+你可以使用等效的命令行选项覆盖配置文件中的任何选项：
 
 ```shell
-rollup -c -o bundle-2.js # `-o` is equivalent to `--file` (formerly "output")
+rollup -c -o bundle-2.js # `-o` 等价于 `--file`（曾用名为 "output"）
 ```
 
-_Note: Rollup itself processes the config file, which is why we're able to use `export default` syntax – the code isn't being transpiled with Babel or anything similar, so you can only use ES2015 features that are supported in the version of Node.js that you're running._
+_注意： Rollup 本身会处理配置文件，这就是为什么我们可以使用 `export default` 语法的原因 –  代码没有被 Babel 或任何类似的工具转换，因此你只能使用在你当前使用的 Node 版本中支持的 ES2015 功能。_
 
-You can, if you like, specify a different config file from the default `rollup.config.js`:
+你也可以选择指定不同于默认的 `rollup.config.js` 的配置文件：
 
 ```shell
 rollup --config rollup.config.dev.js
 rollup --config rollup.config.prod.js
 ```
 
-## Installing Rollup locally
+## 本地安装 Rollup {#installing-rollup-locally}
 
-When working within teams or distributed environments it can be wise to add Rollup as a _local_ dependency. Installing Rollup locally prevents the requirement that multiple contributors install Rollup separately as an extra step, and ensures that all contributors are using the same version of Rollup.
+在团队或分布式环境中工作时，将 Rollup 添加为 _本地_ 依赖可能是明智的选择。本地安装 Rollup 可以避免多个贡献者单独安装 Rollup 的额外步骤，并确保所有贡献者使用相同版本的 Rollup。
 
-To install Rollup locally with NPM:
+用 NPM 安装 Rollup 到本地：
 
 ```shell
 npm install rollup --save-dev
 ```
 
-Or with Yarn:
+或者使用 Yarn：
 
 ```shell
 yarn -D add rollup
 ```
 
-After installing, Rollup can be run within the root directory of your project:
+安装完成后, Rollup 可以在项目的根目录中运行：
 
 ```shell
 npx rollup --config
 ```
 
-Or with Yarn:
+或者使用 Yarn：
 
 ```shell
 yarn rollup --config
 ```
 
-Once installed, it's common practice to add a single build script to `package.json`, providing a convenient command for all contributors. e.g.
+安装完成后，通常会在 `package.json` 中添加一个单一的构建脚本，为所有贡献者提供方便的命令。例如：
 
 ```json
 {
@@ -169,17 +169,17 @@ Once installed, it's common practice to add a single build script to `package.js
 }
 ```
 
-_Note: Once installed locally, both NPM and Yarn will resolve the dependency's bin file and execute Rollup when called from a package script._
+_注意： 一旦本地安装完成，当运行脚本命令时，不管是 NPM 还是 Yarn 都可以找到 Rollup 的可执行文件并执行。_
 
-## Using plugins
+## 使用插件 {#using-plugins}
 
-So far, we've created a simple bundle from an entry point and a module imported via a relative path. As you build more complex bundles, you'll often need more flexibility – importing modules installed with NPM, compiling code with Babel, working with JSON files and so on.
+到目前为止，我们已经用入口文件和通过相对路径导入的模块打了一个简单的包。随着你需要打包更复杂的代码，通常需要更灵活的配置，例如导入使用 NPM 安装的模块、使用 Babel 编译代码、处理 JSON 文件等等。
 
-For that, we use _plugins_, which change the behaviour of Rollup at key points in the bundling process. A list of awesome plugins is maintained on [the Rollup Awesome List](https://github.com/rollup/awesome).
+为此，我们使用 _插件_，在捆绑过程的关键点更改 Rollup 的行为。一个很棒的插件列表保存在 [the Rollup Awesome List](https://github.com/rollup/awesome)。
 
-For this tutorial, we'll use [@rollup/plugin-json](https://github.com/rollup/plugins/tree/master/packages/json), which allows Rollup to import data from a JSON file.
+在本教程中，我们将使用 [@rollup/plugin-json](https://github.com/rollup/plugins/tree/master/packages/json)，它允许 Rollup 从 JSON 文件中导入数据。
 
-Create a file in the project root called `package.json`, and add the following content:
+在项目根目录中创建一个名为 `package.json` 的文件，并添加以下内容：
 
 ```json
 {
@@ -191,15 +191,15 @@ Create a file in the project root called `package.json`, and add the following c
 }
 ```
 
-Install @rollup/plugin-json as a development dependency:
+将 @rollup/plugin-json 安装到开发依赖中：
 
 ```shell
 npm install --save-dev @rollup/plugin-json
 ```
 
-(We're using `--save-dev` rather than `--save` because our code doesn't actually depend on the plugin when it runs – only when we're building the bundle.)
+(我们使用 `--save-dev` 而不是 `--save`，因为我们的代码在运行时实际上不依赖于插件，只有在打包时才需要。)
 
-Update your `src/main.js` file so that it imports from your package.json instead of `src/foo.js`:
+更新你的 `src/main.js` 文件，使其从 `package.json` 导入而不是 `src/foo.js`：
 
 ```js
 // src/main.js
@@ -210,7 +210,7 @@ export default function () {
 }
 ```
 
-Edit your `rollup.config.js` file to include the JSON plugin:
+在 `rollup.config.js` 文件中加入 JSON plugin：
 
 ```js
 // rollup.config.js
@@ -226,7 +226,7 @@ export default {
 };
 ```
 
-Run Rollup with `npm run build`. The result should look like this:
+使用 `npm run build` 运行 Rollup。结果应该如下所示：
 
 ```js
 'use strict';
@@ -240,19 +240,19 @@ function main() {
 module.exports = main;
 ```
 
-_Note: Only the data we actually need gets imported – `name` and `devDependencies` and other parts of `package.json` are ignored. That's **tree-shaking** in action._
+_注意： 结果中只导入了我们实际需要的数据 ——`name`、`devDependencies` 和 `package.json` 中其他内容都被忽略了。这就是 **除屑优化** 的作用。_
 
-## Using output plugins
+## 使用输出插件 {#using-output-plugins}
 
-Some plugins can also be applied specifically to some outputs. See [plugin hooks](../plugin-development/index.md#build-hooks) for the technical details of what output-specific plugins can do. In a nut-shell, those plugins can only modify code after the main analysis of Rollup has completed. Rollup will warn if an incompatible plugin is used as an output-specific plugin. One possible use-case is minification of bundles to be consumed in a browser.
+某些插件也可以专门应用于某些输出. 有关特定输出插件可以做什么的详细信息，请参见 [插件钩子](../plugin-development/index.md#build-hooks)。简而言之，这些插件只能在 Rollup 的主要分析完成后修改代码。如果使用不兼容的插件作为特定输出插件，Rollup 将会发出警告。一个可能的用例是压缩产物以在浏览器中使用。
 
-Let us extend the previous example to provide a minified build together with the non-minified one. To that end, we install `@rollup/plugin-terser`:
+让我们扩展上一个示例，提供一个最小化的构建和一个非最小化的构建。为此，我们需要安装 `@rollup/plugin-terser`：
 
 ```shell
 npm install --save-dev @rollup/plugin-terser
 ```
 
-Edit your `rollup.config.js` file to add a second minified output. As format, we choose `iife`. This format wraps the code so that it can be consumed via a `script` tag in the browser while avoiding unwanted interactions with other code. As we have an export, we need to provide the name of a global variable that will be created by our bundle so that other code can access our export via this variable.
+编辑你的 `rollup.config.js` 文件，添加另一个最小化压缩的输出。我们选择 `iife` 作为格式。该格式会将代码封装起来，以便可以通过浏览器中的 `script` 标签使用，同时避免与其他代码产生不必要的交互。由于设置了一个导出，因此我们需要提供一个全局变量的名称，该变量将由我们的产物创建，以便其他代码可以通过此变量访问我们的导出。
 
 ```js
 // rollup.config.js
@@ -277,7 +277,7 @@ export default {
 };
 ```
 
-Besides `bundle.js`, Rollup will now create a second file `bundle.min.js`:
+除了 `bundle.js`，Rollup 现在还将创建第二个文件 `bundle.min.js`：
 
 ```js
 var version = (function () {
@@ -289,11 +289,11 @@ var version = (function () {
 })();
 ```
 
-## Code Splitting
+## 代码分割 {#code-splitting}
 
-For code splitting, there are cases where Rollup splits code into chunks automatically, like dynamic loading or multiple entry points, and there is a way to explicitly tell Rollup which modules to split into separate chunks via the [`output.manualChunks`](../configuration-options/index.md#output-manualchunks) option.
+代码分割是指有些情况下 Rollup 会自动将代码拆分成块，例如动态加载或多个入口点，还有一种方法可以显式地告诉 Rollup 将哪些模块拆分成单独的块，这是通过 [`output.manualChunks`](../configuration-options/index.md#output-manualchunks) 选项实现的。
 
-To use the code splitting feature to achieve the lazy dynamic loading (where some imported module(s) is only loaded after executing a function), we go back to the original example and modify `src/main.js` to load `src/foo.js` dynamically instead of statically:
+要使用代码分割功能实现惰性动态加载（其中某些导入的模块仅在执行函数后加载），我们返回到原始示例，并修改 `src/main.js`，以动态加载 `src/foo.js` 而不是静态加载：
 
 ```js
 // src/main.js
@@ -302,21 +302,21 @@ export default function () {
 }
 ```
 
-Rollup will use the dynamic import to create a separate chunk that is only loaded on demand. In order for Rollup to know where to place the second chunk, instead of passing the `--file` option we set a folder to output to with the `--dir` option:
+Rollup 将使用动态导入创建一个仅在需要时加载的单独块。为了让 Rollup 知道在哪里放置第二个块，我们不使用 `--file` 选项，而是使用 `--dir` 选项设置一个输出文件夹：
 
 ```shell
 rollup src/main.js -f cjs -d dist
 ```
 
-This will create a folder `dist` containing two files, `main.js` and `chunk-[hash].js`, where `[hash]` is a content based hash string. You can supply your own naming patterns by specifying the [`output.chunkFileNames`](../configuration-options/index.md#output-chunkfilenames) and [`output.entryFileNames`](../configuration-options/index.md#output-entryfilenames) options.
+这将创建一个名为 `dist` 的文件夹，其中包含两个文件，`main.js` 和 `chunk-[hash].js`, 其中 `[hash]` 是基于内容的哈希字符串。您可以通过指定 [`output.chunkFileNames`](../configuration-options/index.md#output-chunkfilenames) 和 [`output.entryFileNames`](../configuration-options/index.md#output-entryfilenames) 选项来提供自己的命名模式。
 
-You can still run your code as before with the same output, albeit a little slower as loading and parsing of `./foo.js` will only commence once we call the exported function for the first time.
+您仍然可以像以前一样运行您的代码，并且具有相同的输出，尽管会慢一些，因为加载和解析 `./foo.js` 仅在我们第一次调用导出的函数时才开始。
 
 ```shell
 node -e "require('./dist/main.js')()"
 ```
 
-If we do not use the `--dir` option, Rollup will again print the chunks to `stdout`, adding comments to highlight the chunk boundaries:
+如果我们不使用 `--dir` 选项，Rollup 将再次将块打印到 `stdout`，并添加注释以突出显示块的边界：
 
 ```js
 //→ main.js:
@@ -338,9 +338,9 @@ var foo = 'hello world!';
 exports.default = foo;
 ```
 
-This is useful if you want to load and parse expensive features only once they are used.
+如果您想要在使用耗时很长的功能之前仅加载和解析它们一次，则此方法非常有用。
 
-A different use for code-splitting is the ability to specify several entry points that share some dependencies. Again we extend our example to add a second entry point `src/main2.js` that statically imports `src/foo.js` just like we did in the original example:
+代码分割的另一个用途是能够指定共享一些依赖项的多个入口点。我们再次扩展我们的示例，添加一个名为 `src/main2.js` 的第二个入口点，它静态导入 `src/foo.js`，就像我们在原始示例中所做的那样：
 
 ```js
 // src/main2.js
@@ -350,13 +350,13 @@ export default function () {
 }
 ```
 
-If we supply both entry points to rollup, three chunks are created:
+如果我们给 Rollup 提供了两个入口，那么会创建三个块：
 
 ```shell
 rollup src/main.js src/main2.js -f cjs
 ```
 
-will output
+输出为
 
 ```js
 //→ main.js:
@@ -389,11 +389,11 @@ var foo = 'hello world!';
 exports.default = foo;
 ```
 
-Notice how both entry points import the same shared chunk. Rollup will never duplicate code and instead create additional chunks to only ever load the bare minimum necessary. Again, passing the `--dir` option will write the files to disk.
+请注意两个入口点都导入了相同的共享块。Rollup 永远不会复制代码，而是创建额外的块，仅加载必要的最少量。同样，通过传递 `--dir` 选项，将文件写入磁盘。
 
-You can build the same code for the browser via native ES modules, an AMD loader or SystemJS.
+你可以通过原生的 ES 模块、AMD 加载器或 SystemJS，为浏览器构建相同的代码。
 
-For example, with `-f es` for native modules:
+例如，使用 `-f es` 选项进行原生模块构建：
 
 ```shell
 rollup src/main.js src/main2.js -f es -d dist
@@ -407,19 +407,19 @@ rollup src/main.js src/main2.js -f es -d dist
 </script>
 ```
 
-Or alternatively, for SystemJS with `-f system`:
+或者，使用 `-f system` 选项进行 SystemJS 构建：
 
 ```shell
 rollup src/main.js src/main2.js -f system -d dist
 ```
 
-Install SystemJS via
+通过以下方式安装 SystemJS
 
 ```shell
 npm install --save-dev systemjs
 ```
 
-And then load either or both entry points in an HTML page as needed:
+然后根据需要在 HTML 页面中加载一个或两个入口点：
 
 ```html
 <!DOCTYPE html>
@@ -429,4 +429,4 @@ And then load either or both entry points in an HTML page as needed:
 </script>
 ```
 
-See [rollup-starter-code-splitting](https://github.com/rollup/rollup-starter-code-splitting) for an example on how to set up a web app that uses native ES modules on browsers that support them with a fallback to SystemJS if necessary.
+请参考 [rollup-starter-code-splitting](https://github.com/rollup/rollup-starter-code-splitting) 示例，了解如何在支持原生 ES 模块的浏览器上设置使用它们的 Web 应用程序，并在必要时回退到 SystemJS。
