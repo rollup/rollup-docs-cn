@@ -1,82 +1,82 @@
 ---
-title: Troubleshooting
+title: 故障排除
 ---
 
 # {{ $frontmatter.title }}
 
 [[toc]]
 
-If you get stuck, please try discussing the issue on the [Rollup Discord](https://is.gd/rollup_chat) or posting a question to [Stackoverflow](https://stackoverflow.com/questions/tagged/rollupjs). If you've found a bug, or Rollup can't meet your needs, please try [raising an issue](https://github.com/rollup/rollup/issues). Lastly, you may try contacting [@RollupJS](https://twitter.com/RollupJS) on Twitter.
+如果您遇到困难，请尝试在 [Rollup Discord](https://is.gd/rollup_chat) 上讨论该问题或将问题发布到 [Stackoverflow](https://stackoverflow.com/questions/tagged/rollupjs). 如果您发现了 bug， 或者 Rollup 不能满足你的需求， 可以尝试提 [issue](https://github.com/rollup/rollup/issues)。最后，您可以尝试在 Twitter 上联系 [@RollupJS](https://twitter.com/RollupJS) 。
 
-## Avoiding `eval`
+## 避免使用 `eval` {#avoiding-eval}
 
-You probably already know that '`eval` is evil', at least according to some people. But it's particularly harmful with Rollup, because of how it works – unlike other module bundlers, which wrap each module in a function, Rollup puts all your code in the same scope.
+您可能已经了解到在某些人看来“`eval` 是邪恶的”。但它对 Rollup 尤其有害，因为它的工作方式——不像其他将每个模块包装在函数中的模块打包器，Rollup 将所有代码放在同一个作用域内。
 
-That's more efficient, but it means that the shared scope is 'polluted' whenever you use `eval`, whereas with a different bundler, modules that _didn't_ use eval would not be polluted. A minifier can't mangle variable names in polluted code, because it can't guarantee that the code to be evaluated doesn't reference those variable names.
+虽然这样效率更高，但这意味着在您使用 eval 时共享作用域将被“污染”，而使用其他打包器时，未使用 eval 的模块不会被污染。压缩工具不能破坏污染代码中的变量名，因为它不能保证要评估的代码不引用这些变量名。
 
-Furthermore, **it poses a security risk** in that a malicious module could access another module's private variables with `eval('SUPER_SEKRIT')`.
+此外，**它还会带来安全风险**，因为恶意模块可能通过 `eval('SUPER_SEKRIT')` 访问另一个模块的私有变量。
 
-Luckily, unless you _really do_ intend for the evaluated code to have access to local variables (in which case you're probably doing something wrong!), you can achieve the same effect in one of two ways:
+幸运的是，除非你真的希望被执行的代码能够访问局部变量（这种情况下，你应该是错了什么！），否则可以通过以下两种方式实现相同的效果：
 
-### eval2 = eval
+### eval2 = eval {#eval2-eval}
 
-Simply 'copying' `eval` provides you with a function that does exactly the same thing, but which runs in the global scope rather than the local one:
+简单地“复制” `eval`，你的确可以得到一个可以完成相同事情的函数，但是它运行在全局作用域而不是局部作用域：
 
 ```js
 var eval2 = eval;
 
 (function () {
 	var foo = 42;
-	eval('console.log("with eval:",foo)'); // logs 'with eval: 42'
-	eval2('console.log("with eval2:",foo)'); // throws ReferenceError
+	eval('console.log("with eval:",foo)'); // 打印 'with eval: 42'
+	eval2('console.log("with eval2:",foo)'); // 抛出 ReferenceError
 })();
 ```
 
-### `new Function`
+### `new Function` {#new-function}
 
-Using the [Function constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function) generates a function from the supplied string. Again, it runs in the global scope. If you need to call the function repeatedly, this is much, _much_ faster than using `eval`.
+使用 [Function 构造函数](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function) 可以根据提供的字符串生成一个函数。同样，它运行在全局作用域中。如果需要重复调用函数，这要比使用`eval`快得多得多。
 
-## Tree-shaking doesn't seem to be working
+## 除屑优化（Tree-Shaking）似乎不能正常工作 {#tree-shaking-does-not-seem-to-be-working}
 
-Sometimes, you'll end up with code in your bundle that doesn't seem like it should be there. For example, if you import a utility from `lodash-es`, you might expect that you'll get the bare minimum of code necessary for that utility to work.
+有时，你会在打包文件中发现一些看起来不应该存在的代码。例如，如果你从 `lodash-es` 导入一个实用函数，你可能希望得到该实用函数工作所需的最低限度的代码。
 
-But Rollup has to be conservative about what code it removes in order to guarantee that the end result will run correctly. If an imported module appears to have _side effects_, either on bits of the module that you're using or on the global environment, Rollup plays it safe and includes those side effects.
+但是 Rollup 必须对它删除的代码保持保守，以确保最终结果将正确运行。如果导入的模块有副作用，无论是对你正在使用的模块中的某些部分还是对全局环境，Rollup 都会平安无事地处理这些副作用。
 
-Because static analysis in a dynamic language like JavaScript is hard, there will occasionally be false positives. Lodash is a good example of a module that _looks_ like it has lots of side effects, even in places that it doesn't. You can often mitigate those false positives by importing submodules (e.g. `import map from 'lodash-es/map'` rather than `import { map } from 'lodash-es'`).
+因为在像 JavaScript 这样的动态语言中进行静态分析是困难的，所以偶尔会有误报。Lodash 就是一个很好的例子，它看起来有很多副作用，即使在没有副作用的地方。你通常可以通过导入子模块（例如:`import map from 'lodash-es/map'`而不是`import {map} from 'lodash-es'`）。
 
-Rollup's static analysis will improve over time, but it will never be perfect in all cases – that's just JavaScript.
+Rollup 的静态分析将随着时间的推移而改进，但它永远不会在所有情况下都是完美的——这就是 JavaScript。
 
-## Error: "[name] is not exported by [module]"
+## Error: "[name] is not exported by [module]" {#error-name-is-not-exported-by-module}
 
-Occasionally you will see an error message like this:
+偶尔你会看见这样一条错误信息：
 
 > 'foo' is not exported by bar.js (imported by baz.js)
 
-Import declarations must have corresponding export declarations in the imported module. For example, if you have `import a from './a.js'` in a module, and a.js doesn't have an `export default` declaration, or `import {foo} from './b.js'`, and b.js doesn't export `foo`, Rollup cannot bundle the code.
+导入声明必须在被导入的模块中有相应的导出声明。例如，如果你在一个模块中有 `import a from './a.js'`，而 a.js 没有 `export default` 声明，或者 `import {foo} from './b.js'`，而 b.js 没有导出 `foo`，那么 Rollup 就不能打包这些代码。
 
-This error frequently occurs with CommonJS modules converted by [rollup-plugin-commonjs](https://github.com/rollup/rollup-plugin-commonjs), this package has been deprecated and is no longer maintained. Please use [@rollup/plugin-commonjs](https://github.com/rollup/plugins/tree/master/packages/commonjs#custom-named-exports).
+此错误经常发生在由 [rollup-plugin-commonjs](https://github.com/rollup/rollup-plugin-commonjs) 转换的 CommonJS 模块中，此包已被弃用，且不再维护，请使用 [@rollup/plugin-commonjs](https://github.com/rollup/plugins/tree/master/packages/commonjs#custom-named-exports)。
 
-## Error: "this is undefined"
+## Error: "this is undefined" {#error-this-is-undefined}
 
-In a JavaScript module, `this` is `undefined` at the top level (i.e., outside functions). Because of that, Rollup will rewrite any `this` references to `undefined` so that the resulting behaviour matches what will happen when modules are natively supported.
+在 JavaScript 模块中，`this` 在顶层（即函数外部）是 `undefined`。因此，Rollup 将重写任何对 `undefined` 的 `this` 引用，以便产生的行为与原生支持模块时发生的行为相匹配。
 
-There are occasional valid reasons for `this` to mean something else. If you're getting errors in your bundle, you can use `options.context` and `options.moduleContext` to change this behaviour.
+偶尔也有正当的理由让 `this` 有别的意思。如果你在你的包中遇到错误，你可以使用 `options.context` 和 `options.moduleContext` 来改变这种行为。
 
-## Warning: "Sourcemap is likely to be incorrect"
+## Warning: "Sourcemap is likely to be incorrect" {#warning-sourcemap-is-likely-to-be-incorrect}
 
-You'll see this warning if you generate a sourcemap with your bundle (`sourcemap: true` or `sourcemap: 'inline'`) but you're using one or more plugins that transformed code without generating a sourcemap for the transformation.
+如果你为你的包（`sourcemap: true`或`sourcemap: 'inline'`）生成了一个 sourcemap，但你使用了一个或多个转换代码的插件，而没有生成转换所需的 sourcemap，你会看到这个警告。
 
-Usually, a plugin will only omit the sourcemap if it (the plugin, not the bundle) was configured with `sourcemap: false` – so all you need to do is change that. If the plugin doesn't generate a sourcemap, consider raising an issue with the plugin author.
+通常，只有当插件（而不是打包器）配置了 `sourcemap: false` 时，插件才会省略 sourcemap——所以你所需要做的就是更改它。如果插件没有生成 sourcemap，请考虑向插件作者提出问题。
 
-## Warning: "Treating [module] as external dependency"
+## Warning: "Treating [module] as external dependency" {#warning-treating-module-as-external-dependency}
 
-Rollup will only resolve _relative_ module IDs by default. This means that an import statement like this…
+默认情况下，Rollup 只解析相对模块。这意味着像这样的 import 语句
 
 ```js
 import moment from 'moment';
 ```
 
-…won't result in `moment` being included in your bundle – instead, it will be an external dependency that is required at runtime. If that's what you want, you can suppress this warning with the `external` option, which makes your intentions explicit:
+不会导致 `moment` 被打包到你的包中——相反，它将是运行时需要的外部依赖项。如果这就是你想要的，你可以用 `external` 选项消除这个警告，这会让你的意图更加明确:
 
 ```js
 // rollup.config.js
@@ -84,17 +84,17 @@ export default {
 	entry: 'src/index.js',
 	dest: 'bundle.js',
 	format: 'cjs',
-	external: ['moment'] // <-- suppresses the warning
+	external: ['moment'] // <-- 消除这个警告
 };
 ```
 
-If you _do_ want to include the module in your bundle, you need to tell Rollup how to find it. In most cases, this is a question of using [@rollup/plugin-node-resolve](https://github.com/rollup/plugins/tree/master/packages/node-resolve).
+如果你确实想在打包后的代码中包含这个模块，需要告诉 Rollup 如何找到它。大多数情况下，你可以使用 [@rollup/plugin-node-resolve](https://github.com/rollup/plugins/tree/master/packages/node-resolve)
 
-Some modules, like `events` or `util`, are built in to Node.js. If you want to include those (for example, so that your bundle runs in the browser), you may need to include [rollup-plugin-polyfill-node](https://github.com/FredKSchott/rollup-plugin-polyfill-node).
+有些模块，如 `events` 或 `util`，是内置在 Node.js 中的。如果你想要包含它们（例如，让你的包在浏览器中运行），你可能需要使用 [rollup-plugin-polyfill-node](https://github.com/FredKSchott/rollup-plugin-polyfill-node)
 
-## Error: "EMFILE: too many open files"
+## Error: "EMFILE: too many open files" {#error-emfile-too-many-open-files}
 
-For large projects, you may run into an EMFILE error when running Rollup in watch mode on macOS. If you experience this, disabling FSEvents may eliminate the problem:
+对于大型项目，在 macOS 上以监视模式运行 Rollup 时可能会遇到 EMFILE 错误。如果你遇到这种情况，禁用 FSEvents 可能会消除问题：
 
 ```js
 // rollup.config.js
@@ -108,18 +108,18 @@ export default {
 };
 ```
 
-## Error: JavaScript heap out of memory
+## Error: JavaScript heap out of memory {#error:-javascript-heap-out-of-memory}
 
-As Rollup needs to keep all module information in memory simultaneously to be able to analyze relevant side effects for tree-shaking, it is possible that bundling large projects reaches Node's memory limit. If this happens, it can help to increase this limit by running Rollup via
+由于 Rollup 需要同时将所有模块信息保存在内存中，以便分析除屑优化（Tree-Shaking）的相关副作用，因此打包大型项目可能会达到 Node 的内存限制。如果发生这种情况，你可以通过这种方式运行 Rollup 以提高这个限制
 
 ```shell
 node --max-old-space-size=8192 node_modules/rollup/dist/bin/rollup -c
 ```
 
-increasing `--max-old-space-size` as needed. Note that this number can safely surpass your available physical memory. In that case, Node will start paging memory to disk as needed.
+按需增加 `--max-old-space-size` 。请注意，这个数字可以安全地超过你的可用物理内存。在这种情况下，Node 会根据需要将内存分页到磁盘上。
 
-You may reduce memory pressure by introducing code splitting by using dynamic imports, importing just specific modules rather than whole dependencies, disabling sourcemaps, or increasing the size of your swap space.
+你可以通过使用动态导入引入代码分割、只导入特定的模块而不是整个依赖、禁用 sourcemap，或者增加交换空间的大小来减少内存压力。
 
-## Error: Node tried to load your configuration file as CommonJS even though it is likely an ES module
+## Error: Node tried to load your configuration file as CommonJS even though it is likely an ES module {#error-node-tried-to-load-your-configuration-file-as-commonjs-even-though-it-is-likely-an-es-module}
 
-By default, Rollup will use Node's native module mechanism to load your Rollup configuration. That means if you use ES imports and exports in your configuration, you either need to define `"type": "module"` in your `package.json` file or use the `.mjs` extension for your configuration. See also [Configuration Files](../command-line-interface/index.md#configuration-files) and [Caveats when using native Node ES modules](../command-line-interface/index.md#caveats-when-using-native-node-es-modules) for more information.
+默认情况下，Rollup 会使用 Node 原生的模块机制来加载你的 Rollup 配置。这意味着如果你在配置中使用 ES imports 和 exports，你要么需要在 `package. js` 中定义 `"type": "module"`，或者为你的配置文件使用 `.mjs` 后缀。更多信息请参见 [配置文件](../command-line-interface/index.md#configuration-files) 和 [使用原生 Node ES 模块时的注意事项](../command-line-interface/index.md#caveats-when-using-native-node-es-modules)。
