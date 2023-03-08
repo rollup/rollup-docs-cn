@@ -3,3 +3,4 @@
 
 npx lint-staged
 npm run build:docs
+git add -A

@@ -104,7 +104,7 @@ async function generateOutputs(bundle) {
 }
 ```
 
-### inputOptions object {#inputoptions-object}
+### inputOptions 对象 {#inputoptions-object}
 
 `inputOptions` 对象可以包含以下属性（有关详细信息，请参见[选项大全](../configuration-options/index.md)）：
 
@@ -136,7 +136,7 @@ const inputOptions = {
 };
 ```
 
-### outputOptions object {#outputoptions-object}
+### outputOptions 对象 {#outputoptions-object}
 
 `outputOptions` 对象可以包含以下属性（有关详细信息，请参见[选项大全](../configuration-options/index.md)）：
 

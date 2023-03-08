@@ -1,24 +1,24 @@
 ---
-title: Configuration Options
+title: 配置选项
 ---
 
 # {{ $frontmatter.title }}
 
 [[toc]]
 
-## Core functionality
+## 核心功能 {#core-functionality}
 
 ### external
 
 |  |  |
 | --: | :-- |
-| Type: | `(string \| RegExp)[]\| RegExp\| string\| (id: string, parentId: string, isResolved: boolean) => boolean` |
-| CLI: | `-e`/`--external <external-id,another-external-id,...>` |
+| 类型： | `(string \| RegExp)[]\| RegExp\| string\| (id: string, parentId: string, isResolved: boolean) => boolean` |
+| CLI： | `-e`/`--external <external-id,another-external-id,...>` |
 
-Either a function that takes an `id` and returns `true` (external) or `false` (not external), or an `Array` of module IDs, or regular expressions to match module IDs, that should remain external to the bundle. Can also be just a single ID or regular expression. The matched IDs should be either:
+可以是一个函数，接受一个 `id` 参数并返回 `true`（表示外部依赖）或 `false`（表示非外部依赖），也可以是一个模块 ID 数组或者正则表达式，用于匹配应该保持在打包文件外的模块 ID。也可以只是一个单独的 ID 或正则表达式。被匹配的 ID 应该是：
 
-1. the name of an external dependency, exactly the way it is written in the import statement. I.e. to mark `import "dependency.js"` as external, use `"dependency.js"` while to mark `import "dependency"` as external, use `"dependency"`.
-2. a resolved ID (like an absolute path to a file).
+1. 外部依赖的名称，与 import 语句中写法完全一致。例如，将 `import "dependency.js"` 标记为外部依赖，使用的是 `"dependency.js"`；而将 `import "dependency"` 标记为外部依赖，则使用 `"dependency"`。
+2. 一个已解析的 ID（如文件的绝对路径）。
 
 ```js
 // rollup.config.js
@@ -39,38 +39,38 @@ export default {
 };
 ```
 
-Note that if you want to filter out package imports, e.g. `import {rollup} from 'rollup'`, via a `/node_modules/` regular expression, you need something like [@rollup/plugin-node-resolve](https://github.com/rollup/plugins/tree/master/packages/node-resolve) to resolve the imports to `node_modules` first.
+请注意，如果要通过 `/node_modules/` 正则表达式过滤掉包的导入，例如 `import {rollup} from 'rollup'`，需要使用类似 [@rollup/plugin-node-resolve](https://github.com/rollup/plugins/tree/master/packages/node-resolve) 的插件先将导入解析到 `node_modules`。
 
-When given as a command line argument, it should be a comma-separated list of IDs:
+当作为命令行参数给出时，它应该是一个逗号分隔的 ID 列表：
 
 ```bash
 rollup -i src/main.js ... -e foo,bar,baz
 ```
 
-When providing a function, it is called with three parameters `(id, parent, isResolved)` that can give you more fine-grained control:
+当提供一个函数时，它会被调用，并带有三个参数 `(id, parent, isResolved)`，这可以给你更细粒度的控制：
 
-- `id` is the id of the module in question
-- `parent` is the id of the module doing the import
-- `isResolved` signals whether the `id` has been resolved by e.g. plugins
+- `id` 是模块的 id
+- `parent` 是进行导入的模块的 id
+- `isResolved` 表示 `id` 是否已被插件等解析
 
-When creating an `iife` or `umd` bundle, you will need to provide global variable names to replace your external imports via the [`output.globals`](#output-globals) option.
+当创建一个 `iife` 或 `umd` 包时，你需要通过 [`output.globals`](#output-globals) 选项来提供全局变量名称，以替换你的外部导入。
 
-If a relative import, i.e. starting with `./` or `../`, is marked as "external", rollup will internally resolve the id to an absolute file system location so that different imports of the external module can be merged. When the resulting bundle is written, the import will again be converted to a relative import. Example:
+如果一个相对导入，即以 `./` 或 `../` 开头的导入，被标记为 “external”，rollup 将在内部将其解析为绝对路径，以便合并外部模块的不同导入。当写入结果包时，导入将再次转换为相对路径。例如：
 
 ```js
 // input
-// src/main.js (entry point)
+// src/main.js（入口点）
 import x from '../external.js';
 import './nested/nested.js';
 console.log(x);
 
 // src/nested/nested.js
-// the import would point to the same file if it existed
+// 这个导入将会指向同一个文件（只要它存在）
 import x from '../../external.js';
 console.log(x);
 
 // output
-// the different imports are merged
+// 不同路径表示的导入将被合并
 import x from '../external.js';
 
 console.log(x);
@@ -78,7 +78,7 @@ console.log(x);
 console.log(x);
 ```
 
-The conversion back to a relative import is done as if `output.file` or `output.dir` were in the same location as the entry point or the common base directory of all entry points if there is more than one.
+转换回相对导入的操作好像是假定 `output.file` 或 `output.dir` 与入口点在同一位置，或者与所有入口点的共同基本目录在同一位置。如果有多个入口点，则使用所有入口点的共同基本目录。
 
 ### input
 
@@ -87,9 +87,9 @@ The conversion back to a relative import is done as if `output.file` or `output.
 | Type: | `string \| string []\| { [entryName: string]: string }` |
 |  CLI: | `-i`/`--input <filename>`                               |
 
-The bundle's entry point(s) (e.g. your `main.js` or `app.js` or `index.js`). If you provide an array of entry points or an object mapping names to entry points, they will be bundled to separate output chunks. Unless the [`output.file`](#output-file) option is used, generated chunk names will follow the [`output.entryFileNames`](#output-entryfilenames) option. When using the object form, the `[name]` portion of the file name will be the name of the object property while for the array form, it will be the file name of the entry point.
+入口点的打包（例如 `main.js` 或 `app.js` 或 `index.js`）。如果你提供一个入口点数组或一个将名称映射到入口点的对象，则它们将被打包成单独的输出块。除非使用 [`output.file`](#output-file) 选项，否则生成的块名称将遵循 [`output.entryFileNames`](#output-entryfilenames) 选项。在使用对象形式时，文件名中的 `[name]` 部分将是对象属性的名称，而在使用数组形式时，它将是入口点的文件名。
 
-Note that it is possible when using the object form to put entry points into different sub-folders by adding a `/` to the name. The following will generate at least two entry chunks with the names `entry-a.js` and `entry-b/index.js`, i.e. the file `index.js` is placed in the folder `entry-b`:
+请注意，在使用对象形式时，可以通过在名称后添加 `/` 将入口点放入不同的子文件夹中。以下代码将生成至少两个入口块，名称为 `entry-a.js` 和 `entry-b/index.js`，即文件 `index.js` 被放置在 `entry-b` 文件夹中：
 
 ```js
 // rollup.config.js

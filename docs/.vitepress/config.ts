@@ -41,9 +41,9 @@ export default withMermaid(
 		},
 		themeConfig: {
 			algolia: {
-				apiKey: '233d24494bdf54811b5c3181883b5ee3',
-				appId: 'V5XQ4IDZSG',
-				indexName: 'rollupjs'
+				apiKey: '1ad354aec09a57f18f8d9bec8a913e52',
+				appId: 'EMNHQTRZYG',
+				indexName: 'rollup_docs_CN'
 			},
 			editLink: {
 				pattern: 'https://github.com/rollup/rollup/edit/master/docs/:path',

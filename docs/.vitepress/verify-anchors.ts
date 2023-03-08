@@ -46,9 +46,9 @@ function verifyAnchorsOnPage(page: string, slugs: Set<string>) {
 			if (!slugs.has(anchor)) {
 				console.log(slugs);
 				throw new Error(
-					`Page ${page} references anchor ${anchor} but it cannot be found on this page. Slugs found on this page:\n${[
-						...slugs
-					]
+					`Page ${yellowBold(page)} references anchor ${greenBold(
+						anchor
+					)} but it cannot be found on this page. Slugs found on this page:\n${[...slugs]
 						.sort()
 						.join('\n')}\n`
 				);
@@ -91,13 +91,13 @@ function verifyLinksInRollup() {
 		const [pageBase, hash] = link.split('/#');
 		const slugs = slugsByPage.get(`${pageBase}/index.md`);
 		if (!slugs) {
-			throw new Error(`Could not find page ${pageBase} referenced in Rollup sources.`);
+			throw new Error(`Could not find page ${yellowBold(pageBase)} referenced in Rollup sources.`);
 		}
 		if (!slugs.has(hash)) {
 			throw new Error(
-				`Could not find anchor ${hash} on page ${pageBase} that is referenced in Rollup sources. Slugs found on this page:\n${[
-					...slugs
-				]
+				`Could not find anchor ${yellowBold(hash)} on page ${greenBold(
+					pageBase
+				)} that is referenced in Rollup sources. Slugs found on this page:\n${[...slugs]
 					.sort()
 					.join('\n')}\n`
 			);

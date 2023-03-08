@@ -102,7 +102,7 @@ export default something;
 
 尽管规范允许，但在同一个模块中混合默认和命名导出是不好的做法。
 
-## How bindings work {#how-bindings-work}
+## 绑定是如何工作的？ {#how-bindings-work}
 
 ES 模块导出 _live bindings_，而不是值，因此可以在初始导入后更改值。
 
