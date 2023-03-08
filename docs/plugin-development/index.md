@@ -323,19 +323,6 @@ interface SourceDescription {
 
 你可以使用 [`this.getModuleInfo`](#this-getmoduleinfo) 在此钩子中查找 `assertions`、`meta`、`moduleSideEffects` 和 `syntheticNamedExports` 的先前值。
 
-|  |  |
-| --- | --- |
-| 类型： | `(moduleInfo: ModuleInfo) => void` |
-| 类别： | async，parallel |
-| 上一个钩子： | [`transform`](#transform)，当前处理的文件已被转换 |
-| 下一个钩子： | [`resolveId`](#resolveid) 和 [`resolveDynamicImport`](#resolvedynamicimport)，并行解析所有已发现的静态和动态导入，如果存在，否则为 [`buildEnd`](#buildend) |
-
-每次 Rollup 完全解析模块后都会调用此钩子。有关传递给此钩子的信息，请参见 [`this.getModuleInfo`](#this-getmoduleinfo)。
-
-与 [`transform`](#transform) 钩子不同，此钩子永远不会被缓存，并且可用于获取有关缓存和其他模块的信息，包括 `meta` 属性、`code` 和 `ast` 的最终形状。
-
-此钩子将等待直到所有导入都解析完毕，以便 `moduleInfo.importedIds`、`moduleInfo.dynamicallyImportedIds`、`moduleInfo.importedIdResolutions` 和 `moduleInfo.dynamicallyImportedIdResolutions` 中的信息是完整和准确的。但是请注意，导入模块的信息可能不完整，因为稍后可能会发现其他导入者。如果需要这些信息，请使用 [`buildEnd`](#buildend) 钩子。
-
 ### moduleParsed
 
 |  |  |
