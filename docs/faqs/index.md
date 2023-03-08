@@ -6,31 +6,33 @@ title: Frequently Asked Questions
 
 [[toc]]
 
-## Why are ES modules better than CommonJS Modules?
+## 为什么 ES 模块优于 CommonJS 模块？
 
-ES modules are an official standard and the clear path forward for JavaScript code structure, whereas CommonJS modules are an idiosyncratic legacy format that served as a stopgap solution before ES modules had been proposed. ES modules allow static analysis that helps with optimizations like tree-shaking and scope-hoisting, and provide advanced features like circular references and live bindings.
+ES 模块是官方标准，是 JavaScript 代码结构的清晰发展方向，而 CommonJS 模块是一种独特的遗留格式，是在 ES 模块提出之前作为权宜之计的解决方案。ES 模块允许静态分析，有助于像摇树和作用域提升这样的优化，并新增了高级特性，如循环引用和动态绑定。
 
-## What Is "tree-shaking?"
+## 什么是 "tree-shaking"？
 
-Tree-shaking, also known as "live code inclusion", is Rollup's process of eliminating code that is not actually used in a given project. It is a [form of dead code elimination](https://medium.com/@Rich_Harris/tree-shaking-versus-dead-code-elimination-d3765df85c80#.jnypozs9n) but can be much more efficient than other approaches with regard to output size. The name is derived from the [abstract syntax tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree) of the modules (not the module graph). The algorithm first marks all relevant statements and then "shakes the syntax tree" to remove all dead code. It is similar in idea to the [mark-and-sweep garbage collection algorithm](https://en.wikipedia.org/wiki/Tracing_garbage_collection). Even though this algorithm is not restricted to ES modules, they make it much more efficient as they allow Rollup to treat all modules together as a big abstract syntax tree with shared bindings.
+"Tree-shaking"，也称为 "实时代码包含"，是 Rollup 的一个过程，用于消除在给定项目中实际上没有使用的代码。它是一种[死代码消除](https://medium.com/@Rich_Harris/tree-shaking-versus-dead-code-elimination-d3765df85c80#.jnypozs9n)的形式，但在输出大小方面比其他方法更加高效。该名称源自模块（而不是模块图）的[抽象语法树](https://en.wikipedia.org/wiki/Abstract_syntax_tree)。该算法首先标记所有相关语句，然后 "摇晃语法树"，以删除所有死代码。它在思想上类似于[标记和扫描垃圾回收算法](https://en.wikipedia.org/wiki/Tracing_garbage_collection)。尽管该算法不限于 ES 模块，但由于 ES 模块允许 Rollup 将所有模块一起视为共享绑定的大型抽象语法树，因此它们使其更加高效。
 
-## How do I use Rollup in Node.js with CommonJS modules?
+## 如何在 Node.js 中使用 Rollup 处理 CommonJS 模块？
 
-Rollup strives to implement the specification for ES modules, not necessarily the behaviors of Node.js, NPM, `require()`, and CommonJS. Consequently, loading of CommonJS modules and use of Node's module location resolution logic are both implemented as optional plugins, not included by default in the Rollup core. Just `npm install` the [commonjs](https://github.com/rollup/plugins/tree/master/packages/commonjs) and [node-resolve](https://github.com/rollup/plugins/tree/master/packages/node-resolve) plugins and then enable them using a `rollup.config.js` file and you should be all set. If the modules import JSON files, you will also need the [json](https://github.com/rollup/plugins/tree/master/packages/json) plugin.
+Rollup 旨在实现 ES 模块的规范，而不是必须遵循 Node.js、NPM、`require()` 和 CommonJS 的行为。因此，加载 CommonJS 模块和使用 Node 的模块位置解析逻辑都被实现为可选插件，不包含在 Rollup 核心中。只需使用 `npm install` 命令安装 [commonjs](https://github.com/rollup/plugins/tree/master/packages/commonjs) 和 [node-resolve](https://github.com/rollup/plugins/tree/master/packages/node-resolve) 插件，然后在 `rollup.config.js` 文件中启用它们，你就可以开始使用了。如果模块导入了 JSON 文件，你还需要 [json](https://github.com/rollup/plugins/tree/master/packages/json) 插件。
 
-## Why isn't node-resolve a built-in feature?
 
-There are two primary reasons:
+## 为什么 node-resolve 不是内置功能？
 
-1. Philosophically, it's because Rollup is essentially a [polyfill](<https://en.wikipedia.org/wiki/Polyfill_(programming)>) of sorts for native module loaders in both Node and browsers. In a browser, `import foo from 'foo'` won't work, because browsers don't use Node's resolution algorithm.
+有两个主要原因：
 
-2. On a practical level, it's just much easier to develop software if these concerns are neatly separated with a good API. Rollup's core is quite large, and everything that stops it getting larger is a good thing. Meanwhile, it's easier to fix bugs and add features. By keeping Rollup lean, the potential for technical debt is small.
+1. 从哲学上讲，这是因为 Rollup 本质上是一种类似于 Node 和浏览器中本地模块加载器的 [polyfill](<https://en.wikipedia.org/wiki/Polyfill_(programming)>)。在浏览器中，`import foo from 'foo'` 无法工作，因为浏览器不使用 Node 的解析算法。
 
-Please see [this issue](https://github.com/rollup/rollup/issues/1555#issuecomment-322862209) for a more verbose explanation.
+2. 在实践层面上，如果使用良好的 API 将这些问题清晰地分离，开发软件会更加容易。Rollup 的核心非常庞大，任何能够使它变得更小的事情都是好事。同时，修复错误和添加功能也更容易。通过保持 Rollup 精简，技术债务的潜力很小。
 
-## Why do additional imports turn up in my entry chunks when code-splitting?
+请参见 [此问题](https://github.com/rollup/rollup/issues/1555#issuecomment-322862209) 中的更详细的解释。
 
-By default, when creating multiple chunks, imports of dependencies of entry chunks will be added as empty imports to the entry chunks themselves. [Example](../repl/index.md?shareable=JTdCJTIybW9kdWxlcyUyMiUzQSU1QiU3QiUyMm5hbWUlMjIlM0ElMjJtYWluLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmltcG9ydCUyMHZhbHVlJTIwZnJvbSUyMCcuJTJGb3RoZXItZW50cnkuanMnJTNCJTVDbmNvbnNvbGUubG9nKHZhbHVlKSUzQiUyMiUyQyUyMmlzRW50cnklMjIlM0F0cnVlJTdEJTJDJTdCJTIybmFtZSUyMiUzQSUyMm90aGVyLWVudHJ5LmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmltcG9ydCUyMGV4dGVybmFsVmFsdWUlMjBmcm9tJTIwJ2V4dGVybmFsJyUzQiU1Q25leHBvcnQlMjBkZWZhdWx0JTIwMiUyMColMjBleHRlcm5hbFZhbHVlJTNCJTIyJTJDJTIyaXNFbnRyeSUyMiUzQXRydWUlN0QlNUQlMkMlMjJvcHRpb25zJTIyJTNBJTdCJTIyZm9ybWF0JTIyJTNBJTIyZXNtJTIyJTJDJTIybmFtZSUyMiUzQSUyMm15QnVuZGxlJTIyJTJDJTIyYW1kJTIyJTNBJTdCJTIyaWQlMjIlM0ElMjIlMjIlN0QlMkMlMjJnbG9iYWxzJTIyJTNBJTdCJTdEJTdEJTJDJTIyZXhhbXBsZSUyMiUzQW51bGwlN0Q=):
+
+## 为什么使用代码分割时会在入口 chunk 中出现额外的导入？
+
+默认情况下，当创建多个 chunk 时，入口 chunk 的依赖项的导入将被添加为空导入 [Example](../repl/index.md?shareable=JTdCJTIybW9kdWxlcyUyMiUzQSU1QiU3QiUyMm5hbWUlMjIlM0ElMjJtYWluLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmltcG9ydCUyMHZhbHVlJTIwZnJvbSUyMCcuJTJGb3RoZXItZW50cnkuanMnJTNCJTVDbmNvbnNvbGUubG9nKHZhbHVlKSUzQiUyMiUyQyUyMmlzRW50cnklMjIlM0F0cnVlJTdEJTJDJTdCJTIybmFtZSUyMiUzQSUyMm90aGVyLWVudHJ5LmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmltcG9ydCUyMGV4dGVybmFsVmFsdWUlMjBmcm9tJTIwJ2V4dGVybmFsJyUzQiU1Q25leHBvcnQlMjBkZWZhdWx0JTIwMiUyMColMjBleHRlcm5hbFZhbHVlJTNCJTIyJTJDJTIyaXNFbnRyeSUyMiUzQXRydWUlN0QlNUQlMkMlMjJvcHRpb25zJTIyJTNBJTdCJTIyZm9ybWF0JTIyJTNBJTIyZXNtJTIyJTJDJTIybmFtZSUyMiUzQSUyMm15QnVuZGxlJTIyJTJDJTIyYW1kJTIyJTNBJTdCJTIyaWQlMjIlM0ElMjIlMjIlN0QlMkMlMjJnbG9iYWxzJTIyJTNBJTdCJTdEJTdEJTJDJTIyZXhhbXBsZSUyMiUzQW51bGwlN0Q=):
 
 ```js
 // input
@@ -44,7 +46,7 @@ export default 2 * externalValue;
 
 // output
 // main.js
-import 'external'; // this import has been hoisted from other-entry.js
+import 'external'; // 这个导入已经从 other-entry.js 提升了
 import value from './other-entry.js';
 console.log(value);
 
@@ -54,24 +56,24 @@ var value = 2 * externalValue;
 export default value;
 ```
 
-This does not affect code execution order or behaviour, but it will speed up how your code is loaded and parsed. Without this optimization, a JavaScript engine needs to perform the following steps to run `main.js`:
+这不会影响代码的执行顺序或行为，但它会加快你的代码的加载和解析速度。没有这个优化，JavaScript 引擎需要执行以下步骤来运行 `main.js`：
 
-1. Load and parse `main.js`. At the end, an import to `other-entry.js` will be discovered.
-2. Load and parse `other-entry.js`. At the end, an import to `external` will be discovered.
-3. Load and parse `external`.
-4. Execute `main.js`.
+1. 加载并解析 `main.js`。在最后，将发现对 `other-entry.js` 的导入。
+2. 加载并解析 `other-entry.js`。在最后，将发现对 `external` 的导入。
+3. 加载并解析 `external`。
+4. 执行 `main.js`。
 
-With this optimization, a JavaScript engine will discover all transitive dependencies after parsing an entry module, avoiding the waterfall:
+有了这个优化，JavaScript 引擎将在解析入口模块后发现所有传递依赖，避免了瀑布：
 
-1. Load and parse `main.js`. At the end, imports to `other-entry.js` and `external` will be discovered.
-2. Load and parse `other-entry.js` and `external`. The import of `external` from `other-entry.js` is already loaded and parsed.
-3. Execute `main.js`.
+1. 加载并解析 `main.js`。在最后，将发现对 `other-entry.js` 和 `external` 的导入。
+2. 加载并解析 `other-entry.js` 和 `external`。从 `other-entry.js` 导入的 `external` 已经加载和解析过了。
+3. 执行 `main.js`。
 
-There may be situations where this optimization is not desired, in which case you can turn it off via the [`output.hoistTransitiveImports`](../configuration-options/index.md#output-hoisttransitiveimports) option. This optimization is also never applied when using the [`output.preserveModules`](../configuration-options/index.md#output-preservemodules) option.
+可能有些情况下不希望使用这个优化，在这种情况下，你可以通过 [`output.hoistTransitiveImports`](../configuration-options/index.md#output-hoisttransitiveimports) 选项来关闭它。当使用 [`output.preserveModules`](../configuration-options/index.md#output-preservemodules) 选项时，也不会应用这个优化。
 
-## How do I add polyfills to a Rollup bundle?
+## 如何向 Rollup 包添加 polyfills？
 
-Even though Rollup will usually try to maintain exact module execution order when bundling, there are two situations when this is not always the case: code-splitting and external dependencies. The problem is most obvious with external dependencies, see the following [example](../repl/index.md?shareable=JTdCJTIybW9kdWxlcyUyMiUzQSU1QiU3QiUyMm5hbWUlMjIlM0ElMjJtYWluLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmltcG9ydCUyMCcuJTJGcG9seWZpbGwuanMnJTNCJTVDbmltcG9ydCUyMCdleHRlcm5hbCclM0IlNUNuY29uc29sZS5sb2coJ21haW4nKSUzQiUyMiUyQyUyMmlzRW50cnklMjIlM0F0cnVlJTdEJTJDJTdCJTIybmFtZSUyMiUzQSUyMnBvbHlmaWxsLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmNvbnNvbGUubG9nKCdwb2x5ZmlsbCcpJTNCJTIyJTJDJTIyaXNFbnRyeSUyMiUzQWZhbHNlJTdEJTVEJTJDJTIyb3B0aW9ucyUyMiUzQSU3QiUyMmZvcm1hdCUyMiUzQSUyMmVzbSUyMiUyQyUyMm5hbWUlMjIlM0ElMjJteUJ1bmRsZSUyMiUyQyUyMmFtZCUyMiUzQSU3QiUyMmlkJTIyJTNBJTIyJTIyJTdEJTJDJTIyZ2xvYmFscyUyMiUzQSU3QiU3RCU3RCUyQyUyMmV4YW1wbGUlMjIlM0FudWxsJTdE):
+尽管 Rollup 通常会在打包时尽量保持模块的执行顺序，但有两种情况下这并不总是成立：代码分割和外部依赖。这个问题在外部依赖上最为明显，看看下面的[例子](../repl/index.md?shareable=JTdCJTIybW9kdWxlcyUyMiUzQSU1QiU3QiUyMm5hbWUlMjIlM0ElMjJtYWluLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmltcG9ydCUyMCcuJTJGcG9seWZpbGwuanMnJTNCJTVDbmltcG9ydCUyMCdleHRlcm5hbCclM0IlNUNuY29uc29sZS5sb2coJ21haW4nKSUzQiUyMiUyQyUyMmlzRW50cnklMjIlM0F0cnVlJTdEJTJDJTdCJTIybmFtZSUyMiUzQSUyMnBvbHlmaWxsLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmNvbnNvbGUubG9nKCdwb2x5ZmlsbCcpJTNCJTIyJTJDJTIyaXNFbnRyeSUyMiUzQWZhbHNlJTdEJTVEJTJDJTIyb3B0aW9ucyUyMiUzQSU3QiUyMmZvcm1hdCUyMiUzQSUyMmVzbSUyMiUyQyUyMm5hbWUlMjIlM0ElMjJteUJ1bmRsZSUyMiUyQyUyMmFtZCUyMiUzQSU3QiUyMmlkJTIyJTNBJTIyJTIyJTdEJTJDJTIyZ2xvYmFscyUyMiUzQSU3QiU3RCU3RCUyQyUyMmV4YW1wbGUlMjIlM0FudWxsJTdE):
 
 ```js
 // main.js
@@ -83,7 +85,7 @@ console.log('main');
 console.log('polyfill');
 ```
 
-Here the execution order is `polyfill.js` → `external` → `main.js`. Now when you bundle the code, you will get
+这里的执行顺序是 `polyfill.js` → `external` → `main.js`。现在当你打包代码时，你会得到
 
 ```js
 import 'external';
@@ -91,48 +93,48 @@ console.log('polyfill');
 console.log('main');
 ```
 
-with the execution order `external` → `polyfill.js` → `main.js`. This is not a problem caused by Rollup putting the `import` at the top of the bundle—imports are always executed first, no matter where they are located in the file. This problem can be solved by creating more chunks: If `polyfill.js` ends up in a different chunk than `main.js`, [correct execution order will be preserved](../repl/index.md?shareable=JTdCJTIybW9kdWxlcyUyMiUzQSU1QiU3QiUyMm5hbWUlMjIlM0ElMjJtYWluLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmltcG9ydCUyMCcuJTJGcG9seWZpbGwuanMnJTNCJTVDbmltcG9ydCUyMCdleHRlcm5hbCclM0IlNUNuY29uc29sZS5sb2coJ21haW4nKSUzQiUyMiUyQyUyMmlzRW50cnklMjIlM0F0cnVlJTdEJTJDJTdCJTIybmFtZSUyMiUzQSUyMnBvbHlmaWxsLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmNvbnNvbGUubG9nKCdwb2x5ZmlsbCcpJTNCJTIyJTJDJTIyaXNFbnRyeSUyMiUzQXRydWUlN0QlNUQlMkMlMjJvcHRpb25zJTIyJTNBJTdCJTIyZm9ybWF0JTIyJTNBJTIyZXNtJTIyJTJDJTIybmFtZSUyMiUzQSUyMm15QnVuZGxlJTIyJTJDJTIyYW1kJTIyJTNBJTdCJTIyaWQlMjIlM0ElMjIlMjIlN0QlMkMlMjJnbG9iYWxzJTIyJTNBJTdCJTdEJTdEJTJDJTIyZXhhbXBsZSUyMiUzQW51bGwlN0Q=). However, there is not yet an automatic way to do this in Rollup. For code-splitting, the situation is similar as Rollup is trying to create as few chunks as possible while making sure no code is executed that is not needed.
+执行顺序为 `external` → `polyfill.js` → `main.js`。这不是 Rollup 将 `import` 放在包的顶部导致的问题 —— 无论它们位于文件中的哪个位置，导入总是首先执行。这个问题可以通过创建更多的块来解决：如果 `polyfill.js` 和 `main.js` 结束在不同的块中，[正确的执行顺序将得到保证](../repl/index.md?shareable=JTdCJTIybW9kdWxlcyUyMiUzQSU1QiU3QiUyMm5hbWUlMjIlM0ElMjJtYWluLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmltcG9ydCUyMCcuJTJGcG9seWZpbGwuanMnJTNCJTVDbmltcG9ydCUyMCdleHRlcm5hbCclM0IlNUNuY29uc29sZS5sb2coJ21haW4nKSUzQiUyMiUyQyUyMmlzRW50cnklMjIlM0F0cnVlJTdEJTJDJTdCJTIybmFtZSUyMiUzQSUyMnBvbHlmaWxsLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmNvbnNvbGUubG9nKCdwb2x5ZmlsbCcpJTNCJTIyJTJDJTIyaXNFbnRyeSUyMiUzQXRydWUlN0QlNUQlMkMlMjJvcHRpb25zJTIyJTNBJTdCJTIyZm9ybWF0JTIyJTNBJTIyZXNtJTIyJTJDJTIybmFtZSUyMiUzQSUyMm15QnVuZGxlJTIyJTJDJTIyYW1kJTIyJTNBJTdCJTIyaWQlMjIlM0ElMjIlMjIlN0QlMkMlMjJnbG9iYWxzJTIyJTNBJTdCJTdEJTdEJTJDJTIyZXhhbXBsZSUyMiUzQW51bGwlN0Q=). 但是，Rollup 还没有一种自动的方法来做到这一点。对于代码分割，情况也类似，因为 Rollup 试图创建尽可能少的块，同时确保不执行不需要的代码。
 
-For most code this is not a problem, because Rollup can guarantee:
+对于大多数代码，这不是一个问题，因为 Rollup 可以保证：
 
-> If module A imports module B and there are no circular imports, then B will always be executed before A.
+如果模块 A 导入模块 B，并且没有循环导入，那么 B 将始终在 A 之前执行。
 
-This is however a problem for polyfills, as those usually need to be executed first but it is usually not desired to place an import of the polyfill in every single module. Luckily, this is not needed:
+这对于 polyfill 来说是一个问题，因为它们通常需要首先执行，但通常不希望在每个模块中都放置一个 polyfill 的导入。幸运的是，这不是必需的：
 
-1. If there are no external dependencies that depend on the polyfill, it is enough to add an import of the polyfill as first statement to each static entry point.
-2. Otherwise, additionally making the polyfill a separate entry or [manual chunk](../configuration-options/index.md#output-manualchunks) will always make sure it is executed first.
+1. 如果没有依赖于 polyfill 的外部依赖项，只需将 polyfill 的导入作为每个静态入口点的第一条语句添加即可。
+2. 否则，另外将 polyfill 作为单独的入口或[手动块](../configuration-options/index.md#output-manualchunks)将始终确保它首先执行。
 
-## Is Rollup meant for building libraries or applications?
+## Rollup 是用来构建库还是应用程序的？
 
-Rollup is already used by many major JavaScript libraries, and can also be used to build the vast majority of applications. However, if you want to use code-splitting or dynamic imports with older browsers, you will need an additional runtime to handle loading missing chunks. We recommend using the [SystemJS Production Build](https://github.com/systemjs/systemjs#browser-production) as it integrates nicely with Rollup's system format output and is capable of properly handling all the ES module live bindings and re-export edge cases. Alternatively, an AMD loader can be used as well.
+Rollup 已经被许多主流的 JavaScript 库使用，也可以用来构建绝大多数的应用程序。然而，如果你想在旧版浏览器中使用代码分割或动态导入，你将需要一个额外的运行时来处理加载缺失的块。我们推荐使用 [SystemJS Production Build](https://github.com/systemjs/systemjs#browser-production)，因为它可以很好地与 Rollup 的 system 格式输出集成，并且能够正确地处理所有 ES 模块的实时绑定和重新导出边缘情况。或者，也可以使用一个 AMD 加载器。
 
-## How do I run Rollup itself in a browser
+## 如何在浏览器中运行 Rollup
 
-While the regular Rollup build relies on some NodeJS features, there is also a browser build available that only uses browser APIs. You can install it via
+尽管常规的 Rollup 构建依赖于一些 NodeJS 功能，但也有一个仅使用浏览器 API 的浏览器版本可用。您可以通过以下方式安装它：
 
 ```shell
 npm install @rollup/browser
 ```
 
-and in your script, import it via
+然后在您的脚本中通过以下方式导入：
 
 ```js
 import { rollup } from '@rollup/browser';
 ```
 
-Alternatively, you can import from a CDN, e.g. for the ESM build
+或者，您也可以从 CDN 导入，例如对于 ESM 构建：
 
 ```js
 import * as rollup from 'https://unpkg.com/@rollup/browser/dist/es/rollup.browser.js';
 ```
 
-and for the UMD build
+和对于 UMD 构建：
 
 ```html
 <script src="https://unpkg.com/@rollup/browser/dist/rollup.browser.js"></script>
 ```
 
-which will create a global variable `window.rollup`. As the browser build cannot access the file system, you need to provide plugins that resolve and load all modules you want to bundle. Here is a contrived example that does this:
+这将创建一个全局变量 `window.rollup` 。由于浏览器版本无法访问文件系统，您需要提供插件来解析和加载要捆绑的所有模块。以下是一个假设的例子：
 
 ```js
 const modules = {
@@ -163,7 +165,7 @@ rollup
 	.then(({ output }) => console.log(output[0].code));
 ```
 
-This example only supports two imports, `"main.js"` and `"foo.js"`, and no relative imports. Here is another example that uses absolute URLs as entry points and supports relative imports. In that case, we are just re-bundling Rollup itself, but it could be used on any other URL that exposes an ES module:
+这个例子只支持两个导入，`"main.js"` 和 `"foo.js"`，并且不支持相对导入。这里有另一个例子，它使用绝对 URL 作为入口点，并支持相对导入。在这种情况下，我们只是重新打包 Rollup 本身，但它可以用于任何其他暴露 ES 模块的 URL：
 
 ```js
 rollup
@@ -176,10 +178,10 @@ rollup
 					if (source[0] !== '.') {
 						try {
 							new URL(source);
-							// If it is a valid URL, return it
+							// 如果是有效的 URL，返回它
 							return source;
 						} catch {
-							// Otherwise make it external
+							// 否则将其设为外部的
 							return { id: source, external: true };
 						}
 					}
@@ -196,6 +198,6 @@ rollup
 	.then(({ output }) => console.log(output));
 ```
 
-## Who made the Rollup logo? It's lovely.
+## Rollup 的 logo 是谁设计的？它很可爱。
 
 [Julian Lloyd](https://github.com/jlmakes)!
