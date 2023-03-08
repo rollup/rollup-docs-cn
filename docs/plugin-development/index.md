@@ -511,9 +511,7 @@ function injectPolyfillPlugin() {
 
 `assertions` 参数告诉你导入中存在哪些导入断言。例如，`import "foo" assert {type: "json"}` 将传递 `assertions: {type: "json}"`。
 
-如果返回 `null`，则会转而使用其他 `resolveId` 函数，最终使用默认的解析行为。
-
-如果返回 `false`，则表示 `source` 应被视为外部模块，不包含在产物中。如果这发生在相对导入中，则会像使用 `external` 选项时一样重新规范化 id。
+如果返回 `null`，则会转而使用其他 `resolveId` 函数，最终使用默认的解析行为。如果返回 `false`，则表示 `source` 应被视为外部模块，不包含在产物中。如果这发生在相对导入中，则会像使用 `external` 选项时一样重新规范化 id。
 
 如果返回一个对象，则可以将导入解析为不同的 id，同时将其从产物中排除。这使你可以将依赖项替换为外部依赖项，而无需用户手动通过 `external` 选项将它们标记为 “external” 。
 
@@ -1088,6 +1086,8 @@ function resolveToDocumentPlugin() {
 允许自定义 Rollup 如何处理 `import.meta` 和 `import.meta.someProperty`，特别是 `import.meta.url`。在 ES 模块中，`import.meta`是一个对象，`import.meta.url`包含当前模块的 URL，例如在浏览器中为`http://server.net/bundle.js`，在 Node 中为`file:///path/to/bundle.js`。
 
 默认情况下，对于除 ES 模块以外的格式，Rollup 将 `import.meta.url` 替换为尝试匹配此行为的代码，返回当前块的动态 URL。请注意，除 CommonJS 和 UMD 之外的所有格式都假定它们在浏览器环境中运行，其中`URL`和`document`可用。对于其他属性，`import.meta.someProperty`
+
+这种行为可以通过这个钩子进行更改，包括 ES 模块。对于每个 `import.meta<.someProperty>` 的出现，都会调用这个钩子，并传入属性的名称或者如果直接访问 `import.meta` 则为 `null`。例如，以下代码将使用原始模块相对路径到当前工作目录的解析 `import.meta.url`，并在运行时再次将此路径解析为当前文档的基本 URL：
 
 ```js
 function importMetaUrlCurrentModulePlugin() {
