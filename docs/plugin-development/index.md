@@ -265,7 +265,7 @@ flowchart TB
 | 上一个钩子： | [`moduleParsed`](#moduleparsed)、[`resolveId`](#resolveid) 或 [`resolveDynamicImport`](#resolvedynamicimport) |
 | 下一个钩子： | 输出生成阶段的 [`outputOptions`](#outputoptions)，因为这是构建阶段的最后一个钩子 |
 
-在 Rollup 完成捆绑但尚未调用 `generate` 或 `write` 之前调用；也可以返回一个 Promise。如果在构建过程中发生错误，则将其传递给此钩子。
+在 Rollup 完成产物但尚未调用 `generate` 或 `write` 之前调用；也可以返回一个 Promise。如果在构建过程中发生错误，则将其传递给此钩子。
 
 ### buildStart
 
@@ -313,9 +313,9 @@ interface SourceDescription {
 
 定义自定义加载器。返回 `null` 将延迟到其他 `load` 函数（最终默认从文件系统加载）。为了避免额外的解析开销，例如该钩子已经使用 `this.parse` 生成了某些原因，该钩子可以选择返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个具有每个节点的 `start` 和 `end` 属性的标准 ESTree AST。如果转换不移动代码，则可以通过将 `map` 设置为 `null` 来保留现有的源码映射。否则，你可能需要生成源映射。有关 [源代码转换](#source-code-transformations) 的详细信息，请参见该部分。
 
-如果 `moduleSideEffects` 返回 `false`，并且没有其他模块从该模块导入任何内容，则即使该模块具有副作用，该模块也不会包含在捆绑包中。如果返回 `true`，则 Rollup 将使用其默认算法包含模块中具有副作用的所有语句（例如修改全局或导出变量）。如果返回 `"no-treeshake"`，则将关闭此模块的摇树优化，并且即使该模块为空，也将在生成的块之一中包含它。如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由第一个解析此模块的 `resolveId` 钩子，[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `true` 确定。`transform` 钩子可以覆盖此设置。
+如果 `moduleSideEffects` 返回 `false`，并且没有其他模块从该模块导入任何内容，则即使该模块具有副作用，该模块也不会包含在产物中。如果返回 `true`，则 Rollup 将使用其默认算法包含模块中具有副作用的所有语句（例如修改全局或导出变量）。如果返回 `"no-treeshake"`，则将关闭此模块的除屑优化，并且即使该模块为空，也将在生成的块之一中包含它。如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由第一个解析此模块的 `resolveId` 钩子，[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `true` 确定。`transform` 钩子可以覆盖此设置。
 
-`assertions` 包含导入此模块时使用的导入断言。目前，它们不会影响捆绑模块的呈现，而是用于文档目的。如果返回 `null` 或省略标志，则 `assertions` 将由第一个解析此模块的 `resolveId` 钩子或此模块的第一个导入中存在的断言确定。`transform` 钩子可以覆盖此设置。
+`assertions` 包含导入此模块时使用的导入断言。目前，它们不会影响产物模块的呈现，而是用于文档目的。如果返回 `null` 或省略标志，则 `assertions` 将由第一个解析此模块的 `resolveId` 钩子或此模块的第一个导入中存在的断言确定。`transform` 钩子可以覆盖此设置。
 
 有关 `syntheticNamedExports` 选项的影响，请参见 [合成命名导出](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将由第一个解析此模块的 `resolveId` 钩子确定，或者最终默认为 `false`。`transform` 钩子可以覆盖此设置。
 
@@ -458,22 +458,39 @@ function injectPolyfillPlugin() {
 		name: 'inject-polyfill',
 		async resolveId(source, importer, options) {
 			if (source === POLYFILL_ID) {
-				// 确保 polyfill 的副作用始终被考虑，否则使用“treeshake.moduleSideEffects: false”可能会阻止 polyfill 被包含
+				// 对于polyfill，必须始终考虑副作用
+				// 否则使用
+				// "treeshake.moduleSideEffects: false"
+				// 这样可能会阻止包含polyfill
 				return { id: POLYFILL_ID, moduleSideEffects: true };
 			}
 			if (options.isEntry) {
-				// 确定实际的入口点是什么。我们需要“skipSelf”来避免无限循环
+				// 确定实际的入口点是什么。
+				// 我们需要“skipSelf”来避免无限循环
 				const resolution = await this.resolve(source, importer, {
 					skipSelf: true,
 					...options
 				});
-				// 如果无法解析或是外部引用，则直接返回，以便 Rollup 可以显示错误
+				// 如果无法解析或是外部引用
+				// 则直接返回错误
 				if (!resolution || resolution.external) return resolution;
-				// 在代理的加载钩子中，我们需要知道入口点是否有默认导出。然而，我们不再拥有完整的“resolution”对象，该对象可能包含来自其他插件的元数据，这些元数据仅在第一次加载时添加。因此，我们在此处触发加载
+				// 在代理的加载钩子中，我们需要知道入口点是否有默认导出。
+				// 然而，我们不再拥有完整的“resolution”对象，
+				// 该对象可能包含来自其他插件的元数据，
+				// 这些元数据仅在第一次加载时添加。
+				// 因此，我们在此处触发加载
 				const moduleInfo = await this.load(resolution);
-				// 我们需要确保原始入口点中的副作用即使对于 treeshake.moduleSideEffects: false 也要被考虑。 “moduleSideEffects”是 ModuleInfo 上的可写属性。
+				// 我们需要确保原始入口点中的副作用
+				// 即使对于 treeshake.moduleSideEffects: false
+				// 也要被考虑。
+				// “moduleSideEffects”是 ModuleInfo 上的可写属性。
 				moduleInfo.moduleSideEffects = true;
-				// 重要的是，新的入口点不以 \0 开头，并且与原始入口点具有相同的目录，以避免破坏相对外部引用的生成。同时保留名称并仅在末尾添加一个“?query”确保 preserveModules 为此入口点生成原始入口点名称。
+				// 重要的是，新的入口点不以 \0 开头
+				// 并且与原始入口点具有相同的目录
+				// 以避免破坏相对外部引用的生成。
+				// 同时保留名称并仅在末尾添加一个“?query”
+				// 确保 preserveModules
+				// 为此入口点生成原始入口点名称。
 				return `${resolution.id}${PROXY_SUFFIX}`;
 			}
 			return null;
@@ -485,12 +502,14 @@ function injectPolyfillPlugin() {
 			}
 			if (id.endsWith(PROXY_SUFFIX)) {
 				const entryId = id.slice(0, -PROXY_SUFFIX.length);
-				// 我们知道 ModuleInfo.hasDefaultExport 是可靠的，因为我们在 resolveId 中等待了 this.load
+				// 我们知道 ModuleInfo.hasDefaultExport 是可靠的
+				// 因为我们在 resolveId 中等待了 this.load
 				const { hasDefaultExport } = this.getModuleInfo(entryId);
 				let code =
 					`import ${JSON.stringify(POLYFILL_ID)};` +
 					`export * from ${JSON.stringify(entryId)};`;
-				// 命名空间重新导出不会重新导出默认值，因此我们需要特殊处理
+				// 命名空间重新导出不会重新导出默认值
+				// 因此我们需要特殊处理
 				if (hasDefaultExport) {
 					code += `export { default } from ${JSON.stringify(entryId)};`;
 				}
@@ -506,9 +525,9 @@ function injectPolyfillPlugin() {
 
 如果返回 `null`，则会转而使用其他 `resolveId` 函数，最终使用默认的解析行为。
 
-如果返回 `false`，则表示 `source` 应被视为外部模块，不包含在捆绑包中。如果这发生在相对导入中，则会像使用 `external` 选项时一样重新规范化 id。
+如果返回 `false`，则表示 `source` 应被视为外部模块，不包含在产物中。如果这发生在相对导入中，则会像使用 `external` 选项时一样重新规范化 id。
 
-如果返回一个对象，则可以将导入解析为不同的 id，同时将其从捆绑包中排除。这使你可以将依赖项替换为外部依赖项，而无需用户手动通过 `external` 选项将它们标记为 “external” 。
+如果返回一个对象，则可以将导入解析为不同的 id，同时将其从产物中排除。这使你可以将依赖项替换为外部依赖项，而无需用户手动通过 `external` 选项将它们标记为 “external” 。
 
 ```js
 function externalizeDependencyPlugin() {
@@ -530,7 +549,7 @@ function externalizeDependencyPlugin() {
 
 可以在返回的对象中明确声明 `resolvedBy`。它将替换 [`this.resolve`](#this-resolve) 返回的相应字段。
 
-如果为外部模块返回 `assertions` 的值，则这将确定在生成 `"es"` 输出时如何呈现此模块的导入。例如，`{id: "foo", external: true, assertions: {type: "json"}}` 将导致此模块的导入显示为 `import "foo" assert {type: "json"}`。如果不传递值，则将使用 `assertions` 输入参数的值。传递一个空对象以删除任何断言。虽然 `assertions` 不影响捆绑模块的呈现，但它们仍然需要在模块的所有导入中保持一致，否则会发出警告。`load` 和 `transform` 钩子可以覆盖此选项。
+如果为外部模块返回 `assertions` 的值，则这将确定在生成 `"es"` 输出时如何呈现此模块的导入。例如，`{id: "foo", external: true, assertions: {type: "json"}}` 将导致此模块的导入显示为 `import "foo" assert {type: "json"}`。如果不传递值，则将使用 `assertions` 输入参数的值。传递一个空对象以删除任何断言。虽然 `assertions` 不影响产物模块的呈现，但它们仍然需要在模块的所有导入中保持一致，否则会发出警告。`load` 和 `transform` 钩子可以覆盖此选项。
 
 有关 `syntheticNamedExports` 选项的影响，请参见 [synthetic named exports](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将默认为 `false`。`load` 和 `transform` 钩子可以覆盖此选项。
 
@@ -607,7 +626,7 @@ interface SourceDescription {
 
 如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子、[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `true` 确定。
 
-`assertions` 包含导入此模块时使用的导入断言。目前，它们不会影响捆绑模块的呈现，而是用于文档目的。如果返回 `null` 或省略标志，则 `assertions` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子或此模块的第一个导入中存在的断言确定。
+`assertions` 包含导入此模块时使用的导入断言。目前，它们不会影响产物模块的呈现，而是用于文档目的。如果返回 `null` 或省略标志，则 `assertions` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子或此模块的第一个导入中存在的断言确定。
 
 有关 `syntheticNamedExports` 选项的影响，请参见[合成命名导出](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子、[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `false` 确定。
 
@@ -627,7 +646,7 @@ interface SourceDescription {
 
 ## 输出生成钩子 {#output-generation-hooks}
 
-输出生成钩子可以提供有关生成的捆绑包的信息并在构建完成后修改构建。它们的工作方式和类型与[构建钩子](#build-hooks)相同，但是对于每个调用 `bundle.generate(outputOptions)` 或 `bundle.write(outputOptions)`，它们都会单独调用。仅使用输出生成钩子的插件也可以通过输出选项传递，并且因此仅针对某些输出运行。
+输出生成钩子可以提供有关生成的产物的信息并在构建完成后修改构建。它们的工作方式和类型与[构建钩子](#build-hooks)相同，但是对于每个调用 `bundle.generate(outputOptions)` 或 `bundle.write(outputOptions)`，它们都会单独调用。仅使用输出生成钩子的插件也可以通过输出选项传递，并且因此仅针对某些输出运行。
 
 输出生成阶段的第一个钩子是 [`outputOptions`](#outputoptions)，最后一个钩子是 [`generateBundle`](#generatebundle)（如果通过 `bundle.generate(...)` 成功生成输出），[`writeBundle`](#writebundle)（如果通过 `bundle.write(...)` 成功生成输出），或 [`renderError`](#rendererror)（如果在输出生成期间的任何时候发生错误）。
 
@@ -799,7 +818,7 @@ function augmentWithDatePlugin() {
 | 类别: | async，parallel |
 | 上一个钩子: | 如果有构建错误，则为 [`buildEnd`](#buildend)，否则为调用 [`bundle.close()`](../javascript-api/index.md#rollup-rollup)，在这种情况下，这将是最后一个触发的钩子 |
 
-可用于清理可能正在运行的任何外部服务。Rollup 的 CLI 将确保在每次运行后调用此钩子，但是 JavaScript API 的用户有责任在生成捆绑包后手动调用 `bundle.close()`。因此，任何依赖此功能的插件都应在其文档中仔细提到这一点。
+可用于清理可能正在运行的任何外部服务。Rollup 的 CLI 将确保在每次运行后调用此钩子，但是 JavaScript API 的用户有责任在生成产物后手动调用 `bundle.close()`。因此，任何依赖此功能的插件都应在其文档中仔细提到这一点。
 
 如果插件想要在监视模式下保留资源，则可以在此钩子中检查 [`this.meta.watchMode`](#this-meta) 并在 [`closeWatcher`](#closewatcher) 中执行必要的监视模式清理。
 
@@ -863,11 +882,11 @@ interface ChunkInfo {
 
 在 `bundle.generate()` 结束时或在 `bundle.write()` 写入文件之前立即调用。要在写入文件后修改文件，请使用 [`writeBundle`](#writebundle) 钩子。`bundle` 提供正在写入或生成的文件的完整列表以及它们的详细信息。
 
-你可以通过在此钩子中从捆绑对象中删除它们来防止文件被发出。要发出其他文件，请使用 [`this.emitFile`](#this-emitfile) 插件上下文函数。
+你可以通过在此钩子中从产物对象中删除它们来防止文件被发出。要发出其他文件，请使用 [`this.emitFile`](#this-emitfile) 插件上下文函数。
 
 ::: danger
 
-不要直接将静态资源添加到捆绑包中。这会绕过 Rollup 用于跟踪静态资源的内部机制。它还可能导致你的静态资源缺少 Rollup 在内部依赖的重要属性，因此你的插件可能会在较小的 Rollup 版本中出现问题。
+不要直接将静态资源添加到产物中。这会绕过 Rollup 用于跟踪静态资源的内部机制。它还可能导致你的静态资源缺少 Rollup 在内部依赖的重要属性，因此你的插件可能会在较小的 Rollup 版本中出现问题。
 
 相反，请始终使用 [`this.emitFile`](#this-emitfile)。
 
@@ -931,7 +950,7 @@ type RenderChunkHook = (
 - `code` 和 `map` 未设置。而是使用此钩子的 `code` 参数。
 - 所有引用的块文件名将包含哈希占位符，而不是哈希。这包括 `fileName`，`imports`，`importedBindings`，`dynamicImports`和`implicitlyLoadedBefore` 。当你在此钩子返回的代码中使用此类占位符文件名或其一部分时，Rollup 将在`generateBundle`之前将占位符替换为实际哈希，确保哈希反映了最终生成的块的实际内容，包括所有引用的文件哈希。
 
-`chunk` 是可变的，此钩子中应用的更改将传播到其他插件和生成的捆绑包中。这意味着如果你在此钩子中添加或删除导入或导出，则应更新`imports`，`importedBindings`和/或`exports`。
+`chunk` 是可变的，此钩子中应用的更改将传播到其他插件和生成的产物中。这意味着如果你在此钩子中添加或删除导入或导出，则应更新`imports`，`importedBindings`和/或`exports`。
 
 `meta.chunks` 包含有关 Rollup 正在生成的所有块的信息，并为哈希使用占位符。这意味着你可以在此钩子中探索整个块图。
 
@@ -1373,7 +1392,8 @@ export default function addProxyPlugin() {
 				// 不代理使用代理的 ID
 				return null;
 			}
-			// 确保将任何 resolveId 选项传递给 this.resolve 以获取模块 ID
+			// 确保将任何 resolveId 选项传递给 this.resolve
+			// 以获取模块 ID
 			const resolution = await this.resolve(source, importer, {
 				skipSelf: true,
 				...options
@@ -1386,17 +1406,21 @@ export default function addProxyPlugin() {
 					return `${resolution.id}?proxy`;
 				}
 			}
-			// 由于我们已经完全解析了模块，因此没有理由再次解析它
+			// 由于我们已经完全解析了模块
+			// 因此没有理由再次解析它
 			return resolution;
 		},
 		load(id) {
 			if (id.endsWith('?proxy')) {
 				const importee = id.slice(0, -'?proxy'.length);
-				// 请注意，命名空间重新导出不会重新导出默认导出
+				// 请注意
+				// 命名空间重新导出不会重新导出默认导出
 				let code = `console.log('proxy for ${importee}'); export * from ${JSON.stringify(
 					importee
 				)};`;
-				// 我们知道在解析代理时，importee 已经完全加载和解析，因此我们可以依赖 hasDefaultExport
+				// 我们知道在解析代理时
+				// importee 已经完全加载和解析
+				// 因此我们可以依赖 hasDefaultExport
 				if (this.getModuleInfo(importee).hasDefaultExport) {
 					code += `export { default } from ${JSON.stringify(importee)};`;
 				}
@@ -1426,9 +1450,17 @@ export default function dynamicChunkLogsPlugin() {
 			if (!(typeof specifier === 'string')) return;
 			// 获取导入目标的 id 和初始元信息
 			const resolved = await this.resolve(specifier, importer);
-			// 忽略外部目标。显式外部具有 "external" 属性，而未解析的导入为 "null"。
+			// 忽略外部目标。
+			// 显式外部具有 "external" 属性，而未解析的导入为 "null"。
 			if (resolved && !resolved.external) {
-				// 我们在这里触发加载模块，而不等待它，因为 resolveId 钩子中附加的元信息，可能包含在 "resolved" 中，像 "commonjs" 这样的插件可能依赖于它，只有在第一次加载模块时才会附加到模块上。这确保了在稍后使用 "this.load" 再次在 load 钩子中使用仅模块 id 时，不会丢失此元信息。
+				// 我们在这里触发加载模块，
+				// 而不等待它，
+				// 因为 resolveId 钩子中附加的元信息，
+				// 可能包含在 "resolved" 中，
+				// 像 "commonjs" 这样的插件可能依赖于它，
+				// 只有在第一次加载模块时才会附加到模块上。
+				// 这确保了在稍后使用 "this.load" 再次在 load 钩子中使用仅模块 id 时，
+				// 不会丢失此元信息。
 				this.load(resolved);
 				return `${DYNAMIC_IMPORT_PROXY_PREFIX}${resolved.id}`;
 			}
@@ -1437,13 +1469,20 @@ export default function dynamicChunkLogsPlugin() {
 			// 忽略所有文件，除了我们的动态导入代理
 			if (!id.startsWith('\0dynamic-import:')) return null;
 			const actualId = id.slice(DYNAMIC_IMPORT_PROXY_PREFIX.length);
-			// 为了允许并行加载模块，同时保持复杂度低，我们不直接等待每个 "this.load" 调用，而是将它们的 Promise 放入一个数组中，在 async for 循环中通过 await 它们。
+			// 为了允许并行加载模块，同时保持复杂度低，
+			// 我们不直接等待每个 "this.load" 调用，
+			// 而是将它们的 Promise 放入一个数组中，
+			// 在 async for 循环中通过 await 它们。
 			const moduleInfoPromises = [
 				this.load({ id: actualId, resolveDependencies: true })
 			];
-			// 我们在这里跟踪每个已加载的依赖项，以便我们不会加载文件两次，并且在存在循环依赖项时也不会卡住。
+			// 我们在这里跟踪每个已加载的依赖项，
+			// 以便我们不会加载文件两次，
+			// 并且在存在循环依赖项时也不会卡住。
 			const dependencies = new Set([actualId]);
-			// "importedIdResolutions" 跟踪 resolveId 钩子创建的对象。我们使用这些对象而不是 "importedIds"，以便再次不会丢失重要的元信息。
+			// "importedIdResolutions" 跟踪 resolveId 钩子创建的对象。
+			// 我们使用这些对象而不是 "importedIds"，
+			// 以便再次不会丢失重要的元信息。
 			for await (const { importedIdResolutions } of moduleInfoPromises) {
 				for (const resolved of importedIdResolutions) {
 					if (!dependencies.has(resolved.id)) {
@@ -1458,7 +1497,8 @@ export default function dynamicChunkLogsPlugin() {
 			let code = `console.log([${[...dependencies]
 				.map(JSON.stringify)
 				.join(', ')}]); export * from ${JSON.stringify(actualId)};`;
-			// 命名空间重新导出不会重新导出默认导出，因此如果存在默认导出，我们需要手动重新导出它
+			// 命名空间重新导出不会重新导出默认导出，
+			// 因此如果存在默认导出，我们需要手动重新导出它
 			if (this.getModuleInfo(actualId).hasDefaultExport) {
 				code += `export { default } from ${JSON.stringify(actualId)};`;
 			}
@@ -1638,7 +1678,7 @@ function svgResolverPlugin() {
 }
 ```
 
-现在，只有在代码中实际使用引用 `import.meta.ROLLUP_FILE_URL_referenceId` 时，静态资源才会添加到捆绑包中。
+现在，只有在代码中实际使用引用 `import.meta.ROLLUP_FILE_URL_referenceId` 时，静态资源才会添加到产物中。
 
 类似于静态资源，发出的块也可以通过 `import.meta.ROLLUP_FILE_URL_referenceId` 从 JS 代码中引用。
 
@@ -1661,7 +1701,9 @@ function registerPaintWorkletPlugin() {
 			}
 		},
 		resolveId(source, importer) {
-			// 我们去掉前缀，将所有内容解析为绝对 ID，然后再添加前缀。这样可以确保你可以使用相对导入来定义工作流
+			// 我们去掉前缀，将所有内容解析为绝对 ID，
+			// 然后再添加前缀。
+			// 这样可以确保你可以使用相对导入来定义工作流
 			if (source.startsWith(REGISTER_WORKLET)) {
 				return this.resolve(
 					source.slice(REGISTER_WORKLET.length),
@@ -1779,16 +1821,16 @@ export const __synthetic = {
 ```js
 import { foo, bar, baz, __synthetic } from './dep.js';
 
-// logs "explicit" as non-synthetic exports take precedence
+// 输出 "explicit"，因为非合成导出优先
 console.log(foo);
 
-// logs "bar", picking the property from __synthetic
+// 输出 "bar", 从__synthetic中选择属性
 console.log(bar);
 
-// logs "undefined"
+// 输出 "undefined"
 console.log(baz);
 
-// logs "{foo:'foo',bar:'bar'}"
+// 输出 "{foo:'foo',bar:'bar'}"
 console.log(__synthetic);
 ```
 
@@ -1875,9 +1917,12 @@ function plugin() {
 	return {
 		name: 'test',
 		buildStart() {
-			// 触发加载模块。我们也可以在这里传递一个初始的“meta”对象，但如果模块已经通过其他方式加载，则会被忽略
+			// 触发加载模块。
+			// 我们也可以在这里传递一个初始的“meta”对象，
+			// 但如果模块已经通过其他方式加载，则会被忽略
 			this.load({ id: 'my-id' });
-			// 现在模块信息可用，我们不需要等待 this.load
+			// 现在模块信息可用，
+			// 我们不需要等待 this.load
 			const meta = this.getModuleInfo('my-id').meta;
 			// 现在我们也可以手动修改 meta
 			meta.test = { some: 'data' };
