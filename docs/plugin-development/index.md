@@ -331,9 +331,9 @@ interface SourceDescription {
 |              |                                             |
 | -----------: | :------------------------------------------ | ----- |
 |       类型： | `(options: InputOptions) => InputOptions \  | null` |
-|       类别： | 异步，顺序执行                              |
-| 上一个钩子： | 这是构建阶段的第一个钩子                    |
-| 下一个钩子： | [`buildStart`](#buildstart)                 |
+|       类别： | async, sequential                           |
+| 上一个钩子： | 这是在构建阶段的第一个钩子                  |
+|  下一个钩子: | [`buildStart`](#buildstart)                 |
 
 替换或操作传递给 `rollup.rollup` 的选项对象。返回 `null` 不会替换任何内容。如果只需要读取选项，则建议使用 [`buildStart`](#buildstart) 钩子，因为该钩子可以访问所有 `options` 钩子的转换考虑后的选项。
 
@@ -477,11 +477,13 @@ function injectPolyfillPlugin() {
 }
 ```
 
-`assertions` tells you which import assertions were present in the import. I.e. `import "foo" assert {type: "json"}` will pass along `assertions: {type: "json"}`.
+`assertions` 参数告诉你导入中存在哪些导入断言。例如，`import "foo" assert {type: "json"}` 将传递 `assertions: {type: "json}"`。
 
-Returning `null` defers to other `resolveId` functions and eventually the default resolution behavior. Returning `false` signals that `source` should be treated as an external module and not included in the bundle. If this happens for a relative import, the id will be renormalized the same way as when the `external` option is used.
+如果返回 `null`，则会转而使用其他 `resolveId` 函数，最终使用默认的解析行为。
 
-If you return an object, then it is possible to resolve an import to a different id while excluding it from the bundle at the same time. This allows you to replace dependencies with external dependencies without the need for the user to mark them as "external" manually via the `external` option:
+如果返回 `false`，则表示 `source` 应被视为外部模块，不包含在捆绑包中。如果这发生在相对导入中，则会像使用 `external` 选项时一样重新规范化 id。
+
+如果返回一个对象，则可以将导入解析为不同的 id，同时将其从捆绑包中排除。这使您可以将依赖项替换为外部依赖项，而无需用户手动通过 `external` 选项将它们标记为 “external” 。
 
 ```js
 function externalizeDependencyPlugin() {
@@ -497,32 +499,32 @@ function externalizeDependencyPlugin() {
 }
 ```
 
-If `external` is `true`, then absolute ids will be converted to relative ids based on the user's choice for the [`makeAbsoluteExternalsRelative`](../configuration-options/index.md#makeabsoluteexternalsrelative) option. This choice can be overridden by passing either `external: "relative"` to always convert an absolute id to a relative id or `external: "absolute"` to keep it as an absolute id. When returning an object, relative external ids, i.e. ids starting with `./` or `../`, will _not_ be internally converted to an absolute id and converted back to a relative id in the output, but are instead included in the output unchanged. If you want relative ids to be renormalised and deduplicated instead, return an absolute file system location as `id` and choose `external: "relative"`.
+如果 `external` 为 `true`，则绝对 id 将根据用户对 [`makeAbsoluteExternalsRelative`](../configuration-options/index.md#makeabsoluteexternalsrelative) 选项的选择转换为相对 id。可以通过传递 `external: "relative"` 来覆盖此选择，以始终将绝对 id 转换为相对 id，或者传递 `external: "absolute"` 来保持其为绝对 id。当返回一个对象时，相对的外部 id，即以 `./` 或 `../` 开头的 id，将 _不会_ 被内部转换为绝对 id 并在输出中转换回相对 id，而是不变地包含在输出中。如果您希望相对 id 被重新规范化和去重，请将绝对文件系统位置作为 `id` 返回，并选择 `external: "relative"`。
 
-If `false` is returned for `moduleSideEffects` in the first hook that resolves a module id and no other module imports anything from this module, then this module will not be included even if the module would have side effects. If `true` is returned, Rollup will use its default algorithm to include all statements in the module that have side effects (such as modifying a global or exported variable). If `"no-treeshake"` is returned, treeshaking will be turned off for this module and it will also be included in one of the generated chunks even if it is empty. If `null` is returned or the flag is omitted, then `moduleSideEffects` will be determined by the [`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) option or default to `true`. The `load` and `transform` hooks can override this.
+如果在解析模块 id 的第一个钩子中返回 `false` 且没有其他模块从此模块导入任何内容，则即使该模块具有副作用，该模块也不会被包含。如果返回 `true`，Rollup 将使用其默认算法来包含模块中具有副作用的所有语句（例如修改全局或导出变量）。如果返回 `"no-treeshake"`，则将关闭此模块的树摇，并且即使它为空，它也将包含在生成的块之一中。如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由 [`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项确定或默认为 `true`。`load` 和 `transform` 钩子可以覆盖此选项。
 
-`resolvedBy` can be explicitly declared in the returned object. It will replace the corresponding field returned by [`this.resolve`](#this-resolve).
+可以在返回的对象中明确声明 `resolvedBy`。它将替换 [`this.resolve`](#this-resolve) 返回的相应字段。
 
-If you return a value for `assertions` for an external module, this will determine how imports of this module will be rendered when generating `"es"` output. E.g. `{id: "foo", external: true, assertions: {type: "json"}}` will cause imports of this module appear as `import "foo" assert {type: "json"}`. If you do not pass a value, the value of the `assertions` input parameter will be used. Pass an empty object to remove any assertions. While `assertions` do not influence rendering for bundled modules, they still need to be consistent across all imports of a module, otherwise a warning is emitted. The `load` and `transform` hooks can override this.
+如果为外部模块返回 `assertions` 的值，则这将确定在生成 `"es"` 输出时如何呈现此模块的导入。例如，`{id: "foo", external: true, assertions: {type: "json"}}` 将导致此模块的导入显示为 `import "foo" assert {type: "json"}`。如果不传递值，则将使用 `assertions` 输入参数的值。传递一个空对象以删除任何断言。虽然 `assertions` 不影响捆绑模块的呈现，但它们仍然需要在模块的所有导入中保持一致，否则会发出警告。`load` 和 `transform` 钩子可以覆盖此选项。
 
-See [synthetic named exports](#synthetic-named-exports) for the effect of the `syntheticNamedExports` option. If `null` is returned or the flag is omitted, then `syntheticNamedExports` will default to `false`. The `load` and `transform` hooks can override this.
+有关 `syntheticNamedExports` 选项的影响，请参见 [synthetic named exports](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将默认为 `false`。`load` 和 `transform` 钩子可以覆盖此选项。
 
-See [custom module meta-data](#custom-module-meta-data) for how to use the `meta` option. If `null` is returned or the option is omitted, then `meta` will default to an empty object. The `load` and `transform` hooks can add or replace properties of this object.
+有关如何使用 `meta` 选项，请参见 [custom module meta-data](#custom-module-meta-data)。如果返回 `null` 或省略选项，则 `meta` 将默认为空对象。`load` 和 `transform` 钩子可以添加或替换此对象的属性。
 
-Note that while `resolveId` will be called for each import of a module and can therefore resolve to the same `id` many times, values for `external`, `assertions`, `meta`, `moduleSideEffects` or `syntheticNamedExports` can only be set once before the module is loaded. The reason is that after this call, Rollup will continue with the [`load`](#load) and [`transform`](#transform) hooks for that module that may override these values and should take precedence if they do so.
+请注意，虽然 `resolveId` 将为模块的每个导入调用一次，并且因此可以多次解析为相同的 `id`，但是 `external`、`assertions`、`meta`、`moduleSideEffects` 或 `syntheticNamedExports` 的值只能在加载模块之前设置一次。原因是在此调用之后，Rollup 将继续使用该模块的 [`load`](#load) 和 [`transform`](#transform) 钩子，这些钩子可能会覆盖这些值，并且如果它们这样做，则应优先考虑。
 
-When triggering this hook from a plugin via [`this.resolve`](#this-resolve), it is possible to pass a custom options object to this hook. While this object will be passed unmodified, plugins should follow the convention of adding a `custom` property with an object where the keys correspond to the names of the plugins that the options are intended for. For details see [custom resolver options](#custom-resolver-options).
+当通过 [`this.resolve`](#this-resolve) 从插件触发此钩子时，可以向此钩子传递自定义选项对象。虽然此对象将不被修改，但插件应遵循添加具有对象的 `custom` 属性的约定，其中键对应于选项所针对的插件的名称。有关详细信息，请参见 [custom resolver options](#custom-resolver-options)。
 
-In watch mode or when using the cache explicitly, the resolved imports of a cached module are also taken from the cache and not determined via the `resolveId` hook again. To prevent this, you can return `true` from the [`shouldTransformCachedModule`](#shouldtransformcachedmodule) hook for that module. This will remove the module and its import resolutions from cache and call `transform` and `resolveId` again.
+在观察模式下或者明确使用缓存时，缓存模块的已解析导入也会从缓存中获取，而不是再次通过 `resolveId` 钩子进行确定。为了防止这种情况，您可以在 [`shouldTransformCachedModule`](#shouldtransformcachedmodule) 钩子中为该模块返回 `true`。这将从缓存中删除该模块及其导入解析，并再次调用 `transform` 和 `resolveId`。
 
 ### shouldTransformCachedModule
 
 |  |  |
 | --: | :-- |
-| Type: | `ShouldTransformCachedModuleHook` |
-| Kind: | async, first |
-| Previous: | [`load`](#load) where the cached file was loaded to compare its code with the cached version |
-| Next: | [`moduleParsed`](#moduleparsed) if no plugin returns `true`, otherwise [`transform`](#transform) |
+| 类型: | `ShouldTransformCachedModuleHook` |
+| 类别: | 异步, 第一位 |
+| 上一个钩子: | [`load`](#load)，用于加载缓存文件并将其代码与缓存版本进行比较 |
+| 下一个钩子: | 如果没有插件返回 `true`，则为 [`moduleParsed`](#moduleparsed)，否则为 [`transform`](#transform) |
 
 ```typescript
 type ShouldTransformCachedModuleHook = (options: {
@@ -535,20 +537,20 @@ type ShouldTransformCachedModuleHook = (options: {
 }) => boolean;
 ```
 
-If the Rollup cache is used (e.g. in watch mode or explicitly via the JavaScript API), Rollup will skip the [`transform`](#transform) hook of a module if after the [`load`](#transform) hook, the loaded `code` is identical to the code of the cached copy. To prevent this, discard the cached copy and instead transform a module, plugins can implement this hook and return `true`.
+如果使用 Rollup 缓存（例如在观察模式下或通过 JavaScript API 明确使用），如果在 [`load`](#transform) 钩子之后，加载的 `code` 与缓存副本的代码相同，则 Rollup 将跳过模块的 [`transform`](#transform) 钩子。为了防止这种情况，插件可以实现此钩子并返回 `true`，以丢弃缓存副本并转换模块。
 
-This hook can also be used to find out which modules were cached and access their cached meta information.
+此钩子还可用于查找已缓存的模块并访问其缓存的元信息。
 
-If a plugin does not return `true`, Rollup will trigger this hook for other plugins, otherwise all remaining plugins will be skipped.
+如果插件没有返回 `true`，则 Rollup 将为其他插件触发此钩子，否则所有剩余的插件都将被跳过。
 
 ### transform
 
 |  |  |
 | --: | :-- |
-| Type: | `(code: string, id: string) => TransformResult` |
-| Kind: | async, sequential |
-| Previous: | [`load`](#load) where the currently handled file was loaded. If caching is used and there was a cached copy of that module, [`shouldTransformCachedModule`](#shouldtransformcachedmodule) if a plugin returned `true` for that hook |
-| Next: | [`moduleParsed`](#moduleparsed) once the file has been processed and parsed |
+| 类型: | `(code: string, id: string) => TransformResult` |
+| 类别: | 异步, 顺序 |
+| 前置钩子: | [`load`](#load)，用于加载当前处理的文件。如果使用缓存并且该模块有一个缓存副本，则为 [`shouldTransformCachedModule`](#shouldtransformcachedmodule)，如果插件为该钩子返回了 `true` |
+| 后置钩子: | [`moduleParsed`](#moduleparsed)，一旦文件已被处理和解析 |
 
 ```typescript
 type TransformResult = string | null | Partial<SourceDescription>;
@@ -564,29 +566,29 @@ interface SourceDescription {
 }
 ```
 
-Can be used to transform individual modules. To prevent additional parsing overhead in case e.g. this hook already used `this.parse` to generate an AST for some reason, this hook can optionally return a `{ code, ast, map }` object. The `ast` must be a standard ESTree AST with `start` and `end` properties for each node. If the transformation does not move code, you can preserve existing sourcemaps by setting `map` to `null`. Otherwise, you might need to generate the source map. See [the section on source code transformations](#source-code-transformations).
+可用于转换单个模块。为了避免额外的解析开销，例如此钩子已经使用 `this.parse` 生成了 AST，此钩子可以选择性地返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个标准的 ESTree AST，每个节点都有 `start` 和 `end` 属性。如果转换不移动代码，则可以通过将 `map` 设置为 `null` 来保留现有的源映射。否则，您可能需要生成源映射。请参见[源代码转换](#source-code-transformations)一节。
 
-Note that in watch mode or when using the cache explicitly, the result of this hook is cached when rebuilding and the hook is only triggered again for a module `id` if either the `code` of the module has changed or a file has changed that was added via `this.addWatchFile` the last time the hook was triggered for this module.
+请注意，在观察模式下或明确使用缓存时，当重新构建时，此钩子的结果会被缓存，仅当模块的 `code` 发生更改或上次触发此钩子时添加了通过 `this.addWatchFile` 添加的文件时，才会再次触发该模块的钩子。
 
-In all other cases, the [`shouldTransformCachedModule`](#shouldtransformcachedmodule) hook is triggered instead, which gives access to the cached module. Returning `true` from `shouldTransformCachedModule` will remove the module from cache and instead call `transform` again.
+在所有其他情况下，将触发 [`shouldTransformCachedModule`](#shouldtransformcachedmodule) 钩子，该钩子可以访问缓存的模块。从 `shouldTransformCachedModule` 返回 `true` 将从缓存中删除该模块，并再次调用 `transform`。
 
-You can also use the object form of the return value to configure additional properties of the module. Note that it's possible to return only properties and no code transformations.
+您还可以使用返回值的对象形式来配置模块的其他属性。请注意，可能只返回属性而没有代码转换。
 
-If `false` is returned for `moduleSideEffects` and no other module imports anything from this module, then this module will not be included even if the module would have side effects.
+如果对于 `moduleSideEffects` 返回 `false`，并且没有其他模块从该模块导入任何内容，则即使该模块具有副作用，该模块也不会被包含。
 
-If `true` is returned, Rollup will use its default algorithm to include all statements in the module that have side effects (such as modifying a global or exported variable).
+如果返回 `true`，则 Rollup 将使用其默认算法，包括模块中具有副作用的所有语句（例如修改全局或导出变量）。
 
-If `"no-treeshake"` is returned, treeshaking will be turned off for this module and it will also be included in one of the generated chunks even if it is empty.
+如果返回 `"no-treeshake"`，则将关闭此模块的树摇，并且即使为空，它也将包含在生成的块之一中。
 
-If `null` is returned or the flag is omitted, then `moduleSideEffects` will be determined by the `load` hook that loaded this module, the first `resolveId` hook that resolved this module, the [`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) option, or eventually default to `true`.
+如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子、[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `true` 确定。
 
-`assertions` contain the import assertions that were used when this module was imported. At the moment, they do not influence rendering for bundled modules but rather serve documentation purposes. If `null` is returned or the flag is omitted, then `assertions` will be determined by the `load` hook that loaded this module, the first `resolveId` hook that resolved this module, or the assertions present in the first import of this module.
+`assertions` 包含导入此模块时使用的导入断言。目前，它们不会影响捆绑模块的呈现，而是用于文档目的。如果返回 `null` 或省略标志，则 `assertions` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子或此模块的第一个导入中存在的断言确定。
 
-See [synthetic named exports](#synthetic-named-exports) for the effect of the `syntheticNamedExports` option. If `null` is returned or the flag is omitted, then `syntheticNamedExports` will be determined by the `load` hook that loaded this module, the first `resolveId` hook that resolved this module, the [`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) option, or eventually default to `false`.
+有关 `syntheticNamedExports` 选项的影响，请参见[合成命名导出](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子、[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `false` 确定。
 
-See [custom module meta-data](#custom-module-meta-data) for how to use the `meta` option. If `null` is returned or the option is omitted, then `meta` will be determined by the `load` hook that loaded this module, the first `resolveId` hook that resolved this module or eventually default to an empty object.
+有关如何使用 `meta` 选项，请参见[自定义模块元数据](#custom-module-meta-data)。如果返回 `null` 或省略选项，则 `meta` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子或最终默认为空对象确定。
 
-You can use [`this.getModuleInfo`](#this-getmoduleinfo) to find out the previous values of `assertions`, `meta`, `moduleSideEffects` and `syntheticNamedExports` inside this hook.
+您可以使用 [`this.getModuleInfo`](#this-getmoduleinfo) 在此钩子中查找 `assertions`、`meta`、`moduleSideEffects` 和 `syntheticNamedExports` 的先前值。
 
 ### watchChange
 
