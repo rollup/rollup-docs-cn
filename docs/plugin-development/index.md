@@ -1545,7 +1545,7 @@ this.warn({ message: 'hmm...' });
 
   或通过 `Array.from(this.moduleIds)` 转换为数组。
 
-## 文件 URLs {#File-URLs}
+## 文件 URLs {#file-urls}
 
 要从 JS 代码中引用文件 URL 引用，请使用 `import.meta.ROLLUP_FILE_URL_referenceId` 替换。这将生成依赖于输出格式并生成指向目标环境中
 
