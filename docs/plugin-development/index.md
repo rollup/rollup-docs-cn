@@ -90,9 +90,9 @@ export default ({
 - `sequential`：如果有多个插件实现此钩子，则所有这些钩子将按指定的插件顺序运行。如果钩子是 `async`，则此类后续钩子将等待当前钩子解决后再运行。
 - `parallel`：如果有多个插件实现此钩子，则所有这些钩子将按指定的插件顺序运行。如果钩子是 `async`，则此类后续钩子将并行运行，而不是等待当前钩子。
 
-钩子可以是函数，也可以是对象。在这种情况下，实际的钩子函数（或 `banner/footer/intro/outro` 的值）必须指定为 `handler`。这允许你提供更多的可选属性来改变钩子的执行：
+除了函数之外，钩子也可以是对象。在这种情况下，实际的钩子函数（或 `banner/footer/intro/outro` 的值）必须指定为 `handler`。这允许您提供更多的可选属性，以改变钩子的执行：
 
-- `order: "pre" | "post" | null`<br> 如果有多个插件实现此钩子，则可以选择先运行此插件（“pre”），最后运行此插件（“post”），或在用户指定的位置运行此插件（没有值或 `null`）。
+- `order: "pre" | "post" | null`<br> 如果有多个插件实现此钩子，则可以先运行此插件（`"pre"`），最后运行此插件（`"post"`），或在用户指定的位置运行（没有值或 `null`）。
 
   ```js
   export default function resolveFirst() {
@@ -111,7 +111,32 @@ export default ({
   }
   ```
 
-构建钩子在构建阶段运行，由 `rollup.rollup(inputOptions)` 触发。它们主要关注在 Rollup 处理输入文件之前定位、提供和转换输入文件。
+  如果有多个插件使用 `"pre"` 或 `"post"`，Rollup 将按用户指定的顺序运行它们。此选项可用于所有插件钩子。对于并行钩子，它会更改同步部分运行的顺序。
+
+- `sequential: boolean`<br> 不要与其他插件的相同钩子并行运行此钩子。仅可用于 `parallel` 钩子。使用此选项将使 Rollup 等待所有先前插件的结果，然后执行插件钩子，然后再次并行运行剩余的插件。例如，当您有插件 `A`、`B`、`C`、`D`、`E`，它们都实现了相同的并行钩子，并且中间插件 `C` 具有 `sequential: true` 时，Rollup 将首先并行运行 `A + B`，然后单独运行 `C`，然后再次并行运行 `D + E`。
+
+  当您需要在不同的 [`writeBundle`](#writebundle) 钩子中运行多个命令行工具并相互依赖时，这可能很有用（请注意，如果可能，建议在顺序 [`generateBundle`](#generatebundle) 钩子中添加/删除文件，这样更快，适用于纯内存构建，并允许其他内存构建插件查看文件）。您可以将此选项与 `order` 结合使用进行排序。
+
+  ```js
+  import { resolve } from 'node:path';
+  import { readdir } from 'node:fs/promises';
+
+  export default function getFilesOnDisk() {
+  	return {
+  		name: 'getFilesOnDisk',
+  		writeBundle: {
+  			sequential: true,
+  			order: 'post',
+  			async handler({ dir }) {
+  				const topLevelFiles = await readdir(resolve(dir));
+  				console.log(topLevelFiles);
+  			}
+  		}
+  	};
+  }
+  ```
+
+构建钩子在构建阶段运行，该阶段由 `rollup.rollup(inputOptions)` 触发。它们主要涉及在 Rollup 处理输入文件之前定位、提供和转换输入文件。构建阶段的第一个钩子是 [`options`](#options)，最后一个钩子始终是 [`buildEnd`](#buildend)。如果有构建错误，则在此之后将调用 [`closeBundle`](#closebundle)。
 
 <style>
 .legend-grid {
