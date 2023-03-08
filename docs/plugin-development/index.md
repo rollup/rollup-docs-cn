@@ -1368,8 +1368,6 @@ type Load = (options: {
 
 请注意，关于 `assertions`、`meta`、`moduleSideEffects` 和 `syntheticNamedExports` 选项，与 `resolveId` 钩子相同的限制适用：仅当模块尚未加载时，它们的值才会生效。因此，非常重要的是首先使用 `this.resolve` 查找任何插件是否想要在其 `resolveId` 钩子中设置这些选项的特殊值，并在适当时将这些选项传递给 `this.load`。下面的示例展示了如何处理包含特殊代码注释的模块以添加代理模块。请注意重新导出默认导出的特殊处理：
 
-以下是代码中的注释的中文翻译：
-
 ```js
 export default function addProxyPlugin() {
 	return {
