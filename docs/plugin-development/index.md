@@ -436,7 +436,8 @@ import { foo } from '../bar.js';
 例如，你可以将其用作为入口点定义自定义代理模块的机制。以下插件将所有入口点代理到注入 polyfill 导入的模块中。
 
 ```js
-// 我们在 polyfill id 前面加上 \0，以告诉其他插件不要尝试加载或转换它
+// 我们在 polyfill id 前面加上 \0，
+// 以告诉其他插件不要尝试加载或转换它
 const POLYFILL_ID = '\0polyfill';
 const PROXY_SUFFIX = '?inject-polyfill-proxy';
 
