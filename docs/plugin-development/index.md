@@ -511,11 +511,9 @@ function injectPolyfillPlugin() {
 
 `assertions` 参数告诉你导入中存在哪些导入断言。例如，`import "foo" assert {type: "json"}` 将传递 `assertions: {type: "json}"`。
 
-如果返回 `null`，则会转而使用其他 `resolveId` 函数，最终使用默认的解析行为。如果返回 `false`，则表示 `source` 应被视为外部模块，不包含在产物中。如果这发生在相对导入中，则会像使用 `external` 选项时一样重新规范化 id。如果返回一个对象，则可以将导入解析为不同的 id，同时将其从产物中排除。这使你可以将依赖项替换为外部依赖项，而无需用户手动通过 `external` 选项将它们标记为 “external” 。
+如果返回 `null`，则会转而使用其他 `resolveId` 函数，最终使用默认的解析行为。如果返回 `false`，则表示 `source` 应被视为外部模块，不包含在产物中。如果这发生在相对导入中，则会像使用 `external` 选项时一样重新规范化 id。
 
-加载并解析与给定 ID 对应的模块，如果提供了额外的元信息，则将其附加到模块上。这将触发与另一个模块导入该模块时触发的 [`load`](#load)、[`transform`](#transform) 和 [`moduleParsed`](#moduleparsed) 钩子相同的钩子。
-
-如果返回一个对象，则可以同时将导入解析为不同的 ID 并将其从捆绑包中排除。这使您可以将依赖项替换为外部依赖项，而无需用户通过 `external` 选项手动标记它们为“外部”：
+如果返回一个对象，则可以将导入解析为不同的 id，同时将其从产物中排除。这使你可以将依赖项替换为外部依赖项，而无需用户手动通过 `external` 选项将它们挪到产物“之外” ：
 
 ```js
 function externalizeDependencyPlugin() {
