@@ -511,9 +511,7 @@ function injectPolyfillPlugin() {
 
 `assertions` 参数告诉你导入中存在哪些导入断言。例如，`import "foo" assert {type: "json"}` 将传递 `assertions: {type: "json}"`。
 
-如果返回 `null`，则会转而使用其他 `resolveId` 函数，最终使用默认的解析行为。如果返回 `false`，则表示 `source` 应被视为外部模块，不包含在产物中。如果这发生在相对导入中，则会像使用 `external` 选项时一样重新规范化 id。
-
-如果返回一个对象，则可以将导入解析为不同的 id，同时将其从产物中排除。这使你可以将依赖项替换为外部依赖项，而无需用户手动通过 `external` 选项将它们标记为 “external” 。
+如果返回 `null`，则会转而使用其他 `resolveId` 函数，最终使用默认的解析行为。如果返回 `false`，则表示 `source` 应被视为外部模块，不包含在产物中。如果这发生在相对导入中，则会像使用 `external` 选项时一样重新规范化 id。如果返回一个对象，则可以将导入解析为不同的 id，同时将其从产物中排除。这使你可以将依赖项替换为外部依赖项，而无需用户手动通过 `external` 选项将它们标记为 “external” 。
 
 ```js
 function externalizeDependencyPlugin() {
@@ -1427,7 +1425,8 @@ export default function addProxyPlugin() {
 这里是另一个更详细的示例，其中我们通过 `resolveDependencies` 选项和对 `this.load` 的重复调用来扫描整个依赖子图。我们使用已处理模块 ID 的 `Set` 来处理循环依赖关系。插件的目标是向每个动态导入的块添加日志，该日志仅列出块中的所有模块。虽然这只是一个玩具示例，但该技术可以用于例如为子图中导入的所有 CSS 创建单个样式标记。
 
 ```js
-// 前导的 \0 指示其他插件不要尝试解析、加载或转换我们的代理模块
+// 前导的 \0 指示其他插件不要尝试解析、加载
+// 或转换我们的代理模块
 const DYNAMIC_IMPORT_PROXY_PREFIX = '\0dynamic-import:';
 
 export default function dynamicChunkLogsPlugin() {
@@ -1600,7 +1599,9 @@ this.warn({ message: 'hmm...' });
 
 ## 文件 URLs {#file-urls}
 
-要从 JS 代码中引用文件 URL 引用，请使用 `import.meta.ROLLUP_FILE_URL_referenceId` 替换。这将生成依赖于输出格式并生成指向目标环境中
+要在 JS 代码中引用文件 URL 引用，请使用 `import.meta.ROLLUP_FILE_URL_referenceId` 替换。这将生成依赖于输出格式的代码，并生成指向目标环境中发出的文件的 URL。请注意，除了 CommonJS 和 UMD 之外的所有格式都假定它们在浏览器环境中运行，其中 `URL` 和 `document` 可用。
+
+以下示例将检测 `.svg` 文件的导入，将导入的文件作为资源发出，并返回它们的 URL，例如用作 `img` 标签的 `src` 属性：
 
 ```js
 function svgResolverPlugin() {
