@@ -1,8 +1,8 @@
 import square from './square.js';
 
-// Everything used by both entry modules will become
-// a separate chunk that is imported by both entry
-// chunks to avoid code duplication
+// 两个入口模块都使用的所有内容都将成为一个单独的代码块，
+// 由两个入口代码块导入
+// 以避免代码重复
 export default function cube(x) {
 	return square(x) * x;
 }

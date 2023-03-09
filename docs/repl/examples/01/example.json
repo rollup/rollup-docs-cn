@@ -1,5 +1,5 @@
 {
-	"title": "Named exports",
+	"title": "Named exports (具名导出）",
 	"options": {
 		"output": {
 			"exports": "auto",

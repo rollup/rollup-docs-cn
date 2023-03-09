@@ -21,18 +21,16 @@ const version = computed(() => {
 	const { type, version } = rollupStore.request;
 	const actualVersion = rollupStore.loaded.instance?.VERSION;
 	if (type === 'local') {
-		return actualVersion
-			? `Local development build (${actualVersion})`
-			: 'Loading local development build …';
+		return actualVersion ? `本地开发构建 (${actualVersion})` : '加载本地开发构建中 …';
 	}
 	if (type === 'pr') {
 		return actualVersion
-			? `Pull request ${getPRLink(version)} (${actualVersion})`
-			: `Loading pull request ${getPRLink(version)} …`;
+			? `拉取请求 ${getPRLink(version)} (${actualVersion})`
+			: `加载拉取请求中 ${getPRLink(version)} …`;
 	}
 	return actualVersion
 		? `Rollup ${getVersionLink(actualVersion)}`
-		: `Loading Rollup ${version || '(latest)'} …`;
+		: `加载 Rollup ${version || '(latest)'} …`;
 });
 </script>
 

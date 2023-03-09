@@ -1,5 +1,5 @@
 {
-	"title": "Dynamic imports",
+	"title": "Dynamic imports （动态导入）",
 	"options": {
 		"output": {
 			"inlineDynamicImports": false

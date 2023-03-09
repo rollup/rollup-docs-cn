@@ -5,18 +5,18 @@
 			<span v-if="editableHeader">
 				<input ref="input" v-model="module.name" @focus="selectName" placeholder="foo.js" />
 				<button class="remove" @click="emit('remove')">
-					<span class="label">remove</span>
+					<span class="label">移除</span>
 					<span class="icon-cancel"></span>
 				</button>
 				<button class="toggle-entry" @click="module.isEntry = !module.isEntry">
-					<span class="label">(entry&nbsp;module)</span>
+					<span class="label">(入口&nbsp;模块)</span>
 					<span v-if="module.isEntry" class="icon-minus"></span>
 					<span v-else class="icon-plus"></span>
 				</button>
 			</span>
 			<span v-else-if="showHeader" class="module-name">
 				{{ module.name }}
-				<span v-if="module.isEntry" class="entry-module-label">(entry module)</span>
+				<span v-if="module.isEntry" class="entry-module-label">(入口模块)</span>
 			</span>
 		</header>
 		<ReplEditor v-model:code="module.code" :moduleName="module.name" :readonly="!editable" />

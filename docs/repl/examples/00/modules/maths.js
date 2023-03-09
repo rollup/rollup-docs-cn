@@ -1,21 +1,21 @@
 // maths.js
 
-// This function isn't used anywhere, so
-// Rollup excludes it from the bundle...
+// 这个函数并没有被外部模块使用
+// 所以 Rollup 会将它从打包产物中排除掉...
 export const square = x => x * x;
 
-// This function gets included
-// rewrite this as `square(x) * x`
-// and see what happens!
+// 这个函数被外部模块使用了
+// 你把这个函数重写为 `square(x) * x`
+// 看看会发生什么。
 export const cube = x => x * x * x;
 
-// This "side effect" creates a global
-// variable and will not be removed.
+// 这个“副作用”创建了一个全局变量
+// 所以它不会被移除。
 window.effect1 = 'created';
 
 const includeEffect = false;
 if (includeEffect) {
-	// On the other hand, this is never
-	// executed and thus removed.
+	// 另一方面来说，这将永远不会被执行
+	// 所以会被移除。
 	window.effect1 = 'not created';
 }

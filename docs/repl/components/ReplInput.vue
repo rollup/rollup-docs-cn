@@ -15,7 +15,7 @@
 
 	<button class="new-module" @click="createModule">
 		<span class="icon icon-plus"></span>
-		add module
+		添加模块
 	</button>
 </template>
 
