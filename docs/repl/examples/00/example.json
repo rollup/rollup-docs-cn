@@ -1,5 +1,5 @@
 {
-	"title": "Tree-shaking",
+	"title": "除屑优化（Tree-shaking）",
 	"options": {
 		"treeshake": true
 	}

@@ -1,11 +1,11 @@
-// NAMED EXPORTS
-// There are many ways to export bindings
-// from an ES2015 module
+// 具名导出
+// 有很多种方法可以从 ES2015 模块中
+// 导出绑定
 export var foo = 1;
 
 export function bar() {
-	// try changing this to `foo++`
-	// when generating CommonJS
+	// 在生成 CommonJS 时
+	// 尝试将此更改为 `foo++`
 	return foo;
 }
 

@@ -1,12 +1,12 @@
 <template>
 	<header>
 		<select :value="modulesStore.selectedExample" @input="handleInput">
-			<option disabled selected value="">Select an example...</option>
+			<option disabled selected value="">选择一个例子...</option>
 			<option v-for="(example, id) in examplesById" :key="id" :value="id">
 				{{ example.title }}
 			</option>
 		</select>
-		<button class="start-over" @click="startOver">Start over</button>
+		<button class="start-over" @click="startOver">重新开始</button>
 	</header>
 </template>
 

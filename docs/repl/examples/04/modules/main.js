@@ -1,8 +1,8 @@
-// DYNAMIC NAMESPACES
-// In some cases, you don't know which exports will
-// be accessed until you actually run the code. In
-// these cases, Rollup creates a namespace object
-// for dynamic lookup
+// 动态名称空间
+// 在某些情况下
+// 直到实际运行代码之前，你不知道哪些代码块将会被导出。
+// 在这些情况下
+// Rollup 会创建一个用于动态查找的命名空间对象
 import * as constants from './constants';
 
 for (const key of Object.keys(constants)) {

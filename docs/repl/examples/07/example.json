@@ -1,6 +1,6 @@
 {
-	"title": "Multiple Entry Modules",
-    "entryModules": ["main.js", "otherEntry.js"],
+  "title": "多个入口模块",
+  "entryModules": ["main.js", "otherEntry.js"],
   "options": {
     "output": {
       "minifyInternalExports": false,

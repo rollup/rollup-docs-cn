@@ -9,7 +9,7 @@
 						class="remove"
 						@click="optionsStore.set(option.name, undefined)"
 					>
-						<span class="label">remove</span>
+						<span class="label">移除</span>
 						<span class="icon-cancel"></span>
 					</button>
 				</h3>
@@ -57,7 +57,7 @@
 					$event.target.value = '_';
 				"
 			>
-				<option disabled selected value="_">add option</option>
+				<option disabled selected value="_">添加设置</option>
 				<option
 					v-for="option in optionsStore.additionalAvailableOptions"
 					:key="option"

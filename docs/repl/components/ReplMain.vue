@@ -1,7 +1,7 @@
 <template>
 	<div class="repl">
 		<div class="left">
-			<h2>ES6 modules go in...</h2>
+			<h2>ES6 模块进入...</h2>
 			<div class="input">
 				<ReplInput />
 			</div>
@@ -9,8 +9,8 @@
 		<div class="right">
 			<h2>
 				...
-				{{ rollupOutputStore.output.length > 1 ? 'chunks come' : 'bundle comes' }}
-				out
+				{{ rollupOutputStore.output.length > 1 ? '产出分块' : '产出包' }}
+				输出
 			</h2>
 			<div class="output">
 				<ReplOutput />

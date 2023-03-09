@@ -1,7 +1,7 @@
 import cube from './cube.js';
 
-// This is only imported by one entry module and
-// shares a chunk with that module
+// 这只被一个入口模块导入
+// 并与该模块共享一个代码块
 export default function hyperCube(x) {
 	return cube(x) * x;
 }
