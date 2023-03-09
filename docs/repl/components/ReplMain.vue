@@ -1,7 +1,7 @@
 <template>
 	<div class="repl">
 		<div class="left">
-			<h2>进入ES6模块...</h2>
+			<h2>ES6 模块进入...</h2>
 			<div class="input">
 				<ReplInput />
 			</div>
