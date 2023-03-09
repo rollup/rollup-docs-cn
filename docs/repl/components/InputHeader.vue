@@ -1,7 +1,7 @@
 <template>
 	<header>
 		<select :value="modulesStore.selectedExample" @input="handleInput">
-			<option disabled selected value="">选择一个例子。。。</option>
+			<option disabled selected value="">选择一个例子...</option>
 			<option v-for="(example, id) in examplesById" :key="id" :value="id">
 				{{ example.title }}
 			</option>
