@@ -2,7 +2,7 @@
 title: 命令行接口
 ---
 
-# {{ $frontmatter.title }}
+# {{$frontmatter.title}}
 
 [[toc]]
 
@@ -131,7 +131,7 @@ export default {
 };
 ```
 
-你可以从配置文件中导出一个 **数组**，以便一次从多个不相关的输入进行打包，即使在监视模式下也可以。要使用相同的输入打出不同的包，你需要为每个输入提供一个输出选项数组：
+你可以从配置文件中导出一个**数组**，以便一次从多个不相关的输入进行打包，即使在监视模式下也可以。要使用相同的输入打出不同的包，你需要为每个输入提供一个输出选项数组：
 
 ```javascript
 // rollup.config.js (building more than one bundle)
@@ -290,7 +290,7 @@ rollup --config node:my-special-config
 
 ### 获取当前目录 {#getting-the-current-directory}
 
-对于 CommonJS 文件，人们经常使用 `__dirname` 访问当前目录并将相对路径解析为绝对路径。这在原生 ES 模块中不被支持。相反，我们建议使用以下方法（例如生成外部模块的绝对 id）：
+对于 CommonJS 文件，人们经常使用 `__dirname` 访问当前目录并将相对路径解析为绝对路径。这在原生 ES 模块中不被支持。相反，我们建议使用以下方法 (例如生成外部模块的绝对 id)：
 
 ```js
 // rollup.config.js
@@ -305,7 +305,7 @@ export default {
 
 ### 导入 package.json {#importing-packagejson}
 
-导入你的 package 文件可能很有用，例如自动将你的依赖项标记为“external”。根据你的 Node 版本，有不同的方法来实现此目的：
+导入你的 package 文件可能很有用，例如自动将你的依赖项标记为 “external”。根据你的 Node 版本，有不同的方法来实现此目的：
 
 - 对于 Node 17.5+，你可以使用导入断言
 
@@ -439,13 +439,13 @@ export default {
 --watch.skipWrite           在监视时不要将文件写入磁盘
 ```
 
-以下标志仅通过命令行界面可用。所有其他标志都对应并覆盖其配置文件等效项，请参阅 [选项大列表](../configuration-options/index.md) 获取详细信息。
+以下标志仅通过命令行界面可用。所有其他标志都对应并覆盖其配置文件等效项，请参阅[选项大列表](../configuration-options/index.md)获取详细信息。
 
 ### `-h`/`--help` {#h-help}
 
 打印帮助文档。
 
-### `-p <plugin>`, `--plugin <plugin>` {#p-plugin-plugin-plugin}
+### `-p <plugin>`，`--plugin <plugin>` {#p-plugin-plugin-plugin}
 
 使用指定的插件。在此处指定插件的方式有多种：
 
@@ -523,7 +523,7 @@ _注意：在观察模式下，Rollup 的命令行界面将设置 `ROLLUP_WATCH`
 
 ### `--silent` {#silent}
 
-不在控制台上打印警告信息。如果你的配置文件包含一个 `onwarn` 处理程序，该处理程序仍然会被调用。要手动防止这种情况，你可以按照 [配置文件](#configuration-files) 结尾处所述的方式在配置文件中访问命令行选项。
+不在控制台上打印警告信息。如果你的配置文件包含一个 `onwarn` 处理程序，该处理程序仍然会被调用。要手动防止这种情况，你可以按照[配置文件](#configuration-files)结尾处所述的方式在配置文件中访问命令行选项。
 
 ### `--failAfterWarnings` {#failafterwarnings}
 
@@ -561,13 +561,13 @@ npm run build -- --environment BUILD:development
 
 ### `--stdin=ext` {#stdinext}
 
-在从 stdin 读取内容时指定虚拟文件扩展名。默认情况下，Rollup 将使用虚拟文件名 `-`，没有扩展名，用于从 stdin 读取的内容。但是，一些插件依赖于文件扩展名来确定是否处理文件。另请参见 [从 stdin 读取文件](#reading-a-file-from-stdin)。
+在从 stdin 读取内容时指定虚拟文件扩展名。默认情况下，Rollup 将使用虚拟文件名 `-`，没有扩展名，用于从 stdin 读取的内容。但是，一些插件依赖于文件扩展名来确定是否处理文件。另请参见[从 stdin 读取文件](#reading-a-file-from-stdin)。
 
 ### `--no-stdin` {#no-stdin}
 
-不要从 `stdin` 读取文件。设置此标志将防止将内容传输到 Rollup 并确保 Rollup 将 `-` 和 `-.[ext]` 解释为常规文件名，而不是将其解释为 `stdin` 的名称。另请参见 [从 stdin 读取文件](#reading-a-file-from-stdin)。
+不要从 `stdin` 读取文件。设置此标志将防止将内容传输到 Rollup 并确保 Rollup 将 `-` 和 `-.[ext]` 解释为常规文件名，而不是将其解释为 `stdin` 的名称。另请参见[从 stdin 读取文件](#reading-a-file-from-stdin)。
 
-### `--watch.onStart <cmd>`, `--watch.onBundleStart <cmd>`, `--watch.onBundleEnd <cmd>`, `--watch.onEnd <cmd>`, `--watch.onError <cmd>` {#watchonstart-cmd-watchonbundlestart-cmd-watchonbundleend-cmd-watchonend-cmd-watchonerror-cmd}
+### `--watch.onStart <cmd>`，`--watch.onBundleStart <cmd>`，`--watch.onBundleEnd <cmd>`，`--watch.onEnd <cmd>`，`--watch.onError <cmd>` {#watchonstart-cmd-watchonbundlestart-cmd-watchonbundleend-cmd-watchonend-cmd-watchonerror-cmd}
 
 在监视模式下，为监视事件代码运行一个 shell 命令 `<cmd>`。另请参见 [rollup.watch](../javascript-api/index.md#rollup-watch)。
 
