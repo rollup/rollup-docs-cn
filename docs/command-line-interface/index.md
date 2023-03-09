@@ -221,7 +221,7 @@ export default commandLineArgs => {
 }
 ```
 
-### Config Intellisense {#config-intellisense}
+### 填写配置时的智能提示 {#config-intellisense}
 
 由于 Rollup 随附了 TypeScript 类型定义，因此你可以使用 JSDoc 类型提示来利用你的 IDE 的智能感知功能：
 
