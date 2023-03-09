@@ -1,5 +1,5 @@
 {
-	"title": "Default exports （默认导出）",
+	"title": "默认导出（Default exports）",
 	"options": {
 		"output": {
 			"exports": "auto",

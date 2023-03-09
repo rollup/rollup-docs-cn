@@ -1,5 +1,5 @@
 {
-	"title": "Dynamic namespaces （动态名称空间）",
+	"title": "动态名称空间",
 	"options": {
 		"output": {
 			"freeze": "true"

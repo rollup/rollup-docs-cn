@@ -9,7 +9,7 @@
 		<div class="right">
 			<h2>
 				...
-				{{ rollupOutputStore.output.length > 1 ? '代码块' : '产物' }}
+				{{ rollupOutputStore.output.length > 1 ? '产出分块' : '产出包' }}
 				输出
 			</h2>
 			<div class="output">

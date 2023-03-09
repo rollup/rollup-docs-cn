@@ -5,7 +5,7 @@
 export const square = x => x * x;
 
 // 这个函数被外部模块使用了
-// 你把这个函数重写为 `square(x) * x`
+// 把这个函数重写为 `square(x) * x`
 // 看看会发生什么。
 export const cube = x => x * x * x;
 
