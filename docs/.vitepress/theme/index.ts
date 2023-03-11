@@ -2,6 +2,7 @@ import { createPinia } from 'pinia';
 // eslint-disable-next-line import/no-unresolved
 import defaultTheme from 'vitepress/theme';
 import './custom.css';
+import './styles/font.css';
 
 const pinia = createPinia();
 const theme: typeof defaultTheme = {
