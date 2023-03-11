@@ -69,7 +69,7 @@ console.log(x);
 import x from '.../external.js';
 console.log(x);
 
-// output
+// 输出
 // 不同的依赖将会合并
 import x from '../external.js';
 
@@ -106,7 +106,7 @@ export default {
 };
 ```
 
-如果你想将一组文件转换为另一种格式，并同时保持文件结构和导出签名，推荐的方法是将每个文件变成一个入口文件，而不是使用 [`output.preserveModules`](#output-preservemodules)，后者可能会除屑导出，并产生由插件创建的虚拟文件。你可以动态地处理，例如通过 `glob` 包。
+如果你想将一组文件转换为另一种格式，并同时保持文件结构和导出签名，推荐的方法是将每个文件变成一个入口文件，而不是使用 [`output.preserveModules`](#output-preservemodules)，后者可能会导出被除屑优化，并产生由插件创建的虚拟文件。你可以动态地处理，例如通过 `glob` 包。
 
 ```js
 import glob from 'glob';
@@ -222,7 +222,7 @@ export default {
 
 /*
 var MyBundle = (function ($) {
-  // code goes here
+  // 这里编辑代码
 }($));
 */
 ```
@@ -384,11 +384,11 @@ async function buildWithCache() {
 
 buildWithCache()
 	.then(bundle => {
-		// ... do something with the bundle
+		// ... 操作 bundle
 	})
 	.then(() => buildWithCache()) // 将使用之前构建的缓存
 	.then(bundle => {
-		// ... do something with the bundle
+		// ... 操作 bundle
 	});
 ```
 
@@ -441,8 +441,8 @@ export default {
 		if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return;
 
 		// 抛出其他类型的警告
-		// 使用 Object.assign 拷贝 new Error(warning.message) 将使
-		// 命令行打印额外的信息，如警告位置
+		// 使用 Object.assign 拷贝 new Error(warning.message)
+		// 将使命令行打印额外的信息，如警告位置
 		// 和帮助 URL。
 		if (warning.code === 'MISSING_EXPORT')
 			throw Object.assign(new Error(), warning);
@@ -1299,7 +1299,7 @@ define(['https://d3js.org/d3.v4.min'], function (d3) {
 |  CLI： | `--preserveModules`/`--no-preserveModules` |
 | 默认： | `false`                                    |
 
-该选项将使用原始模块名作为文件名，为所有模块创建单独的 chunk，而不是创建尽可能少的 chunk。它需要配合 [`output.dir`](#output-dir) 选项一起使用。除屑（Tree-shaking）仍会对没有被入口使用或者执行阶段没有副作用的文件生效，并删除不属于入口起点的未使用文件的导出。另一方面，如果插件（如 `@rollup/plugin-commonjs`）为实现某些结果而产生了额外的“虚拟”文件，这些文件将作为实际文件使用 `_virtual/fileName.js` 模式产生。
+该选项将使用原始模块名作为文件名，为所有模块创建单独的 chunk，而不是创建尽可能少的 chunk。它需要配合 [`output.dir`](#output-dir) 选项一起使用。除屑优化（Tree-shaking）仍会对没有被入口使用或者执行阶段没有副作用的文件生效，并删除不属于入口起点的未使用文件的导出。另一方面，如果插件（如 `@rollup/plugin-commonjs`）为实现某些结果而产生了额外的“虚拟”文件，这些文件将作为实际文件使用 `_virtual/fileName.js` 模式产生。
 
 因此，如果你直接想从这些文件中引入，不建议盲目地使用这个选项将整个文件结构转换为另一种格式，因为预期的输出可能会丢失。在这种情况下，你应该把所有文件明确指定为入口，把它们添加到 [`input` 选项对象](#input) 中，可以查看那里的例子。
 
@@ -1574,7 +1574,7 @@ console.log(shared);
 
 启用此选项后，当使用废弃的功能时，Rollup 将抛出错误而不是警告。此外，如果使用了在下一个主版本（major version）被标记为废弃警告的功能时，也会抛出错误。
 
-该选项被用于例如插件作者能尽早地为即将发布的主要版本调整其插件配置。
+该选项用于让插件作者等人能尽早地为即将发布的主要版本调整其插件配置。
 
 ## 慎用选项 {#danger-zone}
 
@@ -1805,7 +1805,7 @@ const hello = require('your-lib').hello;
 const { hello } = require('your-lib');
 ```
 
-The wrinkle is that if you use `named` exports but _also_ have a `default` export, a user would have to do something like this to use the default export:
+问题是，如果你使用 `named` 导出，但 _也_ 会有一个 `default` 导出，用户将不得不类似这样做来使用默认到处：
 
 ```js
 // your-lib 包入口
@@ -1876,7 +1876,7 @@ exports.x = external.x;
 |  CLI： | `--indent`/`--no-indent` |
 | 默认： | `true`                   |
 
-该选项用于指定代码缩进的缩进字符串（在 `amd`，`iife`，`umd` 和 `system` 格式中）。它的值可以是 `false` （没有缩进）或 `true` （默认值 - 自动缩进）。
+该选项用于指定代码缩进的缩进字符串（在 `amd`，`iife`，`umd` 和 `system` 格式中）。它的值可以是 `false` （没有缩进）或 `true` （默认值——自动缩进）。
 
 ```js
 // rollup.config.js
@@ -1999,7 +1999,7 @@ type ModuleSideEffectsOption =
 type HasModuleSideEffects = (id: string, external: boolean) => boolean;
 ```
 
-该选项用于决定是否应用除屑（tree-shaking），并微调除屑的过程。该选项的值设置为 `false` 时，Rollup 将生成更大的 bundle，但是可能会提高构建性能。你也可以从三个预设中选择一个，如果有新的选项加入，就会自动更新：
+该选项用于决定是否应用除屑优化（tree-shaking），并微调除屑优化的过程。该选项的值设置为 `false` 时，Rollup 将生成更大的 bundle，但是可能会提高构建性能。你也可以从三个预设中选择一个，如果有新的选项加入，就会自动更新：
 
 - 值为 `"smallest"`，将选择选项值以尽可能减小输出大小。这对大多数代码库都应该有效，只要你不依赖于某些模式，目前是：
   - 有副作用的 getters 只有在返回值被使用时才会被保留（[`treeshake.propertyReadSideEffects: false`](#treeshake-propertyreadsideeffects)）
@@ -2007,10 +2007,10 @@ type HasModuleSideEffects = (id: string, external: boolean) => boolean;
   - 你不应该打包依赖于检测损坏的内置函数的 polyfill（[`treeshake.tryCatchDeoptimization: false`](#treeshake-trycatchdeoptimization)）
   - 一些语义问题可能被吞没（[`treeshake.unknownGlobalSideEffects: false`](#treeshake-unknownglobalsideeffects)，[`treeshake.correctVarValueBeforeDeclaration: false`](#treeshake-correctvarvaluebeforedeclaration)）
 - 值为 `"recommended"`，对于大多数的使用模式来说，应该可以很好地工作。虽然一些语义问题可能会被吞没（`treeshake.unknownGlobalSideEffects: false`，`treeshake.correctVarValueBeforeDeclaration: false`）
-- 值为 `"safest"`，试图在提供一些基本的除屑功能的同时，尽可能地符合规范。
+- 值为 `"safest"`，试图在提供一些基本的除屑优化功能的同时，尽可能地符合规范。
 - 值为 `true`，相当于不指定该选项，并将始终选择默认值（见下文）
 
-如果你发现由除屑算法造成的 bug，请给我们提 issue！将此选项的值设置为对象意味着启用除屑，并启用以下选项：
+如果你发现由除屑优化算法造成的 bug，请给我们提 issue！将此选项的值设置为对象意味着启用除屑优化，并启用以下选项：
 
 #### treeshake.annotations {#treeshake-annotations}
 
@@ -2045,7 +2045,7 @@ class Impure {
 在某些极端情况下，如果一个变量在其声明赋值之前被访问并且未被重新赋值，那么 Rollup 可能会错误地假设该变量在整个程序中都是常量，就像下面的示例一样。但是，如果使用 `var` 声明变量，则是不正确的，因为这些变量可以在其声明之前被访问，此时它们将被定义为 `undefined`。值为 `true` 时可以确保 Rollup 不会对使用 `var` 声明的变量的值做任何假设。但请注意，这可能会对除屑优化的结果产生明显的负面影响。
 
 ```js
-// 除非 treeshake.correctVarValueBeforeDeclaration === true，否则一切都将被除屑
+// 除非 treeshake.correctVarValueBeforeDeclaration === true，否则一切都将被除屑优化
 let logBeforeDeclaration = false;
 
 function logIfEnabled() {
@@ -2191,7 +2191,7 @@ console.log('this side-effect and the mutation are retained');
 console.log(foo);
 ```
 
-请注意，尽管名字有点误导，但此选项不会向没有副作用的模块“添加”副作用。重要的是，例如，因为你需要这个模块来跟踪依赖关系，而将空模块“包含”在 bundle 中，则插件接口允许你通过 [`resolveId`](../plugin-development/index.md#resolveid)，[`load`](../plugin-development/index.md#load) 或 [`transform`](../plugin-development/index.md#transform) 钩子将模块指定为不从除屑中删除。
+请注意，尽管名字有点误导，但此选项不会向没有副作用的模块“添加”副作用。重要的是，例如，因为你需要这个模块来跟踪依赖关系，而将空模块“包含”在 bundle 中，则插件接口允许你通过 [`resolveId`](../plugin-development/index.md#resolveid)，[`load`](../plugin-development/index.md#load) 或 [`transform`](../plugin-development/index.md#transform) 钩子将模块指定为不被除屑优化删除。
 
 #### treeshake.preset {#treeshake-preset}
 
@@ -2520,7 +2520,7 @@ _请使用 [`renderDynamicImport`](../plugin-development/index.md#renderdynamici
 
 ### output.experimentalDeepDynamicChunkOptimization {#output-experimentaldeepdynamicchunkoptimization}
 
-_This option is no longer needed._
+_该选项不再需要_
 
 |  |  |
 | --: | :-- |
