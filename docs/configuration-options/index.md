@@ -15,10 +15,10 @@ title: 配置选项
 | 类型： | `(string \| RegExp)[]\| RegExp\| string\| (id: string, parentId: string, isResolved: boolean) => boolean` |
 | CLI： | `-e`/`--external <external-id,another-external-id,...>` |
 
-该选项用于匹配需要排除在 bundle 外部的模块，它的值可以是一个接收模块 `id` 参数并返回 `true` （表示排除）或 `false` （表示包含）的函数，也可以一个 ID 构成的 `Array`，还可以能匹配到模块 ID 的正则表达式。除此之外，它还可以只是单个的模块 ID 或正则表达式。其匹配得到的模块 ID 应该满足以下条件之一：
+该选项用于匹配需要排除在 bundle 外部的模块，它的值可以是一个接收模块 `id` 参数并返回 `true` （表示外部依赖）或 `false` （表示非外部依赖）的函数，也可以是一个模块 ID 数组或者正则表达式。除此之外，它还可以只是单个的模块 ID 或正则表达式。被匹配的模块 ID 应该满足以下条件之一：
 
-1. 外部依赖的名称，需要和引入语句中书写的形式一样。例如，如果想标记 `import "dependency.js"` 为外部依赖，就需要使用 `"dependency.js"` 作为模块 ID，而如果要标记 `import "dependency"` 为外部依赖，就要使用 `"dependency"`。
-2. 解析过的模块 ID（比如，文件的绝对路径）。
+1. 外部依赖的名称，需要和引入语句中写法完全一致。例如，如果想标记 `import "dependency.js"` 为外部依赖，就需要使用 `"dependency.js"` 作为模块 ID；而如果要标记 `import "dependency"` 为外部依赖，则使用 `"dependency"`。
+2. 解析过的模块 ID（如文件的绝对路径）。
 
 ```js
 // rollup.config.js
@@ -39,7 +39,7 @@ export default {
 };
 ```
 
-请注意，如果想通过 `/node_modules/` 正则表达式过滤包的引入，例如 `import {rollup} from 'rollup'`，你需要先引入类似 [@rollup/plugin-node-resolve](https://github.com/rollup/plugins/tree/master/packages/node-resolve) 的插件，来将引入依赖解析为 `node_modules`。
+请注意，如果要通过 `/node_modules/` 正则表达式过滤掉包的引入，例如 `import {rollup} from 'rollup'`，需要先使用类似 [@rollup/plugin-node-resolve](https://github.com/rollup/plugins/tree/master/packages/node-resolve) 的插件，来将引入依赖解析到 `node_modules`。
 
 当用作命令行参数时，该选项的值应该是一个以逗号分隔的模块 ID 列表：
 
@@ -47,15 +47,15 @@ export default {
 rollup -i src/main.js ... -e foo,bar,baz
 ```
 
-当该选项的值为函数时，它提供了三个参数 `(id, parent, isResolved)`，可以可以为你提供更细粒度的控制：
+当该选项的值为函数时，它提供了三个参数 `(id, parent, isResolved)`，可以为你提供更细粒度的控制：
 
 - `id` 为相关模块 id
-- `parent` 为执行引入的模块 id
-- `isResolved` 表示是否已经被插件等方式解决了模块依赖
+- `parent` 为进行引入的模块 id
+- `isResolved` 表示 `id` 是否已被插件等解析
 
 当创建 `iife` 或 `umd` 格式的 bundle 时，你需要通过 [`output.globals`](#output-globals) 选项提供全局变量名，以替换掉外部引入。
 
-如果一个相对引入，即以 `./` 或 `../` 开头，被标记为 `external`，rollup 将在内部将该模块 ID 解析为系统中绝对文件路径，以便引入的不同外部模块可以合并。当写入生成的 bundle 后，这些引入模块将再次被转换为相对引入。例如：
+如果一个相对引入，即以 `./` 或 `../` 开头，被标记为 `external`，rollup 将在内部将该模块 ID 解析为绝对路径，以便引入的不同外部模块可以合并。当写入生成的 bundle 后，这些引入模块将再次被转换为相对引入。例如：
 
 ```js
 // 输入
@@ -66,7 +66,7 @@ console.log(x);
 
 // src/nested/nested.js
 // 如果引入依赖已存在，它将指向同一个文件
-import x from '.../external.js';
+import x from '../../external.js';
 console.log(x);
 
 // 输出
