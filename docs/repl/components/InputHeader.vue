@@ -17,7 +17,7 @@ import { useOptions } from '../stores/options';
 
 const modulesStore = useModules();
 const optionsStore = useOptions();
-const handleInput = (event: InputEvent) =>
+const handleInput = (event: Event) =>
 	modulesStore.selectExample((event.target as HTMLSelectElement).value);
 const startOver = () => {
 	modulesStore.set([{ code: '', isEntry: true, name: 'main.js' }], '');
