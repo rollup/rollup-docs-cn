@@ -420,7 +420,7 @@ buildWithCache()
 |  CLI： | `--maxParallelFileOps <number>` |
 | 默认： | 20                              |
 
-该选项限制 rollup 在读取模块或写入 chunk 时，同时能打开的文件数量。如果没有限制或者数值足够高，构建可能会失败，出现 "EMFILE: Too many open files"（EMFILE：打开的文件数过多）。这取决于操作系统限制的句柄数（open file handles）大小。
+该选项限制 rollup 在读取模块或写入 chunk 时，同时能打开的文件数量。如果没有限制或者数值足够高，构建可能会失败，显示“EMFILE: Too many open files“（EMFILE：打开的文件数过多）。这取决于操作系统限制的句柄数（open file handles）大小。
 
 ### onwarn {#onwarn}
 
@@ -2310,7 +2310,7 @@ const element = angular.element;
 
 这些选项反应了尚未完全确定的新功能。因此，它们的可行性、行为和用法在次要版本（minor version）中可能发生变化。
 
-### experimentalCacheExpiry
+### experimentalCacheExpiry {#experimentalcacheexpiry}
 
 |        |                                            |
 | -----: | :----------------------------------------- |
@@ -2318,9 +2318,9 @@ const element = angular.element;
 |  CLI： | `--experimentalCacheExpiry <numberOfRuns>` |
 | 默认： | `10`                                       |
 
-Determines after how many runs cached assets that are no longer used by plugins should be removed.
+该选项用于确定在多少次执行以后，应该删除不再被插件使用的静态缓存。
 
-### experimentalLogSideEffects
+### experimentalLogSideEffects {#experimentallogsideeffects}
 
 |  |  |
 | --: | :-- |
@@ -2328,11 +2328,11 @@ Determines after how many runs cached assets that are no longer used by plugins 
 | CLI： | `--experimentalLogSideEffects`/`--no-experimentalLogSideEffects` |
 | 默认： | `false` |
 
-When set to `true`, this will log the first side effect it finds in every file to the console. This can be very helpful to figure which files have side effects and what the actual side effects are. Removing side effects can improve tree-shaking and chunk generation and is crucial to make [`output.experimentalMinChunkSize`](#output-experimentalminchunksize) work.
+该选项值为 `true` 时，将会在每个文件发现的第一个副作用打印到控制台。这对于计算哪些文件有副作用以及实际的副作用是什么非常有帮助。删除副作用可以改善除屑优化和 chunk 的生成，对于使 [`output.experimentalMinChunkSize`](#output-experimentalminchunksize) 发挥作用至关重要。
 
-This option will only log top-level statements, though. Sometimes, e.g. in case of immediately-invoked-function-expressions, the actual side effect can be hidden inside a nested expression.
+不过，该选项只记录顶层的语句。有时，例如在立即调用函数表达式的情况下，实际的副作用可能隐藏在一个嵌套表达式中。
 
-### output.experimentalMinChunkSize
+### output.experimentalMinChunkSize {#output-experimentalminchunksize}
 
 |        |                                     |
 | -----: | :---------------------------------- |
@@ -2340,13 +2340,13 @@ This option will only log top-level statements, though. Sometimes, e.g. in case 
 |  CLI： | `--experimentalMinChunkSize <size>` |
 | 默认： | `0`                                 |
 
-Set a minimal chunk size target in Byte for code-splitting setups. When this value is greater than `0`, Rollup will try to merge any chunk that does not have side effects when executed, i.e. any chunk that only contains function definitions etc., and is below this size limit into another chunk that is likely to be loaded under similar conditions.
+该选项用于为代码分割设置一个以字节为单位的最小 chunk 大小。当这个值大于 `0` 时，Rollup 将尝试把任何执行时没有副作用的 chunk，即任何只包含函数定义之类的 chunk 合并到另一个可能在类似条件下加载的块中。
 
-This will mean that the generated bundle will possibly load code that is not required yet in order to reduce the number of chunks. The condition for the merged chunks to be side effect free ensures that this does not change behaviour.
+这意味着生成的 bundle 可能会加载还不需要的代码，用以减少 chunk 的数量。合并后的 chunk 必须是无副作用的，这个条件可以确保不会改变行为。
 
-Unfortunately, due to the way chunking works, chunk size is measured before any chunk rendering plugins like minifiers ran, which means you should use a high enough limit to take this into account.
+但是，由于分块的工作方式，chunk 大小是在任何分块渲染插件，比如 minifiers 运行之前运行的，考虑这一点，这意味着你应该使用一个足够高的限制。
 
-### perf
+### perf {#perf}
 
 |        |                      |
 | -----: | :------------------- |
@@ -2354,9 +2354,9 @@ Unfortunately, due to the way chunking works, chunk size is measured before any 
 |  CLI： | `--perf`/`--no-perf` |
 | 默认： | `false`              |
 
-Whether to collect performance timings. When used from the command line or a configuration file, detailed measurements about the current bundling process will be displayed. When used from the [JavaScript API](../javascript-api/index.md), the returned bundle object will contain an additional `getTimings()` function that can be called at any time to retrieve all accumulated measurements.
+该选项用于决定是否收集打包执行耗时。当使用命令行或者配置文件时，将会展示与当前构建过程有关的详细指标。当在 [JavaScript API](../javascript-api/index.md) 中使用时，返回的 bundle 对象将包含额外的 `getTimings()` 函数，可以随时调用该函数来获取所有累计的指标。
 
-`getTimings()` returns an object of the following form:
+`getTimings()` 函数返回以下对象形式：
 
 ```
 {
@@ -2367,9 +2367,9 @@ Whether to collect performance timings. When used from the command line or a con
 }
 ```
 
-For each key, the first number represents the elapsed time while the second represents the change in memory consumption, and the third represents the total memory consumption after this step. The order of these steps is the order used by `Object.keys`. Top level keys start with `#` and contain the timings of nested steps, i.e. in the example above, the 698ms of the `# BUILD` step include the 538ms of the `## parse modules` step.
+对于每个键的值，是一个数组，其中，第一个数值表示经过的时间，第二个数值表示内存消耗的变化，第三个数值表示此步骤完成后的总内存消耗。这些步骤的顺序是通过 `Object.keys` 确定的。顶层的键以 `#` 开头，包含嵌套步骤的耗时，例如，在上面例子中，耗时 698ms 的 `# BUILD` 步骤包含了耗时 539ms 的 `## parse modules` 步骤。
 
-## watch
+## 观察选项 {#watch}
 
 |        |                           |
 | -----: | :------------------------ |
@@ -2387,7 +2387,7 @@ interface WatcherOptions {
 }
 ```
 
-Specify options for watch mode or prevent this configuration from being watched. Specifying `false` is only really useful when an array of configurations is used. In that case, this configuration will not be built or rebuilt on change in watch mode, but it will be built when running Rollup regularly:
+该选项用于指定观察模式（watch mode）的选项，或防止 Rollup 配置被观察。指定该选项为 `false`，将仅对 Rollup 使用数组配置时有效。在这种情况下，Rollup 配置将不会根据观察模式中的变更构建或重新构建，而是在 Rollup 运行时定期构建：
 
 ```js
 // rollup.config.js
@@ -2404,9 +2404,9 @@ export default [
 ];
 ```
 
-These options only take effect when running Rollup with the `--watch` flag, or using `rollup.watch`.
+这些选项仅在使用 `--watch` 标志或使用 `rollup.watch` 运行 Rollup 时生效。
 
-### watch.buildDelay
+### watch.buildDelay {#watch-builddelay}
 
 |        |                               |
 | -----: | :---------------------------- |
@@ -2414,17 +2414,17 @@ These options only take effect when running Rollup with the `--watch` flag, or u
 |  CLI： | `--watch.buildDelay <number>` |
 | 默认： | `0`                           |
 
-Configures how long Rollup will wait for further changes until it triggers a rebuild in milliseconds. By default, Rollup does not wait but there is a small debounce timeout configured in the chokidar instance. Setting this to a value greater than `0` will mean that Rollup will only trigger a rebuild if there was no change for the configured number of milliseconds. If several configurations are watched, Rollup will use the largest configured build delay.
+该选项用于配置 Rollup 触发重新构建到执行下一次构建需要等待的时间，以毫秒为单位。默认情况下，Rollup 不会等待，但是在 chokidar 实例中配置了一个小的防抖定时器（debounce timeout）。该选项的值大于 `0` 将意味着如果配置的毫秒数没有发生变化，Rollup 只会触发一次重新构建。如果观察到多个配置变化，Rollup 将使用配置的最大构建延迟。
 
-### watch.chokidar
+### watch.chokidar {#watch-chokidar}
 
 |        |                   |
 | -----: | :---------------- |
 | 类型： | `ChokidarOptions` |
 
-An optional object of watch options that will be passed to the bundled [chokidar](https://github.com/paulmillr/chokidar) instance. See the [chokidar documentation](https://github.com/paulmillr/chokidar#api) to find out what options are available.
+在观察选项中，该选项是可选对象，将传递给 [chokidar](https://github.com/paulmillr/chokidar) 实例。查阅 [chokidar 文档](https://github.com/paulmillr/chokidar#api) 以了解可用的选项。
 
-### watch.clearScreen
+### watch.clearScreen {#watch-clearscreen}
 
 |        |                                                |
 | -----: | :--------------------------------------------- |
@@ -2432,16 +2432,16 @@ An optional object of watch options that will be passed to the bundled [chokidar
 |  CLI： | `--watch.clearScreen`/`--no-watch.clearScreen` |
 | 默认： | `true`                                         |
 
-Whether to clear the screen when a rebuild is triggered.
+该选项用于决定在触发重建是是否清除屏幕。
 
-### watch.exclude
+### watch.exclude {#watch-exclude}
 
 |        |                                          |
 | -----: | :--------------------------------------- |
 | 类型： | `string \| RegExp\| (string\| RegExp)[]` |
 |  CLI： | `--watch.exclude <files>`                |
 
-Prevent files from being watched:
+该选项用于指定不需要被 watch 的文件：
 
 ```js
 // rollup.config.js
@@ -2453,14 +2453,14 @@ export default {
 };
 ```
 
-### watch.include
+### watch.include {#watch-include}
 
 |        |                                          |
 | -----: | :--------------------------------------- |
 | 类型： | `string \| RegExp\| (string\| RegExp)[]` |
 |  CLI： | `--watch.include <files>`                |
 
-Limit the file-watching to certain files. Note that this only filters the module graph but does not allow adding additional watch files:
+该选项用于限制只能对指定文件进行观察。请注意，该选项只过滤模块图中的文件，不允许添加额外的观察文件：
 
 ```js
 // rollup.config.js
@@ -2472,7 +2472,7 @@ export default {
 };
 ```
 
-### watch.skipWrite
+### watch.skipWrite {#watch-skipWrite}
 
 |        |                                            |
 | -----: | :----------------------------------------- |
@@ -2480,23 +2480,23 @@ export default {
 |  CLI： | `--watch.skipWrite`/`--no-watch.skipWrite` |
 | 默认： | `false`                                    |
 
-Whether to skip the `bundle.write()` step when a rebuild is triggered.
+该选项用于决定是否在触发重新构建时跳过 `bundle.write()` 步骤。
 
-## Deprecated options
+## 废弃选项 {#deprecated-options}
 
-☢️ These options have been deprecated and may be removed in a future Rollup version.
+☢️ 这些选项已经废弃，可能从未来的 Rollup 版本中移除。
 
-### inlineDynamicImports
+### inlineDynamicImports {#inlinedynamicimports}
 
-_Use the [`output.inlineDynamicImports`](#output-inlinedynamicimports) output option instead, which has the same signature._
+_请使用具有相同签名的 [`output.inlineDynamicImports`](#output-inlinedynamicimports) 选项代替。_
 
-### manualChunks
+### manualChunks {#manualchunks}
 
-_Use the [`output.manualChunks`](#output-manualchunks) output option instead, which has the same signature._
+_请使用具有相同签名的 [`output.manualChunks`](#output-manualchunks) 选项代替。_
 
-### maxParallelFileReads
+### maxParallelFileReads {#maxparallelfilereads}
 
-_Use the [`maxParallelFileOps`](#maxparallelfileops) option instead._
+_请使用 [`maxParallelFileOps`](#maxparallelfileops) 选项代替。_
 
 |        |                                   |
 | -----: | :-------------------------------- |
@@ -2504,11 +2504,11 @@ _Use the [`maxParallelFileOps`](#maxparallelfileops) option instead._
 |  CLI： | `--maxParallelFileReads <number>` |
 | 默认： | 20                                |
 
-Limits the number of files rollup will open in parallel when reading modules. Without a limit or with a high enough value, builds can fail with an "EMFILE: too many open files". This depends on how many open file handles the os allows.
+该选项限制 Rollup 在读取模块时并行打开的文件数量。如果没有限制，或者数值足够高，构建可能会失败，显示“EMFILE: Too many open files“（EMFILE：打开的文件数过多）。这取决于操作系统限制的句柄数（open file handles）大小。
 
-### output.dynamicImportFunction
+### output.dynamicImportFunction {#output-dynamicimportfunction}
 
-_Use the [`renderDynamicImport`](../plugin-development/index.md#renderdynamicimport) plugin hook instead._
+_请使用 [`renderDynamicImport`](../plugin-development/index.md#renderdynamicimport) 插件钩子代替。_
 
 |        |                                  |
 | -----: | :------------------------------- |
@@ -2516,9 +2516,9 @@ _Use the [`renderDynamicImport`](../plugin-development/index.md#renderdynamicimp
 |  CLI： | `--dynamicImportFunction <name>` |
 | 默认： | `import`                         |
 
-This will rename the dynamic import function to the chosen name when outputting ES bundles. This is useful for generating code that uses a dynamic import polyfill such as [this one](https://github.com/uupaa/dynamic-import-polyfill).
+当输出为 ES bundle 时，该选项将会把动态引入函数重命名为该选项指定的名称。这对于使用了动态引入 polyfill 的代码非常有用，比如 [这个库](https://github.com/uupaa/dynamic-import-polyfill)。
 
-### output.experimentalDeepDynamicChunkOptimization
+### output.experimentalDeepDynamicChunkOptimization {#output-experimentaldeepdynamicchunkoptimization}
 
 _This option is no longer needed._
 
@@ -2528,11 +2528,11 @@ _This option is no longer needed._
 | CLI： | `--experimentalDeepDynamicChunkOptimization`/`--no-experimentalDeepDynamicChunkOptimization` |
 | 默认： | `false` |
 
-This option was used to prevent performance issues with the full chunk optimization algorithm. As the algorithm is much faster now, this option is now ignored by Rollup and should no longer be used.
+该选项是用来防止全部 chunk 优化算法带来的性能问题。由于该算法现在快得多，所以现在这个选项被 Rollup 忽略，不应该再使用。
 
-### output.preferConst
+### output.preferConst {#output-preferconst}
 
-_Use the [`output.generatedCode.constBindings`](#output-generatedcode-constbindings) option instead._
+_请使用 [`output.generatedCode.constBindings`](#output-generatedcode-constbindings) 选项代替。_
 
 |        |                                    |
 | -----: | :--------------------------------- |
@@ -2540,11 +2540,11 @@ _Use the [`output.generatedCode.constBindings`](#output-generatedcode-constbindi
 |  CLI： | `--preferConst`/`--no-preferConst` |
 | 默认： | `false`                            |
 
-Generate `const` declarations for exports rather than `var` declarations.
+该选项表示在导出中使用 `const` 而不是 `var`。
 
-### output.namespaceToStringTag
+### output.namespaceToStringTag {#output-namespacetostringtag}
 
-_Use [`output.generatedCode.symbols`](#output-generatedcode-symbols) instead._
+_请使用 [`output.generatedCode.symbols`](#output-generatedcode-symbols) 选项代替。_
 
 |        |                                                      |
 | -----: | :--------------------------------------------------- |
@@ -2552,15 +2552,15 @@ _Use [`output.generatedCode.symbols`](#output-generatedcode-symbols) instead._
 |  CLI： | `--namespaceToStringTag`/`--no-namespaceToStringTag` |
 | 默认： | `false`                                              |
 
-Whether to add spec compliant `.toString()` tags to namespace objects. If this option is set,
+该选项确定是否允许向命名空间对象添加符合规范的 `.toString()`。如果值为 `true`，
 
 ```javascript
 import * as namespace from './file.js';
 console.log(String(namespace));
 ```
 
-will always log `[object Module]`;
+将总是打印`[object Module]`。
 
-### preserveModules
+### preserveModules {#preservemodules}
 
-_Use the [`output.preserveModules`](#output-preservemodules) output option instead, which has the same signature._
+_请使用具有相同签名的 [`output.preserveModules`](#output-preservemodules) 选项代替。_
