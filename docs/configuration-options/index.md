@@ -13,11 +13,11 @@ title: 配置选项
 |  |  |
 | --: | :-- |
 | 类型： | `(string \| RegExp)[]\| RegExp\| string\| (id: string, parentId: string, isResolved: boolean) => boolean` |
-| 命令行： | `-e`/`--external <external-id,another-external-id,...>` |
+| CLI： | `-e`/`--external <external-id,another-external-id,...>` |
 
 该选项用于匹配需要排除在 bundle 外部的模块，它的值可以是一个接收模块 `id` 参数并返回 `true` （表示排除）或 `false` （表示包含）的函数，也可以一个 ID 构成的 `Array`，还可以能匹配到模块 ID 的正则表达式。除此之外，它还可以只是单个的模块 ID 或正则表达式。其匹配得到的模块 ID 应该满足以下条件之一：
 
-1. 外部依赖的名称，需要和导入语句中书写的形式一样。例如，如果想标记 `import "dependency.js"` 为外部依赖，就需要使用 `"dependency.js"` 作为模块 ID，而如果要标记 `import "dependency"` 为外部依赖，就要使用 `"dependency"`。
+1. 外部依赖的名称，需要和引入语句中书写的形式一样。例如，如果想标记 `import "dependency.js"` 为外部依赖，就需要使用 `"dependency.js"` 作为模块 ID，而如果要标记 `import "dependency"` 为外部依赖，就要使用 `"dependency"`。
 2. 解析过的模块 ID（比如，文件的绝对路径）。
 
 ```js
@@ -55,7 +55,7 @@ rollup -i src/main.js ... -e foo,bar,baz
 
 当创建 `iife` 或 `umd` 格式的 bundle 时，你需要通过 [`output.globals`](#output-globals) 选项提供全局变量名，以替换掉外部引入。
 
-如果一个相对导入，即以 `./` 或 `../` 开头，被标记为 `external`，rollup 将在内部将该模块 ID 解析为系统中绝对文件路径，以便引入的不同外部模块可以合并。当写入生成的 bundle 后，这些引入模块将再次被转换为相对引入。例如：
+如果一个相对引入，即以 `./` 或 `../` 开头，被标记为 `external`，rollup 将在内部将该模块 ID 解析为系统中绝对文件路径，以便引入的不同外部模块可以合并。当写入生成的 bundle 后，这些引入模块将再次被转换为相对引入。例如：
 
 ```js
 // 输入
@@ -82,10 +82,10 @@ console.log(x);
 
 ### input {#input}
 
-|          |                                                         |
-| -------: | :------------------------------------------------------ |
-|   类型： | `string \| string []\| { [entryName: string]: string }` |
-| 命令行： | `-i`/`--input <filename>`                               |
+|        |                                                         |
+| -----: | :------------------------------------------------------ |
+| 类型： | `string \| string []\| { [entryName: string]: string }` |
+|  CLI： | `-i`/`--input <filename>`                               |
 
 该选项用于指定 bundle 的入口文件（例如，你的 `main.js`，`app.js` 或 `index.js` 文件）。如果值为一个入口文件的数组或一个将名称映射到入口文件的对象，那么它们将被打包到单独的输出 chunks。除非使用 [`output.file`](#output-file) 选项，否则生成的 chunk 名称将遵循 [`output.entryFileNames`](#output-entryfilenames) 选项设置。当该选项的值为对象形式时，对象的属性名将作为文件名中的 `[name]`，而对于值为数组形式，数组的值将作为入口文件名。
 
@@ -158,29 +158,29 @@ rollup "main entry"="src/entry 1.js" "src/other entry.js" --format es
 
 ### output.dir {#output-dir}
 
-|          |                        |
-| -------: | :--------------------- |
-|   类型： | `string`               |
-| 命令行： | `-d`/`--dir <dirname>` |
+|        |                        |
+| -----: | :--------------------- |
+| 类型： | `string`               |
+|  CLI： | `-d`/`--dir <dirname>` |
 
 该选项用于指定所有生成的 chunk 被放置在哪个目录中。如果生成一个以上的 chunk，那么这个选项是必需的。否则，可以使用 `file` 选项来代替。
 
 ### output.file {#output-file}
 
-|          |                          |
-| -------: | :----------------------- |
-|   类型： | `string`                 |
-| 命令行： | `-o`/`--file <filename>` |
+|        |                          |
+| -----: | :----------------------- |
+| 类型： | `string`                 |
+|  CLI： | `-o`/`--file <filename>` |
 
 该选项用于指定要写入的文件。如果适用的话，也可以用于生成 sourcemap。只有在生成的 chunk 不超过一个的情况下才可以使用。
 
 ### output.format {#output-format}
 
-|          |                                   |
-| -------: | :-------------------------------- |
-|   类型： | `string`                          |
-| 命令行： | `-f`/`--format <formatspecifier>` |
-|   默认： | `"es"`                            |
+|        |                                   |
+| -----: | :-------------------------------- |
+| 类型： | `string`                          |
+|  CLI： | `-f`/`--format <formatspecifier>` |
+| 默认： | `"es"`                            |
 
 该选项用于指定生成的 bundle 的格式。满足以下其中之一：
 
@@ -196,7 +196,7 @@ rollup "main entry"="src/entry 1.js" "src/other entry.js" --format es
 |  |  |
 | --: | :-- |
 | 类型： | `{ [id: string]: string }\| ((id: string) => string)` |
-| 命令行： | `-g`/`--globals <external-id:variableName,another-external-id:anotherVariableName,...>` |
+| CLI： | `-g`/`--globals <external-id:variableName,another-external-id:anotherVariableName,...>` |
 
 该选项用于在 `umd` / `iife` bundle 中，使用 `id: variableName` 键值对指定外部依赖。例如，在这样的情况下：
 
@@ -262,10 +262,10 @@ export default {
 
 ### output.name {#output-name}
 
-|          |                              |
-| -------: | :--------------------------- |
-|   类型： | `string`                     |
-| 命令行： | `-n`/`--name <variableName>` |
+|        |                              |
+| -----: | :--------------------------- |
+| 类型： | `string`                     |
+|  CLI： | `-n`/`--name <variableName>` |
 
 对于输出格式为 `iife` / `umd` 的 bundle 来说，若想要使用全局变量名来表示你的 bundle 时，该选项是必要的。同一页面上的其他脚本可以使用这个变量名来访问你的 bundle 输出。
 
@@ -301,7 +301,7 @@ this.a.b.c = ...
 | -----: | :----------------------------------------------- |
 | 类型： | `MaybeArray<MaybePromise<OutputPlugin \| void>>` |
 
-该选项用于指定输出插件。关于如何使用特定输出的插件，请查看 [使用输出插件](../tutorial/index.md#using-output-plugins)，关于如何编写自己的插件，请查看 [插件](../plugin-development/index.md)。对于从包中导入的插件，记得要调用引入的插件函数（即调用 `commonjs()`，而不仅仅是 `commonjs`）。返回值为假的插件将被忽略，这样可以用来灵活启用或禁用插件。嵌套的插件将扁平化。异步插件将等待和被解决。
+该选项用于指定输出插件。关于如何使用特定输出的插件，请查看 [使用输出插件](../tutorial/index.md#using-output-plugins)，关于如何编写自己的插件，请查看 [插件](../plugin-development/index.md)。对于从包中引入的插件，记得要调用引入的插件函数（即调用 `commonjs()`，而不仅仅是 `commonjs`）。返回值为假的插件将被忽略，这样可以用来灵活启用或禁用插件。嵌套的插件将扁平化。异步插件将等待和被解决。
 
 并非所有的插件都可以通过该选项使用。`output.plugins` 仅限于在 `bundle.generate()` 或 `bundle.write()` 阶段，即在 Rollup 的主要分析完成后运行钩子的插件才可使用。如果你是一个插件作者，请查看 [输出生成钩子](../plugin-development/index.md#output-generation-hooks) 章节以了解哪些钩子可以使用。
 
@@ -358,16 +358,16 @@ export default (async () => ({
 
 （上述例子还演示了如何使用一个异步 IIFE 和动态引入来避免引入不必要的模块，这可能会使打包过程变慢。）
 
-## Advanced functionality {#advanced-functionality}
+## 进阶功能 {#advanced-functionality}
 
 ### cache {#cache}
 
-|          |                          |
-| -------: | :----------------------- |
-|   类型： | `RollupCache \| boolean` |
-| Default: | `true`                   |
+|        |                          |
+| -----: | :----------------------- |
+| 类型： | `RollupCache \| boolean` |
+| 默认： | `true`                   |
 
-The `cache` property of a previous bundle. Use it to speed up subsequent builds in watch mode — Rollup will only reanalyse the modules that have changed. Setting this option explicitly to `false` will prevent generating the `cache` property on the bundle and also deactivate caching for plugins.
+该选项用于指定之前 bundle 的 `cache` 属性。使用该设置，Rollup 将只会对改变的模块重新分析，从而加速观察模式中后续的构建。将此选项明确设置为 `false` 将阻止 bundle 生成 `cache` 属性，也将导致插件的缓存失效。
 
 ```js
 const rollup = require('rollup');
@@ -375,10 +375,10 @@ let cache;
 
 async function buildWithCache() {
 	const bundle = await rollup.rollup({
-		cache // is ignored if falsy
-		// ... other input options
+		cache // 如果值为假，则忽略
+		// ... 其他输入项
 	});
-	cache = bundle.cache; // store the cache object of the previous build
+	cache = bundle.cache; // 保存之前构建的缓存对象
 	return bundle;
 }
 
@@ -386,7 +386,7 @@ buildWithCache()
 	.then(bundle => {
 		// ... do something with the bundle
 	})
-	.then(() => buildWithCache()) // will use the cache of the previous build
+	.then(() => buildWithCache()) // 将使用之前构建的缓存
 	.then(bundle => {
 		// ... do something with the bundle
 	});
@@ -397,30 +397,30 @@ buildWithCache()
 |  |  |
 | --: | :-- |
 | 类型： | `boolean\| "ifRelativeSource"` |
-| 命令行： | `--makeAbsoluteExternalsRelative`/`--no-makeAbsoluteExternalsRelative` |
-| Default: | `"ifRelativeSource"` |
+| CLI： | `--makeAbsoluteExternalsRelative`/`--no-makeAbsoluteExternalsRelative` |
+| 默认： | `"ifRelativeSource"` |
 
-Determines if absolute external paths should be converted to relative paths in the output. This does not only apply to paths that are absolute in the source but also to paths that are resolved to an absolute path by either a plugin or Rollup core.
+该选项决定外部依赖的绝对路径是否应该在输出中转换为相对路径。本选项不仅适用于源文件中的绝对路径，也适用于由插件或 Rollup 核心解析出的绝对路径。
 
-For `true`, an external import like `import "/Users/Rollup/project/relative.js"` would be converted to a relative path. When converting an absolute path to a relative path, Rollup does _not_ take the `file` or `dir` options into account, because those may not be present e.g. for builds using the JavaScript API. Instead, it assumes that the root of the generated bundle is located at the common shared parent directory of all modules that were included in the bundle. Assuming that the common parent directory of all modules is `"/Users/Rollup/project"`, the import from above would likely be converted to `import "./relative.js"` in the output. If the output chunk is itself nested in a subdirectory by choosing e.g. `chunkFileNames: "chunks/[name].js"`, the import would be `"../relative.js"`.
+值为 `true` 时，像 `import "/Users/Rollup/project/relative.js"` 这样的外部引入将被转换为相对路径。当把绝对路径转换为相对路径时，Rollup _不考虑_ `file` 或 `dir` 选项，因为这些选项可能不存在，比如在使用 JavaScript API 的构建中。相反，它假设输出 bundle 的根目录位于 bundle 中包含的所有模块的同一父目录。比如说所有模块的公共父目录是 `"/Users/Rollup/project"`，上面的引入可能会在输出中被转换为 `import "./relative.js"`。如果输出 chunk 本身是嵌套在一个子目录中，通过设置例如 `chunkFileNames: "chunks/[name].js"`，那么引入将会转换为 `"../relative.js"`。
 
-As stated before, this would also apply to originally relative imports like `import "./relative.js"` that are resolved to an absolute path before they are marked as external by the [`external`](#external) option.
+如上所述，这也适用于最初的相对引入，如 `import "./relative.js"`，在被 [`external`](#external) 选项标记为外部依赖之前会被解析为绝对路径。
 
-One common problem is that this mechanism will also apply to imports like `import "/absolute.js'"`, resulting in unexpected relative paths in the output.
+一个常见的问题是，这种机制也会适用于像 `import "/absolute.js'"` 这样的引入，导致输出中出现意外的相对路径。
 
-For this case, `"ifRelativeSource"` checks if the original import was a relative import and only then convert it to a relative import in the output. Choosing `false` will keep all paths as absolute paths in the output.
+对于这种情况，设置为 `"ifRelativeSource"` 可以检查原始引入是否是相对引入，然后在输出时才将其转换为相对引入。设置为 `false` 将在输出时保持所有路径为绝对路径。
 
-Note that when a relative path is directly marked as "external" using the [`external`](#external) option, then it will be the same relative path in the output. When it is resolved first via a plugin or Rollup core and then marked as external, the above logic will apply.
+请注意，当一个相对路径使用 [`external`](#external) 选项直接标记为 "外部依赖" 时，那么它在输出时会是相同的相对路径。当它通过插件或 Rollup 核心解析，然后标记为外部依赖后，上述逻辑将适用。
 
 ### maxParallelFileOps {#maxparallelfileops}
 
-|          |                                 |
-| -------: | :------------------------------ |
-|   类型： | `number`                        |
-| 命令行： | `--maxParallelFileOps <number>` |
-| Default: | 20                              |
+|        |                                 |
+| -----: | :------------------------------ |
+| 类型： | `number`                        |
+|  CLI： | `--maxParallelFileOps <number>` |
+| 默认： | 20                              |
 
-Limits the number of files rollup will open in parallel when reading modules or writing chunks. Without a limit or with a high enough value, builds can fail with an "EMFILE: too many open files". This depends on how many open file handles the operating system allows.
+该选项限制 rollup 在读取模块或写入 chunk 时，同时能打开的文件数量。如果没有限制或者数值足够高，构建可能会失败，出现 "EMFILE: Too many open files"（EMFILE：打开的文件数过多）。这取决于操作系统限制的句柄数（open file handles）大小。
 
 ### onwarn {#onwarn}
 
@@ -428,32 +428,32 @@ Limits the number of files rollup will open in parallel when reading modules or 
 | --: | :-- |
 | 类型： | `(warning: RollupWarning, defaultHandler: (warning: string \| RollupWarning) => void) => void;` |
 
-A function that will intercept warning messages. If not supplied, warnings will be deduplicated and printed to the console. When using the [`--silent`](../command-line-interface/index.md#silent) CLI option, this handler is the only way to get notified about warnings.
+该选项为一个拦截警告信息的函数。如果不提供，警告将去重并打印到控制台。当在命令行使用 [`--silent`](../command-line-interface/index.md#silent) 选项时，该选项是获取警告通知的唯一途径。
 
-The function receives two arguments: the warning object and the default handler. Warnings objects have, at a minimum, a `code` and a `message` property, allowing you to control how different kinds of warnings are handled. Other properties are added depending on the type of warning. See [`utils/error.ts`](https://github.com/rollup/rollup/blob/master/src/utils/error.ts) for a complete list of errors and warnings together with their codes and properties.
+该函数接收两个参数：警告对象和默认处理函数。其中，警告对象至少有一个 `code` 和一个 `message` 属性，用于控制如何处理不同种类的警告。另外，根据不同的警告类型，警告对象上会有其他的属性。可查看 [`utils/error.ts`](https://github.com/rollup/rollup/blob/master/src/utils/error.ts) 以获得完整的错误和警告列表，以及它们的代码和属性。
 
 ```js
 // rollup.config.js
 export default {
 	//...,
 	onwarn(warning, warn) {
-		// skip certain warnings
+		// 跳过指定类型的警告
 		if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return;
 
-		// throw on others
-		// Using Object.assign over new Error(warning.message) will make
-		// the CLI print additional information such as warning location
-		// and help url.
+		// 抛出其他类型的警告
+		// 使用 Object.assign 拷贝 new Error(warning.message) 将使
+		// 命令行打印额外的信息，如警告位置
+		// 和帮助 URL。
 		if (warning.code === 'MISSING_EXPORT')
 			throw Object.assign(new Error(), warning);
 
-		// Use default for everything else
+		// 使用默认处理函数兜底
 		warn(warning);
 	}
 };
 ```
 
-Many warnings also have a `loc` property and a `frame` allowing you to locate the source of the warning:
+很多警告还具有 `loc` 和 `frame` 属性，它们可以用来定位警告来源：
 
 ```js
 // rollup.config.js
@@ -472,36 +472,36 @@ export default {
 
 ### output.assetFileNames {#output-assetfilenames}
 
-|          |                                               |
-| -------: | :-------------------------------------------- |
-|   类型： | `string\| ((assetInfo: AssetInfo) => string)` |
-| 命令行： | `--assetFileNames <pattern>`                  |
-| Default: | `"assets/[name]-[hash][extname]"`             |
+|        |                                               |
+| -----: | :-------------------------------------------- |
+| 类型： | `string\| ((assetInfo: AssetInfo) => string)` |
+|  CLI： | `--assetFileNames <pattern>`                  |
+| 默认： | `"assets/[name]-[hash][extname]"`             |
 
-The pattern to use for naming custom emitted assets to include in the build output, or a function that is called per asset to return such a pattern. Patterns support the following placeholders:
+该选项的值是一个匹配模式，用于自定义构建结果中的静态资源名称，或者值为一个函数，对每个资源调用以返回匹配模式。这种模式支持以下的占位符：
 
-- `[extname]`: The file extension of the asset including a leading dot, e.g. `.css`.
-- `[ext]`: The file extension without a leading dot, e.g. `css`.
-- `[hash]`: A hash based on the content of the asset. You can also set a specific hash length via e.g. `[hash:10]`.
-- `[name]`: The file name of the asset excluding any extension.
+- `[extname]`：包含点的静态资源文件扩展名，例如 `.css`。
+- `[ext]`：不包含点的文件扩展名，例如 `css`。
+- `[hash]`：基于静态资源内容的哈希。也可以通过例如 `[hash:10]` 设置一个特定的哈希值长度。
+- `[name]`：静态资源的名称，不包含扩展名。
 
-Forward slashes `/` can be used to place files in sub-directories. When using a function, `assetInfo` is a reduced version of the one in [`generateBundle`](../plugin-development/index.md#generatebundle) without the `fileName`. See also [`output.chunkFileNames`](#output-chunkfilenames), [`output.entryFileNames`](#output-entryfilenames).
+正斜杠 `/` 可以用来划分文件到子目录。当值为函数时，`assetInfo` 是 [`generateBundle`](../plugin-development/index.md#generatebundle) 中没有 `fileName` 的简化版本。另见[`output.chunkFileNames`](#output-chunkfilenames)，[`output.entryFileNames`](#output-entryfilenames)。
 
 ### output.banner/output.footer {#output-banner-output-footer}
 
-|          |                                                              |
-| -------: | :----------------------------------------------------------- |
-|   类型： | `string \| ((chunk: ChunkInfo) => string\| Promise<string>)` |
-| 命令行： | `--banner`/`--footer <text>`                                 |
+|        |                                                              |
+| -----: | :----------------------------------------------------------- |
+| 类型： | `string \| ((chunk: ChunkInfo) => string\| Promise<string>)` |
+|  CLI： | `--banner`/`--footer <text>`                                 |
 
-A string to prepend/append to the bundle. You can also supply a function that returns a `Promise` that resolves to a `string` to generate it asynchronously (Note: `banner` and `footer` options will not break sourcemaps).
+该选项用于在 bundle 前或后添加一个字符串。其值也可以是一个返回 `string` 的 `Promise` 异步函数（注意：`banner` 和 `footer` 选项不会破坏 sourcemaps）。
 
-If you supply a function, `chunk` contains additional information about the chunk using the same `ChunkInfo` type as the [`generateBundle`](../plugin-development/index.md#generatebundle) hook with the following differences:
+如果该选项值为函数，参数 `chunk` 包含了额外信息，使用了与 [`generateBundle`](../plugin-development/index.md#generatebundle) 钩子相同的 `ChunkInfo` 类型，但有以下区别：
 
-- `code` and `map` are not set as the chunk has not been rendered yet.
-- all referenced chunk file names that would contain hashes will contain hash placeholders instead. This includes `fileName`, `imports`, `importedBindings`, `dynamicImports` and `implicitlyLoadedBefore`. When you use such a placeholder file name or part of it in the code returned from this option, Rollup will replace the placeholder with the actual hash before `generateBundle`, making sure the hash reflects the actual content of the final generated chunk including all referenced file hashes.
+- `code` 和 `map` 没有设置，因为该 chunk 还没有被渲染。
+- 所有包含哈希值的引用 chunk 文件名将包含哈希占位符。包括 `fileName`、`imports`、`importedBindings`、`dynamicImports` 和 `implicitlyLoadedBefore`。当你在该选项返回的代码中使用这样的占位符文件名或部分文件名时，Rollup 将在 `generateBundle` 之前用实际的哈希值替换掉占位符，确保哈希值反映的是最终生成的 chunk 中的实际内容，包括所有引用的文件哈希值。
 
-`chunk` is mutable and changes applied in this hook will propagate to other plugins and to the generated bundle. That means if you add or remove imports or exports in this hook, you should update `imports`, `importedBindings` and/or `exports`.
+`chunk` 是可变的，在这个钩子中应用的变化将传递到其他插件和生成的 bundle 中。这意味着如果你在这个钩子中增加或删除引入或导出，你应该更新 `imports`、`importedBindings` 以及 `exports`。
 
 ```js
 // rollup.config.js
@@ -515,52 +515,52 @@ export default {
 };
 ```
 
-See also [`output.intro/output.outro`](#output-intro-output-outro).
+另见 [`output.intro/output.outro`](#output-intro-output-outro)。
 
 ### output.chunkFileNames {#output-chunkfilenames}
 
-|          |                                                |
-| -------: | :--------------------------------------------- |
-|   类型： | `string \| ((chunkInfo: ChunkInfo) => string)` |
-| 命令行： | `--chunkFileNames <pattern>`                   |
-| Default: | `"[name]-[hash].js"`                           |
+|        |                                                |
+| -----: | :--------------------------------------------- |
+| 类型： | `string \| ((chunkInfo: ChunkInfo) => string)` |
+|  CLI： | `--chunkFileNames <pattern>`                   |
+| 默认： | `"[name]-[hash].js"`                           |
 
-The pattern to use for naming shared chunks created when code-splitting, or a function that is called per chunk to return such a pattern. Patterns support the following placeholders:
+该选项用于对代码分割中产生的 chunk 自定义命名，其值也可以是一个函数，对每个 chunk 调用以返回匹配模式。这种模式支持以下的占位符：
 
-- `[format]`: The rendering format defined in the output options, e.g. `es` or `cjs`.
-- `[hash]`: A hash based only on the content of the final generated chunk, including transformations in [`renderChunk`](../plugin-development/index.md#renderchunk) and any referenced file hashes. You can also set a specific hash length via e.g. `[hash:10]`.
-- `[name]`: The name of the chunk. This can be explicitly set via the [`output.manualChunks`](#output-manualchunks) option or when the chunk is created by a plugin via [`this.emitFile`](../plugin-development/index.md#this-emitfile). Otherwise, it will be derived from the chunk contents.
+- `[format]`：输出（output）选项中定义的格式（format），例如 `es` 或 `cjs`。
+- `[hash]`：仅基于最终生成的 chunk 内容的哈希值，其中包括 [`renderChunk`](../plugin-development/index.md#renderchunk) 中的转换部分和其依赖文件哈希值。你也可以通过例如 `[hash:10]` 设置一个特定的哈希值长度。
+- `[name]`：chunk 的名称。它可以通过 [`output.manualChunks`](#output-manualchunks) 选项显示的设置，或者通过插件调用 [`this.emitFile`](../plugin-development/index.md#this-emitfile) 设置。否则，它将会根据 chunk 的内容确定。
 
-Forward slashes `/` can be used to place files in sub-directories. When using a function, `chunkInfo` is a reduced version of the one in [`generateBundle`](../plugin-development/index.md#generatebundle) without properties that depend on file names and no information about the rendered modules as rendering only happens after file names have been generated. You can however access a list of included `moduleIds`. See also [`output.assetFileNames`](#output-assetfilenames), [`output.entryFileNames`](#output-entryfilenames).
+正斜杠 `/` 可以用来划分文件到子目录。当值为函数时，`chunkInfo` 是 [`generateBundle`](../plugin-development/index.md#generatebundle) 的简化版本，其中不包含依赖于文件名的属性，且没有关于所渲染模块的信息，因为只有在文件名生成之后才会渲染。另见 [`output.assetFileNames`](#output-assetfilenames)，[`output.entryFileNames`](#output-entryfilenames)。
 
 ### output.compact {#output-compact}
 
-|          |                            |
-| -------: | :------------------------- |
-|   类型： | `boolean`                  |
-| 命令行： | `--compact`/`--no-compact` |
-| Default: | `false`                    |
+|        |                            |
+| -----: | :------------------------- |
+| 类型： | `boolean`                  |
+|  CLI： | `--compact`/`--no-compact` |
+| 默认： | `false`                    |
 
-This will minify the wrapper code generated by rollup. Note that this does not affect code written by the user. This option is useful when bundling pre-minified code.
+该选项用于压缩 Rollup 产生的额外代码。请注意，这个选项不会影响用户的代码。这个选择在构建已经压缩好的代码时是很有用的。
 
 ### output.dynamicImportInCjs {#output-dynamicimportincjs}
 
-|          |                                                  |
-| -------: | :----------------------------------------------- |
-|   类型： | `boolean`                                        |
-| 命令行： | `--dynamicImportInCjs`/`--no-dynamicImportInCjs` |
-| Default: | `true`                                           |
+|        |                                                  |
+| -----: | :----------------------------------------------- |
+| 类型： | `boolean`                                        |
+|  CLI： | `--dynamicImportInCjs`/`--no-dynamicImportInCjs` |
+| 默认： | `true`                                           |
 
-While CommonJS output originally supported only `require(…)` to import dependencies, recent Node versions also started to support `import(…)`, which is the only way to import ES modules from CommonJS files. If this option is `true`, which is the default, Rollup will keep external dynamic imports as `import(…)` expressions in CommonJS output. Set this to `false` to rewrite dynamic imports using `require(…)` syntax.
+虽然 CommonJS 输出最初只支持 `require(…)` 语法来引入依赖，但最近的 Node 版本也开始支持 `import(…)` 语法，这是从 CommonJS 文件中引入 ES 模块的唯一方法。如果这个选项默认值为 `true`，表示 Rollup 会在 CommonJS 输出中保持外部依赖以 `import(…)` 表达式动态引入。将值设置为 `false`，以使用 `require(…)` 语法重写动态引入。
 
 ```js
-// input
+// 输入
 import('external').then(console.log);
 
-// cjs output with dynamicImportInCjs: true or not set
+// 设置 dynamicImportInCjs 为 true 或不设置的 cjs 输出
 import('external').then(console.log);
 
-// cjs output with dynamicImportInCjs: false
+// 设置 dynamicImportInCjs 为 false 的 cjs 输出
 function _interopNamespaceDefault(e) {
 	var n = Object.create(null);
 	if (e) {
@@ -595,80 +595,80 @@ Promise.resolve()
 
 ### output.entryFileNames {#output-entryfilenames}
 
-|          |                                                |
-| -------: | :--------------------------------------------- |
-|   类型： | `string \| ((chunkInfo: ChunkInfo) => string)` |
-| 命令行： | `--entryFileNames <pattern>`                   |
-| Default: | `"[name].js"`                                  |
+|        |                                                |
+| -----: | :--------------------------------------------- |
+| 类型： | `string \| ((chunkInfo: ChunkInfo) => string)` |
+|  CLI： | `--entryFileNames <pattern>`                   |
+| 默认： | `"[name].js"`                                  |
 
-The pattern to use for chunks created from entry points, or a function that is called per entry chunk to return such a pattern. Patterns support the following placeholders:
+该选项用于指定 chunks 的入口文件模式，其值也可以是一个函数，对每个入口 chunk 调用以返回匹配模式。这种模式支持以下的占位符：
 
-- `[format]`: The rendering format defined in the output options, e.g. `es` or `cjs`.
-- `[hash]`: A hash based only on the content of the final generated entry chunk, including transformations in [`renderChunk`](../plugin-development/index.md#renderchunk) and any referenced file hashes. You can also set a specific hash length via e.g. `[hash:10]`.
-- `[name]`: The file name (without extension) of the entry point, unless the object form of input was used to define a different name.
+- `[format]`：输出（output）选项中定义的格式（format），例如 `es` 或 `cjs`。
+- `[hash]`：仅基于最终生成的入口 chunk 内容的哈希值，其中包括 [`renderChunk`](../plugin-development/index.md#renderchunk) 中的转换部分和其依赖文件哈希值。你也可以通过例如 `[hash:10]` 设置一个特定的哈希值长度。
+- `[name]`：入口文件的文件名（不包含扩展名），除非当入口文件为对象时，才用来定义不同的名称。
 
-Forward slashes `/` can be used to place files in sub-directories. When using a function, `chunkInfo` is a reduced version of the one in [`generateBundle`](../plugin-development/index.md#generatebundle) without properties that depend on file names and no information about the rendered modules as rendering only happens after file names have been generated. You can however access a list of included `moduleIds`. See also [`output.assetFileNames`](#output-assetfilenames), [`output.chunkFileNames`](#output-chunkfilenames).
+正斜杠 `/` 可以用来划分文件到子目录。当值为函数时，`chunkInfo` 是 [`generateBundle`](../plugin-development/index.md#generatebundle) 的简化版本，其中不包含依赖于文件名的属性，且没有关于所渲染模块的信息，因为只有在文件名生成之后才会渲染。但是，你可以访问包含 `moduleIds` 的列表。另见 [`output.assetFileNames`](#output-assetfilenames)，[`output.chunkFileNames`](#output-chunkfilenames)。
 
-This pattern will also be used for every file when setting the [`output.preserveModules`](#output-preservemodules) option. Note that in this case, `[name]` will include the relative path from the output root and possibly the original file extension if it was not one of `.js`, `.jsx`, `.mjs`, `.cjs`, `.ts`, `.tsx`, `.mts`, or `.cts`.
+在设置 [`output.preserveModules`](#output-preservemodules) 选项时，该模式也会生效。需要注意在这种情况下，`[name]` 将包括来自输出根路径的相对路径以及可能有原始文件的扩展名，如果它不是 `.js`、`.jsx`、`.mjs`、`.cjs`、`.ts`、`.tsx`、`.mts` 或 `.cts` 的其中之一。
 
-### output.extend
+### output.extend {#output-extend}
 
-|          |                          |
-| -------: | :----------------------- |
-|   类型： | `boolean`                |
-| 命令行： | `--extend`/`--no-extend` |
-| Default: | `false`                  |
+|        |                          |
+| -----: | :----------------------- |
+| 类型： | `boolean`                |
+|  CLI： | `--extend`/`--no-extend` |
+| 默认： | `false`                  |
 
-Whether to extend the global variable defined by the `name` option in `umd` or `iife` formats. When `true`, the global variable will be defined as `(global.name = global.name || {})`. When false, the global defined by `name` will be overwritten like `(global.name = {})`.
+该选项用于指定是否扩展 `umd` 或 `iife` 格式中 `name` 选项定义的全局变量。当值为 `true` 时，该全局变量将定义为 `(global.name = global.name || {})`。当值为 `false` 时，`name` 选项指定的全局变量将被覆盖为 `(global.name = {})`。
 
-### output.externalImportAssertions
+### output.externalImportAssertions {#output-externalimportassertions}
 
-|          |                                                              |
-| -------: | :----------------------------------------------------------- |
-|   类型： | `boolean`                                                    |
-| 命令行： | `--externalImportAssertions`/`--no-externalImportAssertions` |
-| Default: | `true`                                                       |
+|        |                                                              |
+| -----: | :----------------------------------------------------------- |
+| 类型： | `boolean`                                                    |
+|  CLI： | `--externalImportAssertions`/`--no-externalImportAssertions` |
+| 默认： | `true`                                                       |
 
-Whether to add import assertions to external imports in the output if the output format is `es`. By default, assertions are taken from the input files, but plugins can add or remove assertions later. E.g. `import "foo" assert {类型： "json"}` will cause the same import to appear in the output unless the option is set to `false`. Note that all imports of a module need to have consistent assertions, otherwise a warning is emitted.
+该选项表示如果输出格式为 `es`，是否在输出中为外部引入添加引入断言。默认情况下，断言取自输入文件，但插件可以在之后添加或删除断言。例如，`import "foo" assert {type: "json"}` 将导致相同的引入出现在输出中，除非该选项赋值为 `false`。需要注意的是，一个模块的所有引入需要有一致的断言，否则会发出警告。
 
-### output.generatedCode
+### output.generatedCode {#output-generatedcode}
 
 |  |  |
 | --: | :-- |
 | 类型： | `"es5" \| "es2015"\| { arrowFunctions?: boolean, constBindings?: boolean, objectShorthand?: boolean, preset?: "es5"\| "es2015", reservedNamesAsProps?: boolean, symbols?: boolean }` |
-| 命令行： | `--generatedCode <preset>` |
-| Default: | `"es5"` |
+| CLI： | `--generatedCode <preset>` |
+| 默认： | `"es5"` |
 
-Which language features Rollup can safely use in generated code. This will not transpile any user code but only change the code Rollup uses in wrappers and helpers. You may choose one of several presets:
+该选项用于制定 Rollup 可以在生成的代码中安全地使用哪些语言特性。这不会转译任何用户的代码，而只改变 Rollup 在包装器和辅助函数中使用的代码。你可以从几个预设中选择一个：
 
-- `"es5"`: Do not use ES2015+ features like arrow functions, but do not quote reserved names used as props.
-- `"es2015"`: Use any JavaScript features up to ES2015.
+- `"es5"`：不能使用 ES2015+ 的特性，比如箭头函数，不能使用引号包裹的预留词汇作为属性名。
+- `"es2015"`：使用任意 ES2015 之前的 JavaScript 特性。
 
-#### output.generatedCode.arrowFunctions
-
-|  |  |
-| --: | :-- |
-| 类型： | `boolean` |
-| 命令行： | `--generatedCode.arrowFunctions`/`--no-generatedCode.arrowFunctions` |
-| Default: | `false` |
-
-Whether to use arrow functions for auto-generated code snippets. Note that in certain places like module wrappers, Rollup will keep using regular functions wrapped in parentheses as in some JavaScript engines, these will provide [noticeably better performance](https://v8.dev/blog/preparser#pife).
-
-#### output.generatedCode.constBindings
+#### output.generatedCode.arrowFunctions {#output-generatedcode-arrowfunctions}
 
 |  |  |
 | --: | :-- |
 | 类型： | `boolean` |
-| 命令行： | `--generatedCode.constBindings`/`--no-generatedCode.constBindings` |
-| Default: | `false` |
+| CLI： | `--generatedCode.arrowFunctions`/`--no-generatedCode.arrowFunctions` |
+| 默认： | `false` |
 
-This will use `const` instead of `var` in certain places and helper functions. This will allow Rollup to generate more efficient helpers due to block scoping.
+该选项表示是否为自动生成的代码片段使用箭头函数。请注意，在某些地方，比如模块封装器，Rollup 会继续生成用小括号封装的常规函数，因为在一些 JavaScript 引擎中，这些函数会提供 [明显更好的性能](https://v8.dev/blog/preparser#pife)。
+
+#### output.generatedCode.constBindings {#output-generatedcode-constbindings}
+
+|  |  |
+| --: | :-- |
+| 类型： | `boolean` |
+| CLI： | `--generatedCode.constBindings`/`--no-generatedCode.constBindings` |
+| 默认： | `false` |
+
+该选项表示在某些地方和辅助函数中使用 `const` 而不是 `var`。由于代码块的作用域，会使 Rollup 产生更有效的辅助函数。
 
 ```js
-// input
+// 输入
 export * from 'external';
 
-// cjs output with constBindings: false
+// 设置 constBindings 为 false 的 cjs 输出
 var external = require('external');
 
 Object.keys(external).forEach(function (k) {
@@ -681,7 +681,7 @@ Object.keys(external).forEach(function (k) {
 		});
 });
 
-// cjs output with constBindings: true
+// 设置 constBindings 为 true 的 cjs 输出
 const external = require('external');
 
 for (const k in external) {
@@ -693,22 +693,22 @@ for (const k in external) {
 }
 ```
 
-#### output.generatedCode.objectShorthand
+#### output.generatedCode.objectShorthand {#output-generatedcode-objectshorthand}
 
 |  |  |
 | --: | :-- |
 | 类型： | `boolean` |
-| 命令行： | `--generatedCode.objectShorthand`/`--no-generatedCode.objectShorthand` |
-| Default: | `false` |
+| CLI： | `--generatedCode.objectShorthand`/`--no-generatedCode.objectShorthand` |
+| 默认： | `false` |
 
-Allows the use of shorthand notation in objects when the property name matches the value.
+该选项表示当属性名称与值匹配时，是否允许在对象中使用别名。
 
 ```javascript
 // input
 const foo = 1;
 export { foo, foo as bar };
 
-// system output with objectShorthand: false
+// 设置 objectShorthand 为 false 的系统输出
 System.register('bundle', [], function (exports) {
 	'use strict';
 	return {
@@ -719,7 +719,7 @@ System.register('bundle', [], function (exports) {
 	};
 });
 
-// system output with objectShorthand: true
+// 设置 objectShorthand 为 true 的系统输出
 System.register('bundle', [], function (exports) {
 	'use strict';
 	return {
@@ -731,14 +731,14 @@ System.register('bundle', [], function (exports) {
 });
 ```
 
-#### output.generatedCode.preset
+#### output.generatedCode.preset {#output-generatedcode-preset}
 
-|          |                           |
-| -------: | :------------------------ |
-|   类型： | `"es5" \| "es2015"`       |
-| 命令行： | `--generatedCode <value>` |
+|        |                           |
+| -----: | :------------------------ |
+| 类型： | `"es5" \| "es2015"`       |
+|  CLI： | `--generatedCode <value>` |
 
-Allows choosing one of the presets listed above while overriding some options.
+该选项可以选择上面列出的预设之一，同时覆盖一些选项。
 
 ```js
 export default {
@@ -753,52 +753,52 @@ export default {
 };
 ```
 
-#### output.generatedCode.reservedNamesAsProps
+#### output.generatedCode.reservedNamesAsProps {#output-generatedcode-reservednamesasprops}
 
 |  |  |
 | --: | :-- |
 | 类型： | `boolean` |
-| 命令行： | `--generatedCode.reservedNamesAsProps`/`--no-generatedCode.reservedNamesAsProps` |
-| Default: | `true` |
+| CLI： | `--generatedCode.reservedNamesAsProps`/`--no-generatedCode.reservedNamesAsProps` |
+| 默认： | `true` |
 
-Determine whether reserved words like "default" can be used as prop names without using quotes. This will make the syntax of the generated code ES3 compliant. Note however that for full ES3 compliance, you may also need to polyfill some builtin functions like `Object.keys` or `Array.prototype.forEach`.
+该选项确定像 `default` 这样的预留词，是否可以在不加引号的情况下作为属性名。这将使生成的代码语法符合 ES3 标准。但是请注意，为了完全符合 ES3 标准，你可能还需要对一些内置函数进行补丁（polyfill），比如 `Object.keys` 或 `Array.prototype.forEach`。
 
 ```javascript
-// input
+// 输入
 const foo = null;
 export { foo as void };
 
-// cjs output with reservedNamesAsProps: false
+// 设置 reservedNamesAsProps 为 false 的 cjs 输出
 const foo = null;
 
 exports['void'] = foo;
 
-// cjs output with reservedNamesAsProps: true
+// 设置 reservedNamesAsProps 为 true 的 cjs 输出
 const foo = null;
 
 exports.void = foo;
 ```
 
-#### output.generatedCode.symbols
+#### output.generatedCode.symbols {#output-generatedcode-symbols}
 
-|          |                                                        |
-| -------: | :----------------------------------------------------- |
-|   类型： | `boolean`                                              |
-| 命令行： | `--generatedCode.symbols`/`--no-generatedCode.symbols` |
-| Default: | `false`                                                |
+|        |                                                        |
+| -----: | :----------------------------------------------------- |
+| 类型： | `boolean`                                              |
+|  CLI： | `--generatedCode.symbols`/`--no-generatedCode.symbols` |
+| 默认： | `false`                                                |
 
-Whether to allow the use of `Symbol` in auto-generated code snippets. Currently, this only controls if namespaces will have the `Symbol.toStringTag` property set to the correct value of `Module`, which means that for a namespace, `String(namespace)` logs `[object Module]`. This again is used for feature detection in certain libraries and frameworks.
+该选项确定是否允许在自动生成的代码片断中使用 `Symbol`。目前，该选项只控制命名空间是否将 `Symbol.toStringTag` 属性设置为正确的 `Module` 值，这意味着对于一个命名空间来说，`String(namespace)` 打印为 `[object Module]`。该值又被用于某些库和框架的特征检测。
 
 ```javascript
-// input
+// 输入
 export const foo = 42;
 
-// cjs output with symbols: false
+// 设置 symbols 为 false 的 cjs 输出
 const foo = 42;
 
 exports.foo = foo;
 
-// cjs output with symbols: true
+// 设置 symbols 为 true 的 cjs 输出
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
 const foo = 42;
@@ -806,37 +806,37 @@ const foo = 42;
 exports.foo = foo;
 ```
 
-### output.hoistTransitiveImports
+### output.hoistTransitiveImports {#output-hoisttransitiveimports}
 
-|          |                                                          |
-| -------: | :------------------------------------------------------- |
-|   类型： | `boolean`                                                |
-| 命令行： | `--hoistTransitiveImports`/`--no-hoistTransitiveImports` |
-| Default: | `true`                                                   |
+|        |                                                          |
+| -----: | :------------------------------------------------------- |
+| 类型： | `boolean`                                                |
+|  CLI： | `--hoistTransitiveImports`/`--no-hoistTransitiveImports` |
+| 默认： | `true`                                                   |
 
-By default, when creating multiple chunks, transitive imports of entry chunks will be added as empty imports to the entry chunks. See ["Why do additional imports turn up in my entry chunks when code-splitting?"](../faqs/index.md#why-do-additional-imports-turn-up-in-my-entry-chunks-when-code-splitting) for details and background. Setting this option to `false` will disable this behaviour. This option is ignored when using the [`output.preserveModules`](#output-preservemodules) option as here, imports will never be hoisted.
+默认情况下，创建多个 chunk 时，入口 chunk 的可传递引入将以空引入的形式被打包。详细信息和背景请查看 ["Why do additional imports turn up in my entry chunks when code-splitting?"](../faqs/index.md#why-do-additional-imports-turn-up-in-my-entry-chunks-when-code-splitting)。该选项的值为 `false` 将禁用此行为。当使用 [`output.preserveModules`](#output-preservemodules) 选项时，该选项会被忽略，使得永远不会取消引入。
 
-### output.inlineDynamicImports
+### output.inlineDynamicImports {#output-inlinedynamicimports}
 
-|          |                                                      |
-| -------: | :--------------------------------------------------- |
-|   类型： | `boolean`                                            |
-| 命令行： | `--inlineDynamicImports`/`--no-inlineDynamicImports` |
-| Default: | `false`                                              |
+|        |                                                      |
+| -----: | :--------------------------------------------------- |
+| 类型： | `boolean`                                            |
+|  CLI： | `--inlineDynamicImports`/`--no-inlineDynamicImports` |
+| 默认： | `false`                                              |
 
-This will inline dynamic imports instead of creating new chunks to create a single bundle. Only possible if a single input is provided. Note that this will change the execution order: A module that is only imported dynamically will be executed immediately if the dynamic import is inlined.
+该选项用于内联动态引入，而不是用于创建包含新 chunk 的独立 bundle。该选项只在单一输入源时发挥作用。请注意，它会影响执行顺序：如果该模块是内联动态引入，那么它将会被立即执行。
 
-### output.interop
+### output.interop {#output-interop}
 
 |  |  |
 | --: | :-- |
 | 类型： | `"compat" \| "auto"\| "esModule"\| "default"\| "defaultOnly"\| ((id: string) => "compat"\| "auto"\| "esModule"\| "default"\| "defaultOnly")` |
-| 命令行： | `--interop <value>` |
-| Default: | `"default"` |
+| CLI： | `--interop <value>` |
+| 默认： | `"default"` |
 
-Controls how Rollup handles default, namespace and dynamic imports from external dependencies in formats like CommonJS that do not natively support these concepts. Note that the default mode of "default" mimics NodeJS behavior and is different from TypeScript `esModuleInterop`. To get TypeScript's behavior, explicitly set the value to `"auto"`. In the examples, we will be using the CommonJS format, but the choice of interop similarly applies to AMD, IIFE and UMD targets as well.
+该选项用于控制 Rollup 如何处理默认值，命名空间和动态引入像 CommonJS 这样并不支持这些概念的外部依赖格式。请注意，"default" 的默认模式是模仿 NodeJS 的行为，与 TypeScript 的`esModuleInterop` 不同。要获得像 TypeScript 中的行为，需要明确地设置该值为 `"auto"`。在例子中，我们将使用 CommonJS 格式，但该互操作（interop）的选择也同样适用于 AMD、IIFE 和 UMD 目标。
 
-To understand the different values, assume we are bundling the following code for a `cjs` target:
+为了理解不同的取值，我们假设打包以下代码为 `cjs`：
 
 ```js
 import ext_default, * as external from 'external1';
@@ -844,9 +844,9 @@ console.log(ext_default, external.bar, external);
 import('external2').then(console.log);
 ```
 
-Keep in mind that for Rollup, `import * as ext_namespace from 'external'; console.log(ext_namespace.bar);` is completely equivalent to `import {bar} from 'external'; console.log(bar);` and will produce the same code. In the example above however, the namespace object itself is passed to a global function as well, which means we need it as a properly formed object.
+请记住，对于 Rollup 来说，`import * as ext_namespace from 'external'; console.log(ext_namespace.bar);` 完全等同于 `import {bar} from 'external'; console.log(bar);`，并且会打包出同样的代码。然而，在上面的例子中，命名空间对象本身也被传递给一个全局函数，这意味着我们需要它组成一个正确的对象。
 
-- `"default"` assumes that the required value should be treated as the default export of the imported module, just like when importing CommonJS from an ES module context in NodeJS. Named imports are supported as well, which are treated as properties of the default import. To create the namespace object, Rollup injects these helpers:
+- `"default"` 意为所需的值应该被视为引入模块的默认出口，就像在 NodeJS 中从 ES 模块上下文引入 CommonJS 一样。其也支持命名的引入，它们被视为默认引入的属性。为了创建命名空间对象，Rollup 注入了这些辅助函数：
 
   ```js
   var external = require('external1');
@@ -886,7 +886,7 @@ Keep in mind that for Rollup, `import * as ext_namespace from 'external'; consol
   	.then(console.log);
   ```
 
-- `"esModule"` assumes that required modules are transpiled ES modules where the required value corresponds to the module namespace, and the default export is the `.default` property of the exported object. This is the only interop type that will not inject any helper functions:
+- `"esModule"` 意为 ES 模块转译为所需模块，其中所需的值对应模块的命名空间，而默认的导出是导出对象的 `.default` 属性。这是唯一不会注入任何辅助函数的互操作类型：
 
   ```js
   var external = require('external1');
@@ -898,9 +898,9 @@ Keep in mind that for Rollup, `import * as ext_namespace from 'external'; consol
   	.then(console.log);
   ```
 
-  When `esModule` is used, Rollup adds no additional interop helpers and also supports live-bindings for default exports.
+  当使用 `esModule` 时，Rollup 不添加额外的辅助函数，并且对默认出口也支持实时绑定。
 
-- `"auto"` combines both `"esModule"` and `"default"` by injecting helpers that contain code that detects at runtime if the required value contains the [`__esModule` property](#output-esmodule). Adding this property is a hack implemented by TypeScript `esModuleInterop`, Babel and other tools to signify that the required value is the namespace of a transpiled ES module.:
+- `"auto"` 结合了 `"esModule"` 和 `"default"`，通过注入辅助函数，其包含在运行时检测所需的值是否包含 [`__esModule` 属性](#output-esmodule) 的代码。添加这个属性是 TypeScript `esModuleInterop`、Babel 和其他工具实现的一种解决方式，标志着所需值是 ES 模块编译后的命名空间：
 
   ```js
   var external = require('external1');
@@ -944,14 +944,14 @@ Keep in mind that for Rollup, `import * as ext_namespace from 'external'; consol
   	.then(console.log);
   ```
 
-  Note how Rollup is reusing the created namespace object to get the `default` export. If the namespace object is not needed, Rollup will use a simpler helper:
+  注意 Rollup 是如何重复使用创建的命名空间对象来获得 `default` 导出的。如果不需要命名空间对象，Rollup 将使用一个更简单的辅助函数：
 
   ```js
-  // input
+  // 输入
   import ext_default from 'external';
   console.log(ext_default);
 
-  // output
+  // 输出
   var ext_default = require('external');
 
   function _interopDefault(e) {
@@ -962,7 +962,7 @@ Keep in mind that for Rollup, `import * as ext_namespace from 'external'; consol
   console.log(ext_default__default.default);
   ```
 
-- `compat` is equivalent to `"auto"` except that it uses a slightly different helper for the default export that checks for the presence of a `default` property instead of the `__esModule` property. Except for the rare situation where a CommonJS module exports a property `"default"` that should not be the default export, this often helps to make interop "just work" as it does not rely on idiosyncratic hacks but instead uses duck-typing:
+- `compat` 等同于 `"auto"`，只是它对默认导出使用了一个稍微不同的辅助函数，其检查是否存在一个 `default` 属性而不是 `__esModule` 属性。除了 CommonJS 模块导出的属性 `"default"` 不应该是默认导出的这种罕见情况，该值通常有助于使互操作“正常工作”，因为它不依赖于特异的实现，而是使用鸭子类型（duck-typing）：
 
   ```js
   var external = require('external1');
@@ -1007,14 +1007,14 @@ Keep in mind that for Rollup, `import * as ext_namespace from 'external'; consol
   	.then(console.log);
   ```
 
-  Similar to `"auto"`, Rollup will use a simpler helper if the namespace is not needed:
+  于 `"auto"` 类似，如果不需要命名空间，Rollup 将使用一个更简单的辅助函数：
 
   ```js
-  // input
+  // 输入
   import ext_default from 'external';
   console.log(ext_default);
 
-  // output
+  // 输出
   var ext_default = require('external');
 
   function _interopDefaultCompat(e) {
@@ -1029,13 +1029,13 @@ Keep in mind that for Rollup, `import * as ext_namespace from 'external'; consol
   console.log(ext_default__default.default);
   ```
 
-- `"defaultOnly"` is similar to `"default"` except for the following:
+- `"defaultOnly"` 与 `"default"` 类似，但有以下几点区别：
 
-  - Named imports are forbidden. If such an import is encountered, Rollup throws an error even in `es` and `system` formats. That way it is ensures that the `es` version of the code is able to import non-builtin CommonJS modules in Node correctly.
-  - While namespace reexports `export * from 'external';` are not prohibited, they are ignored and will cause Rollup to display a warning because they would not have an effect if there are no named exports.
-  - When a namespace object is generated, Rollup uses a much simpler helper.
+  - 禁止命名引入。如果遇到这样的引入，Rollup 会抛出一个错误，即使是 `es` 和 `system` 格式。这样可以确保 `es` 版本的代码能够正确引入 Node 中的非内置 CommonJS 模块。
+  - 虽然命名空间内再次输出 `export * from 'external';` 不被禁止，但会被忽略掉，并且会导致 Rollup 抛出警告，因为如果没有命名的输出，它们并不会产生影响。
+  - 当一个命名空间对象生成时，Rollup 将会使用一个更简单的辅助函数。
 
-  Here is what Rollup will create from the example code. Note that we removed `external.bar` from the code as otherwise, Rollup would have thrown an error because, as stated before, this is equivalent to a named import.
+  下面示例代码展示了 Rollup 产生的内容。注意，我们从代码中删除了 `external.bar`，否则，Rollup 会抛出一个错误，因为如上所述，这等同于一个命名引入。
 
   ```js
   var ext_default = require('external1');
@@ -1056,9 +1056,9 @@ Keep in mind that for Rollup, `import * as ext_namespace from 'external'; consol
   	.then(console.log);
   ```
 
-- When a function is supplied, Rollup will pass each external id to this function once to control the interop type per dependency.
+- 当值为一个函数时，Rollup 将把每个外部依赖 id 传递给这个函数，以控制每个依赖关系的互操作类型。
 
-  As an example if all dependencies are CommonJs, the following config will ensure that named imports are only permitted from Node builtins:
+  例如，如果所有的依赖都是 CommonJs，下面的配置将确保只允许从 Node 内置的命名引入：
 
   ```js
   // rollup.config.js
@@ -1079,19 +1079,19 @@ Keep in mind that for Rollup, `import * as ext_namespace from 'external'; consol
   };
   ```
 
-There are some additional options that have an effect on the generated interop code:
+有一些额外的选项对生成互操作的代码有影响：
 
-- Setting [`output.externalLiveBindings`](#output-externallivebindings) to `false` will generate simplified namespace helpers as well as simplified code for extracted default imports.
-- Setting [`output.freeze`](#output-freeze) to `false` will prevent generated interop namespace objects from being frozen.
+- 设置 [`output.externalLiveBindings`](#output-externallivebindings) 为 `false` 将生成简化的命名空间辅助函数，以及简化提取默认引入的代码。
+- 设置 [`output.freeze`](#output-freeze) 为 `false` 将防止生成的互操作命名空间对象被冻结（`Object.freeze()`）。
 
-### output.intro/output.outro
+### output.intro/output.outro {#output-intro-output-outro}
 
-|          |                                                              |
-| -------: | :----------------------------------------------------------- |
-|   类型： | `string \| ((chunk: ChunkInfo) => string\| Promise<string>)` |
-| 命令行： | `--intro`/`--outro <text>`                                   |
+|        |                                                              |
+| -----: | :----------------------------------------------------------- |
+| 类型： | `string \| ((chunk: ChunkInfo) => string\| Promise<string>)` |
+|  CLI： | `--intro`/`--outro <text>`                                   |
 
-Similar to [`output.banner/output.footer`](#output-banner-output-footer), except that the code goes _inside_ any format-specific wrapper.
+除了在特定格式中代码不同外，该选项功能和 [`output.banner/output.footer`](#output-banner-output-footer) 类似。
 
 ```js
 export default {
@@ -1103,15 +1103,15 @@ export default {
 };
 ```
 
-### output.manualChunks
+### output.manualChunks {#output-manualchunks}
 
 |  |  |
 | --: | :-- |
 | 类型： | `{ [chunkAlias: string]: string[] } \| ((id: string, {getModuleInfo, getModuleIds}) => string \| void)` |
 
-Allows the creation of custom shared common chunks. When using the object form, each property represents a chunk that contains the listed modules and all their dependencies if they are part of the module graph unless they are already in another manual chunk. The name of the chunk will be determined by the property key.
+该选项允许你创建自定义的公共 chunk。当值为对象形式时，每个属性代表一个 chunk，其中包含列出的模块及其所有依赖，除非他们已经在其他 chunk 中，否则将会是模块图（module graph）的一部分。chunk 的名称由对象属性的键决定。
 
-Note that it is not necessary for the listed modules themselves to be part of the module graph, which is useful if you are working with `@rollup/plugin-node-resolve` and use deep imports from packages. For instance
+请注意，列出的模块本身不一定是模块图的一部分，该特性对于使用 `@rollup/plugin-node-resolve` 包并从中使用深度引用（deep imports）是非常有用的。例如：
 
 ```javascript
 ({
@@ -1121,9 +1121,9 @@ Note that it is not necessary for the listed modules themselves to be part of th
 });
 ```
 
-will put all lodash modules into a manual chunk even if you are only using imports of the form `import get from 'lodash/get'`.
+上述例子中，即使你只是使用 `import get from 'lodash/get'` 形式引入，Rollup 也会将 lodash 的所有模块放到一个自定义 chunk 中。
 
-When using the function form, each resolved module id will be passed to the function. If a string is returned, the module and all its dependency will be added to the manual chunk with the given name. For instance this will create a `vendor` chunk containing all dependencies inside `node_modules`:
+当该选项值为函数形式时，每个被解析的模块都会经过该函数处理。如果函数返回字符串，那么该模块及其所有依赖将被添加到以返回字符串命名的自定义 chunk 中。例如，以下例子会创建一个命名为 `vendor` 的 chunk，它包含所有在 `node_modules` 中的依赖：
 
 ```javascript
 function manualChunks(id) {
@@ -1133,14 +1133,14 @@ function manualChunks(id) {
 }
 ```
 
-Be aware that manual chunks can change the behaviour of the application if side effects are triggered before the corresponding modules are actually used.
+请注意，如果自定义 chunk 在使用相应模块之前触发了副作用，那么它可能改变整个应用的行为。
 
-When using the function form, `manualChunks` will be passed an object as second parameter containing the functions `getModuleInfo` and `getModuleIds` that work the same way as [`this.getModuleInfo`](../plugin-development/index.md#this-getmoduleinfo) and [`this.getModuleIds`](../plugin-development/index.md#this-getmoduleids) on the plugin context.
+当 `manualChunks` 值为函数形式时，它的第二个参数是一个对象，包含 `getModuleInfo` 函数和 `getModuleIds` 函数，其工作方式与插件上下文中的 [`this.getModuleInfo`](../plugin-development/index.md#this-getmoduleinfo) 和 [`this.getModuleIds`](../plugin-development/index.md#this-getmoduleids) 相同。
 
-This can be used to dynamically determine into which manual chunk a module should be placed depending on its position in the module graph. For instance consider a scenario where you have a set of components, each of which dynamically imports a set of translated strings, i.e.
+该选项可以用于根据模块在模块图中的位置动态确定它应该被放在哪个自定义 chunk 中。例如，考虑有这样一个场景，有一组组件，每个组件动态引入一组已转译的依赖，即：
 
 ```js
-// Inside the "foo" component
+// 在 “foo” 组件中
 
 function getTranslatedStrings(currentLanguage) {
 	switch (currentLanguage) {
@@ -1153,19 +1153,19 @@ function getTranslatedStrings(currentLanguage) {
 }
 ```
 
-If a lot of such components are used together, this will result in a lot of dynamic imports of very small chunks: Even though we know that all language files of the same language that are imported by the same chunk will always be used together, Rollup does not have this information.
+如果有很多这样的组件一起使用，则会导致生成许多很小的动态引入 chunk：尽管我们知道由同一 chunk 引入的所有相同语言的语言文件将始终一起使用，但是 Rollup 并不知道。
 
-The following code will merge all files of the same language that are only used by a single entry point:
+下面代码将会合并所有仅由单个入口使用的相一语言文件：
 
 ```js
 function manualChunks(id, { getModuleInfo }) {
 	const match = /.*\.strings\.(\w+)\.js/.exec(id);
 	if (match) {
-		const language = match[1]; // e.g. "en"
+		const language = match[1]; // 例如 “en”
 		const dependentEntryPoints = [];
 
-		// we use a Set here so we handle each module at most once. This
-		// prevents infinite loops in case of circular dependencies
+		// 在这里，我们使用 Set 一次性处理每个依赖模块
+		// 它可以阻止循环依赖中的无限循环
 		const idsToHandle = new Set(getModuleInfo(id).dynamicImporters);
 
 		for (const moduleId of idsToHandle) {
@@ -1174,19 +1174,19 @@ function manualChunks(id, { getModuleInfo }) {
 			if (isEntry || dynamicImporters.length > 0)
 				dependentEntryPoints.push(moduleId);
 
-			// The Set iterator is intelligent enough to iterate over
-			// elements that are added during iteration
+			// Set 迭代器足够智能，可以处理
+			// 在迭代过程中添加元素
 			for (const importerId of importers) idsToHandle.add(importerId);
 		}
 
-		// If there is a unique entry, we put it into a chunk based on the
-		// entry name
+		// 如果仅有一个入口，那么我们会根据入口名
+		// 将它放到独立的 chunk 中
 		if (dependentEntryPoints.length === 1) {
 			return `${
 				dependentEntryPoints[0].split('/').slice(-1)[0].split('.')[0]
 			}.strings.${language}`;
 		}
-		// For multiple entries, we put it into a "shared" chunk
+		// 对于多个入口，我们会把它放到“共享”的 chunk 中
 		if (dependentEntryPoints.length > 1) {
 			return `shared.strings.${language}`;
 		}
@@ -1194,17 +1194,17 @@ function manualChunks(id, { getModuleInfo }) {
 }
 ```
 
-### output.minifyInternalExports
+### output.minifyInternalExports {#output-minifyinternalexports}
 
 |  |  |
 | --: | :-- |
 | 类型： | `boolean` |
-| 命令行： | `--minifyInternalExports`/`--no-minifyInternalExports` |
-| Default: | `true` for formats `es` and `system` or if `output.compact` is `true`, `false` otherwise |
+| CLI： | `--minifyInternalExports`/`--no-minifyInternalExports` |
+| 默认： | 在 `es`、`system` 格式下或者 `output.compact` 值为 `true` 的情况下值为 `true`，否则为 `false` |
 
-By default, for formats `es` and `system` or if `output.compact` is `true`, Rollup will try to export internal variables as single letter variables to allow for better minification.
+默认情况下，在 `es`、`system` 格式下或者 `output.compact` 值为 `true` 的情况下该选项值为 `true`，这意味着 Rollup 会尝试把内部变量导出为单个字母的变量，以便更好地压缩代码。
 
-**Example**<br> Input:
+**示例**<br> 输入：
 
 ```js
 // main.js
@@ -1219,7 +1219,7 @@ import { importantValue } from './lib.js';
 console.log(importantValue);
 ```
 
-Output with `output.minifyInternalExports: true`:
+`output.minifyInternalExports: true` 时，输出为：
 
 ```js
 // main.js
@@ -1237,7 +1237,7 @@ import { i as importantValue } from './main-5532def0.js';
 console.log(importantValue);
 ```
 
-Output with `output.minifyInternalExports: false`:
+`output.minifyInternalExports: false` 时，输出为：
 
 ```js
 // main.js
@@ -1255,15 +1255,15 @@ import { importantValue } from './main-5532def0.js';
 console.log(importantValue);
 ```
 
-Even though it appears that setting this option to `true` makes the output larger, it actually makes it smaller if a minifier is used. In this case, `export { importantValue as i }` can become e.g. `export{a as i}` or even `export{i}`, while otherwise it would produce `export{ a as importantValue }` because a minifier usually will not change export signatures.
+该选项值为 `true` 时，尽管表面上会导致代码输出变大，但实际上，如果你使用了压缩工具，代码输出会更小。在这种情况下，`export { importantValue as i }` 理论上会被压缩成，比如 `export{a as i}`，甚至是 `export{i}`，但实际上输出的是 `export{ a as importantValue }`，因为压缩工具通常不会改变导出签名。
 
-### output.paths
+### output.paths {#output-paths}
 
 |        |                                                        |
 | -----: | :----------------------------------------------------- |
 | 类型： | `{ [id: string]: string } \| ((id: string) => string)` |
 
-Maps external module IDs to paths. External ids are ids that [cannot be resolved](../troubleshooting/index.md#warning-treating-module-as-external-dependency) or ids explicitly provided by the [`external`](#external) option. Paths supplied by `output.paths` will be used in the generated bundle instead of the module ID, allowing you to, for example, load dependencies from a CDN:
+该选项用于将外部依赖 ID 映射为路径。其中，外部依赖 ID 是指该选项 [无法解析](../troubleshooting/index.md#warning-treating-module-as-external-dependency) 的模块或者通过 [`external`](#external) 选项明确指定的模块。`output.paths` 提供的路径会取代模块 ID，在生成的 bundle 中使用，比如你可以从 CDN 中加载依赖：
 
 ```js
 // app.js
@@ -1291,25 +1291,25 @@ define(['https://d3js.org/d3.v4.min'], function (d3) {
 });
 ```
 
-### output.preserveModules
+### output.preserveModules {#output-preservemodules}
 
-|          |                                            |
-| -------: | :----------------------------------------- |
-|   类型： | `boolean`                                  |
-| 命令行： | `--preserveModules`/`--no-preserveModules` |
-| Default: | `false`                                    |
+|        |                                            |
+| -----: | :----------------------------------------- |
+| 类型： | `boolean`                                  |
+|  CLI： | `--preserveModules`/`--no-preserveModules` |
+| 默认： | `false`                                    |
 
-Instead of creating as few chunks as possible, this mode will create separate chunks for all modules using the original module names as file names. Requires the [`output.dir`](#output-dir) option. Tree-shaking will still be applied, suppressing files that are not used by the provided entry points or do not have side effects when executed and removing unused exports of files that are not entry points. On the other hand, if plugins (like `@rollup/plugin-commonjs`) emit additional "virtual" files to achieve certain results, those files will be emitted as actual files using a pattern `_virtual/fileName.js`.
+该选项将使用原始模块名作为文件名，为所有模块创建单独的 chunk，而不是创建尽可能少的 chunk。它需要配合 [`output.dir`](#output-dir) 选项一起使用。除屑（Tree-shaking）仍会对没有被入口使用或者执行阶段没有副作用的文件生效，并删除不属于入口起点的未使用文件的导出。另一方面，如果插件（如 `@rollup/plugin-commonjs`）为实现某些结果而产生了额外的“虚拟”文件，这些文件将作为实际文件使用 `_virtual/fileName.js` 模式产生。
 
-It is therefore not recommended to blindly use this option to transform an entire file structure to another format if you directly want to import from those files as expected exports may be missing. In that case, you should rather designate all files explicitly as entry points by adding them to the [`input` option object](#input), see the example there for how to do that.
+因此，如果你直接想从这些文件中引入，不建议盲目地使用这个选项将整个文件结构转换为另一种格式，因为预期的输出可能会丢失。在这种情况下，你应该把所有文件明确指定为入口，把它们添加到 [`input` 选项对象](#input) 中，可以查看那里的例子。
 
-Note that when transforming to `cjs` or `amd` format, each file will by default be treated as an entry point with [`output.exports`](#output-exports) set to `auto`. This means that e.g. for `cjs`, a file that only contains a default export will be rendered as
+请注意，在转换为 `cjs` 或 `amd` 格式时，设置 [`output.exports`](#output-exports) 的值为 `auto` 可以默认把每个文件作为入口点。这意味着，例如对于 `cjs`，只包含默认导出的文件将会渲染为：
 
 ```js
-// input main.js
+// 输入 main.js
 export default 42;
 
-// output main.js
+// 输出 main.js
 ('use strict');
 
 var main = 42;
@@ -1317,20 +1317,20 @@ var main = 42;
 module.exports = main;
 ```
 
-assigning the value directly to `module.exports`. If someone imports this file, they will get access to the default export via
+直接将值赋值给 `module.exports`。如果有人引入此文件，他们可以通过以下方式访问默认导出
 
 ```js
 const main = require('./main.js');
 console.log(main); // 42
 ```
 
-As with regular entry points, files that mix default and named exports will produce warnings. You can avoid the warnings by forcing all files to use named export mode via `output.exports: "named"`. In that case, the default export needs to be accessed via the `.default` property of the export:
+与常规入口点一样，混合使用默认导出和命名导出的模块将会产生警告。你可以通过设置 `output.exports: "named"`，强制所有文件使用命名导出模式来避免出现警告。在这种情况下，可以通过导出的 `.default` 属性访问默认导出：
 
 ```js
-// input main.js
+// 输入 main.js
 export default 42;
 
-// output main.js
+// 输出 main.js
 ('use strict');
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -1339,21 +1339,21 @@ var main = 42;
 
 exports.default = main;
 
-// consuming file
+// 使用
 const main = require('./main.js');
 console.log(main.default); // 42
 ```
 
-### output.preserveModulesRoot
+### output.preserveModulesRoot {#output-preservemodulesroot}
 
-|          |                                          |
-| -------: | :--------------------------------------- |
-|   类型： | `string`                                 |
-| 命令行： | `--preserveModulesRoot <directory-name>` |
+|        |                                          |
+| -----: | :--------------------------------------- |
+| 类型： | `string`                                 |
+|  CLI： | `--preserveModulesRoot <directory-name>` |
 
-A directory path to input modules that should be stripped away from [`output.dir`](#output-dir) path while [`output.preserveModules`](#output-preservemodules) is `true`.
+当 [`output.preserveModules`](#output-preservemodules) 值为 `true` 时，输入模块的目录路径应从 [`output.dir`](#output-dir) 路径中剥离出来。
 
-For example, given the following configuration:
+例如，给定以下配置：
 
 ```javascript
 export default {
@@ -1369,57 +1369,57 @@ export default {
 };
 ```
 
-The `preserveModulesRoot` setting ensures that the input modules will be output to the paths `dist/module.js` and `dist/another/module.js`.
+`preserveModulesRoot` 设置确保输入的模块会输出到 `dist/module.js` 和 `dist/another/module.js` 路径。
 
-This option is particularly useful while using plugins such as `@rollup/plugin-node-resolve`, which may cause changes in the output directory structure. This can happen when third-party modules are not marked [`external`](#external), or while developing in a monorepo of multiple packages that rely on one another and are not marked [`external`](#external).
+在使用 `@rollup/plugin-node-resolve` 等插件时，这个选项特别有用，它可能导致输出目录结构的变化。当第三方模块没有标记为 [`external`](#external) 时，或者在 monorepo 中多个包相互依赖时，没有标记为[`external`](#external)，都可能发生这种情况。
 
-### output.sourcemap
+### output.sourcemap {#output-sourcemap}
 
-|          |                                     |
-| -------: | :---------------------------------- |
-|   类型： | `boolean \| 'inline'\| 'hidden'`    |
-| 命令行： | `-m`/`--sourcemap`/`--no-sourcemap` |
-| Default: | `false`                             |
+|        |                                     |
+| -----: | :---------------------------------- |
+| 类型： | `boolean \| 'inline'\| 'hidden'`    |
+|  CLI： | `-m`/`--sourcemap`/`--no-sourcemap` |
+| 默认： | `false`                             |
 
-If `true`, a separate sourcemap file will be created. If `"inline"`, the sourcemap will be appended to the resulting `output` file as a data URI. `"hidden"` works like `true` except that the corresponding sourcemap comments in the bundled files are suppressed.
+如果该选项值为 `true`，那么将生成一个独立的 sourcemap 文件。如果值为 `"inline"`，那么 sourcemap 会以 data URI 的形式附加到 `output` 文件末尾。如果值为 `"hidden"`，那么它的表现和 `true` 相同，除了 bundle 文件中将没有 sourcemap 的注释。
 
-### output.sourcemapBaseUrl
+### output.sourcemapBaseUrl {#output-sourcemapbaseurl}
 
-|          |                            |
-| -------: | :------------------------- |
-|   类型： | `string`                   |
-| 命令行： | `--sourcemapBaseUrl <url>` |
+|        |                            |
+| -----: | :------------------------- |
+| 类型： | `string`                   |
+|  CLI： | `--sourcemapBaseUrl <url>` |
 
-By default, sourcemap files generated by Rollup uses relative URLs to reference the files they describe. By providing an absolute base URL, e.g. `https://example.com`, sourcemaps will use absolute URLs instead.
+默认情况下，Rollup 生成的 sourcemap 使用相对 URL 路径来引用它们描述的文件。该选项可提供一个绝对基础 URL 路径，例如 `https://example.com`，sourcemap 将使用绝对 URL 路径来代替。
 
-### output.sourcemapExcludeSources
+### output.sourcemapExcludeSources {#output-sourcemapexcludesources}
 
-|          |                                                            |
-| -------: | :--------------------------------------------------------- |
-|   类型： | `boolean`                                                  |
-| 命令行： | `--sourcemapExcludeSources`/`--no-sourcemapExcludeSources` |
-| Default: | `false`                                                    |
+|        |                                                            |
+| -----: | :--------------------------------------------------------- |
+| 类型： | `boolean`                                                  |
+|  CLI： | `--sourcemapExcludeSources`/`--no-sourcemapExcludeSources` |
+| 默认： | `false`                                                    |
 
-If `true`, the actual code of the sources will not be added to the sourcemaps, making them considerably smaller.
+如果该选项的值为 `true`，那么实际源代码将不会被添加到 sourcemap 文件中，从而使其变得更小。
 
-### output.sourcemapFile
+### output.sourcemapFile {#output-sourcemapfile}
 
-|          |                                         |
-| -------: | :-------------------------------------- |
-|   类型： | `string`                                |
-| 命令行： | `--sourcemapFile <file-name-with-path>` |
+|        |                                         |
+| -----: | :-------------------------------------- |
+| 类型： | `string`                                |
+|  CLI： | `--sourcemapFile <file-name-with-path>` |
 
-The location of the generated bundle. If this is an absolute path, all the `sources` paths in the sourcemap will be relative to it. The `map.file` property is the basename of `sourcemapFile`, as the location of the sourcemap is assumed to be adjacent to the bundle.
+该选项用于指定生成 sourcemap 文件的位置。如果是一个绝对路径，那么 sourcemap 文件中的所有 `sources` 文件路径都相对于该路径。`map.file` 属性是 `sourcemapFile` 的基本名称，因为 sourcemap 文件一般是和其构建后的 bundle 处于同一目录。
 
-`sourcemapFile` is not required if `output` is specified, in which case an output filename will be inferred by adding ".map" to the output filename for the bundle.
+如果 `output` 设置了值，那么 `sourcemapFile` 不是必须的，这种情况下，它的值会通过输出文件名中添加“.map”推断出来。
 
-### output.sourcemapIgnoreList
+### output.sourcemapIgnoreList {#output-sourcemapignorelist}
 
 |  |  |
 | --: | :-- |
 | 类型： | `boolean \| (relativeSourcePath: string, sourcemapPath: string) => boolean` |
 
-A predicate to decide whether or not to ignore-list source files in a sourcemap, used to populate the [`x_google_ignoreList` source map extension](https://developer.chrome.com/blog/devtools-better-angular-debugging/#the-x_google_ignorelist-source-map-extension). `relativeSourcePath` is a relative path from the generated `.map` file to the corresponding source file while `sourcemapPath` is the fully resolved path of the generated sourcemap file.
+该选项决定是否忽略 sourcemap 中列出的源文件，用于填充 [`x_google_ignoreList` source map 扩展](https://developer.chrome.com/blog/devtools-better-angular-debugging/#the-x_google_ignorelist-source-map-extension)。`relativeSourcePath` 是生成的 `.map` 文件到相应源文件的相对路径，而 `sourcemapPath` 是生成的 sourcemap 文件的绝对路径。
 
 ```js
 import path from 'node:path';
@@ -1429,7 +1429,7 @@ export default {
 		{
 			file: 'bundle.js',
 			sourcemapIgnoreList: (relativeSourcePath, sourcemapPath) => {
-				// will ignore-list all files with node_modules in their paths
+				// 将忽略所有路径中含有 node_modules 的文件
 				return relativeSourcePath.includes('node_modules');
 			},
 			format: 'es',
@@ -1439,15 +1439,15 @@ export default {
 };
 ```
 
-When you don't specify this option explicitly, by default it will put all files with `node_modules` in their path on the ignore list. You can specify `false` here to turn off the ignore-listing completely.
+当没有明确指定这个选项时，默认情况下它会把所有路径中带有 `node_modules` 的文件放在忽略列表中。你可以设置值为 `false` 来完全关闭忽略列表。
 
-### output.sourcemapPathTransform
+### output.sourcemapPathTransform {#output-sourcemappathtransform}
 
 |        |                                                                 |
 | -----: | :-------------------------------------------------------------- |
 | 类型： | `(relativeSourcePath: string, sourcemapPath: string) => string` |
 
-A transformation to apply to each path in a sourcemap. `relativeSourcePath` is a relative path from the generated `.map` file to the corresponding source file while `sourcemapPath` is the fully resolved path of the generated sourcemap file.
+该选项用于 sourcemap 的路径转换。其中，`relativeSourcePath` 是指从生成的 `.map` 文件到相对应的源文件的相对路径，而 `sourcemapPath` 是指生成 sourcemap 文件的绝对路径。
 
 ```js
 import path from 'node:path';
@@ -1457,7 +1457,7 @@ export default {
 		{
 			file: 'bundle.js',
 			sourcemapPathTransform: (relativeSourcePath, sourcemapPath) => {
-				// will replace relative paths with absolute paths
+				// 将会把相对路径替换为绝对路径
 				return path.resolve(
 					path.dirname(sourcemapPath),
 					relativeSourcePath
@@ -1470,34 +1470,34 @@ export default {
 };
 ```
 
-### output.validate
+### output.validate {#output-validate}
 
-|          |                              |
-| -------: | :--------------------------- |
-|   类型： | `boolean`                    |
-| 命令行： | `--validate`/`--no-validate` |
-| Default: | `false`                      |
+|        |                              |
+| -----: | :--------------------------- |
+| 类型： | `boolean`                    |
+|  CLI： | `--validate`/`--no-validate` |
+| 默认： | `false`                      |
 
-Re-parses each generated chunk to detect if the generated code is valid JavaScript. This can be useful to debug output generated by plugins that use the [`renderChunk`](../plugin-development/index.md#renderchunk) hook to transform code.
+该选项用于重新解析每个生成的 chunk，以检测生成的代码是否是有效的 JavaScript 代码。这对于调试使用 [`renderChunk`](../plugin-development/index.md#renderchunk) 钩子转换代码的插件所产生的输出时很有用。
 
-If the code is invalid, a warning will be issued. Note that no error is thrown so that you can still inspect the generated output. To promote this warning to an error, you can watch for it in an [`onwarn`](#onwarn) handler.
+如果代码是无效的，将抛出警告。请注意，如果没有错误被抛出，你就可以检查输出代码。要把这个警告提升为错误，你可以在 [`onwarn`](#onwarn) 中查询。
 
-### preserveEntrySignatures
+### preserveEntrySignatures {#preserveentrysignatures}
 
 |  |  |
 | --: | :-- |
 | 类型： | `"strict" \| "allow-extension" \| "exports-only"\| false` |
-| 命令行： | `--preserveEntrySignatures <strict \| allow-extension>`/`--no-preserveEntrySignatures` |
-| Default: | `"exports-only"` |
+| CLI： | `--preserveEntrySignatures <strict \| allow-extension>`/`--no-preserveEntrySignatures` |
+| 默认： | `"exports-only"` |
 
-Controls if Rollup tries to ensure that entry chunks have the same exports as the underlying entry module.
+该选项用于控制 Rollup 尝试确保入口 chunk 与基础入口模块具有相同的导出。
 
-- If set to `"strict"`, Rollup will create exactly the same exports in the entry chunk as there are in the corresponding entry module. If this is not possible because additional internal exports need to be added to a chunk, Rollup will instead create a "facade" entry chunk that reexports just the necessary bindings from other chunks but contains no code otherwise. This is the recommended setting for libraries.
-- `"allow-extension"` will create all exports of the entry module in the entry chunk but may also add additional exports if necessary, avoiding a "facade" entry chunk. This setting makes sense for libraries where a strict signature is not required.
-- `"exports-only"` behaves like `"strict"` if the entry module has exports, otherwise it behaves like `"allow-extension"`.
-- `false` will not add any exports of an entry module to the corresponding chunk and does not even include the corresponding code unless those exports are used elsewhere in the bundle. Internal exports may be added to entry chunks, though. This is the recommended setting for web apps where the entry chunks are to be placed in script tags as it may reduce both the number of chunks and possibly the bundle size.
+- 如果值设置为 `"strict"`，Rollup 将在入口 chunk 中创建与相应入口模块中完全相同的导出。如果因为需要向 chunk 中添加额外的内部导出而无法这样做，那么 Rollup 将创建一个“facade”入口 chunk，它将仅从前其他 chunk 中导出必要的绑定，但不包含任何其他代码。对于库来说，推荐使用此设置。
+- 值为 `"allow-extension"`，Rollup 将在入口 chunk 中创建入口模块的所有导出，但是如果有必要，还可以添加其他导出，从而避免出现“facade”入口 chunk。对于不需要严格签名的库，此设置很有意义。
+- 值为 `"exports-only"`，如果入口模块有导出，它的行为就像 `"strict"`，否则就像 `"allow-extension"`。
+- 值为 `false`，Rollup 不会将入口模块中的任何导出内容添加到相应的 chunk 中，甚至不包含相应的代码，除非这些导出内容在 bundle 的其他位置使用。但是，可以将内部导出添加到入口 chunks 中。对于将入口 chunks 放置在脚本标记中的 Web 应用，推荐使用该设置，因为它可以同时减少 chunks 的数量和 bundle 的大小。
 
-**Example**<br> Input:
+**示例**<br> 输入：
 
 ```js
 // main.js
@@ -1513,7 +1513,7 @@ import { shared } from './lib.js';
 console.log(shared);
 ```
 
-Output for `preserveEntrySignatures: "strict"`:
+`preserveEntrySignatures: "strict"` 时的输出：
 
 ```js
 // main.js
@@ -1533,7 +1533,7 @@ import { s as shared } from './main-50a71bb6.js';
 console.log(shared);
 ```
 
-Output for `preserveEntrySignatures: "allow-extension"`:
+`preserveEntrySignatures: "allow-extension"` 时的输出：
 
 ```js
 // main.js
@@ -1550,7 +1550,7 @@ import { s as shared } from './main.js';
 console.log(shared);
 ```
 
-Output for `preserveEntrySignatures: false`:
+`preserveEntrySignatures: false` 时的输出：
 
 ```js
 // main.js
@@ -1562,19 +1562,19 @@ const shared = 'shared';
 console.log(shared);
 ```
 
-At the moment, the only way to override this setting for individual entry chunks is to use the plugin API and emit those chunks via [`this.emitFile`](../plugin-development/index.md#this-emitfile) instead of using the [`input`](#input) option.
+目前，为独立的入口 chunks 覆盖此设置的唯一方法，是使用插件 API 并通过 [`this.emitFile`](../plugin-development/index.md#this-emitfile) 触发这些 chunks，而不是使用 [`input`](#input) 选项。
 
-### strictDeprecations
+### strictDeprecations {#strictdeprecations}
 
-|          |                                                  |
-| -------: | :----------------------------------------------- |
-|   类型： | `boolean`                                        |
-| 命令行： | `--strictDeprecations`/`--no-strictDeprecations` |
-| Default: | `false`                                          |
+|        |                                                  |
+| -----: | :----------------------------------------------- |
+| 类型： | `boolean`                                        |
+|  CLI： | `--strictDeprecations`/`--no-strictDeprecations` |
+| 默认： | `false`                                          |
 
-When this flag is enabled, Rollup will throw an error instead of showing a warning when a deprecated feature is used. Furthermore, features that are marked to receive a deprecation warning with the next major version will also throw an error when used.
+启用此选项后，当使用废弃的功能时，Rollup 将抛出错误而不是警告。此外，如果使用了在下一个主版本（major version）被标记为废弃警告的功能时，也会抛出错误。
 
-This flag is intended to be used by e.g. plugin authors to be able to adjust their plugins for upcoming major releases as early as possible.
+该选项被用于例如插件作者能尽早地为即将发布的主要版本调整其插件配置。
 
 ## Danger zone
 
@@ -2325,8 +2325,8 @@ Determines after how many runs cached assets that are no longer used by plugins 
 |  |  |
 | --: | :-- |
 | 类型： | `boolean` |
-| 命令行： | `--experimentalLogSideEffects`/`--no-experimentalLogSideEffects` |
-| Default: | `false` |
+| CLI： | `--experimentalLogSideEffects`/`--no-experimentalLogSideEffects` |
+| 默认： | `false` |
 
 When set to `true`, this will log the first side effect it finds in every file to the console. This can be very helpful to figure which files have side effects and what the actual side effects are. Removing side effects can improve tree-shaking and chunk generation and is crucial to make [`output.experimentalMinChunkSize`](#output-experimentalminchunksize) work.
 
@@ -2334,11 +2334,11 @@ This option will only log top-level statements, though. Sometimes, e.g. in case 
 
 ### output.experimentalMinChunkSize
 
-|          |                                     |
-| -------: | :---------------------------------- |
-|   类型： | `number`                            |
-| 命令行： | `--experimentalMinChunkSize <size>` |
-| Default: | `0`                                 |
+|        |                                     |
+| -----: | :---------------------------------- |
+| 类型： | `number`                            |
+|  CLI： | `--experimentalMinChunkSize <size>` |
+| 默认： | `0`                                 |
 
 Set a minimal chunk size target in Byte for code-splitting setups. When this value is greater than `0`, Rollup will try to merge any chunk that does not have side effects when executed, i.e. any chunk that only contains function definitions etc., and is below this size limit into another chunk that is likely to be loaded under similar conditions.
 
@@ -2348,11 +2348,11 @@ Unfortunately, due to the way chunking works, chunk size is measured before any 
 
 ### perf
 
-|          |                      |
-| -------: | :------------------- |
-|   类型： | `boolean`            |
-| 命令行： | `--perf`/`--no-perf` |
-| Default: | `false`              |
+|        |                      |
+| -----: | :------------------- |
+| 类型： | `boolean`            |
+|  CLI： | `--perf`/`--no-perf` |
+| 默认： | `false`              |
 
 Whether to collect performance timings. When used from the command line or a configuration file, detailed measurements about the current bundling process will be displayed. When used from the [JavaScript API](../javascript-api/index.md), the returned bundle object will contain an additional `getTimings()` function that can be called at any time to retrieve all accumulated measurements.
 
@@ -2371,10 +2371,10 @@ For each key, the first number represents the elapsed time while the second repr
 
 ## watch
 
-|          |                           |
-| -------: | :------------------------ |
-|   类型： | `WatcherOptions \| false` |
-| Default: | `{}`                      |
+|        |                           |
+| -----: | :------------------------ |
+| 类型： | `WatcherOptions \| false` |
+| 默认： | `{}`                      |
 
 ```typescript
 interface WatcherOptions {
@@ -2408,11 +2408,11 @@ These options only take effect when running Rollup with the `--watch` flag, or u
 
 ### watch.buildDelay
 
-|          |                               |
-| -------: | :---------------------------- |
-|   类型： | `number`                      |
-| 命令行： | `--watch.buildDelay <number>` |
-| Default: | `0`                           |
+|        |                               |
+| -----: | :---------------------------- |
+| 类型： | `number`                      |
+|  CLI： | `--watch.buildDelay <number>` |
+| 默认： | `0`                           |
 
 Configures how long Rollup will wait for further changes until it triggers a rebuild in milliseconds. By default, Rollup does not wait but there is a small debounce timeout configured in the chokidar instance. Setting this to a value greater than `0` will mean that Rollup will only trigger a rebuild if there was no change for the configured number of milliseconds. If several configurations are watched, Rollup will use the largest configured build delay.
 
@@ -2426,20 +2426,20 @@ An optional object of watch options that will be passed to the bundled [chokidar
 
 ### watch.clearScreen
 
-|          |                                                |
-| -------: | :--------------------------------------------- |
-|   类型： | `boolean`                                      |
-| 命令行： | `--watch.clearScreen`/`--no-watch.clearScreen` |
-| Default: | `true`                                         |
+|        |                                                |
+| -----: | :--------------------------------------------- |
+| 类型： | `boolean`                                      |
+|  CLI： | `--watch.clearScreen`/`--no-watch.clearScreen` |
+| 默认： | `true`                                         |
 
 Whether to clear the screen when a rebuild is triggered.
 
 ### watch.exclude
 
-|          |                                          |
-| -------: | :--------------------------------------- |
-|   类型： | `string \| RegExp\| (string\| RegExp)[]` |
-| 命令行： | `--watch.exclude <files>`                |
+|        |                                          |
+| -----: | :--------------------------------------- |
+| 类型： | `string \| RegExp\| (string\| RegExp)[]` |
+|  CLI： | `--watch.exclude <files>`                |
 
 Prevent files from being watched:
 
@@ -2455,10 +2455,10 @@ export default {
 
 ### watch.include
 
-|          |                                          |
-| -------: | :--------------------------------------- |
-|   类型： | `string \| RegExp\| (string\| RegExp)[]` |
-| 命令行： | `--watch.include <files>`                |
+|        |                                          |
+| -----: | :--------------------------------------- |
+| 类型： | `string \| RegExp\| (string\| RegExp)[]` |
+|  CLI： | `--watch.include <files>`                |
 
 Limit the file-watching to certain files. Note that this only filters the module graph but does not allow adding additional watch files:
 
@@ -2474,11 +2474,11 @@ export default {
 
 ### watch.skipWrite
 
-|          |                                            |
-| -------: | :----------------------------------------- |
-|   类型： | `boolean`                                  |
-| 命令行： | `--watch.skipWrite`/`--no-watch.skipWrite` |
-| Default: | `false`                                    |
+|        |                                            |
+| -----: | :----------------------------------------- |
+| 类型： | `boolean`                                  |
+|  CLI： | `--watch.skipWrite`/`--no-watch.skipWrite` |
+| 默认： | `false`                                    |
 
 Whether to skip the `bundle.write()` step when a rebuild is triggered.
 
@@ -2498,11 +2498,11 @@ _Use the [`output.manualChunks`](#output-manualchunks) output option instead, wh
 
 _Use the [`maxParallelFileOps`](#maxparallelfileops) option instead._
 
-|          |                                   |
-| -------: | :-------------------------------- |
-|   类型： | `number`                          |
-| 命令行： | `--maxParallelFileReads <number>` |
-| Default: | 20                                |
+|        |                                   |
+| -----: | :-------------------------------- |
+| 类型： | `number`                          |
+|  CLI： | `--maxParallelFileReads <number>` |
+| 默认： | 20                                |
 
 Limits the number of files rollup will open in parallel when reading modules. Without a limit or with a high enough value, builds can fail with an "EMFILE: too many open files". This depends on how many open file handles the os allows.
 
@@ -2510,11 +2510,11 @@ Limits the number of files rollup will open in parallel when reading modules. Wi
 
 _Use the [`renderDynamicImport`](../plugin-development/index.md#renderdynamicimport) plugin hook instead._
 
-|          |                                  |
-| -------: | :------------------------------- |
-|   类型： | `string`                         |
-| 命令行： | `--dynamicImportFunction <name>` |
-| Default: | `import`                         |
+|        |                                  |
+| -----: | :------------------------------- |
+| 类型： | `string`                         |
+|  CLI： | `--dynamicImportFunction <name>` |
+| 默认： | `import`                         |
 
 This will rename the dynamic import function to the chosen name when outputting ES bundles. This is useful for generating code that uses a dynamic import polyfill such as [this one](https://github.com/uupaa/dynamic-import-polyfill).
 
@@ -2525,8 +2525,8 @@ _This option is no longer needed._
 |  |  |
 | --: | :-- |
 | 类型： | `boolean` |
-| 命令行： | `--experimentalDeepDynamicChunkOptimization`/`--no-experimentalDeepDynamicChunkOptimization` |
-| Default: | `false` |
+| CLI： | `--experimentalDeepDynamicChunkOptimization`/`--no-experimentalDeepDynamicChunkOptimization` |
+| 默认： | `false` |
 
 This option was used to prevent performance issues with the full chunk optimization algorithm. As the algorithm is much faster now, this option is now ignored by Rollup and should no longer be used.
 
@@ -2534,11 +2534,11 @@ This option was used to prevent performance issues with the full chunk optimizat
 
 _Use the [`output.generatedCode.constBindings`](#output-generatedcode-constbindings) option instead._
 
-|          |                                    |
-| -------: | :--------------------------------- |
-|   类型： | `boolean`                          |
-| 命令行： | `--preferConst`/`--no-preferConst` |
-| Default: | `false`                            |
+|        |                                    |
+| -----: | :--------------------------------- |
+| 类型： | `boolean`                          |
+|  CLI： | `--preferConst`/`--no-preferConst` |
+| 默认： | `false`                            |
 
 Generate `const` declarations for exports rather than `var` declarations.
 
@@ -2546,11 +2546,11 @@ Generate `const` declarations for exports rather than `var` declarations.
 
 _Use [`output.generatedCode.symbols`](#output-generatedcode-symbols) instead._
 
-|          |                                                      |
-| -------: | :--------------------------------------------------- |
-|   类型： | `boolean`                                            |
-| 命令行： | `--namespaceToStringTag`/`--no-namespaceToStringTag` |
-| Default: | `false`                                              |
+|        |                                                      |
+| -----: | :--------------------------------------------------- |
+| 类型： | `boolean`                                            |
+|  CLI： | `--namespaceToStringTag`/`--no-namespaceToStringTag` |
+| 默认： | `false`                                              |
 
 Whether to add spec compliant `.toString()` tags to namespace objects. If this option is set,
 
