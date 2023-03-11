@@ -187,7 +187,7 @@ rollup "main entry"="src/entry 1.js" "src/other entry.js" --format es
 - `amd` – 异步模块加载，适用于 RequireJS 等模块加载器
 - `cjs` – CommonJS，适用于 Node 环境和其他打包工具（别名：`commonjs`）
 - `es` – 将 bundle 保留为 ES 模块文件，适用于其他打包工具，以及支持 `<script type=module>` 标签的浏览器。（别名：`esm`，`module`）
-- `iife` – 自执行函数，适用于 `<script>` 标签（如果你想为你的应用程序创建 bundle，那么你可能会使用它）。`iife` 表示”自执行 [函数表达式](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/function)“
+- `iife` – 自执行函数，适用于 `<script>` 标签（如果你想为你的应用程序创建 bundle，那么你可能会使用它）。`iife` 表示“自执行 [函数表达式](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/function)”
 - `umd` – 通用模块定义规范，同时支持 `amd`，`cjs` 和 `iife`
 - `system` – SystemJS 模块加载器的原生格式（别名：`systemjs`）
 
@@ -420,7 +420,7 @@ buildWithCache()
 |  CLI： | `--maxParallelFileOps <number>` |
 | 默认： | 20                              |
 
-该选项限制 rollup 在读取模块或写入 chunk 时，同时能打开的文件数量。如果没有限制或者数值足够高，构建可能会失败，显示“EMFILE: Too many open files“（EMFILE：打开的文件数过多）。这取决于操作系统限制的句柄数（open file handles）大小。
+该选项限制 rollup 在读取模块或写入 chunk 时，同时能打开的文件数量。如果没有限制或者数值足够高，构建可能会失败，显示“EMFILE: Too many open files”（EMFILE：打开的文件数过多）。这取决于操作系统限制的句柄数（open file handles）大小。
 
 ### onwarn {#onwarn}
 
@@ -1918,7 +1918,7 @@ export default {
 |  CLI： | `--strict`/`--no-strict` |
 | 默认： | `true`                   |
 
-该选项用于决定是否在生成非 ES bundle 的顶部包含 “use strict” 用法。严格地讲，ES 模块 _总是_ 使用严格模式，所以不要无缘无故禁用该选项。
+该选项用于决定是否在生成非 ES bundle 的顶部包含“use strict”用法。严格地讲，ES 模块 _总是_ 使用严格模式，所以不要无缘无故禁用该选项。
 
 ### output.systemNullSetters {#output-systemnullsetters}
 
@@ -2472,7 +2472,7 @@ export default {
 };
 ```
 
-### watch.skipWrite {#watch-skipWrite}
+### watch.skipWrite {#watch-skipwrite}
 
 |        |                                            |
 | -----: | :----------------------------------------- |
@@ -2504,7 +2504,7 @@ _请使用 [`maxParallelFileOps`](#maxparallelfileops) 选项代替。_
 |  CLI： | `--maxParallelFileReads <number>` |
 | 默认： | 20                                |
 
-该选项限制 Rollup 在读取模块时并行打开的文件数量。如果没有限制，或者数值足够高，构建可能会失败，显示“EMFILE: Too many open files“（EMFILE：打开的文件数过多）。这取决于操作系统限制的句柄数（open file handles）大小。
+该选项限制 Rollup 在读取模块时并行打开的文件数量。如果没有限制，或者数值足够高，构建可能会失败，显示“EMFILE: Too many open files”（EMFILE：打开的文件数过多）。这取决于操作系统限制的句柄数（open file handles）大小。
 
 ### output.dynamicImportFunction {#output-dynamicimportfunction}
 
