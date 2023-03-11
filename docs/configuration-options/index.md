@@ -1576,71 +1576,71 @@ console.log(shared);
 
 该选项被用于例如插件作者能尽早地为即将发布的主要版本调整其插件配置。
 
-## Danger zone
+## 慎用选项 {#danger-zone}
 
-You probably don't need to use these options unless you know what you are doing!
+除非你知道自己在做什么，否则尽量别使用这些选项！
 
-### acorn
+### acorn {#acorn}
 
 |        |                |
 | -----: | :------------- |
 | 类型： | `AcornOptions` |
 
-Any options that should be passed through to Acorn's `parse` function, such as `allowReserved: true`. Cf. the [Acorn documentation](https://github.com/acornjs/acorn/tree/master/acorn#interface) for more available options.
+该选项用于指定要传递给 Acorn `parse` 函数的选项，比如 `allowReserved: true`。查看 [Acorn 文档](https://github.com/acornjs/acorn/tree/master/acorn#interface) 了解更多选项。
 
-### acornInjectPlugins
+### acornInjectPlugins {#acorninjectplugins}
 
 |        |                                                |
 | -----: | :--------------------------------------------- |
 | 类型： | `AcornPluginFunction \| AcornPluginFunction[]` |
 
-A single plugin or an array of plugins to be injected into Acorn. For instance to use JSX syntax, you can specify
+该选项用于指定注入到 Acorn 中的单个插件或者插件数组。例如要支持 JSX 预发，你可以指定
 
 ```javascript
 import jsx from 'acorn-jsx';
 
 export default {
-	// … other options …
+	// … 其他选项 …
 	acornInjectPlugins: [jsx()]
 };
 ```
 
-in your rollup configuration. Note that this is different from using Babel in that the generated output will still contain JSX while Babel will replace it with valid JavaScript.
+在你的 Rollup 配置中。请注意，这与使用 Babel 不同，因为生成的输出文件仍将包含 JSX，而 Babel 会将其替换为有效的 JavaScript 代码。
 
-### context
+### context {#context}
 
-|          |                               |
-| -------: | :---------------------------- |
-|   类型： | `string`                      |
-| 命令行： | `--context <contextVariable>` |
-| Default: | `undefined`                   |
+|        |                               |
+| -----: | :---------------------------- |
+| 类型： | `string`                      |
+|  CLI： | `--context <contextVariable>` |
+| 默认： | `undefined`                   |
 
-By default, the context of a module – i.e., the value of `this` at the top level – is `undefined`. In rare cases you might need to change this to something else, like `'window'`.
+默认情况下，模块的上下文（即，全局 `this`）为 `undefined`。在极少数情况下，你可能需要将其修改为其他名称，比如 `window`。
 
-### moduleContext
+### moduleContext {#modulecontext}
 
 |        |                                                        |
 | -----: | :----------------------------------------------------- |
 | 类型： | `((id: string) => string) \| { [id: string]: string }` |
 
-Same as [`context`](#context), but per-module – can either be an object of `id: context` pairs, or an `id => context` function.
+与 [`context`](#context) 相同，但每个模块要么是由 `id: context` 键值对构成的对象，要么是 `id => context` 的函数。
 
-### output.amd
+### output.amd {#output-amd}
 
 |  |  |
 | --: | :-- |
 | 类型： | `{ id?: string, autoId?: boolean, basePath?: string, define?: string }` |
 
-Note `id` can only be used for single-file builds, and cannot be combined with `autoId`/`basePath`.
+注意，`id` 仅适用于单文件构建，并且不能与 `autoId` 或 `basePath` 结合使用。
 
-#### output.amd.id
+#### output.amd.id {#output-amd-id}
 
-|          |                    |
-| -------: | :----------------- |
-|   类型： | `string`           |
-| 命令行： | `--amd.id <amdId>` |
+|        |                    |
+| -----: | :----------------- |
+| 类型： | `string`           |
+|  CLI： | `--amd.id <amdId>` |
 
-An ID to use for AMD/UMD bundles:
+该选项用于设置 AMD/UMD bundle 的 ID：
 
 ```js
 // rollup.config.js
@@ -1655,14 +1655,14 @@ export default {
 // -> define('my-bundle', ['dependency'], ...
 ```
 
-#### output.amd.autoId
+#### output.amd.autoId {#output-amd-autoid}
 
-|          |                |
-| -------: | :------------- |
-|   类型： | `boolean`      |
-| 命令行： | `--amd.autoId` |
+|        |                |
+| -----: | :------------- |
+| 类型： | `boolean`      |
+|  CLI： | `--amd.autoId` |
 
-Set the ID to the chunk ID (with the '.js' extension removed).
+该选项用于设置 chunk ID 的 ID（去除“.js”扩展名后）。
 
 ```js
 // rollup.config.js
@@ -1678,16 +1678,16 @@ export default {
 // -> define('dynamic-chunk', ['dependency'], ...
 ```
 
-#### output.amd.basePath
+#### output.amd.basePath {#output-amd-basepath}
 
-|          |                  |
-| -------: | :--------------- |
-|   类型： | `string`         |
-| 命令行： | `--amd.basePath` |
+|        |                  |
+| -----: | :--------------- |
+| 类型： | `string`         |
+|  CLI： | `--amd.basePath` |
 
-The path that will be prepended to the auto generated ID. This is useful if the build is going to be placed inside another AMD project, and is not at the root.
+该选项用于设置预生成的 ID 前缀路径。如果构建产物将放置在另一个 AMD 项目中，而不是在根目录中，那么这个设置是有用的。
 
-Only valid with [`output.amd.autoId`](#output-amd-autoid).
+只在 [`output.amd.autoId`](#output-amd-autoid) 下生效。
 
 ```js
 // rollup.config.js
@@ -1704,14 +1704,14 @@ export default {
 // -> define('some/where/dynamic-chunk', ['dependency'], ...
 ```
 
-#### output.amd.define
+#### output.amd.define {#output-amd-define}
 
-|          |                                     |
-| -------: | :---------------------------------- |
-|   类型： | `string`                            |
-| 命令行： | `--amd.define <defineFunctionName>` |
+|        |                                     |
+| -----: | :---------------------------------- |
+| 类型： | `string`                            |
+|  CLI： | `--amd.define <defineFunctionName>` |
 
-A function name to use instead of `define`:
+该选项用于指定代替 `define` 的函数名称：
 
 ```js
 // rollup.config.js
@@ -1726,15 +1726,15 @@ export default {
 // -> def(['dependency'],...
 ```
 
-#### output.amd.forceJsExtensionForImports
+#### output.amd.forceJsExtensionForImports {#output-amd-forcejsextensionforimports}
 
-|          |                                    |
-| -------: | :--------------------------------- |
-|   类型： | `boolean`                          |
-| 命令行： | `--amd.forceJsExtensionForImports` |
-| Default: | `false`                            |
+|        |                                    |
+| -----: | :--------------------------------- |
+| 类型： | `boolean`                          |
+|  CLI： | `--amd.forceJsExtensionForImports` |
+| 默认： | `false`                            |
 
-Add `.js` extension for imports of generated chunks and local AMD modules:
+该选项决定为生成的 chunk 和本地 AMD 模块的引入添加 `.js` 扩展名：
 
 ```js
 // rollup.config.js
@@ -1749,100 +1749,100 @@ export default {
 // -> define(['./chunk-or-local-file.js', 'dependency', 'third/dependency'],...
 ```
 
-### output.esModule
+### output.esModule {#output-esmodule}
 
-|          |                                |
-| -------: | :----------------------------- |
-|   类型： | `boolean \| "if-default-prop"` |
-| 命令行： | `--esModule`/`--no-esModule`   |
-| Default: | `"if-default-prop"`            |
+|        |                                |
+| -----: | :----------------------------- |
+| 类型： | `boolean \| "if-default-prop"` |
+|  CLI： | `--esModule`/`--no-esModule`   |
+| 默认： | `"if-default-prop"`            |
 
-Whether to add a `__esModule: true` property when generating exports for non-ES formats. This property signifies that the exported value is the namespace of an ES module and that the default export of this module corresponds to the `.default` property of the exported object.
+该选项用于决定是否在生成非 ES 格式导出时添加 `__esModule: true` 属性。此属性表示导出的值是 ES 模块的命名空间，并且此模块的默认导出对应于导出对象的`.default` 属性。
 
-- `true` will always add the property when using [named exports mode](#output-exports), which is similar to what other tools do.
-- `"if-default-prop"` will only add the property when using named exports mode and there also is a default export. The subtle difference is that if there is no default export, consumers of the CommonJS version of your library will get all named exports as default export instead of an error or `undefined`. We chose to make this the default value as the `__esModule` property is not a standard followed by any JavaScript runtime and leads to many interop issues, so we want to limit its use to the cases where it is really needed.
-- `false` on the other hand will never add the property even if the default export would become a property `.default`.
+- 值为 `true`，当使用 [命名导出模式](#output-exports) 时将始终添加该属性，这与其他工具类似。
+- 值为`"if-default-prop"`，仅当使用命名导出模式且存在默认导出时，才会添加该属性。微妙之处在于，如果没有默认导出，你的 CommonJS 版本的库使用者将获得所有命名导出作为默认导出，而不是出现错误或 `undefined`。我们选择将其设置为默认值，因为 `__esModule` 属性不是任何 JavaScript 运行时遵循的标准，并且会导致许多互操作问题，因此我们希望将其用于确实需要它的情况。
+- 值为 `false`，即使默认导出会变成属性 `.default`，也不会添加该属性。
 
-See also [`output.interop`](#output-interop).
+可以查看 [`output.interop`](#output-interop) 选项。
 
-### output.exports
+### output.exports {#output-exports}
 
-|          |                                          |
-| -------: | :--------------------------------------- |
-|   类型： | `"auto" \| "default"\| "named"\| "none"` |
-| 命令行： | `--exports <exportMode>`                 |
-| Default: | `'auto'`                                 |
+|        |                                          |
+| -----: | :--------------------------------------- |
+| 类型： | `"auto" \| "default"\| "named"\| "none"` |
+|  CLI： | `--exports <exportMode>`                 |
+| 默认： | `'auto'`                                 |
 
-What export mode to use. Defaults to `auto`, which guesses your intentions based on what the `input` module exports:
+该选项用于指定导出模式。默认是 `auto`，指根据 `input` 模块导出推测你的意图：
 
-- `default` – if you are only exporting one thing using `export default ...`; note that this can cause issues when generating CommonJS output that is meant to be interchangeable with ESM output, see below
-- `named` – if you are using named exports
-- `none` – if you are not exporting anything (e.g. you are building an app, not a library)
+- `default` – 适用于只使用 `export default ...` 的情况；请注意，此操作可能会导致生成想要在与 ESM 输出可互换的 CommonJS 输出时出现问题，具体可见下文
+- `named` – 适用于使用命名导出的情况
+- `none` – 适用于没有导出的情况（比如，当你在构建应用而非库时）
 
-As this is only an output transformation, you can only choose `default` if a default export is the only export for all entry chunks. Likewise, you can only choose `none` if there are no exports, otherwise Rollup will throw an error.
+由于这只是一个输出的转换过程，因此仅当默认导出是所有入口 chunk 的唯一导出时，你才能选择 `default`。同样地，仅当没有导出时，才能选择 `none`，否则 Rollup 将会抛出错误。
 
-The difference between `default` and `named` affects how other people can consume your bundle. If you use `default`, a CommonJS user could do this, for example:
+`default` 和 `named` 之间的差异会影响其他人使用你的 bundle 的方式。例如，如果该选项的值为 `default` 时，那么 CommonJS 用户可以通过以下方式使用你的库，例如：
 
 ```js
-// your-lib package entry
+// your-lib 包入口
 export default 'Hello world';
 
-// a CommonJS consumer
-/* require( "your-lib" ) returns "Hello World" */
+// CommonJS 消费者
+/* require( "your-lib" ) 返回 "Hello World" */
 const hello = require('your-lib');
 ```
 
-With `named`, a user would do this instead:
+如果该选项的值是 `named`，那么用户则通过以下方式使用你的库：
 
 ```js
-// your-lib package entry
+// your-lib 包入口
 export const hello = 'Hello world';
 
-// a CommonJS consumer
-/* require( "your-lib" ) returns {hello: "Hello World"} */
+// CommonJS 消费者
+/* require( "your-lib" ) 返回 {hello: "Hello World"} */
 const hello = require('your-lib').hello;
-/* or using destructuring */
+/* 或使用解构 */
 const { hello } = require('your-lib');
 ```
 
 The wrinkle is that if you use `named` exports but _also_ have a `default` export, a user would have to do something like this to use the default export:
 
 ```js
-// your-lib package entry
+// your-lib 包入口
 export default 'foo';
 export const bar = 'bar';
 
-// a CommonJS consumer
-/* require( "your-lib" ) returns {default: "foo", bar: "bar"} */
+// CommonJS 消费者
+/* require( "your-lib" ) 返回 {default: "foo", bar: "bar"} */
 const foo = require('your-lib').default;
 const bar = require('your-lib').bar;
-/* or using destructuring */
+/* 或使用解构 */
 const { default: foo, bar } = require('your-lib');
 ```
 
-Note: There are some tools such as Babel, TypeScript, Webpack, and `@rollup/plugin-commonjs` that are capable of resolving a CommonJS `require(...)` call with an ES module. If you are generating CommonJS output that is meant to be interchangeable with ESM output for those tools, you should always use `named` export mode. The reason is that most of those tools will by default return the namespace of an ES module on `require` where the default export is the `.default` property.
+请注意：一些工具，如 Babel、TypeScript、Webpack 和 `@rollup/plugin-commonjs`，它们能够解析 CommonJS 的 `require(...)` 调用，并将其转换为 ES 模块。如果你正在生成想要在与这些工具的 ESM 输出可互换的 CommonJS 输出，则应始终使用 `named` 导出模式。原因是这些工具中大多数默认情况下会在 `require` 中返回 ES 模块的命名空间，其中默认导出是 `.default` 属性。
 
-In other words for those tools, you cannot create a package interface where `const lib = require("your-lib")` yields the same as `import lib from "your-lib"`. With named export mode however, `const {lib} = require("your-lib")` will be equivalent to `import {lib} from "your-lib"`.
+换句话说，对于这些工具，你无法创建一个包接口，在该接口中 `const lib = require("your-lib")` 能够产生与 `import lib from "your-lib"` 相同的结果。但是，使用 `named` 导出模式，`const {lib} = require("your-lib")` 将与 `import {lib} from "your-lib"` 等效。
 
-### output.externalLiveBindings
+### output.externalLiveBindings {#output-externallivebindings}
 
-|          |                                                      |
-| -------: | :--------------------------------------------------- |
-|   类型： | `boolean`                                            |
-| 命令行： | `--externalLiveBindings`/`--no-externalLiveBindings` |
-| Default: | `true`                                               |
+|        |                                                      |
+| -----: | :--------------------------------------------------- |
+| 类型： | `boolean`                                            |
+|  CLI： | `--externalLiveBindings`/`--no-externalLiveBindings` |
+| 默认： | `true`                                               |
 
-When set to `false`, Rollup will not generate code to support live bindings for external imports but instead assume that exports do not change over time. This will enable Rollup to generate more optimized code. Note that this can cause issues when there are circular dependencies involving an external dependency.
+当该选项的值为 `false` 时，Rollup 不会为外部依赖生成支持动态绑定的代码，而是假定外部依赖永远不会改变。这使得 Rollup 会生成更多优化代码。请注意，当外部依赖存在循环引用时，该选项值为 `false` 可能会引起问题。
 
-This will avoid most cases where Rollup generates getters in the code and can therefore be used to make code IE8 compatible in many cases.
+在大多数情况下，该选项值为 `false` 将避免 Rollup 生成多余代码的 getters，因此在很多情况下，可以使代码兼容 IE8。
 
-Example:
+例如：
 
 ```js
-// input
+// 输入
 export { x } from 'external';
 
-// CJS output with externalLiveBindings: true
+// externalLiveBindings: true 时的 CJS 输出
 var external = require('external');
 
 Object.defineProperty(exports, 'x', {
@@ -1852,31 +1852,31 @@ Object.defineProperty(exports, 'x', {
 	}
 });
 
-// CJS output with externalLiveBindings: false
+// externalLiveBindings: false 时的 CJS 输出
 var external = require('external');
 
 exports.x = external.x;
 ```
 
-### output.freeze
+### output.freeze {#output-freeze}
 
-|          |                          |
-| -------: | :----------------------- |
-|   类型： | `boolean`                |
-| 命令行： | `--freeze`/`--no-freeze` |
-| Default: | `true`                   |
+|        |                          |
+| -----: | :----------------------- |
+| 类型： | `boolean`                |
+|  CLI： | `--freeze`/`--no-freeze` |
+| 默认： | `true`                   |
 
-Whether to `Object.freeze()` namespace import objects (i.e. `import * as namespaceImportObject from...`) that are accessed dynamically.
+该选项用于决定是否使用 `Object.freeze()` 冻结动态访问的引入对象的命名空间（例如 `import * as namespaceImportObject from...`）。
 
-### output.indent
+### output.indent {#output-indent}
 
-|          |                          |
-| -------: | :----------------------- |
-|   类型： | `boolean \| string`      |
-| 命令行： | `--indent`/`--no-indent` |
-| Default: | `true`                   |
+|        |                          |
+| -----: | :----------------------- |
+| 类型： | `boolean \| string`      |
+|  CLI： | `--indent`/`--no-indent` |
+| 默认： | `true`                   |
 
-The indent string to use, for formats that require code to be indented (`amd`, `iife`, `umd`, `system`). Can also be `false` (no indent), or `true` (the default – auto-indent)
+该选项用于指定代码缩进的缩进字符串（在 `amd`，`iife`，`umd` 和 `system` 格式中）。它的值可以是 `false` （没有缩进）或 `true` （默认值 - 自动缩进）。
 
 ```js
 // rollup.config.js
@@ -1889,56 +1889,56 @@ export default {
 };
 ```
 
-### output.noConflict
+### output.noConflict {#output-noconflict}
 
-|          |                                  |
-| -------: | :------------------------------- |
-|   类型： | `boolean`                        |
-| 命令行： | `--noConflict`/`--no-noConflict` |
-| Default: | `false`                          |
+|        |                                  |
+| -----: | :------------------------------- |
+| 类型： | `boolean`                        |
+|  CLI： | `--noConflict`/`--no-noConflict` |
+| 默认： | `false`                          |
 
-This will generate an additional `noConflict` export to UMD bundles. When called in an IIFE scenario, this method will return the bundle exports while restoring the corresponding global variable to its previous value.
+该选项决定在 UMD bundle 中生成一个额外的 `noConflict` 导出。在 IIFE 场景中调用此方法时，该方法将返回打包的导出，同时将相应的全局变量恢复为其先前的值。
 
-### output.sanitizeFileName
+### output.sanitizeFileName {#output-sanitizefilename}
 
-|          |                                                            |
-| -------: | :--------------------------------------------------------- |
-|   类型： | `boolean \| (string) => string`                            |
-| 命令行： | `--sanitizeFileName`/`no-sanitizeFileName` Default: `true` |
+|        |                                                            |
+| -----: | :--------------------------------------------------------- |
+| 类型： | `boolean \| (string) => string`                            |
+|  CLI： | `--sanitizeFileName`/`no-sanitizeFileName` Default: `true` |
 
-Set to `false` to disable all chunk name sanitizations (removal of `\0`, `?` and `*` characters).
+该选项值为 `false` 时禁用所有 chunk 名称的清理（移除 `\0`, `?` 和 `*` 字符）。
 
-Alternatively set to a function to allow custom chunk name sanitization.
+值也可以是一个函数，以允许自定义的 chunk 名称的清理。
 
-### output.strict
+### output.strict {#output-strict}
 
-|          |                          |
-| -------: | :----------------------- |
-|   类型： | `boolean`                |
-| 命令行： | `--strict`/`--no-strict` |
-| Default: | `true`                   |
+|        |                          |
+| -----: | :----------------------- |
+| 类型： | `boolean`                |
+|  CLI： | `--strict`/`--no-strict` |
+| 默认： | `true`                   |
 
-Whether to include the 'use strict' pragma at the top of generated non-ES bundles. Strictly speaking, ES modules are _always_ in strict mode, so you shouldn't disable this without good reason.
+该选项用于决定是否在生成非 ES bundle 的顶部包含 “use strict” 用法。严格地讲，ES 模块 _总是_ 使用严格模式，所以不要无缘无故禁用该选项。
 
-### output.systemNullSetters
+### output.systemNullSetters {#output-systemnullsetters}
 
-|          |                                                |
-| -------: | :--------------------------------------------- |
-|   类型： | `boolean`                                      |
-| 命令行： | `--systemNullSetters`/`--no-systemNullSetters` |
-| Default: | `true`                                         |
+|        |                                                |
+| -----: | :--------------------------------------------- |
+| 类型： | `boolean`                                      |
+|  CLI： | `--systemNullSetters`/`--no-systemNullSetters` |
+| 默认： | `true`                                         |
 
-When outputting the `system` module format, by default, empty setter functions are replaced with `null` as an output simplification. This is incompatible with SystemJS before v6.3.3. Deactivate this option to output empty functions instead that older SystemJS versions support.
+在导出 `system` 模块格式时，该选项将代替空的 setter 函数，以 `null` 形式简化输出。该选项仅在 SystemJS 6.3.3 及以上版本中支持。停用这个选项，可以输出旧版 SystemJS 支持的空函数。
 
-### preserveSymlinks
+### preserveSymlinks {#preservesymlinks}
 
-|          |                      |
-| -------: | :------------------- |
-|   类型： | `boolean`            |
-| 命令行： | `--preserveSymlinks` |
-| Default: | `false`              |
+|        |                      |
+| -----: | :------------------- |
+| 类型： | `boolean`            |
+|  CLI： | `--preserveSymlinks` |
+| 默认： | `false`              |
 
-When set to `false`, symbolic links are followed when resolving a file. When set to `true`, instead of being followed, symbolic links are treated as if the file is where the link is. To illustrate, consider the following situation:
+当该选项值为 `false` 时，引用的文件为软链接实际指向的文件。当该选项值为 `true` 时，引入的文件为软链接所在目录的文件。为了更好的解释，思考以下例子：
 
 ```js
 // /main.js
@@ -1946,7 +1946,7 @@ import { x } from './linked.js';
 console.log(x);
 
 // /linked.js
-// this is a symbolic link to /nested/file.js
+// 这是 /nested/file.js 的软链接
 
 // /nested/file.js
 export { x } from './dep.js';
@@ -1958,25 +1958,25 @@ export const x = 'next to linked';
 export const x = 'next to original';
 ```
 
-If `preserveSymlinks` is `false`, then the bundle created from `/main.js` will log "next to original" as it will use the location of the symbolically linked file to resolve its dependencies. If `preserveSymlinks` is `true`, however, it will log "next to linked" as the symbolic link will not be resolved.
+如果 `preserveSymlinks` 值为 `false`，那么从 `/main.js` 将会输出“next to original”，因为它将使用软链接文件的位置来解决其依赖。然而，如果 `preserveSymlinks` 值为 `true`，那么它将会输出“next to linked”，因为软链接将无法正确解析。
 
-### shimMissingExports
+### shimMissingExports {#shimmissingexports}
 
-|          |                                                  |
-| -------: | :----------------------------------------------- |
-|   类型： | `boolean`                                        |
-| 命令行： | `--shimMissingExports`/`--no-shimMissingExports` |
-| Default: | `false`                                          |
+|        |                                                  |
+| -----: | :----------------------------------------------- |
+| 类型： | `boolean`                                        |
+|  CLI： | `--shimMissingExports`/`--no-shimMissingExports` |
+| 默认： | `false`                                          |
 
-If this option is provided, bundling will not fail if bindings are imported from a file that does not define these bindings. Instead, new variables will be created for these bindings with the value `undefined`.
+如果该选项值为 `true`，那么从未定义绑定的文件中引入依赖时，打包不会失败。相反，将为这些绑定创建值为 `undefined` 的新变量。
 
-### treeshake
+### treeshake {#treeshake}
 
-|          |                                                      |
-| -------: | :--------------------------------------------------- |
-|   类型： | `boolean \| TreeshakingPreset \| TreeshakingOptions` |
-| 命令行： | `--treeshake`/`--no-treeshake`                       |
-| Default: | `true`                                               |
+|        |                                                      |
+| -----: | :--------------------------------------------------- |
+| 类型： | `boolean \| TreeshakingPreset \| TreeshakingOptions` |
+|  CLI： | `--treeshake`/`--no-treeshake`                       |
+| 默认： | `true`                                               |
 
 ```typescript
 type TreeshakingPreset = 'smallest' | 'safest' | 'recommended';
@@ -1999,28 +1999,28 @@ type ModuleSideEffectsOption =
 type HasModuleSideEffects = (id: string, external: boolean) => boolean;
 ```
 
-Whether to apply tree-shaking and to fine-tune the tree-shaking process. Setting this option to `false` will produce bigger bundles but may improve build performance. You may also choose one of three presets that will automatically be updated if new options are added:
+该选项用于决定是否应用除屑（tree-shaking），并微调除屑的过程。该选项的值设置为 `false` 时，Rollup 将生成更大的 bundle，但是可能会提高构建性能。你也可以从三个预设中选择一个，如果有新的选项加入，就会自动更新：
 
-- `"smallest"` will choose option values for you to minimize output size as much as possible. This should work for most code bases as long as you do not rely on certain patterns, which are currently:
-  - getters with side effects will only be retained if the return value is used ([`treeshake.propertyReadSideEffects: false`](#treeshake-propertyreadsideeffects))
-  - code from imported modules will only be retained if at least one exported value is used ([`treeshake.moduleSideEffects: false`](#treeshake-modulesideeffects))
-  - you should not bundle polyfills that rely on detecting broken builtins ([`treeshake.tryCatchDeoptimization: false`](#treeshake-trycatchdeoptimization))
-  - some semantic issues may be swallowed ([`treeshake.unknownGlobalSideEffects: false`](#treeshake-unknownglobalsideeffects), [`treeshake.correctVarValueBeforeDeclaration: false`](#treeshake-correctvarvaluebeforedeclaration))
-- `"recommended"` should work well for most usage patterns. Some semantic issues may be swallowed, though (`treeshake.unknownGlobalSideEffects: false`, `treeshake.correctVarValueBeforeDeclaration: false`)
-- `"safest"` tries to be as spec compliant as possible while still providing some basic tree-shaking capabilities.
-- `true` is equivalent to not specifying the option and will always choose the default value (see below).
+- 值为 `"smallest"`，将选择选项值以尽可能减小输出大小。这对大多数代码库都应该有效，只要你不依赖于某些模式，目前是：
+  - 有副作用的 getters 只有在返回值被使用时才会被保留（[`treeshake.propertyReadSideEffects: false`](#treeshake-propertyreadsideeffects)）
+  - 只有在至少使用了一个导出值的情况下，引入模块的代码才会被保留（[`treeshake.moduleSideEffects: false`](#treeshake-modulesideeffects)）
+  - 你不应该打包依赖于检测损坏的内置函数的 polyfill（[`treeshake.tryCatchDeoptimization: false`](#treeshake-trycatchdeoptimization)）
+  - 一些语义问题可能被吞没（[`treeshake.unknownGlobalSideEffects: false`](#treeshake-unknownglobalsideeffects)，[`treeshake.correctVarValueBeforeDeclaration: false`](#treeshake-correctvarvaluebeforedeclaration)）
+- 值为 `"recommended"`，对于大多数的使用模式来说，应该可以很好地工作。虽然一些语义问题可能会被吞没（`treeshake.unknownGlobalSideEffects: false`，`treeshake.correctVarValueBeforeDeclaration: false`）
+- 值为 `"safest"`，试图在提供一些基本的除屑功能的同时，尽可能地符合规范。
+- 值为 `true`，相当于不指定该选项，并将始终选择默认值（见下文）
 
-If you discover a bug caused by the tree-shaking algorithm, please file an issue! Setting this option to an object implies tree-shaking is enabled and grants the following additional options:
+如果你发现由除屑算法造成的 bug，请给我们提 issue！将此选项的值设置为对象意味着启用除屑，并启用以下选项：
 
-#### treeshake.annotations
+#### treeshake.annotations {#treeshake-annotations}
 
-|          |                                                        |
-| -------: | :----------------------------------------------------- |
-|   类型： | `boolean`                                              |
-| 命令行： | `--treeshake.annotations`/`--no-treeshake.annotations` |
-| Default: | `true`                                                 |
+|        |                                                        |
+| -----: | :----------------------------------------------------- |
+| 类型： | `boolean`                                              |
+|  CLI： | `--treeshake.annotations`/`--no-treeshake.annotations` |
+| 默认： | `true`                                                 |
 
-If `false`, ignore hints from pure annotations, i.e. comments containing `@__PURE__` or `#__PURE__`, when determining side effects of function calls and constructor invocations. These annotations need to immediately precede the call invocation to take effect. The following code will be completely removed unless this option is set to `false`, in which case it will remain unchanged.
+如果该选项值为 `false`，那么在确定函数调用和构造函数调用的副作用时，将会忽略纯注释的提示，比如，包含 `@__PURE__` 或 `#__PURE__` 的注释。这些注释需要紧接在调用代码之前才能生效。该选项的值设置为 `false`，以下代码将原封不动，否则以下包含 `@__PURE__` 注释的代码将被完全删除。
 
 ```javascript
 /*@__PURE__*/ console.log('side-effect');
@@ -2034,18 +2034,18 @@ class Impure {
 /*@__PURE__*/ new Impure();
 ```
 
-#### treeshake.correctVarValueBeforeDeclaration
+#### treeshake.correctVarValueBeforeDeclaration {#treeshake-correctvarvaluebeforedeclaration}
 
 |  |  |
 | --: | :-- |
 | 类型： | `boolean` |
-| 命令行： | `--treeshake.correctVarValueBeforeDeclaration`/`--no-treeshake.correctVarValueBeforeDeclaration` |
-| Default: | `false` |
+| CLI： | `--treeshake.correctVarValueBeforeDeclaration`/`--no-treeshake.correctVarValueBeforeDeclaration` |
+| 默认： | `false` |
 
-In some edge cases if a variable is accessed before its declaration assignment and is not reassigned, then Rollup may incorrectly assume that variable is constant throughout the program, as in the example below. This is not true if the variable is declared with `var`, however, as those variables can be accessed before their declaration where they will evaluate to `undefined`. Choosing `true` will make sure Rollup does not make any assumptions about the value of variables declared with `var`. Note though that this can have a noticeable negative impact on tree-shaking results.
+在某些极端情况下，如果一个变量在其声明赋值之前被访问并且未被重新赋值，那么 Rollup 可能会错误地假设该变量在整个程序中都是常量，就像下面的示例一样。但是，如果使用 `var` 声明变量，则是不正确的，因为这些变量可以在其声明之前被访问，此时它们将被定义为 `undefined`。值为 `true` 时可以确保 Rollup 不会对使用 `var` 声明的变量的值做任何假设。但请注意，这可能会对除屑优化的结果产生明显的负面影响。
 
 ```js
-// everything will be tree-shaken unless treeshake.correctVarValueBeforeDeclaration === true
+// 除非 treeshake.correctVarValueBeforeDeclaration === true，否则一切都将被除屑
 let logBeforeDeclaration = false;
 
 function logIfEnabled() {
@@ -2062,23 +2062,23 @@ function logIfEnabled() {
 	}
 }
 
-logIfEnabled(); // could be removed
+logIfEnabled(); // 可被移除
 logBeforeDeclaration = true;
-logIfEnabled(); // needs to be retained as it displays a log
+logIfEnabled(); // 需要保留，因为它展示日志
 ```
 
-#### treeshake.manualPureFunctions
+#### treeshake.manualPureFunctions {#treeshake-manualpurefunctions}
 
-|          |                                           |
-| -------: | :---------------------------------------- |
-|   类型： | `string[]`                                |
-| 命令行： | `--treeshake.manualPureFunctions <names>` |
+|        |                                           |
+| -----: | :---------------------------------------- |
+| 类型： | `string[]`                                |
+|  CLI： | `--treeshake.manualPureFunctions <names>` |
 
-Allows to manually define a list of function names that should always be considered "pure", i.e. they have no side effects like changing global state etc. when called. The check is performed solely by name.
+该选项允许手动定义一个函数名列表，这些函数名应该总是被认为是“纯”的，即它们在调用时没有副作用，如改变全局状态等。检查只按名称进行。
 
-This can not only help with dead code removal, but can also improve JavaScript chunk generation especially when using [`output.experimentalMinChunkSize`](#output-experimentalminchunksize).
+这不仅可以帮助去除死代码，而且还可以改善 JavaScript chunk 的生成，特别是在使用 [`output.experimentalMinChunkSize`](#output-experimentalminchunksize) 时。
 
-Besides any functions matching that name, any properties on a pure function and any functions returned from a pure functions will also be considered pure functions, and accessing any properties is not checked for side effects.
+除了任何与该名称相匹配的函数，纯函数上的任何属性以及从纯函数返回的任何函数也将被视为纯函数，访问任何属性都不会被检查出副作用。
 
 ```js
 // rollup.config.js
@@ -2094,95 +2094,95 @@ export default {
 import styled from 'styled-components';
 const local = console.log;
 
-local(); // removed
+local(); // 去除
 styled.div`
 	color: blue;
-`; // removed
-styled?.div(); // removed
-styled()(); // removed
-styled().div(); // removed
+`; // 去除
+styled?.div(); // 去除
+styled()(); // 去除
+styled().div(); // 去除
 ```
 
-#### treeshake.moduleSideEffects
+#### treeshake.moduleSideEffects {#treeshake-modulesideeffects}
 
 |  |  |
 | --: | :-- |
 | 类型： | `boolean\| "no-external"\| string[]\| (id: string, external: boolean) => boolean` |
-| 命令行： | `--treeshake.moduleSideEffects`/`--no-treeshake.moduleSideEffects`/`--treeshake.moduleSideEffects no-external` |
-| Default: | `true` |
+| CLI： | `--treeshake.moduleSideEffects`/`--no-treeshake.moduleSideEffects`/`--treeshake.moduleSideEffects no-external` |
+| 默认： | `true` |
 
-If `false`, assume modules and external dependencies from which nothing is imported do not have other side effects like mutating global variables or logging without checking. For external dependencies, this will suppress empty imports:
+如果该选项的值为 `false`，则假定像改变全局变量或不执行检查就记录等行为一样，没有引入任何内容的模块和外部依赖没有其他副作用。对于外部依赖，该选项将影响未使用的引入：
 
 ```javascript
-// input file
+// 输入文件
 import { unused } from 'external-a';
 import 'external-b';
 console.log(42);
 ```
 
 ```javascript
-// output with treeshake.moduleSideEffects === true
+// treeshake.moduleSideEffects === true 时的输出
 import 'external-a';
 import 'external-b';
 console.log(42);
 ```
 
 ```javascript
-// output with treeshake.moduleSideEffects === false
+// treeshake.moduleSideEffects === false 时的输出
 console.log(42);
 ```
 
-For non-external modules, `false` will not include any statements from a module unless at least one import from this module is included:
+对于非外部依赖模块，该选项值为 `false` 时，除非来自改模块的引入被使用，否则输出中将不会包含来自该模块的任何语句：
 
 ```javascript
-// input file a.js
+// 输入文件 a.js
 import { unused } from './b.js';
 console.log(42);
 
-// input file b.js
+// 输入文件 b.js
 console.log('side-effect');
 const ignored = 'will still be removed';
 ```
 
 ```javascript
-// output with treeshake.moduleSideEffects === true
+// treeshake.moduleSideEffects === true 时的输出
 console.log('side-effect');
 
 console.log(42);
 ```
 
 ```javascript
-// output with treeshake.moduleSideEffects === false
+// treeshake.moduleSideEffects === false 时的输出
 console.log(42);
 ```
 
-You can also supply a list of modules with side effects or a function to determine it for each module individually. The value `"no-external"` will only remove external imports if possible and is equivalent to the function `(id, external) => !external`;
+该选项的值也可以是具有副作用的模块列表，或者是一个返回指定模块的函数。该选项的值为 `"no-external"` 将意味着如果可能，则仅删除外部依赖，它等同于函数 `(id, external) => !external`。
 
-If a module that has this flag set to `false` reexports a variable from another module and this variable is used, the question if the reexporting module is scanned for side effects depends on how the variable is reexported:
+如果一个模块将此选项设置为 `false` 并从另一个模块重新导出变量，而且该变量被使用了，则扫描重新导出模块是否存在副作用的问题取决于变量的重新导出方式：
 
 ```javascript
-// input file a.js
+// 输入文件 a.js
 import { foo } from './b.js';
 console.log(foo);
 
-// input file b.js
-// direct reexports will ignore side effects
+// 输入文件 b.js
+// 直接重新导出将忽略副作用
 export { foo } from './c.js';
 console.log('this side-effect is ignored');
 
-// input file c.js
-// indirect reexports will include side effects
+// 输入文件 c.js
+// 非直接重新导出将包含副作用
 import { foo } from './d.js';
 foo.mutated = true;
 console.log('this side-effect and the mutation are retained');
 export { foo };
 
-// input file d.js
+// 输入文件 d.js
 export const foo = 42;
 ```
 
 ```javascript
-// output with treeshake.moduleSideEffects === false
+// treeshake.moduleSideEffects === false 时的输出
 const foo = 42;
 
 foo.mutated = true;
@@ -2191,16 +2191,16 @@ console.log('this side-effect and the mutation are retained');
 console.log(foo);
 ```
 
-Note that despite the name, this option does not "add" side effects to modules that do not have side effects. If it is important that e.g. an empty module is "included" in the bundle because you need this for dependency tracking, the plugin interface allows you to designate modules as being excluded from tree-shaking via the [`resolveId`](../plugin-development/index.md#resolveid), [`load`](../plugin-development/index.md#load) or [`transform`](../plugin-development/index.md#transform) hook.
+请注意，尽管名字有点误导，但此选项不会向没有副作用的模块“添加”副作用。重要的是，例如，因为你需要这个模块来跟踪依赖关系，而将空模块“包含”在 bundle 中，则插件接口允许你通过 [`resolveId`](../plugin-development/index.md#resolveid)，[`load`](../plugin-development/index.md#load) 或 [`transform`](../plugin-development/index.md#transform) 钩子将模块指定为不从除屑中删除。
 
-#### treeshake.preset
+#### treeshake.preset {#treeshake-preset}
 
-|          |                                          |
-| -------: | :--------------------------------------- |
-|   类型： | `"smallest" \| "safest"\| "recommended"` |
-| 命令行： | `--treeshake <value>`<br>                |
+|        |                                          |
+| -----: | :--------------------------------------- |
+| 类型： | `"smallest" \| "safest"\| "recommended"` |
+|  CLI： | `--treeshake <value>`<br>                |
 
-Allows choosing one of the presets listed above while overriding some options.
+该选项可以选择上面列出的预设之一，同时覆盖一些选项。
 
 ```js
 export default {
@@ -2212,22 +2212,22 @@ export default {
 };
 ```
 
-#### treeshake.propertyReadSideEffects
+#### treeshake.propertyReadSideEffects {#treeshake-propertyreadsideeffects}
 
 |  |  |
 | --: | :-- |
 | 类型： | `boolean\| 'always'` |
-| 命令行： | `--treeshake.propertyReadSideEffects`/`--no-treeshake.propertyReadSideEffects` |
-| Default: | `true` |
+| CLI： | `--treeshake.propertyReadSideEffects`/`--no-treeshake.propertyReadSideEffects` |
+| 默认： | `true` |
 
-If `true`, retain unused property reads that Rollup can determine to have side effects. This includes accessing properties of `null` or `undefined` or triggering explicit getters via property access. Note that this does not cover destructuring assignment or getters on objects passed as function parameters.
+如果该选项值为 `true`，则保留未使用的属性读取，这会被 Rollup 确定为具有副作用。这包括访问 `null` 或 `undefined` 的属性，或通过属性访问触发显式 getter。请注意，这并不包括解构赋值或对象上当作函数参数传递的 getter。
 
-If `false`, assume reading a property of an object never has side effects. Depending on your code, disabling this option can significantly reduce bundle size but can potentially break functionality if you rely on getters or errors from illegal property access.
+如果值为 `false`，则假定读取对象的属性将永远不会有副作用。根据你的代码，禁用该属性能够显著缩小 bundle 的大小，但是如果你依赖了 getters 或非法属性访问的造成的错误，那么可能会破坏该功能。
 
-If `'always'`, assume all member property accesses, including destructuring, have side effects. This setting is recommended for code relying on getters with side effects. It typically results in larger bundle size, but smaller than disabling `treeshake` altogether.
+如果值为 `'always'`，则假定所有成员属性访问，包括解构赋值，都具有副作用。建议对依赖具有副作用 getter 的代码使用此设置。它通常会导致更大的包大小，但比完全禁用 `treeshake` 更小。
 
 ```javascript
-// Will be removed if treeshake.propertyReadSideEffects === false
+// 如果 treeshake.propertyReadSideEffects === false 将会被移除
 const foo = {
 	get bar() {
 		console.log('effect');
@@ -2238,85 +2238,85 @@ const result = foo.bar;
 const illegalAccess = foo.quux.tooDeep;
 ```
 
-#### treeshake.tryCatchDeoptimization
+#### treeshake.tryCatchDeoptimization {#treeshake-trycatchdeoptimization}
 
 |  |  |
 | --: | :-- |
 | 类型： | `boolean` |
-| 命令行： | `--treeshake.tryCatchDeoptimization`/`--no-treeshake.tryCatchDeoptimization` |
-| Default: | `true` |
+| CLI： | `--treeshake.tryCatchDeoptimization`/`--no-treeshake.tryCatchDeoptimization` |
+| 默认： | `true` |
 
-By default, Rollup assumes that many builtin globals of the runtime behave according to the latest specs when tree-shaking and do not throw unexpected errors. In order to support e.g. feature detection workflows that rely on those errors being thrown, Rollup will by default deactivate tree-shaking inside try-statements. If a function parameter is called from within a try-statement, this parameter will be deoptimized as well. Set `treeshake.tryCatchDeoptimization` to `false` if you do not need this feature and want to have tree-shaking inside try-statements.
+默认情况下，Rollup 假定在进行除屑优化时，很多运行时内置的全局变量的行为均符合最新规范，并且不会引发意外错误。为了支持，像依赖于抛出错误的特征检测工作流，Rollup 将默认禁用 try 语句中的除屑优化。如果函数参数在 try 语句中被使用，那么该参数也不会被优化处理。如果你不需要此功能，想要在 try 语句中使用除屑优化，则可以设置 `treeshake.tryCatchDeoptimization` 为 `false`。
 
 ```js
 function otherFn() {
-	// even though this function is called from a try-statement, the next line
-	// will be removed as side-effect-free
+	// 尽管该函数时在 try 语句中使用，但是下列代码
+	// 然会被当做无副作用而被移除
 	Object.create(null);
 }
 
 function test(callback) {
 	try {
-		// calls to otherwise side-effect-free global functions are
-		// retained inside try-statements for tryCatchDeoptimization: true
+		// tryCatchDeoptimization: true 时，在 try 语句块中，
+		// 将保留对本来没有副作用的全局函数的调用
 		Object.create(null);
 
-		// calls to other function are retained as well but the body of
-		// this function may again be subject to tree-shaking
+		// 对其他函数的调用也被保留，但该函数的主体
+		// 可能再次受到除屑优化
 		otherFn();
 
-		// if a parameter is called, then all arguments passed to that
-		// function parameter will be deoptimized
+		// 如果函数类型参数被调用，那么所有被该函数使用的
+		// 参数将不会被优化
 		callback();
 	} catch {}
 }
 
 test(() => {
-	// will be ratained
+	// 将会保留
 	Object.create(null);
 });
 
-// call will be retained but again, otherFn is not deoptimized
+// 调用将保留，但同样，otherFn 会被优化
 test(otherFn);
 ```
 
-#### treeshake.unknownGlobalSideEffects
+#### treeshake.unknownGlobalSideEffects {#treeshake-unknownglobalsideeffects}
 
 |  |  |
 | --: | :-- |
 | 类型： | `boolean` |
-| 命令行： | `--treeshake.unknownGlobalSideEffects`/`--no-treeshake.unknownGlobalSideEffects` |
-| Default: | `true` |
+| CLI： | `--treeshake.unknownGlobalSideEffects`/`--no-treeshake.unknownGlobalSideEffects` |
+| 默认： | `true` |
 
-Since accessing a non-existing global variable will throw an error, Rollup does by default retain any accesses to non-builtin global variables. Set this option to `false` to avoid this check. This is probably safe for most code-bases.
+因为访问不存在的全局变量会引起错误，所以默认情况下 Rollup 保留所有对非内置全局变量的访问。该选项的值设置为 `false` 可以避免该检查。对于大多数代码库而言，这样做很可能更安全。
 
 ```js
-// input
+// 输入
 const jQuery = $;
 const requestTimeout = setTimeout;
 const element = angular.element;
 
-// output with unknownGlobalSideEffects == true
+// unknownGlobalSideEffects == true 时的输出
 const jQuery = $;
 const element = angular.element;
 
-// output with unknownGlobalSideEffects == false
+// unknownGlobalSideEffects == false 时的输出
 const element = angular.element;
 ```
 
-In the example, the last line is always retained as accessing the `element` property could also throw an error if `angular` is e.g. `null`. To avoid this check, set [`treeshake.propertyReadSideEffects`](#treeshake-propertyreadsideeffects) to `false` as well.
+在这个例子中，最后一行将被始终保留，用于访问 `element` 属性，但如果 `angular` 值比如为 `null`，也可能抛出错误。为了避免这种情况的检查，可以设置 [`treeshake.propertyReadSideEffects`](#treeshake-propertyreadsideeffects) 为 `false`。
 
-## Experimental options
+## 实验选项 {#experimental-options}
 
-These options reflect new features that have not yet been fully finalized. Availability, behaviour and usage may therefore be subject to change between minor versions.
+这些选项反应了尚未完全确定的新功能。因此，它们的可行性、行为和用法在次要版本（minor version）中可能发生变化。
 
 ### experimentalCacheExpiry
 
-|          |                                            |
-| -------: | :----------------------------------------- |
-|   类型： | `number`                                   |
-| 命令行： | `--experimentalCacheExpiry <numberOfRuns>` |
-| Default: | `10`                                       |
+|        |                                            |
+| -----: | :----------------------------------------- |
+| 类型： | `number`                                   |
+|  CLI： | `--experimentalCacheExpiry <numberOfRuns>` |
+| 默认： | `10`                                       |
 
 Determines after how many runs cached assets that are no longer used by plugins should be removed.
 
