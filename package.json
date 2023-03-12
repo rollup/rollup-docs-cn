@@ -141,7 +141,8 @@
     "vitepress-plugin-mermaid": "^2.0.8",
     "vue": "^3.2.45",
     "weak-napi": "^2.0.2",
-    "yargs-parser": "^21.1.1"
+    "yargs-parser": "^21.1.1",
+    "zhlint": "^0.7.1"
   },
   "overrides": {
     "d3": "7.8.0"
