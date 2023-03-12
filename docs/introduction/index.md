@@ -18,7 +18,7 @@ npm install --global rollup
 
 这将使 Rollup 可以作为全局命令行工具使用。您也可以在本地安装它，请参阅 [在本地安装 Rollup](../tutorial/index.md#installing-rollup-locally)。
 
-## Quick Start {#quick-start}
+## 快速开始 {#quick-start}
 
 可以通过带有可选配置文件的[命令行界面](../command-line-interface/index.md)或[JavaScript API](../javascript-api/index.md)来使用 Rollup。运行`rollup --help`以查看可用选项和参数。
 
