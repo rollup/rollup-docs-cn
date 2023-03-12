@@ -22,8 +22,8 @@
     "lint": "concurrently -c yellow,red 'npm:lint:js' 'npm:lint:zhlint'",
     "lint:js": "eslint . --fix --cache",
     "lint:js:nofix": "eslint . --cache",
-    "lint:zhlint": "zhlint docs/**/*.md --fix",
-    "lint:zhlint:nofix": "zhlint docs/**/*.md",
+    "lint:zhlint": "npx zhlint docs/**/*.md --fix",
+    "lint:zhlint:nofix": "npx zhlint docs/**/*.md",
     "perf": "npm run build:cjs && node --expose-gc scripts/perf.js",
     "perf:init": "node scripts/perf-init.js",
     "prepare": "husky install && node scripts/check-release.js || npm run build",
@@ -141,8 +141,7 @@
     "vitepress-plugin-mermaid": "^2.0.8",
     "vue": "^3.2.45",
     "weak-napi": "^2.0.2",
-    "yargs-parser": "^21.1.1",
-    "zhlint": "^0.7.1"
+    "yargs-parser": "^21.1.1"
   },
   "overrides": {
     "d3": "7.8.0"
