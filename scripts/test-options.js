@@ -76,7 +76,7 @@ const helpOptionLines = splitHelpText.filter(line => line.startsWith('-'));
 
 const cliFlagsText = commandReferenceText
 	.split('\n## ')
-	.find(text => text.startsWith('Command line flags'));
+	.find(text => text.startsWith('命令行标志'));
 const optionListLines = cliFlagsText
 	.match(/```\n([\S\s]*?)\n```/)[1]
 	.split('\n')
