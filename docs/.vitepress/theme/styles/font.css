@@ -1,0 +1,18 @@
+/* 中英文弯引号共享 Unicode 码位，确保引号使用中文字体渲染 */
+@font-face {
+  font-family: Quotes;
+  src: local('PingFang SC Regular'), local('PingFang SC'), local('SimHei'),
+    local('Source Han Sans SC');
+  unicode-range: U+2018, U+2019, U+201C, U+201D; /* 分别是 ‘’“” */
+}
+
+body {
+  /* Quotes 修复中文引号展示问题 */
+  --vp-font-family-base: Quotes, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
+
+  /* 修复斜体不生效问题 */
+  text-rendering: unset !important;
+  font-synthesis: unset !important;
+}
