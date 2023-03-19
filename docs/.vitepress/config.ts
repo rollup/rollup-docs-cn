@@ -47,7 +47,7 @@ export default withMermaid(
 			},
 			editLink: {
 				pattern: 'https://github.com/rollup/rollup/edit/master/docs/:path',
-				text: 'Edit this page on GitHub'
+				text: '在 GitHub 上编辑此页'
 			},
 			footer: {
 				copyright: 'Copyright © 2015-present Rollup 社区贡献者',
