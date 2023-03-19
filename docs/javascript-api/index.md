@@ -271,7 +271,7 @@ const watchOptions = {
 
 ### 以编程方式加载配置文件 {#programmatically-loading-a-config-file}
 
-In order to aid in generating such a config, rollup exposes the helper it uses to load config files in its command line interface via a separate entry-point. This helper receives a resolved `fileName` and optionally an object containing command line parameters:
+rollup 通过一个单独的入口点公开了它用来在命令行界面中加载配置文件的工具函数，为加载配置提供帮助，此工具函数接收一个解析过的 `fileName` （文件路径）和可选的包含命令行参数的对象：
 
 ```js
 const { loadConfigFile } = require('rollup/loadConfigFile');
