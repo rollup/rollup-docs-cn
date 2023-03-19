@@ -311,7 +311,7 @@ interface SourceDescription {
 }
 ```
 
-定义自定义加载器。返回 `null` 将延迟到其他 `load` 函数（最终默认从文件系统加载）。为了避免额外的解析开销，例如该钩子已经使用 `this.parse` 生成了某些原因，该钩子可以选择返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个具有每个节点的 `start` 和 `end` 属性的标准 ESTree AST。如果转换不移动代码，则可以通过将 `map` 设置为 `null` 来保留现有的源码映射。否则，你可能需要生成源映射。有关 [源代码转换](#source-code-transformations) 的详细信息，请参见该部分。
+定义自定义加载器。返回 `null` 将延迟到其他 `load` 函数（最终默认从文件系统加载）。为了避免额外的解析开销，例如由于某些原因该钩子已经使用 `this.parse` 生成 AST，该钩子可以选择返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个具有每个节点的 `start` 和 `end` 属性的标准 ESTree AST。如果转换不移动代码，则可以通过将 `map` 设置为 `null` 来保留现有的源码映射。否则，你可能需要生成源映射。有关 [源代码转换](#source-code-transformations) 的详细信息，请参见该部分。
 
 如果 `moduleSideEffects` 返回 `false`，并且没有其他模块从该模块导入任何内容，则即使该模块具有副作用，该模块也不会包含在产物中。如果返回 `true`，则 Rollup 将使用其默认算法包含模块中具有副作用的所有语句（例如修改全局或导出变量）。如果返回 `"no-treeshake"`，则将关闭此模块的除屑优化，并且即使该模块为空，也将在生成的块之一中包含它。如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由第一个解析此模块的 `resolveId` 钩子，[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `true` 确定。`transform` 钩子可以覆盖此设置。
 
@@ -552,7 +552,7 @@ function externalizeDependencyPlugin() {
 |  |  |
 | --: | :-- |
 | 类型: | `ShouldTransformCachedModuleHook` |
-| 类别: | async, 第一位 |
+| 类别: | async, first |
 | 上一个钩子: | [`load`](#load)，用于加载缓存文件并将其代码与缓存版本进行比较 |
 | 下一个钩子: | 如果没有插件返回 `true`，则为 [`moduleParsed`](#moduleparsed)，否则为 [`transform`](#transform) |
 
@@ -768,7 +768,7 @@ flowchart TB
 | 上一个钩子: | [`renderChunk`](#renderchunk) |
 | 下一个钩子: | 如果还有其他需要处理的块，则为 [`renderChunk`](#renderchunk)，否则为 [`generateBundle`](#generatebundle) |
 
-可用于增强单个块的哈希值。为每个 Rollup 输出块调用。返回 falsy 值不会修改哈希值。Truthy 值将传递给 [`hash.update`](https://nodejs.org/dist/latest-v12.x/docs/api/crypto.html#crypto_hash_update_data_inputencoding)。`chunkInfo` 是 [`generateBundle`](#generatebundle) 中的版本的简化版本，不包括 `code` 和 `map`，并在文件名中使用哈希的占位符。
+可用于增加单个块的哈希值。为每个 Rollup 输出块调用。返回 falsy 值不会修改哈希值。Truthy 值将传递给 [`hash.update`](https://nodejs.org/dist/latest-v12.x/docs/api/crypto.html#crypto_hash_update_data_inputencoding)。`chunkInfo` 是 [`generateBundle`](#generatebundle) 中的版本的简化版本，不包括 `code` 和 `map`，并在文件名中使用哈希的占位符。
 
 以下插件将使用当前时间戳使块 `foo` 的哈希无效：
 
@@ -872,7 +872,7 @@ interface ChunkInfo {
 
 ::: danger
 
-不要直接将静态资源添加到产物中。这会绕过 Rollup 用于跟踪静态资源的内部机制。它还可能导致你的静态资源缺少 Rollup 在内部依赖的重要属性，因此你的插件可能会在较小的 Rollup 版本中出现问题。
+不要直接将静态资源添加到产物中。这会绕过 Rollup 用于跟踪静态资源的内部机制。它还可能导致你的静态资源缺少 Rollup 在内部依赖的重要属性，因此你的插件可能会因为 Rollup 的小版本更新而出现问题。
 
 相反，请始终使用 [`this.emitFile`](#this-emitfile)。
 
@@ -1278,7 +1278,7 @@ for (const moduleId of this.getModuleIds()) {
 }
 ```
 
-or converted into an Array via `Array.from(this.getModuleIds())`.
+或者通过 `Array.from(this.getModuleIds())` 转换成数组。
 
 ### this.getModuleInfo
 
