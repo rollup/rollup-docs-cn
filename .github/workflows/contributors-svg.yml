@@ -20,6 +20,8 @@ jobs:
   update-svg:
     name: Update contributors SVG
     runs-on: macos-latest
+    env:
+      SKIP_BUILD: true
     steps:
       - uses: actions/checkout@v3
 

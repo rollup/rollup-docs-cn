@@ -2,5 +2,5 @@
 . "$(dirname "$0")/_/husky.sh"
 
 npx lint-staged
-npm run build:docs
+if [ \"$SKIP_BUILD\" != \"true\" ]; then npm run build:docs; fi
 git add -A

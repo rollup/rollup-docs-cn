@@ -26,7 +26,7 @@
     "lint:zhlint:nofix": "npx zhlint docs/**/*.md",
     "perf": "npm run build:cjs && node --expose-gc scripts/perf.js",
     "perf:init": "node scripts/perf-init.js",
-    "prepare": "husky install && node scripts/check-release.js || npm run build",
+    "prepare": "if [ \"$SKIP_BUILD\" != \"true\" ]; then husky install && node scripts/check-release.js || npm run build; fi",
     "prepublishOnly": "node scripts/check-release.js",
     "release": "node scripts/release.js",
     "release:docs": "git fetch --update-head-ok origin master:master && git branch --force documentation-published master && git push origin documentation-published",
