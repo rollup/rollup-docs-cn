@@ -28,6 +28,14 @@
 
 ![Alt](https://repobeats.axiom.co/api/embed/c6ea5931407031ccf67ed8e3cd5a1c608d58de26.svg 'Repobeats analytics image')
 
+## Rollup 中文文档译者
+
+<p align="center">
+  <a href="https://cdn.jsdelivr.net/gh/<owner>/<repo>@main/.github-contributors/<svg-file-name>.svg">
+    <img src="https://cdn.jsdelivr.net/gh/<owner>/<repo>@main/.github-contributors/<svg-file-name>.svg" />
+  </a>
+</p>
+
 ## Rollup 贡献者
 
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)]. <a href="https://github.com/rollup/rollup/graphs/contributors"><img src="https://opencollective.com/rollup/contributors.svg?width=890" /></a>
