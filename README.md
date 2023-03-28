@@ -31,8 +31,8 @@
 ## Rollup 中文文档贡献者
 
 <p align="center">
-  <a href="https://cdn.jsdelivr.net/gh/rollup/rollup-docs-cn@main/.github-contributors/rollup_rollup-docs-cn.svg">
-    <img src="https://cdn.jsdelivr.net/gh/rollup/rollup-docs-cn@main/.github-contributors/rollup_rollup-docs-cn.svg" />
+  <a href="https://cdn.jsdelivr.net/gh/rollup/rollup-docs-cn@master/.github-contributors/rollup_rollup-docs-cn.svg">
+    <img src="https://cdn.jsdelivr.net/gh/rollup/rollup-docs-cn@master/.github-contributors/rollup_rollup-docs-cn.svg" />
   </a>
 </p>
 
