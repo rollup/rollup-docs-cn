@@ -14,7 +14,7 @@ on:
           - debug
   # Schedule the interval of the checks.
   schedule:
-    - cron: '0 7 * * *' # Everyday 7:00
+    - cron: '0 16 * * *' # Everyday 0:00 GMT+8
 
 jobs:
   update-svg:
