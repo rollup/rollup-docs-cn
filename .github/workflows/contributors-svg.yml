@@ -19,7 +19,7 @@ on:
 jobs:
   update-svg:
     name: Update contributors SVG
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
 
