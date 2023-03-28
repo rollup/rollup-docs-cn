@@ -40,7 +40,7 @@ jobs:
         run: pnpx make-github-contributor-svg -t ${{ secrets.GITHUB_TOKEN }} -o rollup -r rollup-docs-cn
 
       - name: Commit
-        uses: EndBug/add-and-commit@v4
+        uses: EndBug/add-and-commit@v9
         with:
           commit: --no-verify
           message: "chore(workflow): update contributors image"
