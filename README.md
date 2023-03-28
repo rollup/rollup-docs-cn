@@ -28,11 +28,11 @@
 
 ![Alt](https://repobeats.axiom.co/api/embed/c6ea5931407031ccf67ed8e3cd5a1c608d58de26.svg 'Repobeats analytics image')
 
-## Rollup 中文文档译者
+## Rollup 中文文档贡献者
 
 <p align="center">
-  <a href="https://cdn.jsdelivr.net/gh/<owner>/<repo>@main/.github-contributors/<svg-file-name>.svg">
-    <img src="https://cdn.jsdelivr.net/gh/<owner>/<repo>@main/.github-contributors/<svg-file-name>.svg" />
+  <a href="https://cdn.jsdelivr.net/gh/rollup/rollup-docs-cn@main/.github-contributors/rollup_rollup-docs-cn.svg">
+    <img src="https://cdn.jsdelivr.net/gh/rollup/rollup-docs-cn@main/.github-contributors/rollup_rollup-docs-cn.svg" />
   </a>
 </p>
 

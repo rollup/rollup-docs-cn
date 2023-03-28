@@ -1,6 +1,17 @@
 name: update-contributors-svg
 
 on:
+  workflow_dispatch: 
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+          - info
+          - warning
+          - debug
   # Schedule the interval of the checks.
   schedule:
     - cron: '0 7 * * *' # Everyday 7:00
