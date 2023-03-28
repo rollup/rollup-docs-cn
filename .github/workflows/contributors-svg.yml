@@ -44,6 +44,5 @@ jobs:
         with:
           default_author: github_actions
           message: "chore(workflow): update contributors image"
-          add: ".github-contributors/*"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
