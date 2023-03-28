@@ -19,7 +19,7 @@ on:
 jobs:
   update-svg:
     name: Update contributors SVG
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
 
@@ -43,7 +43,6 @@ jobs:
         uses: EndBug/add-and-commit@v9
         with:
           default_author: github_actions
-          add: '-f .github-contributors/'
           message: "chore(workflow): update contributors image"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
