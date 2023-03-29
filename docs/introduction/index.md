@@ -40,7 +40,7 @@ rollup main.js --file bundle.js --format iife
 rollup main.js --file bundle.js --format cjs
 ```
 
-对于浏览器和 Node.js:
+对于浏览器和 Node.js：
 
 ```shell
 # UMD 格式需要一个包名
