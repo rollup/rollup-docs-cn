@@ -1901,10 +1901,11 @@ export default {
 
 ### output.sanitizeFileName {#output-sanitizefilename}
 
-|        |                                                            |
-| -----: | :--------------------------------------------------------- |
-| 类型： | `boolean \| (string) => string`                            |
-|  CLI： | `--sanitizeFileName`/`no-sanitizeFileName` Default: `true` |
+|        |                                            |
+| -----: | :----------------------------------------- |
+| 类型： | `boolean \| (string) => string`            |
+|  CLI： | `--sanitizeFileName`/`no-sanitizeFileName` |
+| 默认： | `true`                                     |
 
 该选项值为 `false` 时禁用所有 chunk 名称的清理（移除 `\0`, `?` 和 `*` 字符）。
 
