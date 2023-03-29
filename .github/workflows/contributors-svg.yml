@@ -33,6 +33,6 @@ jobs:
         with:
           default_author: github_actions
           add: '.github-contributors'
-          message: 'chore(workflow): update contributors image'
+          message: 'chore(workflow): update contributors image [ci skip]'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
