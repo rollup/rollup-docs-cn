@@ -179,11 +179,10 @@ export default Promise.all([fetch('get-config-1'), fetch('get-config-2')]);
 要使用配置文件来运行 Rollup，请传递 `--config` 或 `-c` 标志：
 
 ```shell
-# pass a custom config file location to Rollup {#pass-a-custom-config-file-location-to-rollup}
+# 向 Rollup 传递自定义配置文件位置 {#pass-a-custom-config-file-location-to-rollup}
 rollup --config my.config.js
 
-# if you do not pass a file name, Rollup will try to load {#if-you-do-not-pass-a-file-name-rollup-will-try-to-load}
-# configuration files in the following order: {#configuration-files-in-the-following-order}
+# 如果你没有传递一个文件名字，Rollup 将会按照以下顺序尝试加载 {#if-you-do-not-pass-a-file-name-rollup-will-try-to-load} 配置文件：{#configuration-files-in-the-following-order}
 # rollup.config.mjs -> rollup.config.cjs -> rollup.config.js {#rollupconfigmjs---rollupconfigcjs---rollupconfigjs}
 rollup --config
 ```

@@ -26,7 +26,7 @@ Rollup 力求实现 ES 模块的规范，而不是 Node.js、NPM、`require()` �
 
 2. 在实际层面上，如果这些问题有一个良好的 API 可以清晰地分离，那么开发软件就会更加容易。Rollup 的核心非常庞大，一切可以阻止其变得更大的东西都是好事。同时，修复错误和添加功能也更容易。通过保持 Rollup 精简，技术债务的潜在风险很小。
 
-请参见 [此问题](https://github.com/rollup/rollup/issues/1555#issuecomment-322862209) 以获得更详细的解释。
+请参见[此问题](https://github.com/rollup/rollup/issues/1555#issuecomment-322862209)以获得更详细的解释。
 
 ## 为什么在代码分割时我的入口块中会出现额外的导入？ {#why-do-additional-imports-turn-up-in-my-entry-chunks-when-code-splitting}
 
@@ -71,7 +71,7 @@ export default value;
 
 ## 如何将 polyfill 添加到 Rollup 产物中？ {#how-do-i-add-polyfills-to-a-rollup-bundle}
 
-即使 Rollup 在打包时通常会尝试维护精确的模块执行顺序，但在两种情况下，这并不总是成立：代码分割和外部依赖。外部依赖的问题最为明显，可以参考以下 [示例](../repl/index.md?shareable=JTdCJTIybW9kdWxlcyUyMiUzQSU1QiU3QiUyMm5hbWUlMjIlM0ElMjJtYWluLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmltcG9ydCUyMCcuJTJGcG9seWZpbGwuanMnJTNCJTVDbmltcG9ydCUyMCdleHRlcm5hbCclM0IlNUNuY29uc29sZS5sb2coJ21haW4nKSUzQiUyMiUyQyUyMmlzRW50cnklMjIlM0F0cnVlJTdEJTJDJTdCJTIybmFtZSUyMiUzQSUyMnBvbHlmaWxsLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmNvbnNvbGUubG9nKCdwb2x5ZmlsbCcpJTNCJTIyJTJDJTIyaXNFbnRyeSUyMiUzQWZhbHNlJTdEJTVEJTJDJTIyb3B0aW9ucyUyMiUzQSU3QiUyMmZvcm1hdCUyMiUzQSUyMmVzbSUyMiUyQyUyMm5hbWUlMjIlM0ElMjJteUJ1bmRsZSUyMiUyQyUyMmFtZCUyMiUzQSU3QiUyMmlkJTIyJTNBJTIyJTIyJTdEJTJDJTIyZ2xvYmFscyUyMiUzQSU3QiU3RCU3RCUyQyUyMmV4YW1wbGUlMjIlM0FudWxsJTdE)：
+即使 Rollup 在打包时通常会尝试维护精确的模块执行顺序，但在两种情况下，这并不总是成立：代码分割和外部依赖。外部依赖的问题最为明显，可以参考以下[示例](../repl/index.md?shareable=JTdCJTIybW9kdWxlcyUyMiUzQSU1QiU3QiUyMm5hbWUlMjIlM0ElMjJtYWluLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmltcG9ydCUyMCcuJTJGcG9seWZpbGwuanMnJTNCJTVDbmltcG9ydCUyMCdleHRlcm5hbCclM0IlNUNuY29uc29sZS5sb2coJ21haW4nKSUzQiUyMiUyQyUyMmlzRW50cnklMjIlM0F0cnVlJTdEJTJDJTdCJTIybmFtZSUyMiUzQSUyMnBvbHlmaWxsLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmNvbnNvbGUubG9nKCdwb2x5ZmlsbCcpJTNCJTIyJTJDJTIyaXNFbnRyeSUyMiUzQWZhbHNlJTdEJTVEJTJDJTIyb3B0aW9ucyUyMiUzQSU3QiUyMmZvcm1hdCUyMiUzQSUyMmVzbSUyMiUyQyUyMm5hbWUlMjIlM0ElMjJteUJ1bmRsZSUyMiUyQyUyMmFtZCUyMiUzQSU3QiUyMmlkJTIyJTNBJTIyJTIyJTdEJTJDJTIyZ2xvYmFscyUyMiUzQSU3QiU3RCU3RCUyQyUyMmV4YW1wbGUlMjIlM0FudWxsJTdE)：
 
 ```js
 // main.js
@@ -91,7 +91,7 @@ console.log('polyfill');
 console.log('main');
 ```
 
-使用 `external` → `polyfill.js` → `main.js` 的执行顺序。这不是由 Rollup 将 `import` 放在捆绑包顶部引起的问题——无论在文件中的位置如何，`import` 都会被首先执行。此问题可以通过创建更多的块来解决：如果 `polyfill.js` 最终位于与 `main.js` 不同的块中，[正确的执行顺序将得以保留](../repl/index.md?shareable=JTdCJTIybW9kdWxlcyUyMiUzQSU1QiU3QiUyMm5hbWUlMjIlM0ElMjJtYWluLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmltcG9ydCUyMCcuJTJGcG9seWZpbGwuanMnJTNCJTVDbmltcG9ydCUyMCdleHRlcm5hbCclM0IlNUNuY29uc29sZS5sb2coJ21haW4nKSUzQiUyMiUyQyUyMmlzRW50cnklMjIlM0F0cnVlJTdEJTJDJTdCJTIybmFtZSUyMiUzQSUyMnBvbHlmaWxsLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmNvbnNvbGUubG9nKCdwb2x5ZmlsbCcpJTNCJTIyJTJDJTIyaXNFbnRyeSUyMiUzQXRydWUlN0QlNUQlMkMlMjJvcHRpb25zJTIyJTNBJTdCJTIyZm9ybWF0JTIyJTNBJTIyZXNtJTIyJTJDJTIybmFtZSUyMiUzQSUyMm15QnVuZGxlJTIyJTJDJTIyYW1kJTIyJTNBJTdCJTIyaWQlMjIlM0ElMjIlMjIlN0QlMkMlMjJnbG9iYWxzJTIyJTNBJTdCJTdEJTdEJTJDJTIyZXhhbXBsZSUyMiUzQW51bGwlN0Q=)。 然而，在 Rollup 中还没有自动执行此操作的方法。对于代码分割，情况类似，因为 Rollup 正在尝试创建尽可能少的块，同时确保不执行不需要的代码。
+使用 `external` → `polyfill.js` → `main.js` 的执行顺序。这不是由 Rollup 将 `import` 放在捆绑包顶部引起的问题——无论在文件中的位置如何，`import` 都会被首先执行。此问题可以通过创建更多的块来解决：如果 `polyfill.js` 最终位于与 `main.js` 不同的块中，[正确的执行顺序将得以保留](../repl/index.md?shareable=JTdCJTIybW9kdWxlcyUyMiUzQSU1QiU3QiUyMm5hbWUlMjIlM0ElMjJtYWluLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmltcG9ydCUyMCcuJTJGcG9seWZpbGwuanMnJTNCJTVDbmltcG9ydCUyMCdleHRlcm5hbCclM0IlNUNuY29uc29sZS5sb2coJ21haW4nKSUzQiUyMiUyQyUyMmlzRW50cnklMjIlM0F0cnVlJTdEJTJDJTdCJTIybmFtZSUyMiUzQSUyMnBvbHlmaWxsLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmNvbnNvbGUubG9nKCdwb2x5ZmlsbCcpJTNCJTIyJTJDJTIyaXNFbnRyeSUyMiUzQXRydWUlN0QlNUQlMkMlMjJvcHRpb25zJTIyJTNBJTdCJTIyZm9ybWF0JTIyJTNBJTIyZXNtJTIyJTJDJTIybmFtZSUyMiUzQSUyMm15QnVuZGxlJTIyJTJDJTIyYW1kJTIyJTNBJTdCJTIyaWQlMjIlM0ElMjIlMjIlN0QlMkMlMjJnbG9iYWxzJTIyJTNBJTdCJTdEJTdEJTJDJTIyZXhhbXBsZSUyMiUzQW51bGwlN0Q=)。然而，在 Rollup 中还没有自动执行此操作的方法。对于代码分割，情况类似，因为 Rollup 正在尝试创建尽可能少的块，同时确保不执行不需要的代码。
 
 对于大多数代码而言，这不是一个问题，因为 Rollup 可以保证：
 
@@ -100,7 +100,7 @@ console.log('main');
 但是，这对于 polyfill 来说是一个问题，因为它们通常需要首先执行，同时又通常不希望在每个模块中都放置一个 polyfill 的导入。幸运的是，这并不是必需的：
 
 1. 如果没有依赖于 polyfill 的外部依赖项，则在每个静态入口点的第一个语句中添加对 polyfill 的导入即可。
-2. 否则，将 polyfill 作为单独的入口或 [手动添加的块](../configuration-options/index.md#output-manualchunks) 也会始终确保它首先被执行。
+2. 否则，将 polyfill 作为单独的入口或[手动添加的块](../configuration-options/index.md#output-manualchunks)也会始终确保它首先被执行。
 
 ## Rollup 适用于构建库还是应用程序？ {#is-rollup-meant-for-building-libraries-or-applications}
 

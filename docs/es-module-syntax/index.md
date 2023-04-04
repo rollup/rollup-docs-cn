@@ -14,7 +14,7 @@ title: ES 模块语法
 
 ### 具名导入 {#named-imports}
 
-使用 源模块中的原始名称 进行导入。
+使用源模块中的原始名称进行导入。
 
 ```js
 import { something } from './module.js';
@@ -56,7 +56,7 @@ import './module.js';
 
 ### 动态导入 {#dynamic-import}
 
-使用 [动态导入 API](https://github.com/tc39/proposal-dynamic-import#import) 导入模块。
+使用[动态导入 API](https://github.com/tc39/proposal-dynamic-import#import) 导入模块。
 
 ```js
 import('./modules.js').then(({ default: DefaultExport, NamedExport }) => {

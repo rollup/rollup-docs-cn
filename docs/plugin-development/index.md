@@ -254,7 +254,7 @@ flowchart TB
 
 此外，在监视模式下，[`watchChange`](#watchchange) 钩子可以在任何时候触发，以通知当前运行生成输出后将触发新的运行。另外，当监视器关闭时，[`closeWatcher`](#closewatcher) 钩子将被触发。
 
-有关在输出生成阶段运行以修改生成的输出的钩子，请参见 [输出生成钩子](#output-generation-hooks)。
+有关在输出生成阶段运行以修改生成的输出的钩子，请参见[输出生成钩子](#output-generation-hooks)。
 
 ### buildEnd
 
@@ -311,15 +311,15 @@ interface SourceDescription {
 }
 ```
 
-定义自定义加载器。返回 `null` 将延迟到其他 `load` 函数（最终默认从文件系统加载）。为了避免额外的解析开销，例如由于某些原因该钩子已经使用 `this.parse` 生成 AST，该钩子可以选择返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个具有每个节点的 `start` 和 `end` 属性的标准 ESTree AST。如果转换不移动代码，则可以通过将 `map` 设置为 `null` 来保留现有的源码映射。否则，你可能需要生成源映射。有关 [源代码转换](#source-code-transformations) 的详细信息，请参见该部分。
+定义自定义加载器。返回 `null` 将延迟到其他 `load` 函数（最终默认从文件系统加载）。为了避免额外的解析开销，例如由于某些原因该钩子已经使用 `this.parse` 生成 AST，该钩子可以选择返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个具有每个节点的 `start` 和 `end` 属性的标准 ESTree AST。如果转换不移动代码，则可以通过将 `map` 设置为 `null` 来保留现有的源码映射。否则，你可能需要生成源映射。有关[源代码转换](#source-code-transformations) 的详细信息，请参见该部分。
 
 如果 `moduleSideEffects` 返回 `false`，并且没有其他模块从该模块导入任何内容，则即使该模块具有副作用，该模块也不会包含在产物中。如果返回 `true`，则 Rollup 将使用其默认算法包含模块中具有副作用的所有语句（例如修改全局或导出变量）。如果返回 `"no-treeshake"`，则将关闭此模块的除屑优化，并且即使该模块为空，也将在生成的块之一中包含它。如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由第一个解析此模块的 `resolveId` 钩子，[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `true` 确定。`transform` 钩子可以覆盖此设置。
 
 `assertions` 包含导入此模块时使用的导入断言。目前，它们不会影响产物模块的呈现，而是用于文档目的。如果返回 `null` 或省略标志，则 `assertions` 将由第一个解析此模块的 `resolveId` 钩子或此模块的第一个导入中存在的断言确定。`transform` 钩子可以覆盖此设置。
 
-有关 `syntheticNamedExports` 选项的影响，请参见 [合成命名导出](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将由第一个解析此模块的 `resolveId` 钩子确定，或者最终默认为 `false`。`transform` 钩子可以覆盖此设置。
+有关 `syntheticNamedExports` 选项的影响，请参见[合成命名导出](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将由第一个解析此模块的 `resolveId` 钩子确定，或者最终默认为 `false`。`transform` 钩子可以覆盖此设置。
 
-有关如何使用 `meta` 选项的 [自定义模块元数据](#custom-module-meta-data)。如果此钩子返回 `meta` 对象，则该对象将与 `resolveId` 钩子返回的任何 `meta` 对象浅合并。如果没有钩子返回 `meta` 对象，则默认为一个空对象。`transform` 钩子可以进一步添加或替换该对象的属性。
+有关如何使用 `meta` 选项的[自定义模块元数据](#custom-module-meta-data)。如果此钩子返回 `meta` 对象，则该对象将与 `resolveId` 钩子返回的任何 `meta` 对象浅合并。如果没有钩子返回 `meta` 对象，则默认为一个空对象。`transform` 钩子可以进一步添加或替换该对象的属性。
 
 你可以使用 [`this.getModuleInfo`](#this-getmoduleinfo) 在此钩子中查找 `assertions`、`meta`、`moduleSideEffects` 和 `syntheticNamedExports` 的先前值。
 
@@ -349,7 +349,7 @@ interface SourceDescription {
 
 替换或操作传递给 `rollup.rollup` 的选项对象。返回 `null` 不会替换任何内容。如果只需要读取选项，则建议使用 [`buildStart`](#buildstart) 钩子，因为该钩子可以访问所有 `options` 钩子的转换考虑后的选项。
 
-这是唯一一个没有访问大多数 [插件上下文](#plugin-context) 实用函数的钩子，因为它在 Rollup 完全配置之前运行。
+这是唯一一个没有访问大多数[插件上下文](#plugin-context)实用函数的钩子，因为它在 Rollup 完全配置之前运行。
 
 ### resolveDynamicImport
 
@@ -394,8 +394,8 @@ type ResolveDynamicImportHook = (
 | --: | :-- |
 | 类型: | `ResolveIdHook` |
 | 类别: | async, first |
-| 上一个钩子: | 如果我们正在解析入口点，则为[`buildStart`](#buildstart)，如果我们正在解析导入，则为[`moduleParsed`](#moduleparsed)，否则作为[`resolveDynamicImport`](#resolvedynamicimport)的后备。此外，此钩子可以通过调用[`this.emitFile`](#this-emitfile)来在构建阶段的插件钩子中触发以发出入口点，或随时调用[`this.resolve`](#this-resolve)手动解析 id。 |
-| 下一个钩子: | 如果尚未加载解析的 id，则为[`load`](#load)，否则为[`buildEnd`](#buildend)。 |
+| 上一个钩子: | 如果我们正在解析入口点，则为 [`buildStart`](#buildstart)，如果我们正在解析导入，则为 [`moduleParsed`](#moduleparsed)，否则作为 [`resolveDynamicImport`](#resolvedynamicimport) 的后备。此外，此钩子可以通过调用 [`this.emitFile`](#this-emitfile) 来在构建阶段的插件钩子中触发以发出入口点，或随时调用 [`this.resolve`](#this-resolve) 手动解析 id。 |
+| 下一个钩子: | 如果尚未加载解析的 id，则为 [`load`](#load)，否则为 [`buildEnd`](#buildend)。 |
 
 ```typescript
 type ResolveIdHook = (
@@ -931,7 +931,7 @@ type RenderChunkHook = (
 
 可以用于转换单个块。对于每个 Rollup 输出块文件都会调用此函数。返回 `null` 将不应用任何转换。如果你在此钩子中更改了代码并希望支持源映射，则需要返回一个描述更改的`map`，请参见[源代码转换](#source-code-transformations)部分。
 
-`chunk` 包含有关块的其他信息，使用与[`generateBundle`](#generatebundle)钩子相同的 `ChunkInfo` 类型，但有以下区别：
+`chunk` 包含有关块的其他信息，使用与 [`generateBundle`](#generatebundle) 钩子相同的 `ChunkInfo` 类型，但有以下区别：
 
 - `code` 和 `map` 未设置。而是使用此钩子的 `code` 参数。
 - 所有引用的块文件名将包含哈希占位符，而不是哈希。这包括 `fileName`，`imports`，`importedBindings`，`dynamicImports`和`implicitlyLoadedBefore` 。当你在此钩子返回的代码中使用此类占位符文件名或其一部分时，Rollup 将在`generateBundle`之前将占位符替换为实际哈希，确保哈希反映了最终生成的块的实际内容，包括所有引用的文件哈希。
@@ -946,8 +946,8 @@ type RenderChunkHook = (
 | --: | :-- |
 | 类型: | `renderDynamicImportHook` |
 | 类别: | sync, first |
-| 上一个钩子: | 如果这是第一个块，则为[`renderStart`](#renderstart)，否则为上一个块的[`banner`](#banner)，[`footer`](#footer)，[`intro`](#intro)，[`outro`](#outro) |
-| 下一个钩子: | 对于每个 `import.meta.ROLLUP_FILE_URL_referenceId` 的使用，为[`resolveFileUrl`](#resolvefileurl)，对于当前块中所有其他访问`import.meta`，为[`resolveImportMeta`](#resolveimportmeta) |
+| 上一个钩子: | 如果这是第一个块，则为 [`renderStart`](#renderstart)，否则为上一个块的 [`banner`](#banner)，[`footer`](#footer)，[`intro`](#intro)，[`outro`](#outro) |
+| 下一个钩子: | 对于每个 `import.meta.ROLLUP_FILE_URL_referenceId` 的使用，为 [`resolveFileUrl`](#resolvefileurl)，对于当前块中所有其他访问`import.meta`，为 [`resolveImportMeta`](#resolveimportmeta) |
 
 ```typescript
 type renderDynamicImportHook = (options: {
@@ -960,7 +960,7 @@ type renderDynamicImportHook = (options: {
 
 此钩子通过提供导入表达式参数左侧（`import(`）和右侧（`)`）的代码替换，提供了对动态导入如何呈现的细粒度控制。返回`null`将推迟到此类型的其他钩子，最终呈现特定于格式的默认值。
 
-`format` 是呈现的输出格式， `moduleId` 是执行动态导入的模块的 ID。如果导入可以解析为内部或外部 ID，则`targetModuleId`将设置为此 ID，否则将为`null`。如果动态导入包含由[`resolveDynamicImport`](#resolvedynamicimport)钩子解析为替换字符串的非字符串表达式，则`customResolution`将包含该字符串。
+`format` 是呈现的输出格式， `moduleId` 是执行动态导入的模块的 ID。如果导入可以解析为内部或外部 ID，则`targetModuleId`将设置为此 ID，否则将为`null`。如果动态导入包含由 [`resolveDynamicImport`](#resolvedynamicimport) 钩子解析为替换字符串的非字符串表达式，则`customResolution`将包含该字符串。
 
 以下代码将使用自定义处理程序替换所有动态导入，添加 `import.meta.url` 作为第二个参数，以允许处理程序正确解析相对导入：
 
@@ -1028,7 +1028,7 @@ function retainImportExpressionPlugin() {
 | 上一个钩子: | [`outputOptions`](#outputoptions) |
 | 下一个钩子: | 对于第一个块中的每个动态导入表达式，跟随 [`renderDynamicImport`](#renderdynamicimport) |
 
-每次调用`bundle.generate()`或`bundle.write()`时最初调用。要在生成完成时得到通知，请使用`generateBundle`和`renderError`钩子。这是建议使用的钩子，当你需要访问传递给`bundle.generate()`或`bundle.write()`的输出选项时，它会考虑所有[`outputOptions`](#outputoptions)钩子的转换，并且还包含未设置选项的正确默认值。它还接收传递给`rollup.rollup()`的输入选项，以便可以将可用作输出插件的插件（即仅使用`generate`阶段钩子的插件）访问它们。
+每次调用 `bundle.generate() `或 `bundle.write()` 时最初调用。要在生成完成时得到通知，请使用 `generateBundle` 和 `renderError` 钩子。这是建议使用的钩子，当你需要访问传递给 `bundle.generate()` 或 `bundle.write()` 的输出选项时，它会考虑所有 [`outputOptions`](#outputoptions) 钩子的转换，并且还包含未设置选项的正确默认值。它还接收传递给 `rollup.rollup()` 的输入选项，以便可以将可用作输出插件的插件（即仅使用`generate`阶段钩子的插件）访问它们。
 
 ### resolveFileUrl
 
@@ -1080,10 +1080,10 @@ function resolveToDocumentPlugin() {
 | --: | :-- |
 | 类型: | `(property: string \| null, {chunkId: string, moduleId: string, format: string}) => string \| null` |
 | 类别: | sync, first |
-| 上一个钩子: | 当前块中每个动态导入表达式的[`renderDynamicImport`](#renderdynamicimport) |
-| 下一个钩子: | 当前块的[`banner`](#banner), [`footer`](#footer), [`intro`](#intro), [`outro`](#outro)并行处理 |
+| 上一个钩子: | 当前块中每个动态导入表达式的 [`renderDynamicImport`](#renderdynamicimport) |
+| 下一个钩子: | 当前块的 [`banner`](#banner), [`footer`](#footer), [`intro`](#intro), [`outro`](#outro) 并行处理 |
 
-允许自定义 Rollup 如何处理 `import.meta` 和 `import.meta.someProperty`，特别是 `import.meta.url`。在 ES 模块中，`import.meta`是一个对象，`import.meta.url`包含当前模块的 URL，例如在浏览器中为`http://server.net/bundle.js`，在 Node 中为`file:///path/to/bundle.js`。
+允许自定义 Rollup 如何处理 `import.meta` 和 `import.meta.someProperty`，特别是 `import.meta.url`。在 ES 模块中，`import.meta` 是一个对象，`import.meta.url` 包含当前模块的 URL，例如在浏览器中为`http://server.net/bundle.js`，在 Node 中为`file:///path/to/bundle.js`。
 
 默认情况下，对于除 ES 模块以外的格式，Rollup 将 `import.meta.url` 替换为尝试匹配此行为的代码，返回当前块的动态 URL。请注意，除 CommonJS 和 UMD 之外的所有格式都假定它们在浏览器环境中运行，其中`URL`和`document`可用。对于其他属性，`import.meta.someProperty`
 
@@ -1115,9 +1115,9 @@ function importMetaUrlCurrentModulePlugin() {
 | 类型: | `(options: OutputOptions, bundle: { [fileName: string]: AssetInfo \| ChunkInfo }) => void` |
 | 类别: | async, parallel |
 | 上一个钩子: | [`generateBundle`](#generatebundle) |
-| 下一个钩子: | 如果调用了它，则是输出生成阶段的最后一个钩子，并且如果生成了另一个输出，则可能再次跟随[`outputOptions`](#outputoptions) |
+| 下一个钩子: | 如果调用了它，则是输出生成阶段的最后一个钩子，并且如果生成了另一个输出，则可能再次跟随 [`outputOptions`](#outputoptions) |
 
-仅在 `bundle.write()` 结束时调用，一旦所有文件都已写入。与[`generateBundle`](#generatebundle)钩子类似，`bundle` 提供正在写入的所有文件的完整列表以及它们的详细信息。
+仅在 `bundle.write()` 结束时调用，一旦所有文件都已写入。与 [`generateBundle`](#generatebundle) 钩子类似，`bundle` 提供正在写入的所有文件的完整列表以及它们的详细信息。
 
 ## 插件上下文 {#plugin-context}
 
@@ -1129,9 +1129,9 @@ function importMetaUrlCurrentModulePlugin() {
 | ----: | :--------------------- |
 | 类型: | `(id: string) => void` |
 
-添加要在监视模式下监视的其他文件，以便更改这些文件将触发重建。 `id` 可以是文件或目录的绝对路径，也可以是相对于当前工作目录的路径。此上下文函数只能在构建阶段的钩子中使用，即在 `buildStart`、`load`、 `resolveId` 和 `transform` 中。
+添加要在监视模式下监视的其他文件，以便更改这些文件将触发重建。`id` 可以是文件或目录的绝对路径，也可以是相对于当前工作目录的路径。此上下文函数只能在构建阶段的钩子中使用，即在 `buildStart`、`load`、 `resolveId` 和 `transform` 中。
 
-**注意**： 通常在监视模式下，为了提高重建速度，`transform` 钩子只会在给定模块的内容实际更改时触发。从`transform`钩子中使用`this.addWatchFile`将确保如果监视的文件更改，则也将重新评估此模块的 `transform` 钩子。
+**注意**：通常在监视模式下，为了提高重建速度，`transform` 钩子只会在给定模块的内容实际更改时触发。从`transform`钩子中使用`this.addWatchFile`将确保如果监视的文件更改，则也将重新评估此模块的 `transform` 钩子。
 
 通常建议从依赖于监视文件的钩子中使用 `this.addWatchFile`。
 
@@ -1161,17 +1161,17 @@ interface EmittedAsset {
 }
 ```
 
-`emitFile` 方法可以生成一个新的文件，并将其包含在构建输出中。同时，它会返回一个 `referenceId` ，可以在各种地方使用该 `referenceId` 来引用生成的文件。你可以生成代码块或者资源文件。
+`emitFile` 方法可以生成一个新的文件，并将其包含在构建输出中。同时，它会返回一个 `referenceId`，可以在各种地方使用该 `referenceId` 来引用生成的文件。你可以生成代码块或者资源文件。
 
-在两种情况下，都可以提供 `name` 或 `fileName`。如果提供了 `fileName` ，它将被直接用作生成文件的名称，如果这会导致冲突，则会抛出错误。否则，如果提供了`name`，则会将其用作相应的 [`output.chunkFileNames`](../configuration-options/index.md#output-chunkfilenames) 或 [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) 模式中的 `[name]` 的替换，可能会在文件名的末尾添加一个唯一的数字以避免冲突。如果既没有提供 `name` 也没有提供 `fileName` ，则会使用默认名称。
+在两种情况下，都可以提供 `name` 或 `fileName`。如果提供了 `fileName`，它将被直接用作生成文件的名称，如果这会导致冲突，则会抛出错误。否则，如果提供了`name`，则会将其用作相应的 [`output.chunkFileNames`](../configuration-options/index.md#output-chunkfilenames) 或 [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) 模式中的 `[name]` 的替换，可能会在文件名的末尾添加一个唯一的数字以避免冲突。如果既没有提供 `name` 也没有提供 `fileName`，则会使用默认名称。
 
-你可以通过 `import.meta.ROLLUP_FILE_URL_referenceId` 在任何由 [`load`](#load) 或 [`transform`](#transform)插件钩子返回的代码中引用生成的文件的 URL。有关更多详细信息和示例，请参见 [File URL](#file-urls)。
+你可以通过 `import.meta.ROLLUP_FILE_URL_referenceId` 在任何由 [`load`](#load) 或 [`transform`](#transform) 插件钩子返回的代码中引用生成的文件的 URL。有关更多详细信息和示例，请参见 [File URL](#file-urls)。
 
 替换 `import.meta.ROLLUP_FILE_URL_referenceId` 的生成代码可以通过 [`resolveFileUrl`](#resolvefileurl) 插件钩子进行自定义。你也可以使用 [`this.getFileName(referenceId)`](#this-getfilename) 在文件名可用时确定文件名。如果没有显式设置文件名，则
 
 - 资源文件名从 [`renderStart`](#renderstart) 钩子开始可用。对于稍后生成的资源，文件名将在生成资源后立即可用。
 - 不包含哈希的代码块文件名在 `renderStart` 钩子后创建代码块后立即可用。
-- 如果代码块文件名包含哈希，则在 [`generateBundle`](#generatebundle) 之前的任何钩子中使用`getFileName`将返回一个包含占位符而不是实际名称的名称。如果你在[`renderChunk`](#renderchunk)中转换的代码块中使用了这个文件名或其中的部分，Rollup 将在 `generateBundle` 之前用实际哈希替换占位符，确保哈希反映最终生成的代码块的实际内容，包括所有引用的文件哈希。
+- 如果代码块文件名包含哈希，则在 [`generateBundle`](#generatebundle) 之前的任何钩子中使用 `getFileName` 将返回一个包含占位符而不是实际名称的名称。如果你在 [`renderChunk`](#renderchunk) 中转换的代码块中使用了这个文件名或其中的部分，Rollup 将在 `generateBundle` 之前用实际哈希替换占位符，确保哈希反映最终生成的代码块的实际内容，包括所有引用的文件哈希。
 
 如果 `type` 是 `chunk`，则会生成一个以给定模块 `id` 为入口点的新代码块。为了解析它，`id` 将通过构建钩子传递，就像常规入口点一样，从 [`resolveId`](#resolveid) 开始。如果提供了`importer`，它将作为 `resolveId` 的第二个参数，并且对于正确解析相对路径非常重要。如果没有提供它，路径将相对于当前工作目录解析。如果提供了 `preserveSignature` 的值，它将覆盖 [`preserveEntrySignatures`](../configuration-options/index.md#preserveentrysignatures) 的值。
 
@@ -1270,7 +1270,7 @@ export default {
 | ----: | :------------------------------- |
 | 类型: | `() => IterableIterator<string>` |
 
-返回一个 `Iterator` ，可访问当前图中的所有模块 ID。它可以通过以下方式进行迭代：
+返回一个 `Iterator`，可访问当前图中的所有模块 ID。它可以通过以下方式进行迭代：
 
 ```js
 for (const moduleId of this.getModuleIds()) {

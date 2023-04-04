@@ -19,7 +19,7 @@ title: 迁移到 Rollup 3
 
 请确保你的 Node 版本至少为 14.18.0，并更新所有 Rollup 插件到最新版本。
 
-对于较大的配置，请首先更新到 `rollup@2.79.1` ，将[`strictDeprecations`](../configuration-options/index.md#strictdeprecations) 选项添加到你的配置中，并解决弹出的所有错误。这样，你可以确保你不依赖可能在 Rollup 3 中被删除的功能。如果你的插件有错误，请联系插件作者。
+对于较大的配置，请首先更新到 `rollup@2.79.1` ，将 [`strictDeprecations`](../configuration-options/index.md#strictdeprecations) 选项添加到你的配置中，并解决弹出的所有错误。这样，你可以确保你不依赖可能在 Rollup 3 中被删除的功能。如果你的插件有错误，请联系插件作者。
 
 ## 配置文件使用 {#using-configuration-files}
 
@@ -32,7 +32,7 @@ title: 迁移到 Rollup 3
 - 你不能直接地导入你的 `package.json` 文件
 - 你不能使用 `__dirname` 来获取当前目录
 
-参阅 [使用原生 Node ES 模块时的注意事项](../command-line-interface/index.md#caveats-when-using-native-node-es-modules) 将为你提供一些处理这些问题的替代方法。
+参阅[使用原生 Node ES 模块时的注意事项](../command-line-interface/index.md#caveats-when-using-native-node-es-modules)将为你提供一些处理这些问题的替代方法。
 
 或者你可以传递 [`--bundleConfigAsCjs`](../command-line-interface/index.md#bundleconfigascjs) 选项来强制使用旧的加载行为。
 
@@ -67,12 +67,12 @@ title: 迁移到 Rollup 3
 
 ## 从 CommonJS 输出中的动态导入 {#dynamic-import-in-commonjs-output}
 
-默认情况下，当使用 `cjs` 作为输出时， Rollup 现在会将任何外部的（即非打包的）动态导入作为输出中的 `import(…)` 表达式。在 Node 14 及以上的所有版本中都支持从生成的 CommonJS 输出中加载 CommonJS 和 ES 模块。如果你需要支持旧的 Node 版本，你可以传递参数[`output.dynamicImportInCjs: false`](../configuration-options/index.md#output-dynamicimportincjs)。
+默认情况下，当使用 `cjs` 作为输出时，Rollup 现在会将任何外部的（即非打包的）动态导入作为输出中的 `import(…)` 表达式。在 Node 14 及以上的所有版本中都支持从生成的 CommonJS 输出中加载 CommonJS 和 ES 模块。如果你需要支持旧的 Node 版本，你可以传递参数 [`output.dynamicImportInCjs: false`](../configuration-options/index.md#output-dynamicimportincjs)。
 
 ## 插件 API 更改 {#changes-to-the-plugin-api}
 
-重新设计了通用的输出生成流程，参阅 [输出生成钩子](../plugin-development/index.md#output-generation-hooks)图表以获取新的插件钩子顺序。最明显的变化可能是 [`banner`](../plugin-development/index.md#banner)/[`footer`](../plugin-development/index.md#footer)/[`intro`](../plugin-development/index.md#intro)/[`outro`](../plugin-development/index.md#outro) 不再在开头调用一次，而是按块调用。另一方面，当创建哈希时，[`augmentChunkHash`](../plugin-development/index.md#augmentchunkhash) 现在在 [`renderChunk`](../plugin-development/index.md#renderchunk) 之后执行。
+重新设计了通用的输出生成流程，参阅[输出生成钩子](../plugin-development/index.md#output-generation-hooks)图表以获取新的插件钩子顺序。最明显的变化可能是 [`banner`](../plugin-development/index.md#banner)/[`footer`](../plugin-development/index.md#footer)/[`intro`](../plugin-development/index.md#intro)/[`outro`](../plugin-development/index.md#outro) 不再在开头调用一次，而是按块调用。另一方面，当创建哈希时，[`augmentChunkHash`](../plugin-development/index.md#augmentchunkhash) 现在在 [`renderChunk`](../plugin-development/index.md#renderchunk) 之后执行。
 
 由于文件哈希现在基于 `renderChunk` 之后文件的实际内容，因此在生成哈希之前我们不再知道确切的文件名。相反，运行逻辑现在依赖于形式为 `!~{001}~` 的哈希占位符。这意味着在 `renderChunk` 钩子可用的所有文件名都可能包含占位符，并且可能不对应于最终的文件名。但如果你计划在块内使用这些文件名，Rollup 将在 [`generateBundle`](../plugin-development/index.md#generatebundle) 运行之前替换所有占位符。
 
-这不一定是一个破坏性的更新，但在 [`renderChunk`](../plugin-development/index.md#renderchunk) 中添加或删除导入的插件应该确保它们也更新传递给此钩子的相应 `chunk` 信息。这将使其他插件能够依赖于准确的块信息，而无需自己解析。有关 `renderChunk` 钩子的更多信息，请参阅 [相关内容的文档](../plugin-development/index.md#renderchunk)。
+这不一定是一个破坏性的更新，但在 [`renderChunk`](../plugin-development/index.md#renderchunk) 中添加或删除导入的插件应该确保它们也更新传递给此钩子的相应 `chunk` 信息。这将使其他插件能够依赖于准确的块信息，而无需自己解析。有关 `renderChunk` 钩子的更多信息，请参阅[相关内容的文档](../plugin-development/index.md#renderchunk)。

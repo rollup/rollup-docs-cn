@@ -25,7 +25,7 @@ import { rollup } from 'rollup';
 const inputOptions = {...};
 
 // 你可以从相同的输入创建多个输出，
-//以生成例如 CommonJS 和 ESM 这样的不同格式
+// 以生成例如 CommonJS 和 ESM 这样的不同格式
 const outputOptionsList = [{...}, {...}];
 
 build();
