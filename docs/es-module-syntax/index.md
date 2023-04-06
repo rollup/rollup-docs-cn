@@ -98,7 +98,7 @@ export const something = true;
 export default something;
 ```
 
-仅当您的源模块只有一个导出时才推荐这种做法。
+仅当你的源模块只有一个导出时才推荐这种做法。
 
 尽管规范允许，但在同一个模块中混合默认和命名导出是不好的做法。
 

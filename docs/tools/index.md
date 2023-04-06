@@ -87,7 +87,7 @@ import answer from 'the-answer';
 import _ from 'lodash';
 ```
 
-您可以精细调整哪些导入将被打包，哪些将被视为外部导入。在此示例中，我们将把 `lodash` 视为外部导入，但不将 `the-answer` 视为外部导入。
+你可以精细调整哪些导入将被打包，哪些将被视为外部导入。在此示例中，我们将把 `lodash` 视为外部导入，但不将 `the-answer` 视为外部导入。
 
 以下是配置文件：
 
@@ -112,7 +112,7 @@ export default {
 };
 ```
 
-现在，`lodash` 将被视为外部导入，不会与您的库捆绑在一起。
+现在，`lodash` 将被视为外部导入，不会与你的库捆绑在一起。
 
 `external` 键接受模块名称的数组或一个函数，该函数接受模块名称并返回 true，如果应将其视为外部导入。例如：
 
@@ -123,7 +123,7 @@ export default {
 };
 ```
 
-如果您使用 [babel-plugin-lodash](https://github.com/lodash/babel-plugin-lodash) 来挑选 `lodash` 模块，则可能会使用此形式。在这种情况下，Babel 将转换您的导入语句，使之类似于：
+如果你使用 [babel-plugin-lodash](https://github.com/lodash/babel-plugin-lodash) 来挑选 `lodash` 模块，则可能会使用此形式。在这种情况下，Babel 将转换你的导入语句，使之类似于：
 
 ```js
 import _merge from 'lodash/merge';
@@ -269,4 +269,4 @@ const {rollup} = require("rollup");
 const bundle = await rollup({ //...
 ```
 
-请确保使用 `--unstable` 标志运行 deno。如果您计划使用 `bundle.write()`，请不要忘记 `--allow-read` 和 `--allow-write`。
+请确保使用 `--unstable` 标志运行 deno。如果你计划使用 `bundle.write()`，请不要忘记 `--allow-read` 和 `--allow-write`。

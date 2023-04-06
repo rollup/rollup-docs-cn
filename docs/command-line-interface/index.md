@@ -345,7 +345,7 @@ export default {
 
 ## 命令行标志 {#command-line-flags}
 
-许多选项都有等效的命令行标志。在这些情况下，如果您正在使用配置文件，则此处传递的任何参数都将覆盖配置文件。以下是所有支持的选项列表：
+许多选项都有等效的命令行标志。在这些情况下，如果你正在使用配置文件，则此处传递的任何参数都将覆盖配置文件。以下是所有支持的选项列表：
 
 ```
 -c, --config <filename>     使用此配置文件
@@ -415,7 +415,7 @@ export default {
 --no-strict                 不在生成的模块中发出 `"use strict";`
 --strictDeprecations        抛出有关不推荐使用的功能的错误
 --no-systemNullSetters      不要将空的 SystemJS setter 替换为 `null`
---no-treeshake              禁用树摇优化
+--no-treeshake              禁用除屑优化
 --no-treeshake.annotations 忽略纯调用注释
 --treeshake.correctVarValueBeforeDeclaration 在声明之前将变量取消优化
 --treeshake.manualPureFunctions <names> 手动将函数声明为纯函数
@@ -473,13 +473,13 @@ export default {
   rollup -i input.js -f es -p '{transform: (c, i) => `/* ${JSON.stringify(i)} */\n${c}`}'
   ```
 
-如果您想加载多个插件，可以重复使用该选项或提供逗号分隔的名称列表：
+如果你想加载多个插件，可以重复使用该选项或提供逗号分隔的名称列表：
 
 ```shell
 rollup -i input.js -f es -p node-resolve -p commonjs,json
 ```
 
-默认情况下，插件函数将不带参数调用以创建插件。但是，您也可以传递自定义参数：
+默认情况下，插件函数将不带参数调用以创建插件。但是，你也可以传递自定义参数：
 
 ```shell
 rollup -i input.js -f es -p 'terser={output: {beautify: true, indent_level: 2}}'
@@ -499,15 +499,15 @@ rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript
 "include": ["src/**/*", "rollup.config.ts"],
 ```
 
-此选项支持与 [`--plugin`](#p-plugin-plugin-plugin) 选项相同的语法，即您可以多次指定该选项，可以省略 `@rollup/plugin-` 前缀，只需编写 `typescript`，并可以通过 `={...}` 指定插件选项。
+此选项支持与 [`--plugin`](#p-plugin-plugin-plugin) 选项相同的语法，即你可以多次指定该选项，可以省略 `@rollup/plugin-` 前缀，只需编写 `typescript`，并可以通过 `={...}` 指定插件选项。
 
-使用此选项将使 Rollup 首先将您的配置文件转译为 ES 模块，然后再执行它。如果要转译为 CommonJS，请还传递 [`--bundleConfigAsCjs`](#bundleconfigascjs) 选项。
+使用此选项将使 Rollup 首先将你的配置文件转译为 ES 模块，然后再执行它。如果要转译为 CommonJS，请还传递 [`--bundleConfigAsCjs`](#bundleconfigascjs) 选项。
 
 ### `--bundleConfigAsCjs` {#bundleconfigascjs}
 
-此选项将强制将您的配置转译为 CommonJS。
+此选项将强制将你的配置转译为 CommonJS。
 
-这允许您在配置中使用 CommonJS 常用的变量/方法，例如 `__dirname` 或 `require.resolve`，即使配置本身是作为 ES 模块编写的。
+这允许你在配置中使用 CommonJS 常用的变量/方法，例如 `__dirname` 或 `require.resolve`，即使配置本身是作为 ES 模块编写的。
 
 ### `-v`/`--version` {#v-version}
 

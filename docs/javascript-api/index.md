@@ -10,7 +10,7 @@ Rollup 提供了一个可从 Node.js 使用的 JavaScript API。你很少需要�
 
 ## rollup.rollup {#rollup-rollup}
 
-`rollup.rollup` 函数接收一个输入选项对象作为参数，并返回一个 Promise，该 Promise 解析为一个 `bundle` 对象，该对象具有下列各种属性和方法。在此步骤中，Rollup 将构建模块图并执行树摇，但不会生成任何输出。
+`rollup.rollup` 函数接收一个输入选项对象作为参数，并返回一个 Promise，该 Promise 解析为一个 `bundle` 对象，该对象具有下列各种属性和方法。在此步骤中，Rollup 将构建模块图并执行除屑优化，但不会生成任何输出。
 
 在 `bundle` 对象上，你可以多次调用 `bundle.generate` 并使用不同的输出选项对象来生成不同的产物到内存中。如果你想直接将它们写入磁盘，请使用 `bundle.write`。
 

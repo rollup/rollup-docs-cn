@@ -90,7 +90,7 @@ export default ({
 - `sequential`：如果有多个插件实现此钩子，则所有这些钩子将按指定的插件顺序运行。如果钩子是 `async`，则此类后续钩子将等待当前钩子解决后再运行。
 - `parallel`：如果有多个插件实现此钩子，则所有这些钩子将按指定的插件顺序运行。如果钩子是 `async`，则此类后续钩子将并行运行，而不是等待当前钩子。
 
-除了函数之外，钩子也可以是对象。在这种情况下，实际的钩子函数（或 `banner/footer/intro/outro` 的值）必须指定为 `handler`。这允许您提供更多的可选属性，以改变钩子的执行：
+除了函数之外，钩子也可以是对象。在这种情况下，实际的钩子函数（或 `banner/footer/intro/outro` 的值）必须指定为 `handler`。这允许你提供更多的可选属性，以改变钩子的执行：
 
 - `order: "pre" | "post" | null`<br> 如果有多个插件实现此钩子，则可以先运行此插件（`"pre"`），最后运行此插件（`"post"`），或在用户指定的位置运行（没有值或 `null`）。
 
@@ -113,9 +113,9 @@ export default ({
 
   如果有多个插件使用 `"pre"` 或 `"post"`，Rollup 将按用户指定的顺序运行它们。此选项可用于所有插件钩子。对于并行钩子，它会更改同步部分运行的顺序。
 
-- `sequential: boolean`<br> 不要与其他插件的相同钩子并行运行此钩子。仅可用于 `parallel` 钩子。使用此选项将使 Rollup 等待所有先前插件的结果，然后执行插件钩子，然后再次并行运行剩余的插件。例如，当您有插件 `A`、`B`、`C`、`D`、`E`，它们都实现了相同的并行钩子，并且中间插件 `C` 具有 `sequential: true` 时，Rollup 将首先并行运行 `A + B`，然后单独运行 `C`，然后再次并行运行 `D + E`。
+- `sequential: boolean`<br> 不要与其他插件的相同钩子并行运行此钩子。仅可用于 `parallel` 钩子。使用此选项将使 Rollup 等待所有先前插件的结果，然后执行插件钩子，然后再次并行运行剩余的插件。例如，当你有插件 `A`、`B`、`C`、`D`、`E`，它们都实现了相同的并行钩子，并且中间插件 `C` 具有 `sequential: true` 时，Rollup 将首先并行运行 `A + B`，然后单独运行 `C`，然后再次并行运行 `D + E`。
 
-  当您需要在不同的 [`writeBundle`](#writebundle) 钩子中运行多个命令行工具并相互依赖时，这可能很有用（请注意，如果可能，建议在顺序 [`generateBundle`](#generatebundle) 钩子中添加/删除文件，这样更快，适用于纯内存构建，并允许其他内存构建插件查看文件）。您可以将此选项与 `order` 结合使用进行排序。
+  当你需要在不同的 [`writeBundle`](#writebundle) 钩子中运行多个命令行工具并相互依赖时，这可能很有用（请注意，如果可能，建议在顺序 [`generateBundle`](#generatebundle) 钩子中添加/删除文件，这样更快，适用于纯内存构建，并允许其他内存构建插件查看文件）。你可以将此选项与 `order` 结合使用进行排序。
 
   ```js
   import { resolve } from 'node:path';
@@ -531,7 +531,7 @@ function externalizeDependencyPlugin() {
 
 如果 `external` 为 `true`，则绝对 id 将根据用户对 [`makeAbsoluteExternalsRelative`](../configuration-options/index.md#makeabsoluteexternalsrelative) 选项的选择转换为相对 id。可以通过传递 `external: "relative"` 来覆盖此选择，以始终将绝对 id 转换为相对 id，或者传递 `external: "absolute"` 来保持其为绝对 id。当返回一个对象时，相对的外部 id，即以 `./` 或 `../` 开头的 id，将 _不会_ 被内部转换为绝对 id 并在输出中转换回相对 id，而是不变地包含在输出中。如果你希望相对 id 被重新规范化和去重，请将绝对文件系统位置作为 `id` 返回，并选择 `external: "relative"`。
 
-如果在解析模块 id 的第一个钩子中返回 `false` 且没有其他模块从此模块导入任何内容，则即使该模块具有副作用，该模块也不会被包含。如果返回 `true`，Rollup 将使用其默认算法来包含模块中具有副作用的所有语句（例如修改全局或导出变量）。如果返回 `"no-treeshake"`，则将关闭此模块的树摇，并且即使它为空，它也将包含在生成的块之一中。如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由 [`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项确定或默认为 `true`。`load` 和 `transform` 钩子可以覆盖此选项。
+如果在解析模块 id 的第一个钩子中返回 `false` 且没有其他模块从此模块导入任何内容，则即使该模块具有副作用，该模块也不会被包含。如果返回 `true`，Rollup 将使用其默认算法来包含模块中具有副作用的所有语句（例如修改全局或导出变量）。如果返回 `"no-treeshake"`，则将关闭此模块的除屑，并且即使它为空，它也将包含在生成的块之一中。如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由 [`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项确定或默认为 `true`。`load` 和 `transform` 钩子可以覆盖此选项。
 
 可以在返回的对象中明确声明 `resolvedBy`。它将替换 [`this.resolve`](#this-resolve) 返回的相应字段。
 
@@ -608,7 +608,7 @@ interface SourceDescription {
 
 如果返回 `true`，则 Rollup 将使用其默认算法，包括模块中具有副作用的所有语句（例如修改全局或导出变量）。
 
-如果返回 `"no-treeshake"`，则将关闭此模块的树摇，并且即使为空，它也将包含在生成的块之一中。
+如果返回 `"no-treeshake"`，则将关闭此模块的除屑优化，并且即使为空，它也将包含在生成的块之一中。
 
 如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子、[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `true` 确定。
 
@@ -1238,7 +1238,7 @@ export default {
 
 请注意，即使在 `implicitlyLoadedAfterOneOf` 中可以使用任何模块 ID，如果这样的 ID 不能与块唯一关联，例如因为 `id` 不能从现有的静态入口点隐式或显式地到达，或者因为文件被完全剪枝，Rollup 也会抛出错误。只使用入口点，无论是用户定义的还是先前发出的块，都将始终起作用。
 
-如果 `type` 是 _`asset`_，则会发出一个具有给定 `source` 内容的任意新文件。可以通过 [`this.setAssetSource(referenceId, source)`](#this-setassetsource) 推迟设置 `source` 到稍后的时间，以便在生成阶段期间能够引用文件，同时为每个输出单独设置源。具有指定 `fileName` 的资源将始终生成单独的文件，而其他发出的资源可能会与现有资源进行去重，即使 `name` 不匹配，但它们具有相同的源。如果没有 `fileName` 的资源没有被去重，则将使用 [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) 名称模式。如果将 `needsCodeReference` 设置为 `true` ，并且此资源在输出中没有被任何代码引用，即没有通过 `import.meta.ROLLUP_FILE_URL_referenceId` 引用，则 Rollup 将不会发出它。这也尊重通过树摇除去的引用，即如果相应的 `import.meta.ROLLUP_FILE_URL_referenceId` 是源代码的一部分，但实际上没有使用并且引用被除屑优化除去，则不会发出该资源。
+如果 `type` 是 _`asset`_，则会发出一个具有给定 `source` 内容的任意新文件。可以通过 [`this.setAssetSource(referenceId, source)`](#this-setassetsource) 推迟设置 `source` 到稍后的时间，以便在生成阶段期间能够引用文件，同时为每个输出单独设置源。具有指定 `fileName` 的资源将始终生成单独的文件，而其他发出的资源可能会与现有资源进行去重，即使 `name` 不匹配，但它们具有相同的源。如果没有 `fileName` 的资源没有被去重，则将使用 [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) 名称模式。如果将 `needsCodeReference` 设置为 `true` ，并且此资源在输出中没有被任何代码引用，即没有通过 `import.meta.ROLLUP_FILE_URL_referenceId` 引用，则 Rollup 将不会发出它。这也尊重通过除屑优化除去的引用，即如果相应的 `import.meta.ROLLUP_FILE_URL_referenceId` 是源代码的一部分，但实际上没有使用并且引用被除屑优化除去，则不会发出该资源。
 
 ### this.error
 
@@ -1294,7 +1294,7 @@ interface ModuleInfo {
 	hasDefaultExport: boolean | null; // 是否有默认导出，如果是外部模块或尚未可用，则为 `null`
 	isEntry: boolean; // 是否为用户或插件定义的入口点
 	isExternal: boolean; // 对于被引用但未包含在图形中的外部模块
-	isIncluded: boolean | null; // 是否在树摇后包含模块，如果是外部模块或尚未可用，则为 `null`
+	isIncluded: boolean | null; // 是否除屑优化后包含模块，如果是外部模块或尚未可用，则为 `null`
 	importedIds: string[]; // 由此模块静态导入的模块 ID
 	importedIdResolutions: ResolvedId[]; // 静态导入 ID 的解析方式，用于 this.load
 	importers: string[]; // 静态导入此模块的所有模块的 ID
@@ -1316,7 +1316,7 @@ interface ResolvedId {
 	external: boolean | 'absolute'; // 此模块是否为外部模块，“absolute”表示它不会在模块中呈现为相对路径
 	assertions: { [key: string]: string }; // 此导入的导入断言
 	meta: { [plugin: string]: any }; // 解析模块时的自定义模块元数据
-	moduleSideEffects: boolean | 'no-treeshake'; // 是否观察到模块的副作用，是否启用了树摇
+	moduleSideEffects: boolean | 'no-treeshake'; // 是否观察到模块的副作用，是否启用了除屑优化
 	resolvedBy: string; // 哪个插件解析了此模块，如果由 Rollup 自身解析，则为“rollup”
 	syntheticNamedExports: boolean | string; // 模块是否允许导入不存在的命名导出
 }

@@ -6,13 +6,13 @@ title: 故障排除
 
 [[toc]]
 
-如果您遇到困难，请尝试在 [Rollup Discord](https://is.gd/rollup_chat) 上讨论该问题或将问题发布到 [Stackoverflow](https://stackoverflow.com/questions/tagged/rollupjs). 如果您发现了 bug，或者 Rollup 不能满足你的需求，可以尝试提 [issue](https://github.com/rollup/rollup/issues)。最后，您可以尝试在 Twitter 上联系 [@RollupJS](https://twitter.com/RollupJS) 。
+如果你遇到困难，请尝试在 [Rollup Discord](https://is.gd/rollup_chat) 上讨论该问题或将问题发布到 [Stackoverflow](https://stackoverflow.com/questions/tagged/rollupjs). 如果你发现了 bug，或者 Rollup 不能满足你的需求，可以尝试提 [issue](https://github.com/rollup/rollup/issues)。最后，你可以尝试在 Twitter 上联系 [@RollupJS](https://twitter.com/RollupJS) 。
 
 ## 避免使用 `eval` {#avoiding-eval}
 
-您可能已经了解到在某些人看来“`eval` 是邪恶的”。但它对 Rollup 尤其有害，因为它的工作方式——不像其他将每个模块包装在函数中的模块打包器，Rollup 将所有代码放在同一个作用域内。
+你可能已经了解到在某些人看来“`eval` 是邪恶的”。但它对 Rollup 尤其有害，因为它的工作方式——不像其他将每个模块包装在函数中的模块打包器，Rollup 将所有代码放在同一个作用域内。
 
-虽然这样效率更高，但这意味着在您使用 eval 时共享作用域将被“污染”，而使用其他打包器时，未使用 eval 的模块不会被污染。压缩工具不能破坏污染代码中的变量名，因为它不能保证要评估的代码不引用这些变量名。
+虽然这样效率更高，但这意味着在你使用 eval 时共享作用域将被“污染”，而使用其他打包器时，未使用 eval 的模块不会被污染。压缩工具不能破坏污染代码中的变量名，因为它不能保证要评估的代码不引用这些变量名。
 
 此外，**它还会带来安全风险**，因为恶意模块可能通过 `eval('SUPER_SEKRIT')` 访问另一个模块的私有变量。
 
