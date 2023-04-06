@@ -122,7 +122,7 @@ rollup -c
 rollup -c -o bundle-2.js # `-o` 等价于 `--file`（曾用名为 "output"）
 ```
 
-_注意：Rollup 本身会处理配置文件，这就是为什么我们可以使用 `export default` 语法的原因 –  代码没有被 Babel 或任何类似的工具转换，因此你只能使用在你当前使用的 Node 版本中支持的 ES2015 功能。_
+_注意：Rollup 本身会处理配置文件，这就是为什么我们可以使用 `export default` 语法的原因 – 代码没有被 Babel 或任何类似的工具转换，因此你只能使用在你当前使用的 Node 版本中支持的 ES2015 功能。_
 
 你也可以选择指定不同于默认的 `rollup.config.js` 的配置文件：
 
@@ -240,11 +240,11 @@ function main() {
 module.exports = main;
 ```
 
-_注意：结果中只导入了我们实际需要的数据 ——`name`、`devDependencies` 和 `package.json` 中其他内容都被忽略了。这就是**除屑优化**的作用。_
+_注意：结果中只导入了我们实际需要的数据 ——`name`、`devDependencies` 和 `package.json` 中其他内容都被忽略了。这就是 **除屑优化** 的作用。_
 
 ## 使用输出插件 {#using-output-plugins}
 
-某些插件也可以专门应用于某些输出. 有关特定输出插件可以做什么的详细信息，请参见[插件钩子](../plugin-development/index.md#build-hooks)。简而言之，这些插件只能在 Rollup 的主要分析完成后修改代码。如果使用不兼容的插件作为特定输出插件，Rollup 将会发出警告。一个可能的用例是压缩产物以在浏览器中使用。
+某些插件也可以专门应用于某些输出. 有关特定输出插件可以做什么的详细信息，请参见 [插件钩子](../plugin-development/index.md#build-hooks)。简而言之，这些插件只能在 Rollup 的主要分析完成后修改代码。如果使用不兼容的插件作为特定输出插件，Rollup 将会发出警告。一个可能的用例是压缩产物以在浏览器中使用。
 
 让我们扩展上一个示例，提供一个最小化的构建和一个非最小化的构建。为此，我们需要安装 `@rollup/plugin-terser`：
 

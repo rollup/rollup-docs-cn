@@ -16,11 +16,11 @@ Rollup 是一个用于 JavaScript 的模块打包工具，它将小的代码片�
 npm install --global rollup
 ```
 
-这将使 Rollup 可以作为全局命令行工具使用。您也可以在本地安装它，请参阅[在本地安装 Rollup](../tutorial/index.md#installing-rollup-locally)。
+这将使 Rollup 可以作为全局命令行工具使用。您也可以在本地安装它，请参阅 [在本地安装 Rollup](../tutorial/index.md#installing-rollup-locally)。
 
 ## 快速开始 {#quick-start}
 
-可以通过带有可选配置文件的[命令行界面](../command-line-interface/index.md)或 [JavaScript API](../javascript-api/index.md) 来使用 Rollup。运行`rollup --help`以查看可用选项和参数。
+可以通过带有可选配置文件的 [命令行界面](../command-line-interface/index.md) 或 [JavaScript API](../javascript-api/index.md) 来使用 Rollup。运行`rollup --help`以查看可用选项和参数。
 
 > 参见 [rollup-starter-lib](https://github.com/rollup/rollup-starter-lib) 和 [rollup-starter-app](https://github.com/rollup/rollup-starter-app)，以查看使用 Rollup 的示例库和应用程序项目。
 
@@ -49,7 +49,7 @@ rollup main.js --file bundle.js --format umd --name "myBundle"
 
 ## 背景 {#the-why}
 
-将项目分解为较小的独立部分通常可以使软件开发更加容易，因为这通常可以消除意外的交互，并大大减少您需要解决的问题的复杂性，而仅仅是首先编写较小的项目[并不一定是最好的方式](https://medium.com/@Rich_Harris/small-modules-it-s-not-quite-that-simple-3ca532d65de4)。不幸的是，JavaScript 在历史上并没有将这种能力作为语言的核心特性之一。这在 ES6 版本的 JavaScript 中得到了改变，该版本包括一种语法，用于导入和导出函数和数据，以便它们可以在单独的脚本之间共享。
+将项目分解为较小的独立部分通常可以使软件开发更加容易，因为这通常可以消除意外的交互，并大大减少您需要解决的问题的复杂性，而仅仅是首先编写较小的项目 [并不一定是最好的方式](https://medium.com/@Rich_Harris/small-modules-it-s-not-quite-that-simple-3ca532d65de4)。不幸的是，JavaScript 在历史上并没有将这种能力作为语言的核心特性之一。这在 ES6 版本的 JavaScript 中得到了改变，该版本包括一种语法，用于导入和导出函数和数据，以便它们可以在单独的脚本之间共享。
 
 该规范现在已经稳定，但仅在现代浏览器中实现，并未在 Node.js 中完全落地。Rollup 允许您使用新的模块系统编写代码，然后将其编译回现有的支持格式，例如 CommonJS 模块、AMD 模块和 IIFE 样式脚本。这意味着您可以编写 _对未来兼容_ 的代码，并且还可以获得以下几点收益……
 
@@ -83,8 +83,8 @@ ajax(`https://api.example.com?search=${query}`).then(handleResponse);
 
 ### 导入 CommonJS {#importing-commonjs}
 
-Rollup 可以通过插件[导入现有的 CommonJS 模块](https://github.com/rollup/plugins/tree/master/packages/commonjs)。
+Rollup 可以通过插件 [导入现有的 CommonJS 模块](https://github.com/rollup/plugins/tree/master/packages/commonjs)。
 
 ### 发布 ES 模块 {#publishing-es-modules}
 
-为了确保您的 ES 模块可以立即被处理 CommonJS 的工具，例如 Node.js 和 webpack 使用，您可以使用 Rollup 编译成 UMD 或 CommonJS 格式，然后在 `package.json` 文件中使用 `main` 属性指向编译后的版本。如果您的 `package.json` 文件还有一个 `module` 字段，那么像 Rollup 和 [webpack 2+](https://webpack.js.org/) 这样的可感知 ES 模块的工具将直接[导入 ES 模块版本](https://github.com/rollup/rollup/wiki/pkg.module)。
+为了确保您的 ES 模块可以立即被处理 CommonJS 的工具，例如 Node.js 和 webpack 使用，您可以使用 Rollup 编译成 UMD 或 CommonJS 格式，然后在 `package.json` 文件中使用 `main` 属性指向编译后的版本。如果您的 `package.json` 文件还有一个 `module` 字段，那么像 Rollup 和 [webpack 2+](https://webpack.js.org/) 这样的可感知 ES 模块的工具将直接 [导入 ES 模块版本](https://github.com/rollup/rollup/wiki/pkg.module)。

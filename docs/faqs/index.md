@@ -26,7 +26,7 @@ Rollup 力求实现 ES 模块的规范，而不是 Node.js、NPM、`require()` �
 
 2. 在实际层面上，如果这些问题有一个良好的 API 可以清晰地分离，那么开发软件就会更加容易。Rollup 的核心非常庞大，一切可以阻止其变得更大的东西都是好事。同时，修复错误和添加功能也更容易。通过保持 Rollup 精简，技术债务的潜在风险很小。
 
-请参见[此问题](https://github.com/rollup/rollup/issues/1555#issuecomment-322862209)以获得更详细的解释。
+请参见 [此问题](https://github.com/rollup/rollup/issues/1555#issuecomment-322862209) 以获得更详细的解释。
 
 ## 为什么在代码分割时我的入口块中会出现额外的导入？ {#why-do-additional-imports-turn-up-in-my-entry-chunks-when-code-splitting}
 
@@ -100,7 +100,7 @@ console.log('main');
 但是，这对于 polyfill 来说是一个问题，因为它们通常需要首先执行，同时又通常不希望在每个模块中都放置一个 polyfill 的导入。幸运的是，这并不是必需的：
 
 1. 如果没有依赖于 polyfill 的外部依赖项，则在每个静态入口点的第一个语句中添加对 polyfill 的导入即可。
-2. 否则，将 polyfill 作为单独的入口或[手动添加的块](../configuration-options/index.md#output-manualchunks)也会始终确保它首先被执行。
+2. 否则，将 polyfill 作为单独的入口或 [手动添加的块](../configuration-options/index.md#output-manualchunks) 也会始终确保它首先被执行。
 
 ## Rollup 适用于构建库还是应用程序？ {#is-rollup-meant-for-building-libraries-or-applications}
 

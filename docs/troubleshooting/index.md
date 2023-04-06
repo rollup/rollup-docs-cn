@@ -122,4 +122,4 @@ node --max-old-space-size=8192 node_modules/rollup/dist/bin/rollup -c
 
 ## Error: Node tried to load your configuration file as CommonJS even though it is likely an ES module {#error-node-tried-to-load-your-configuration-file-as-commonjs-even-though-it-is-likely-an-es-module}
 
-默认情况下，Rollup 会使用 Node 原生的模块机制来加载你的 Rollup 配置。这意味着如果你在配置中使用 ES imports 和 exports，你要么需要在 `package. js` 中定义 `"type": "module"`，或者为你的配置文件使用 `.mjs` 后缀。更多信息请参见[配置文件](../command-line-interface/index.md#configuration-files) 和[使用原生 Node ES 模块时的注意事项](../command-line-interface/index.md#caveats-when-using-native-node-es-modules)。
+默认情况下，Rollup 会使用 Node 原生的模块机制来加载你的 Rollup 配置。这意味着如果你在配置中使用 ES imports 和 exports，你要么需要在 `package. js` 中定义 `"type": "module"`，或者为你的配置文件使用 `.mjs` 后缀。更多信息请参见 [配置文件](../command-line-interface/index.md#configuration-files) 和 [使用原生 Node ES 模块时的注意事项](../command-line-interface/index.md#caveats-when-using-native-node-es-modules)。

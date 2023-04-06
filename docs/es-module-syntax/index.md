@@ -56,7 +56,7 @@ import './module.js';
 
 ### 动态导入 {#dynamic-import}
 
-使用[动态导入 API](https://github.com/tc39/proposal-dynamic-import#import) 导入模块。
+使用 [动态导入 API](https://github.com/tc39/proposal-dynamic-import#import) 导入模块。
 
 ```js
 import('./modules.js').then(({ default: DefaultExport, NamedExport }) => {

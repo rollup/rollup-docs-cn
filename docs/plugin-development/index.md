@@ -8,11 +8,11 @@ title: 插件开发
 
 ## 插件概述 {#plugins-overview}
 
-Rollup 插件是一个对象，具有[属性](#properties)、[构建钩子](#build-hooks)和[输出生成钩子](#output-generation-hooks)中的一个或多个，并遵循我们的[约定](#conventions)。插件应作为一个导出一个函数的包进行发布，该函数可以使用插件特定的选项进行调用并返回此类对象。
+Rollup 插件是一个对象，具有 [属性](#properties)、[构建钩子](#build-hooks) 和 [输出生成钩子](#output-generation-hooks) 中的一个或多个，并遵循我们的 [约定](#conventions)。插件应作为一个导出一个函数的包进行发布，该函数可以使用插件特定的选项进行调用并返回此类对象。
 
-插件允许你通过例如在打包之前进行转译代码或在`node_modules`文件夹中查找第三方模块来自定义 Rollup 的行为。有关如何使用它们的示例，请参见[使用插件](../tutorial/index.md#using-plugins)。
+插件允许你通过例如在打包之前进行转译代码或在`node_modules`文件夹中查找第三方模块来自定义 Rollup 的行为。有关如何使用它们的示例，请参见 [使用插件](../tutorial/index.md#using-plugins)。
 
-插件列表可以在[github.com/rollup/awesome](https://github.com/rollup/awesome)上找到。如果你想建议一个插件，请提交一个 Pull Request。
+插件列表可以在 [github.com/rollup/awesome](https://github.com/rollup/awesome) 上找到。如果你想建议一个插件，请提交一个 Pull Request。
 
 ## 一个简单的示例 {#a-simple-example}
 
@@ -254,7 +254,7 @@ flowchart TB
 
 此外，在监视模式下，[`watchChange`](#watchchange) 钩子可以在任何时候触发，以通知当前运行生成输出后将触发新的运行。另外，当监视器关闭时，[`closeWatcher`](#closewatcher) 钩子将被触发。
 
-有关在输出生成阶段运行以修改生成的输出的钩子，请参见[输出生成钩子](#output-generation-hooks)。
+有关在输出生成阶段运行以修改生成的输出的钩子，请参见 [输出生成钩子](#output-generation-hooks)。
 
 ### buildEnd
 
@@ -311,15 +311,15 @@ interface SourceDescription {
 }
 ```
 
-定义自定义加载器。返回 `null` 将延迟到其他 `load` 函数（最终默认从文件系统加载）。为了避免额外的解析开销，例如由于某些原因该钩子已经使用 `this.parse` 生成 AST，该钩子可以选择返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个具有每个节点的 `start` 和 `end` 属性的标准 ESTree AST。如果转换不移动代码，则可以通过将 `map` 设置为 `null` 来保留现有的源码映射。否则，你可能需要生成源映射。有关[源代码转换](#source-code-transformations) 的详细信息，请参见该部分。
+定义自定义加载器。返回 `null` 将延迟到其他 `load` 函数（最终默认从文件系统加载）。为了避免额外的解析开销，例如由于某些原因该钩子已经使用 `this.parse` 生成 AST，该钩子可以选择返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个具有每个节点的 `start` 和 `end` 属性的标准 ESTree AST。如果转换不移动代码，则可以通过将 `map` 设置为 `null` 来保留现有的源码映射。否则，你可能需要生成源映射。有关 [源代码转换](#source-code-transformations) 的详细信息，请参见该部分。
 
 如果 `moduleSideEffects` 返回 `false`，并且没有其他模块从该模块导入任何内容，则即使该模块具有副作用，该模块也不会包含在产物中。如果返回 `true`，则 Rollup 将使用其默认算法包含模块中具有副作用的所有语句（例如修改全局或导出变量）。如果返回 `"no-treeshake"`，则将关闭此模块的除屑优化，并且即使该模块为空，也将在生成的块之一中包含它。如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由第一个解析此模块的 `resolveId` 钩子，[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `true` 确定。`transform` 钩子可以覆盖此设置。
 
 `assertions` 包含导入此模块时使用的导入断言。目前，它们不会影响产物模块的呈现，而是用于文档目的。如果返回 `null` 或省略标志，则 `assertions` 将由第一个解析此模块的 `resolveId` 钩子或此模块的第一个导入中存在的断言确定。`transform` 钩子可以覆盖此设置。
 
-有关 `syntheticNamedExports` 选项的影响，请参见[合成命名导出](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将由第一个解析此模块的 `resolveId` 钩子确定，或者最终默认为 `false`。`transform` 钩子可以覆盖此设置。
+有关 `syntheticNamedExports` 选项的影响，请参见 [合成命名导出](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将由第一个解析此模块的 `resolveId` 钩子确定，或者最终默认为 `false`。`transform` 钩子可以覆盖此设置。
 
-有关如何使用 `meta` 选项的[自定义模块元数据](#custom-module-meta-data)。如果此钩子返回 `meta` 对象，则该对象将与 `resolveId` 钩子返回的任何 `meta` 对象浅合并。如果没有钩子返回 `meta` 对象，则默认为一个空对象。`transform` 钩子可以进一步添加或替换该对象的属性。
+有关如何使用 `meta` 选项的 [自定义模块元数据](#custom-module-meta-data)。如果此钩子返回 `meta` 对象，则该对象将与 `resolveId` 钩子返回的任何 `meta` 对象浅合并。如果没有钩子返回 `meta` 对象，则默认为一个空对象。`transform` 钩子可以进一步添加或替换该对象的属性。
 
 你可以使用 [`this.getModuleInfo`](#this-getmoduleinfo) 在此钩子中查找 `assertions`、`meta`、`moduleSideEffects` 和 `syntheticNamedExports` 的先前值。
 
@@ -349,7 +349,7 @@ interface SourceDescription {
 
 替换或操作传递给 `rollup.rollup` 的选项对象。返回 `null` 不会替换任何内容。如果只需要读取选项，则建议使用 [`buildStart`](#buildstart) 钩子，因为该钩子可以访问所有 `options` 钩子的转换考虑后的选项。
 
-这是唯一一个没有访问大多数[插件上下文](#plugin-context)实用函数的钩子，因为它在 Rollup 完全配置之前运行。
+这是唯一一个没有访问大多数 [插件上下文](#plugin-context) 实用函数的钩子，因为它在 Rollup 完全配置之前运行。
 
 ### resolveDynamicImport
 
@@ -596,7 +596,7 @@ interface SourceDescription {
 }
 ```
 
-可用于转换单个模块。为了避免额外的解析开销，例如此钩子已经使用 `this.parse` 生成了 AST，此钩子可以选择性地返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个标准的 ESTree AST，每个节点都有 `start` 和 `end` 属性。如果转换不移动代码，则可以通过将 `map` 设置为 `null` 来保留现有的源映射。否则，你可能需要生成源映射。请参见[源代码转换](#source-code-transformations)一节。
+可用于转换单个模块。为了避免额外的解析开销，例如此钩子已经使用 `this.parse` 生成了 AST，此钩子可以选择性地返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个标准的 ESTree AST，每个节点都有 `start` 和 `end` 属性。如果转换不移动代码，则可以通过将 `map` 设置为 `null` 来保留现有的源映射。否则，你可能需要生成源映射。请参见 [源代码转换](#source-code-transformations) 一节。
 
 请注意，在观察模式下或明确使用缓存时，当重新构建时，此钩子的结果会被缓存，仅当模块的 `code` 发生更改或上次触发此钩子时添加了通过 `this.addWatchFile` 添加的文件时，才会再次触发该模块的钩子。
 
@@ -614,9 +614,9 @@ interface SourceDescription {
 
 `assertions` 包含导入此模块时使用的导入断言。目前，它们不会影响产物模块的呈现，而是用于文档目的。如果返回 `null` 或省略标志，则 `assertions` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子或此模块的第一个导入中存在的断言确定。
 
-有关 `syntheticNamedExports` 选项的影响，请参见[合成命名导出](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子、[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `false` 确定。
+有关 `syntheticNamedExports` 选项的影响，请参见 [合成命名导出](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子、[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `false` 确定。
 
-有关如何使用 `meta` 选项，请参见[自定义模块元数据](#custom-module-meta-data)。如果返回 `null` 或省略选项，则 `meta` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子或最终默认为空对象确定。
+有关如何使用 `meta` 选项，请参见 [自定义模块元数据](#custom-module-meta-data)。如果返回 `null` 或省略选项，则 `meta` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子或最终默认为空对象确定。
 
 你可以使用 [`this.getModuleInfo`](#this-getmoduleinfo) 在此钩子中查找 `assertions`、`meta`、`moduleSideEffects` 和 `syntheticNamedExports` 的先前值。
 
@@ -632,7 +632,7 @@ interface SourceDescription {
 
 ## 输出生成钩子 {#output-generation-hooks}
 
-输出生成钩子可以提供有关生成的产物的信息并在构建完成后修改构建。它们的工作方式和类型与[构建钩子](#build-hooks)相同，但是对于每个调用 `bundle.generate(outputOptions)` 或 `bundle.write(outputOptions)`，它们都会单独调用。仅使用输出生成钩子的插件也可以通过输出选项传递，并且因此仅针对某些输出运行。
+输出生成钩子可以提供有关生成的产物的信息并在构建完成后修改构建。它们的工作方式和类型与 [构建钩子](#build-hooks) 相同，但是对于每个调用 `bundle.generate(outputOptions)` 或 `bundle.write(outputOptions)`，它们都会单独调用。仅使用输出生成钩子的插件也可以通过输出选项传递，并且因此仅针对某些输出运行。
 
 输出生成阶段的第一个钩子是 [`outputOptions`](#outputoptions)，最后一个钩子是 [`generateBundle`](#generatebundle)（如果通过 `bundle.generate(...)` 成功生成输出），[`writeBundle`](#writebundle)（如果通过 `bundle.write(...)` 成功生成输出），或 [`renderError`](#rendererror)（如果在输出生成期间的任何时候发生错误）。
 
@@ -929,7 +929,7 @@ type RenderChunkHook = (
 ) => { code: string; map?: SourceMapInput } | string | null;
 ```
 
-可以用于转换单个块。对于每个 Rollup 输出块文件都会调用此函数。返回 `null` 将不应用任何转换。如果你在此钩子中更改了代码并希望支持源映射，则需要返回一个描述更改的`map`，请参见[源代码转换](#source-code-transformations)部分。
+可以用于转换单个块。对于每个 Rollup 输出块文件都会调用此函数。返回 `null` 将不应用任何转换。如果你在此钩子中更改了代码并希望支持源映射，则需要返回一个描述更改的`map`，请参见 [源代码转换](#source-code-transformations) 部分。
 
 `chunk` 包含有关块的其他信息，使用与 [`generateBundle`](#generatebundle) 钩子相同的 `ChunkInfo` 类型，但有以下区别：
 
@@ -984,7 +984,7 @@ import('./lib.js');
 dynamicImportPolyfill('./lib.js', import.meta.url);
 ```
 
-下一个插件将确保所有 `esm-lib` 的动态导入都被标记为外部模块，并保留为导入表达式，以便允许 CommonJS 构建在 Node 13+中导入 ES 模块，参见 Node 文档中的[从 CommonJS 导入 ES 模块](https://nodejs.org/api/esm.html#esm_import_expressions)。
+下一个插件将确保所有 `esm-lib` 的动态导入都被标记为外部模块，并保留为导入表达式，以便允许 CommonJS 构建在 Node 13+中导入 ES 模块，参见 Node 文档中的 [从 CommonJS 导入 ES 模块](https://nodejs.org/api/esm.html#esm_import_expressions)。
 
 ```js
 function retainImportExpressionPlugin() {
@@ -1238,7 +1238,7 @@ export default {
 
 请注意，即使在 `implicitlyLoadedAfterOneOf` 中可以使用任何模块 ID，如果这样的 ID 不能与块唯一关联，例如因为 `id` 不能从现有的静态入口点隐式或显式地到达，或者因为文件被完全剪枝，Rollup 也会抛出错误。只使用入口点，无论是用户定义的还是先前发出的块，都将始终起作用。
 
-如果 `type` 是 _`asset`_ ，则会发出一个具有给定 `source` 内容的任意新文件。可以通过 [`this.setAssetSource(referenceId, source)`](#this-setassetsource) 推迟设置 `source` 到稍后的时间，以便在生成阶段期间能够引用文件，同时为每个输出单独设置源。具有指定 `fileName` 的资源将始终生成单独的文件，而其他发出的资源可能会与现有资源进行去重，即使 `name` 不匹配，但它们具有相同的源。如果没有 `fileName` 的资源没有被去重，则将使用 [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) 名称模式。如果将 `needsCodeReference` 设置为 `true` ，并且此资源在输出中没有被任何代码引用，即没有通过 `import.meta.ROLLUP_FILE_URL_referenceId` 引用，则 Rollup 将不会发出它。这也尊重通过树摇除去的引用，即如果相应的 `import.meta.ROLLUP_FILE_URL_referenceId` 是源代码的一部分，但实际上没有使用并且引用被除屑优化除去，则不会发出该资源。
+如果 `type` 是 _`asset`_，则会发出一个具有给定 `source` 内容的任意新文件。可以通过 [`this.setAssetSource(referenceId, source)`](#this-setassetsource) 推迟设置 `source` 到稍后的时间，以便在生成阶段期间能够引用文件，同时为每个输出单独设置源。具有指定 `fileName` 的资源将始终生成单独的文件，而其他发出的资源可能会与现有资源进行去重，即使 `name` 不匹配，但它们具有相同的源。如果没有 `fileName` 的资源没有被去重，则将使用 [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) 名称模式。如果将 `needsCodeReference` 设置为 `true` ，并且此资源在输出中没有被任何代码引用，即没有通过 `import.meta.ROLLUP_FILE_URL_referenceId` 引用，则 Rollup 将不会发出它。这也尊重通过树摇除去的引用，即如果相应的 `import.meta.ROLLUP_FILE_URL_referenceId` 是源代码的一部分，但实际上没有使用并且引用被除屑优化除去，则不会发出该资源。
 
 ### this.error
 
@@ -1545,7 +1545,7 @@ type Resolve = (
 
 如果传递 `skipSelf: true`，则在解析时将跳过从中调用 `this.resolve` 的插件的 `resolveId` 钩子。当其他插件在处理原始 `this.resolve` 调用时，使用 _完全相同的 `source` 和 `importer`_ 在其 `resolveId` 钩子中也调用 `this.resolve` 时，原始插件的 `resolveId` 钩子也将跳过这些调用。这里的理由是插件已经声明在此时点它“不知道”如何解析这个特定的 `source` 和 `importer` 组合。如果你不想要这种行为，请不要使用 `skipSelf`，但如果必要，可以实现自己的无限循环预防机制。
 
-你还可以通过 `custom` 选项传递插件特定选项的对象，有关详细信息，请参见[自定义解析器选项](#custom-resolver-options)。
+你还可以通过 `custom` 选项传递插件特定选项的对象，有关详细信息，请参见 [自定义解析器选项](#custom-resolver-options)。
 
 你在这里传递的 `isEntry` 值将传递给处理此调用的 [`resolveId`](#resolveid) 钩子，否则如果有导入器，则传递 `false`，如果没有，则传递 `true`。
 

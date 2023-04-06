@@ -187,7 +187,7 @@ rollup "main entry"="src/entry 1.js" "src/other entry.js" --format es
 - `amd` – 异步模块加载，适用于 RequireJS 等模块加载器
 - `cjs` – CommonJS，适用于 Node 环境和其他打包工具（别名：`commonjs`）
 - `es` – 将 bundle 保留为 ES 模块文件，适用于其他打包工具，以及支持 `<script type=module>` 标签的浏览器。（别名：`esm`，`module`）
-- `iife` – 自执行函数，适用于 `<script>` 标签（如果你想为你的应用程序创建 bundle，那么你可能会使用它）。`iife` 表示“自执行[函数表达式](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/function)”
+- `iife` – 自执行函数，适用于 `<script>` 标签（如果你想为你的应用程序创建 bundle，那么你可能会使用它）。`iife` 表示“自执行 [函数表达式](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/function)”
 - `umd` – 通用模块定义规范，同时支持 `amd`，`cjs` 和 `iife`
 - `system` – SystemJS 模块加载器的原生格式（别名：`systemjs`）
 
@@ -301,9 +301,9 @@ this.a.b.c = ...
 | -----: | :----------------------------------------------- |
 | 类型： | `MaybeArray<MaybePromise<OutputPlugin \| void>>` |
 
-该选项用于指定输出插件。关于如何使用特定输出的插件，请查看[使用输出插件](../tutorial/index.md#using-output-plugins)，关于如何编写自己的插件，请查看[插件](../plugin-development/index.md)。对于从包中引入的插件，记得要调用引入的插件函数（即调用 `commonjs()`，而不仅仅是 `commonjs`）。返回值为假的插件将被忽略，这样可以用来灵活启用或禁用插件。嵌套的插件将扁平化。异步插件将等待和被解决。
+该选项用于指定输出插件。关于如何使用特定输出的插件，请查看 [使用输出插件](../tutorial/index.md#using-output-plugins)，关于如何编写自己的插件，请查看  [插件](../plugin-development/index.md)。对于从包中引入的插件，记得要调用引入的插件函数（即调用 `commonjs()`，而不仅仅是 `commonjs`）。返回值为假的插件将被忽略，这样可以用来灵活启用或禁用插件。嵌套的插件将扁平化。异步插件将等待和被解决。
 
-并非所有的插件都可以通过该选项使用。`output.plugins` 仅限于在 `bundle.generate()` 或 `bundle.write()` 阶段，即在 Rollup 的主要分析完成后运行钩子的插件才可使用。如果你是一个插件作者，请查看[输出生成钩子](../plugin-development/index.md#output-generation-hooks) 章节以了解哪些钩子可以使用。
+并非所有的插件都可以通过该选项使用。`output.plugins` 仅限于在 `bundle.generate()` 或 `bundle.write()` 阶段，即在 Rollup 的主要分析完成后运行钩子的插件才可使用。如果你是一个插件作者，请查看 [输出生成钩子](../plugin-development/index.md#output-generation-hooks) 章节以了解哪些钩子可以使用。
 
 以下是一个使用压缩插件作用于其中一个输出的例子：
 
@@ -333,7 +333,7 @@ export default {
 | -----: | :----------------------------------------- |
 | 类型： | `MaybeArray<MaybePromise<Plugin \| void>>` |
 
-关于如何使用插件的更多信息，请查看[使用插件](../tutorial/index.md#using-plugins)章节，关于如何编写你自己的插件，请查看[插件](../plugin-development/index.md)章节（试试看吧，它并不像听起来那么困难，你可以通过 Rollup 插件做很多拓展）。对于从包中引入的插件，记住要调用引入的插件函数（即调用 `commonjs()`，而不仅仅是 `commonjs`）。返回值为假的插件将被忽略，这样可以用来灵活启用或禁用插件。嵌套的插件将扁平化。异步插件将等待和被解决。
+关于如何使用插件的更多信息，请查看 [使用插件](../tutorial/index.md#using-plugins)章节，关于如何编写你自己的插件，请查看 [插件](../plugin-development/index.md)章节（试试看吧，它并不像听起来那么困难，你可以通过 Rollup 插件做很多拓展）。对于从包中引入的插件，记住要调用引入的插件函数（即调用 `commonjs()`，而不仅仅是 `commonjs`）。返回值为假的插件将被忽略，这样可以用来灵活启用或禁用插件。嵌套的插件将扁平化。异步插件将等待和被解决。
 
 ```js
 // rollup.config.js
@@ -652,7 +652,7 @@ Promise.resolve()
 | CLI： | `--generatedCode.arrowFunctions`/`--no-generatedCode.arrowFunctions` |
 | 默认： | `false` |
 
-该选项表示是否为自动生成的代码片段使用箭头函数。请注意，在某些地方，比如模块封装器，Rollup 会继续生成用小括号封装的常规函数，因为在一些 JavaScript 引擎中，这些函数会提供[明显更好的性能](https://v8.dev/blog/preparser#pife)。
+该选项表示是否为自动生成的代码片段使用箭头函数。请注意，在某些地方，比如模块封装器，Rollup 会继续生成用小括号封装的常规函数，因为在一些 JavaScript 引擎中，这些函数会提供 [明显更好的性能](https://v8.dev/blog/preparser#pife)。
 
 #### output.generatedCode.constBindings {#output-generatedcode-constbindings}
 
@@ -1263,7 +1263,7 @@ console.log(importantValue);
 | -----: | :----------------------------------------------------- |
 | 类型： | `{ [id: string]: string } \| ((id: string) => string)` |
 
-该选项用于将外部依赖 ID 映射为路径。其中，外部依赖 ID 是指该选项[无法解析](../troubleshooting/index.md#warning-treating-module-as-external-dependency)的模块或者通过 [`external`](#external) 选项明确指定的模块。`output.paths` 提供的路径会取代模块 ID，在生成的 bundle 中使用，比如你可以从 CDN 中加载依赖：
+该选项用于将外部依赖 ID 映射为路径。其中，外部依赖 ID 是指该选项 [无法解析](../troubleshooting/index.md#warning-treating-module-as-external-dependency) 的模块或者通过 [`external`](#external) 选项明确指定的模块。`output.paths` 提供的路径会取代模块 ID，在生成的 bundle 中使用，比如你可以从 CDN 中加载依赖：
 
 ```js
 // app.js
@@ -1371,7 +1371,7 @@ export default {
 
 `preserveModulesRoot` 设置确保输入的模块会输出到 `dist/module.js` 和 `dist/another/module.js` 路径。
 
-在使用 `@rollup/plugin-node-resolve` 等插件时，这个选项特别有用，它可能导致输出目录结构的变化。当第三方模块没有标记为 [`external`](#external) 时，或者在 monorepo 中多个包相互依赖时，没有标记为[`external`](#external)，都可能发生这种情况。
+在使用 `@rollup/plugin-node-resolve` 等插件时，这个选项特别有用，它可能导致输出目录结构的变化。当第三方模块没有标记为 [`external`](#external) 时，或者在 monorepo 中多个包相互依赖时，没有标记为 [`external`](#external)，都可能发生这种情况。
 
 ### output.sourcemap {#output-sourcemap}
 
@@ -2517,7 +2517,7 @@ _请使用 [`renderDynamicImport`](../plugin-development/index.md#renderdynamici
 |  CLI： | `--dynamicImportFunction <name>` |
 | 默认： | `import`                         |
 
-当输出为 ES bundle 时，该选项将会把动态引入函数重命名为该选项指定的名称。这对于使用了动态引入 polyfill 的代码非常有用，比如[这个库](https://github.com/uupaa/dynamic-import-polyfill)。
+当输出为 ES bundle 时，该选项将会把动态引入函数重命名为该选项指定的名称。这对于使用了动态引入 polyfill 的代码非常有用，比如 [这个库](https://github.com/uupaa/dynamic-import-polyfill)。
 
 ### output.experimentalDeepDynamicChunkOptimization {#output-experimentaldeepdynamicchunkoptimization}
 

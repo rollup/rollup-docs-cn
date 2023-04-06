@@ -106,7 +106,7 @@ async function generateOutputs(bundle) {
 
 ### inputOptions 对象 {#inputoptions-object}
 
-`inputOptions` 对象可以包含以下属性（有关详细信息，请参见[选项大全](../configuration-options/index.md)）：
+`inputOptions` 对象可以包含以下属性（有关详细信息，请参见 [选项大全](../configuration-options/index.md)）：
 
 ```js
 const inputOptions = {
@@ -138,7 +138,7 @@ const inputOptions = {
 
 ### outputOptions 对象 {#outputoptions-object}
 
-`outputOptions` 对象可以包含以下属性（有关详细信息，请参见[选项大全](../configuration-options/index.md)）：
+`outputOptions` 对象可以包含以下属性（有关详细信息，请参见 [选项大全](../configuration-options/index.md)）：
 
 ```js
 const outputOptions = {
@@ -267,7 +267,7 @@ const watchOptions = {
 };
 ```
 
-有关 `inputOptions` 和 `outputOptions` 的详细信息，请参见上文，或者查阅[选项大全](../configuration-options/index.md)以获取有关 `chokidar`、`include` 和 `exclude` 的信息。
+有关 `inputOptions` 和 `outputOptions` 的详细信息，请参见上文，或者查阅 [选项大全](../configuration-options/index.md) 以获取有关 `chokidar`、`include` 和 `exclude` 的信息。
 
 ### 以编程方式加载配置文件 {#programmatically-loading-a-config-file}
 
