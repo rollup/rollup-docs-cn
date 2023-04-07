@@ -960,7 +960,7 @@ type renderDynamicImportHook = (options: {
 
 此钩子通过提供导入表达式参数左侧（`import(`）和右侧（`)`）的代码替换，提供了对动态导入如何呈现的细粒度控制。返回`null`将推迟到此类型的其他钩子，最终呈现特定于格式的默认值。
 
-`format` 是呈现的输出格式， `moduleId` 是执行动态导入的模块的 ID。如果导入可以解析为内部或外部 ID，则`targetModuleId`将设置为此 ID，否则将为`null`。如果动态导入包含由 [`resolveDynamicImport`](#resolvedynamicimport) 钩子解析为替换字符串的非字符串表达式，则`customResolution`将包含该字符串。
+`format` 是呈现的输出格式， `moduleId` 是执行动态导入的模块的 ID。如果导入可以解析为内部或外部 ID，则 `targetModuleId` 将设置为此 ID，否则将为 `null`。如果动态导入包含由 [`resolveDynamicImport`](#resolvedynamicimport) 钩子解析为替换字符串的非字符串表达式，则 `customResolution` 将包含该字符串。
 
 以下代码将使用自定义处理程序替换所有动态导入，添加 `import.meta.url` 作为第二个参数，以允许处理程序正确解析相对导入：
 
