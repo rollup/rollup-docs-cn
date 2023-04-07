@@ -42,7 +42,7 @@ var eval2 = eval;
 
 但是 Rollup 必须对它删除的代码保持保守，以确保最终结果将正确运行。如果导入的模块有副作用，无论是对你正在使用的模块中的某些部分还是对全局环境，Rollup 都会平安无事地处理这些副作用。
 
-因为在像 JavaScript 这样的动态语言中进行静态分析是困难的，所以偶尔会有误报。Lodash 就是一个很好的例子，它看起来有很多副作用，即使在没有副作用的地方。你通常可以通过导入子模块（例如: `import map from 'lodash-es/map'` 而不是 `import {map} from 'lodash-es'`）。
+因为在像 JavaScript 这样的动态语言中进行静态分析是困难的，所以偶尔会有误报。Lodash 就是一个很好的例子，它看起来有很多副作用，即使在没有副作用的地方。你通常可以通过导入子模块（例如：`import map from 'lodash-es/map'` 而不是 `import {map} from 'lodash-es'`）。
 
 Rollup 的静态分析将随着时间的推移而改进，但它永远不会在所有情况下都是完美的——这就是 JavaScript。
 
