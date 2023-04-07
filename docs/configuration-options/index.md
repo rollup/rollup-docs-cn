@@ -301,7 +301,7 @@ this.a.b.c = ...
 | -----: | :----------------------------------------------- |
 | 类型： | `MaybeArray<MaybePromise<OutputPlugin \| void>>` |
 
-该选项用于指定输出插件。关于如何使用特定输出的插件，请查看 [使用输出插件](../tutorial/index.md#using-output-plugins)，关于如何编写自己的插件，请查看  [插件](../plugin-development/index.md)。对于从包中引入的插件，记得要调用引入的插件函数（即调用 `commonjs()`，而不仅仅是 `commonjs`）。返回值为假的插件将被忽略，这样可以用来灵活启用或禁用插件。嵌套的插件将扁平化。异步插件将等待和被解决。
+该选项用于指定输出插件。关于如何使用特定输出的插件，请查看 [使用输出插件](../tutorial/index.md#using-output-plugins)，关于如何编写自己的插件，请查看 [插件](../plugin-development/index.md)。对于从包中引入的插件，记得要调用引入的插件函数（即调用 `commonjs()`，而不仅仅是 `commonjs`）。返回值为假的插件将被忽略，这样可以用来灵活启用或禁用插件。嵌套的插件将扁平化。异步插件将等待和被解决。
 
 并非所有的插件都可以通过该选项使用。`output.plugins` 仅限于在 `bundle.generate()` 或 `bundle.write()` 阶段，即在 Rollup 的主要分析完成后运行钩子的插件才可使用。如果你是一个插件作者，请查看 [输出生成钩子](../plugin-development/index.md#output-generation-hooks) 章节以了解哪些钩子可以使用。
 
