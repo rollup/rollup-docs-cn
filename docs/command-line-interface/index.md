@@ -336,7 +336,8 @@ export default {
   import { readFileSync } from 'node:fs';
 	
   // 使用 import.meta.url 可以使路径相对于当前源文件而不是 process.cwd()。
-  // 更多信息参见：https://nodejs.org/docs/latest-v16.x/api/esm.html#importmetaurl
+  // 更多信息参见：
+  // https://nodejs.org/docs/latest-v16.x/api/esm.html#importmetaurl
   const packageJson = JSON.parse(
   	readFileSync(new URL('./package.json', import.meta.url))
   );
