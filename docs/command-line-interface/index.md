@@ -184,7 +184,7 @@ rollup --config my.config.js
 
 # 如果你没有传递文件名，Rollup 将会尝试
 # 按照以下顺序加载配置文件：
-# rollup.config.mjs -> rollup.config.cjs -> rollup.config.js {#rollupconfigmjs---rollupconfigcjs---rollupconfigjs}
+# rollup.config.mjs -> rollup.config.cjs -> rollup.config.js
 rollup --config
 ```
 
