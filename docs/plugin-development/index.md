@@ -1131,7 +1131,7 @@ function importMetaUrlCurrentModulePlugin() {
 
 添加要在监视模式下监视的其他文件，以便更改这些文件将触发重建。`id` 可以是文件或目录的绝对路径，也可以是相对于当前工作目录的路径。此上下文函数只能在构建阶段的钩子中使用，即在 `buildStart`、`load`、 `resolveId` 和 `transform` 中。
 
-**注意**：通常在监视模式下，为了提高重建速度，`transform` 钩子只会在给定模块的内容实际更改时触发。从`transform`钩子中使用`this.addWatchFile`将确保如果监视的文件更改，则也将重新评估此模块的 `transform` 钩子。
+**注意**：通常在监视模式下，为了提高重建速度，`transform` 钩子只会在给定模块的内容实际更改时触发。从 `transform` 钩子中使用 `this.addWatchFile` 将确保如果监视的文件更改，则也将重新评估此模块的 `transform` 钩子。
 
 通常建议从依赖于监视文件的钩子中使用 `this.addWatchFile`。
 
