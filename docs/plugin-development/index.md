@@ -1028,7 +1028,7 @@ function retainImportExpressionPlugin() {
 | 上一个钩子: | [`outputOptions`](#outputoptions) |
 | 下一个钩子: | 对于第一个块中的每个动态导入表达式，跟随 [`renderDynamicImport`](#renderdynamicimport) |
 
-每次调用 `bundle.generate() `或 `bundle.write()` 时最初调用。要在生成完成时得到通知，请使用 `generateBundle` 和 `renderError` 钩子。这是建议使用的钩子，当你需要访问传递给 `bundle.generate()` 或 `bundle.write()` 的输出选项时，它会考虑所有 [`outputOptions`](#outputoptions) 钩子的转换，并且还包含未设置选项的正确默认值。它还接收传递给 `rollup.rollup()` 的输入选项，以便可以将可用作输出插件的插件（即仅使用`generate`阶段钩子的插件）访问它们。
+每次调用 `bundle.generate()` 或 `bundle.write()` 时最初调用。要在生成完成时得到通知，请使用 `generateBundle` 和 `renderError` 钩子。这是建议使用的钩子，当你需要访问传递给 `bundle.generate()` 或 `bundle.write()` 的输出选项时，它会考虑所有 [`outputOptions`](#outputoptions) 钩子的转换，并且还包含未设置选项的正确默认值。它还接收传递给 `rollup.rollup()` 的输入选项，以便可以将可用作输出插件的插件（即仅使用 `generate` 阶段钩子的插件）访问它们。
 
 ### resolveFileUrl
 
