@@ -182,7 +182,8 @@ export default Promise.all([fetch('get-config-1'), fetch('get-config-2')]);
 # 向 Rollup 传递自定义配置文件位置
 rollup --config my.config.js
 
-# 如果你没有传递一个文件名字，Rollup 将会按照以下顺序尝试加载 {#if-you-do-not-pass-a-file-name-rollup-will-try-to-load} 配置文件：{#configuration-files-in-the-following-order}
+# 如果你没有传递文件名，Rollup 将会尝试
+# 按照以下顺序加载配置文件：
 # rollup.config.mjs -> rollup.config.cjs -> rollup.config.js {#rollupconfigmjs---rollupconfigcjs---rollupconfigjs}
 rollup --config
 ```
