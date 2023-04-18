@@ -6,13 +6,13 @@ title: 故障排除
 
 [[toc]]
 
-如果您遇到困难，请尝试在 [Rollup Discord](https://is.gd/rollup_chat) 上讨论该问题或将问题发布到 [Stackoverflow](https://stackoverflow.com/questions/tagged/rollupjs). 如果您发现了 bug， 或者 Rollup 不能满足你的需求， 可以尝试提 [issue](https://github.com/rollup/rollup/issues)。最后，您可以尝试在 Twitter 上联系 [@RollupJS](https://twitter.com/RollupJS) 。
+如果你遇到困难，请尝试在 [Rollup Discord](https://is.gd/rollup_chat) 上讨论该问题或将问题发布到 [Stackoverflow](https://stackoverflow.com/questions/tagged/rollupjs). 如果你发现了 bug，或者 Rollup 不能满足你的需求，可以尝试提 [issue](https://github.com/rollup/rollup/issues)。最后，你可以尝试在 Twitter 上联系 [@RollupJS](https://twitter.com/RollupJS) 。
 
 ## 避免使用 `eval` {#avoiding-eval}
 
-您可能已经了解到在某些人看来“`eval` 是邪恶的”。但它对 Rollup 尤其有害，因为它的工作方式——不像其他将每个模块包装在函数中的模块打包器，Rollup 将所有代码放在同一个作用域内。
+你可能已经了解到在某些人看来“`eval` 是邪恶的”。但它对 Rollup 尤其有害，因为它的工作方式——不像其他将每个模块包装在函数中的模块打包器，Rollup 将所有代码放在同一个作用域内。
 
-虽然这样效率更高，但这意味着在您使用 eval 时共享作用域将被“污染”，而使用其他打包器时，未使用 eval 的模块不会被污染。压缩工具不能破坏污染代码中的变量名，因为它不能保证要评估的代码不引用这些变量名。
+虽然这样效率更高，但这意味着在你使用 eval 时共享作用域将被“污染”，而使用其他打包器时，未使用 eval 的模块不会被污染。压缩工具不能破坏污染代码中的变量名，因为它不能保证要评估的代码不引用这些变量名。
 
 此外，**它还会带来安全风险**，因为恶意模块可能通过 `eval('SUPER_SEKRIT')` 访问另一个模块的私有变量。
 
@@ -42,7 +42,7 @@ var eval2 = eval;
 
 但是 Rollup 必须对它删除的代码保持保守，以确保最终结果将正确运行。如果导入的模块有副作用，无论是对你正在使用的模块中的某些部分还是对全局环境，Rollup 都会平安无事地处理这些副作用。
 
-因为在像 JavaScript 这样的动态语言中进行静态分析是困难的，所以偶尔会有误报。Lodash 就是一个很好的例子，它看起来有很多副作用，即使在没有副作用的地方。你通常可以通过导入子模块（例如:`import map from 'lodash-es/map'`而不是`import {map} from 'lodash-es'`）。
+因为在像 JavaScript 这样的动态语言中进行静态分析是困难的，所以偶尔会有误报。Lodash 就是一个很好的例子，它看起来有很多副作用，即使在没有副作用的地方。你通常可以通过导入子模块（例如：`import map from 'lodash-es/map'` 而不是 `import {map} from 'lodash-es'`）。
 
 Rollup 的静态分析将随着时间的推移而改进，但它永远不会在所有情况下都是完美的——这就是 JavaScript。
 
@@ -64,7 +64,7 @@ Rollup 的静态分析将随着时间的推移而改进，但它永远不会在�
 
 ## Warning: "Sourcemap is likely to be incorrect" {#warning-sourcemap-is-likely-to-be-incorrect}
 
-如果你为你的包（`sourcemap: true`或`sourcemap: 'inline'`）生成了一个 sourcemap，但你使用了一个或多个转换代码的插件，而没有生成转换所需的 sourcemap，你会看到这个警告。
+如果你为你的包（`sourcemap: true` 或 `sourcemap: 'inline'`）生成了一个 sourcemap，但你使用了一个或多个转换代码的插件，而没有生成转换所需的 sourcemap，你会看到这个警告。
 
 通常，只有当插件（而不是打包器）配置了 `sourcemap: false` 时，插件才会省略 sourcemap——所以你所需要做的就是更改它。如果插件没有生成 sourcemap，请考虑向插件作者提出问题。
 

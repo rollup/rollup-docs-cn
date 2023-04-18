@@ -72,7 +72,7 @@ Basic options:
 --no-strict                 不在生成的模块中发出 `"use strict";`
 --strictDeprecations        抛出有关不推荐使用的功能的错误
 --no-systemNullSetters      不要将空的 SystemJS setter 替换为 `null`
---no-treeshake              禁用树摇优化
+--no-treeshake              禁用除屑优化
 --no-treeshake.annotations 忽略纯调用注释
 --treeshake.correctVarValueBeforeDeclaration 在声明之前将变量取消优化
 --treeshake.manualPureFunctions <names> 手动将函数声明为纯函数

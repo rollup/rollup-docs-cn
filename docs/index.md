@@ -42,7 +42,7 @@ features:
   - icon:
       src: /vitejs-logo.svg
     title: Vite 依赖的打包器
-    details: 正在开发 Web？Vite 为您预配置 Rollup，提供合理的默认设置和强大的插件，同时为您提供极速的开发服务器。
+    details: 正在开发 Web？Vite 为你预配置 Rollup，提供合理的默认设置和强大的插件，同时为你提供极速的开发服务器。
     link: https://vitejs.dev/
     linkText: 查看 Vite
 ---

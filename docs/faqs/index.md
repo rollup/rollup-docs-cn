@@ -67,7 +67,7 @@ export default value;
 2. 加载和解析 `other-entry.js` 和 `external`。从 `other-entry.js` 导入 `external` 已经被加载和解析。
 3. 执行 `main.js`。
 
-可能存在不需要此优化的情况，在这种情况下，您可以通过 [`output.hoistTransitiveImports`](../configuration-options/index.md#output-hoisttransitiveimports) 选项关闭它。当使用 [`output.preserveModules`](../configuration-options/index.md#output-preservemodules) 选项时，也不会应用此优化。
+可能存在不需要此优化的情况，在这种情况下，你可以通过 [`output.hoistTransitiveImports`](../configuration-options/index.md#output-hoisttransitiveimports) 选项关闭它。当使用 [`output.preserveModules`](../configuration-options/index.md#output-preservemodules) 选项时，也不会应用此优化。
 
 ## 如何将 polyfill 添加到 Rollup 产物中？ {#how-do-i-add-polyfills-to-a-rollup-bundle}
 
@@ -83,7 +83,7 @@ console.log('main');
 console.log('polyfill');
 ```
 
-这里的执行顺序是 `polyfill.js` → `external` → `main.js`。现在，当您打包代码时，您将得到以下结果：
+这里的执行顺序是 `polyfill.js` → `external` → `main.js`。现在，当你打包代码时，你将得到以下结果：
 
 ```js
 import 'external';
@@ -91,7 +91,7 @@ console.log('polyfill');
 console.log('main');
 ```
 
-使用 `external` → `polyfill.js` → `main.js` 的执行顺序。这不是由 Rollup 将 `import` 放在捆绑包顶部引起的问题——无论在文件中的位置如何，`import` 都会被首先执行。此问题可以通过创建更多的块来解决：如果 `polyfill.js` 最终位于与 `main.js` 不同的块中，[正确的执行顺序将得以保留](../repl/index.md?shareable=JTdCJTIybW9kdWxlcyUyMiUzQSU1QiU3QiUyMm5hbWUlMjIlM0ElMjJtYWluLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmltcG9ydCUyMCcuJTJGcG9seWZpbGwuanMnJTNCJTVDbmltcG9ydCUyMCdleHRlcm5hbCclM0IlNUNuY29uc29sZS5sb2coJ21haW4nKSUzQiUyMiUyQyUyMmlzRW50cnklMjIlM0F0cnVlJTdEJTJDJTdCJTIybmFtZSUyMiUzQSUyMnBvbHlmaWxsLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmNvbnNvbGUubG9nKCdwb2x5ZmlsbCcpJTNCJTIyJTJDJTIyaXNFbnRyeSUyMiUzQXRydWUlN0QlNUQlMkMlMjJvcHRpb25zJTIyJTNBJTdCJTIyZm9ybWF0JTIyJTNBJTIyZXNtJTIyJTJDJTIybmFtZSUyMiUzQSUyMm15QnVuZGxlJTIyJTJDJTIyYW1kJTIyJTNBJTdCJTIyaWQlMjIlM0ElMjIlMjIlN0QlMkMlMjJnbG9iYWxzJTIyJTNBJTdCJTdEJTdEJTJDJTIyZXhhbXBsZSUyMiUzQW51bGwlN0Q=)。 然而，在 Rollup 中还没有自动执行此操作的方法。对于代码分割，情况类似，因为 Rollup 正在尝试创建尽可能少的块，同时确保不执行不需要的代码。
+使用 `external` → `polyfill.js` → `main.js` 的执行顺序。这不是由 Rollup 将 `import` 放在捆绑包顶部引起的问题——无论在文件中的位置如何，`import` 都会被首先执行。此问题可以通过创建更多的块来解决：如果 `polyfill.js` 最终位于与 `main.js` 不同的块中，[正确的执行顺序将得以保留](../repl/index.md?shareable=JTdCJTIybW9kdWxlcyUyMiUzQSU1QiU3QiUyMm5hbWUlMjIlM0ElMjJtYWluLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmltcG9ydCUyMCcuJTJGcG9seWZpbGwuanMnJTNCJTVDbmltcG9ydCUyMCdleHRlcm5hbCclM0IlNUNuY29uc29sZS5sb2coJ21haW4nKSUzQiUyMiUyQyUyMmlzRW50cnklMjIlM0F0cnVlJTdEJTJDJTdCJTIybmFtZSUyMiUzQSUyMnBvbHlmaWxsLmpzJTIyJTJDJTIyY29kZSUyMiUzQSUyMmNvbnNvbGUubG9nKCdwb2x5ZmlsbCcpJTNCJTIyJTJDJTIyaXNFbnRyeSUyMiUzQXRydWUlN0QlNUQlMkMlMjJvcHRpb25zJTIyJTNBJTdCJTIyZm9ybWF0JTIyJTNBJTIyZXNtJTIyJTJDJTIybmFtZSUyMiUzQSUyMm15QnVuZGxlJTIyJTJDJTIyYW1kJTIyJTNBJTdCJTIyaWQlMjIlM0ElMjIlMjIlN0QlMkMlMjJnbG9iYWxzJTIyJTNBJTdCJTdEJTdEJTJDJTIyZXhhbXBsZSUyMiUzQW51bGwlN0Q=)。然而，在 Rollup 中还没有自动执行此操作的方法。对于代码分割，情况类似，因为 Rollup 正在尝试创建尽可能少的块，同时确保不执行不需要的代码。
 
 对于大多数代码而言，这不是一个问题，因为 Rollup 可以保证：
 
@@ -104,11 +104,11 @@ console.log('main');
 
 ## Rollup 适用于构建库还是应用程序？ {#is-rollup-meant-for-building-libraries-or-applications}
 
-Rollup 已经被许多主要的 JavaScript 库使用，并且也可以用于构建绝大多数应用程序。但是，如果您想在旧版浏览器中使用代码拆分或动态导入，则需要使用额外的运行时来处理加载丢失的块。我们建议使用 [SystemJS 构建产物作为生产环境](https://github.com/systemjs/systemjs#browser-production)，因为它与 Rollup 的系统格式输出很好地集成，并且能够正确处理所有 ES 模块实时绑定和重新导出边缘情况。或者，也可以使用 AMD 加载器。
+Rollup 已经被许多主要的 JavaScript 库使用，并且也可以用于构建绝大多数应用程序。但是，如果你想在旧版浏览器中使用代码拆分或动态导入，则需要使用额外的运行时来处理加载丢失的块。我们建议使用 [SystemJS 构建产物作为生产环境](https://github.com/systemjs/systemjs#browser-production)，因为它与 Rollup 的系统格式输出很好地集成，并且能够正确处理所有 ES 模块实时绑定和重新导出边缘情况。或者，也可以使用 AMD 加载器。
 
 ## 我如何在浏览器中运行 Rollup？ {#how-do-i-run-rollup-itself-in-a-browser}
 
-虽然常规的 Rollup 构建依赖于一些 NodeJS 特性，但还有一个仅使用浏览器 API 的浏览器版本可用。您可以通过以下方式安装它：
+虽然常规的 Rollup 构建依赖于一些 NodeJS 特性，但还有一个仅使用浏览器 API 的浏览器版本可用。你可以通过以下方式安装它：
 
 ```shell
 npm install @rollup/browser
@@ -132,7 +132,7 @@ import * as rollup from 'https://unpkg.com/@rollup/browser/dist/es/rollup.browse
 <script src="https://unpkg.com/@rollup/browser/dist/rollup.browser.js"></script>
 ```
 
-这将创建一个全局变量 `window.rollup`。由于浏览器构建无法访问文件系统，因此您需要提供解析和加载要捆绑的所有模块的插件。以下是一个虚构的示例：
+这将创建一个全局变量 `window.rollup`。由于浏览器构建无法访问文件系统，因此你需要提供解析和加载要捆绑的所有模块的插件。以下是一个虚构的示例：
 
 ```js
 const modules = {

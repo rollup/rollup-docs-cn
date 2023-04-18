@@ -834,7 +834,7 @@ exports.foo = foo;
 | CLI： | `--interop <value>` |
 | 默认： | `"default"` |
 
-该选项用于控制 Rollup 如何处理默认值，命名空间和动态引入像 CommonJS 这样并不支持这些概念的外部依赖格式。请注意，"default" 的默认模式是模仿 NodeJS 的行为，与 TypeScript 的`esModuleInterop` 不同。要获得像 TypeScript 中的行为，需要明确地设置该值为 `"auto"`。在例子中，我们将使用 CommonJS 格式，但该互操作（interop）的选择也同样适用于 AMD、IIFE 和 UMD 目标。
+该选项用于控制 Rollup 如何处理默认值，命名空间和动态引入像 CommonJS 这样并不支持这些概念的外部依赖格式。请注意，"default" 的默认模式是模仿 NodeJS 的行为，与 TypeScript 的 `esModuleInterop` 不同。要获得像 TypeScript 中的行为，需要明确地设置该值为 `"auto"`。在例子中，我们将使用 CommonJS 格式，但该互操作（interop）的选择也同样适用于 AMD、IIFE 和 UMD 目标。
 
 为了理解不同的取值，我们假设打包以下代码为 `cjs`：
 
@@ -1371,7 +1371,7 @@ export default {
 
 `preserveModulesRoot` 设置确保输入的模块会输出到 `dist/module.js` 和 `dist/another/module.js` 路径。
 
-在使用 `@rollup/plugin-node-resolve` 等插件时，这个选项特别有用，它可能导致输出目录结构的变化。当第三方模块没有标记为 [`external`](#external) 时，或者在 monorepo 中多个包相互依赖时，没有标记为[`external`](#external)，都可能发生这种情况。
+在使用 `@rollup/plugin-node-resolve` 等插件时，这个选项特别有用，它可能导致输出目录结构的变化。当第三方模块没有标记为 [`external`](#external) 时，或者在 monorepo 中多个包相互依赖时，没有标记为 [`external`](#external)，都可能发生这种情况。
 
 ### output.sourcemap {#output-sourcemap}
 
@@ -1757,7 +1757,7 @@ export default {
 |  CLI： | `--esModule`/`--no-esModule`   |
 | 默认： | `"if-default-prop"`            |
 
-该选项用于决定是否在生成非 ES 格式导出时添加 `__esModule: true` 属性。此属性表示导出的值是 ES 模块的命名空间，并且此模块的默认导出对应于导出对象的`.default` 属性。
+该选项用于决定是否在生成非 ES 格式导出时添加 `__esModule: true` 属性。此属性表示导出的值是 ES 模块的命名空间，并且此模块的默认导出对应于导出对象的 `.default` 属性。
 
 - 值为 `true`，当使用 [命名导出模式](#output-exports) 时将始终添加该属性，这与其他工具类似。
 - 值为`"if-default-prop"`，仅当使用命名导出模式且存在默认导出时，才会添加该属性。微妙之处在于，如果没有默认导出，你的 CommonJS 版本的库使用者将获得所有命名导出作为默认导出，而不是出现错误或 `undefined`。我们选择将其设置为默认值，因为 `__esModule` 属性不是任何 JavaScript 运行时遵循的标准，并且会导致许多互操作问题，因此我们希望将其用于确实需要它的情况。

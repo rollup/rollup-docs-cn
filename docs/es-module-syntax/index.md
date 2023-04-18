@@ -14,7 +14,7 @@ title: ES 模块语法
 
 ### 具名导入 {#named-imports}
 
-使用 源模块中的原始名称 进行导入。
+使用源模块中的原始名称进行导入。
 
 ```js
 import { something } from './module.js';
@@ -98,7 +98,7 @@ export const something = true;
 export default something;
 ```
 
-仅当您的源模块只有一个导出时才推荐这种做法。
+仅当你的源模块只有一个导出时才推荐这种做法。
 
 尽管规范允许，但在同一个模块中混合默认和命名导出是不好的做法。
 

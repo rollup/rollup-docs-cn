@@ -122,7 +122,7 @@ rollup -c
 rollup -c -o bundle-2.js # `-o` 等价于 `--file`（曾用名为 "output"）
 ```
 
-_注意： Rollup 本身会处理配置文件，这就是为什么我们可以使用 `export default` 语法的原因 –  代码没有被 Babel 或任何类似的工具转换，因此你只能使用在你当前使用的 Node 版本中支持的 ES2015 功能。_
+_注意：Rollup 本身会处理配置文件，这就是为什么我们可以使用 `export default` 语法的原因 – 代码没有被 Babel 或任何类似的工具转换，因此你只能使用在你当前使用的 Node 版本中支持的 ES2015 功能。_
 
 你也可以选择指定不同于默认的 `rollup.config.js` 的配置文件：
 
@@ -169,7 +169,7 @@ yarn rollup --config
 }
 ```
 
-_注意： 一旦本地安装完成，当运行脚本命令时，不管是 NPM 还是 Yarn 都可以找到 Rollup 的可执行文件并执行。_
+_注意：一旦本地安装完成，当运行脚本命令时，不管是 NPM 还是 Yarn 都可以找到 Rollup 的可执行文件并执行。_
 
 ## 使用插件 {#using-plugins}
 
@@ -240,7 +240,7 @@ function main() {
 module.exports = main;
 ```
 
-_注意： 结果中只导入了我们实际需要的数据 ——`name`、`devDependencies` 和 `package.json` 中其他内容都被忽略了。这就是 **除屑优化** 的作用。_
+_注意：结果中只导入了我们实际需要的数据 ——`name`、`devDependencies` 和 `package.json` 中其他内容都被忽略了。这就是 **除屑优化** 的作用。_
 
 ## 使用输出插件 {#using-output-plugins}
 
@@ -308,9 +308,9 @@ Rollup 将使用动态导入创建一个仅在需要时加载的单独块。为�
 rollup src/main.js -f cjs -d dist
 ```
 
-这将创建一个名为 `dist` 的文件夹，其中包含两个文件，`main.js` 和 `chunk-[hash].js`, 其中 `[hash]` 是基于内容的哈希字符串。您可以通过指定 [`output.chunkFileNames`](../configuration-options/index.md#output-chunkfilenames) 和 [`output.entryFileNames`](../configuration-options/index.md#output-entryfilenames) 选项来提供自己的命名模式。
+这将创建一个名为 `dist` 的文件夹，其中包含两个文件，`main.js` 和 `chunk-[hash].js`, 其中 `[hash]` 是基于内容的哈希字符串。你可以通过指定 [`output.chunkFileNames`](../configuration-options/index.md#output-chunkfilenames) 和 [`output.entryFileNames`](../configuration-options/index.md#output-entryfilenames) 选项来提供自己的命名模式。
 
-您仍然可以像以前一样运行您的代码，并且具有相同的输出，尽管会慢一些，因为加载和解析 `./foo.js` 仅在我们第一次调用导出的函数时才开始。
+你仍然可以像以前一样运行你的代码，并且具有相同的输出，尽管会慢一些，因为加载和解析 `./foo.js` 仅在我们第一次调用导出的函数时才开始。
 
 ```shell
 node -e "require('./dist/main.js')()"
@@ -338,7 +338,7 @@ var foo = 'hello world!';
 exports.default = foo;
 ```
 
-如果您想要在使用耗时很长的功能之前仅加载和解析它们一次，则此方法非常有用。
+如果你想要在使用耗时很长的功能之前仅加载和解析它们一次，则此方法非常有用。
 
 代码分割的另一个用途是能够指定共享一些依赖项的多个入口点。我们再次扩展我们的示例，添加一个名为 `src/main2.js` 的第二个入口点，它静态导入 `src/foo.js`，就像我们在原始示例中所做的那样：
 

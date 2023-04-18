@@ -10,7 +10,7 @@ Rollup 通常应该从命令行使用。你可以提供一个可选的 Rollup �
 
 ## 配置文件 {#configuration-files}
 
-Rollup 配置文件是可选的，但它们非常强大和方便，因此**推荐**使用。配置文件是一个 ES 模块，它导出一个默认对象，其中包含所需的选项：
+Rollup 配置文件是可选的，但它们非常强大和方便，因此 **推荐** 使用。配置文件是一个 ES 模块，它导出一个默认对象，其中包含所需的选项：
 
 ```javascript
 export default {
@@ -22,7 +22,7 @@ export default {
 };
 ```
 
-通常，它被称为 `rollup.config.js` 或 `rollup.config.mjs`，并位于项目的根目录中。除非使用 [`--configPlugin`](#configplugin-plugin) 或 [`--bundleConfigAsCjs`](#bundleconfigascjs) 选项，否则 Rollup 将直接使用 Node 导入该文件。请注意，使用原生 Node ES 模块时存在一些[注意事项](#caveats-when-using-native-node-es-modules)，因为 Rollup 将遵循 [Node ESM 语义](https://nodejs.org/docs/latest-v14.x/api/packages.html#packages_determining_module_system)。
+通常，它被称为 `rollup.config.js` 或 `rollup.config.mjs`，并位于项目的根目录中。除非使用 [`--configPlugin`](#configplugin-plugin) 或 [`--bundleConfigAsCjs`](#bundleconfigascjs) 选项，否则 Rollup 将直接使用 Node 导入该文件。请注意，使用原生 Node ES 模块时存在一些 [注意事项](#caveats-when-using-native-node-es-modules)，因为 Rollup 将遵循 [Node ESM 语义](https://nodejs.org/docs/latest-v14.x/api/packages.html#packages_determining_module_system)。
 
 如果你想使用 `require` 和 `module.exports` 编写 CommonJS 模块的配置文件，你应该将文件扩展名更改为 `.cjs`。
 
@@ -34,7 +34,7 @@ rollup --config rollup.config.ts --configPlugin typescript
 
 使用 `--configPlugin` 选项将始终强制将你的配置文件先转换为 CommonJS 格式。同时，查看 [Config Intellisense](#config-intellisense) 以获取在配置文件中使用 TypeScript 类型定义的更多方法。
 
-配置文件支持下面列出的选项。有关每个选项的详细信息，请参阅[选项大全](../configuration-options/index.md)：
+配置文件支持下面列出的选项。有关每个选项的详细信息，请参阅 [选项大全](../configuration-options/index.md)：
 
 ```javascript
 // rollup.config.js
@@ -131,7 +131,7 @@ export default {
 };
 ```
 
-你可以从配置文件中导出一个**数组**，以便一次从多个不相关的输入进行打包，即使在监视模式下也可以。要使用相同的输入打出不同的包，你需要为每个输入提供一个输出选项数组：
+你可以从配置文件中导出一个 **数组**，以便一次从多个不相关的输入进行打包，即使在监视模式下也可以。要使用相同的输入打出不同的包，你需要为每个输入提供一个输出选项数组：
 
 ```javascript
 // rollup.config.js (building more than one bundle)
@@ -179,12 +179,12 @@ export default Promise.all([fetch('get-config-1'), fetch('get-config-2')]);
 要使用配置文件来运行 Rollup，请传递 `--config` 或 `-c` 标志：
 
 ```shell
-# pass a custom config file location to Rollup {#pass-a-custom-config-file-location-to-rollup}
+# 向 Rollup 传递自定义配置文件位置
 rollup --config my.config.js
 
-# if you do not pass a file name, Rollup will try to load {#if-you-do-not-pass-a-file-name-rollup-will-try-to-load}
-# configuration files in the following order: {#configuration-files-in-the-following-order}
-# rollup.config.mjs -> rollup.config.cjs -> rollup.config.js {#rollupconfigmjs---rollupconfigcjs---rollupconfigjs}
+# 如果你没有传递文件名，Rollup 将会尝试
+# 按照以下顺序加载配置文件：
+# rollup.config.mjs -> rollup.config.cjs -> rollup.config.js
 rollup --config
 ```
 
@@ -335,8 +335,8 @@ export default {
   // rollup.config.mjs
   import { readFileSync } from 'node:fs';
 
-  // Use import.meta.url to make the path relative to the current source
-  // file instead of process.cwd(). For more information:
+  // 使用 import.meta.url 可以使路径相对于当前源文件而不是 process.cwd()。
+  // 更多信息参见：
   // https://nodejs.org/docs/latest-v16.x/api/esm.html#importmetaurl
   const packageJson = JSON.parse(
   	readFileSync(new URL('./package.json', import.meta.url))
@@ -347,7 +347,7 @@ export default {
 
 ## 命令行标志 {#command-line-flags}
 
-许多选项都有等效的命令行标志。在这些情况下，如果您正在使用配置文件，则此处传递的任何参数都将覆盖配置文件。以下是所有支持的选项列表：
+许多选项都有等效的命令行标志。在这些情况下，如果你正在使用配置文件，则此处传递的任何参数都将覆盖配置文件。以下是所有支持的选项列表：
 
 ```
 -c, --config <filename>     使用此配置文件
@@ -417,7 +417,7 @@ export default {
 --no-strict                 不在生成的模块中发出 `"use strict";`
 --strictDeprecations        抛出有关不推荐使用的功能的错误
 --no-systemNullSetters      不要将空的 SystemJS setter 替换为 `null`
---no-treeshake              禁用树摇优化
+--no-treeshake              禁用除屑优化
 --no-treeshake.annotations 忽略纯调用注释
 --treeshake.correctVarValueBeforeDeclaration 在声明之前将变量取消优化
 --treeshake.manualPureFunctions <names> 手动将函数声明为纯函数
@@ -439,7 +439,7 @@ export default {
 --watch.skipWrite           在监视时不要将文件写入磁盘
 ```
 
-以下标志仅通过命令行界面可用。所有其他标志都对应并覆盖其配置文件等效项，请参阅[选项大列表](../configuration-options/index.md)获取详细信息。
+以下标志仅通过命令行界面可用。所有其他标志都对应并覆盖其配置文件等效项，请参阅 [选项大列表](../configuration-options/index.md) 获取详细信息。
 
 ### `-h`/`--help` {#h-help}
 
@@ -475,13 +475,13 @@ export default {
   rollup -i input.js -f es -p '{transform: (c, i) => `/* ${JSON.stringify(i)} */\n${c}`}'
   ```
 
-如果您想加载多个插件，可以重复使用该选项或提供逗号分隔的名称列表：
+如果你想加载多个插件，可以重复使用该选项或提供逗号分隔的名称列表：
 
 ```shell
 rollup -i input.js -f es -p node-resolve -p commonjs,json
 ```
 
-默认情况下，插件函数将不带参数调用以创建插件。但是，您也可以传递自定义参数：
+默认情况下，插件函数将不带参数调用以创建插件。但是，你也可以传递自定义参数：
 
 ```shell
 rollup -i input.js -f es -p 'terser={output: {beautify: true, indent_level: 2}}'
@@ -501,15 +501,15 @@ rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript
 "include": ["src/**/*", "rollup.config.ts"],
 ```
 
-此选项支持与 [`--plugin`](#p-plugin-plugin-plugin) 选项相同的语法，即您可以多次指定该选项，可以省略 `@rollup/plugin-` 前缀，只需编写 `typescript`，并可以通过 `={...}` 指定插件选项。
+此选项支持与 [`--plugin`](#p-plugin-plugin-plugin) 选项相同的语法，即你可以多次指定该选项，可以省略 `@rollup/plugin-` 前缀，只需编写 `typescript`，并可以通过 `={...}` 指定插件选项。
 
-使用此选项将使 Rollup 首先将您的配置文件转译为 ES 模块，然后再执行它。如果要转译为 CommonJS，请还传递 [`--bundleConfigAsCjs`](#bundleconfigascjs) 选项。
+使用此选项将使 Rollup 首先将你的配置文件转译为 ES 模块，然后再执行它。如果要转译为 CommonJS，请还传递 [`--bundleConfigAsCjs`](#bundleconfigascjs) 选项。
 
 ### `--bundleConfigAsCjs` {#bundleconfigascjs}
 
-此选项将强制将您的配置转译为 CommonJS。
+此选项将强制将你的配置转译为 CommonJS。
 
-这允许您在配置中使用 CommonJS 常用的变量/方法，例如 `__dirname` 或 `require.resolve`，即使配置本身是作为 ES 模块编写的。
+这允许你在配置中使用 CommonJS 常用的变量/方法，例如 `__dirname` 或 `require.resolve`，即使配置本身是作为 ES 模块编写的。
 
 ### `-v`/`--version` {#v-version}
 
@@ -523,7 +523,7 @@ _注意：在观察模式下，Rollup 的命令行界面将设置 `ROLLUP_WATCH`
 
 ### `--silent` {#silent}
 
-不在控制台上打印警告信息。如果你的配置文件包含一个 `onwarn` 处理程序，该处理程序仍然会被调用。要手动防止这种情况，你可以按照[配置文件](#configuration-files)结尾处所述的方式在配置文件中访问命令行选项。
+不在控制台上打印警告信息。如果你的配置文件包含一个 `onwarn` 处理程序，该处理程序仍然会被调用。要手动防止这种情况，你可以按照 [配置文件](#configuration-files) 结尾处所述的方式在配置文件中访问命令行选项。
 
 ### `--failAfterWarnings` {#failafterwarnings}
 
@@ -561,11 +561,11 @@ npm run build -- --environment BUILD:development
 
 ### `--stdin=ext` {#stdinext}
 
-在从 stdin 读取内容时指定虚拟文件扩展名。默认情况下，Rollup 将使用虚拟文件名 `-`，没有扩展名，用于从 stdin 读取的内容。但是，一些插件依赖于文件扩展名来确定是否处理文件。另请参见[从 stdin 读取文件](#reading-a-file-from-stdin)。
+在从 stdin 读取内容时指定虚拟文件扩展名。默认情况下，Rollup 将使用虚拟文件名 `-`，没有扩展名，用于从 stdin 读取的内容。但是，一些插件依赖于文件扩展名来确定是否处理文件。另请参见 [从 stdin 读取文件](#reading-a-file-from-stdin)。
 
 ### `--no-stdin` {#no-stdin}
 
-不要从 `stdin` 读取文件。设置此标志将防止将内容传输到 Rollup 并确保 Rollup 将 `-` 和 `-.[ext]` 解释为常规文件名，而不是将其解释为 `stdin` 的名称。另请参见[从 stdin 读取文件](#reading-a-file-from-stdin)。
+不要从 `stdin` 读取文件。设置此标志将防止将内容传输到 Rollup 并确保 Rollup 将 `-` 和 `-.[ext]` 解释为常规文件名，而不是将其解释为 `stdin` 的名称。另请参见 [从 stdin 读取文件](#reading-a-file-from-stdin)。
 
 ### `--watch.onStart <cmd>`，`--watch.onBundleStart <cmd>`，`--watch.onBundleEnd <cmd>`，`--watch.onEnd <cmd>`，`--watch.onError <cmd>` {#watchonstart-cmd-watchonbundlestart-cmd-watchonbundleend-cmd-watchonend-cmd-watchonerror-cmd}
 
