@@ -1,5 +1,88 @@
 # rollup changelog
 
+## 3.21.0
+
+_2023-04-23_
+
+### Features
+
+- Support tree-shaking of named exports in dynamic imports when using destructuring and similar patterns (#4952)
+
+### Pull Requests
+
+- [#4952](https://github.com/rollup/rollup/pull/4952): feat: tree-shake deterministic dynamic imports (@antfu)
+
+## 3.20.7
+
+_2023-04-21_
+
+### Bug Fixes
+
+- Properly track array element mutations when iterating with a for-of loop (#4949)
+- Handle default exporting an anonymous class that extends another class (#4950)
+
+### Pull Requests
+
+- [#4943](https://github.com/rollup/rollup/pull/4943): Add a test for reserved keywords used as import/export specifiers (@Andarist)
+- [#4949](https://github.com/rollup/rollup/pull/4949): Deoptimize right side in for-of loops (@lukastaegert)
+- [#4950](https://github.com/rollup/rollup/pull/4950): Support default exported classes that extend other classes (@lukastaegert)
+
+## 3.20.6
+
+_2023-04-18_
+
+### Bug Fixes
+
+- Revert handling of non-JS import and export names due to regressions (#4914)
+
+### Pull Requests
+
+- [#4914](https://github.com/rollup/rollup/pull/4914): feat: add locales in vitepress config (@iDestin)
+- [#4946](https://github.com/rollup/rollup/pull/4946): Revert #4939 for now (@lukastaegert)
+
+## 3.20.5
+
+_2023-04-18_
+
+### Bug Fixes
+
+- Handle import and export names that are not valid JavaScript identifiers (#4939)
+
+### Pull Requests
+
+- [#4939](https://github.com/rollup/rollup/pull/4939): Fixed imports/exports that are illegal identifiers in the es output (@Andarist)
+- [#4941](https://github.com/rollup/rollup/pull/4941): Reinstate global styles (@lukastaegert)
+
+## 3.20.4
+
+_2023-04-17_
+
+### Bug Fixes
+
+- Do not remove breaks statements after switch statements with conditional breaks (#4937)
+
+### Pull Requests
+
+- [#4937](https://github.com/rollup/rollup/pull/4937): fix: handle conditional breaks in nested switch statement cases (@TrickyPi and @lukastaegert)
+
+## 3.20.3
+
+_2023-04-16_
+
+### Bug Fixes
+
+- Reduce memory consumption for function call parameter analysis (#4938)
+- Fix types for `shouldTransformCachedModule` (#4932)
+
+### Pull Requests
+
+- [#4925](https://github.com/rollup/rollup/pull/4925): chore: repl style add scoped (@btea)
+- [#4926](https://github.com/rollup/rollup/pull/4926): docs: Update the x_google_ignorelist url (@jecfish)
+- [#4932](https://github.com/rollup/rollup/pull/4932): Allow shouldTransformCachedModule to return null (@bluwy)
+- [#4935](https://github.com/rollup/rollup/pull/4935): Bump peter-evans/create-or-update-comment from 2 to 3 (@dependabot[bot])
+- [#4936](https://github.com/rollup/rollup/pull/4936): Disable puppeteer sandbox to fix Vercel deployment (@lukastaegert)
+- [#4938](https://github.com/rollup/rollup/pull/4938): Improve memory usage for parameter deoptimizations (@lukastaegert)
+
 ## 3.20.2
 
 _2023-03-24_

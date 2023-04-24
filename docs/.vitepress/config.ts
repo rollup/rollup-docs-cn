@@ -25,6 +25,10 @@ export default defineConfig({
 		['meta', { content: 'The JavaScript module bundler', name: 'twitter:description' }],
 		['meta', { content: 'https://rollupjs.org/twitter-card.jpg', name: 'twitter:image' }]
 	],
+	locales: {
+		root: { label: '简体中文' },
+		zh: { label: 'English', link: 'https://rollupjs.org' }
+	},
 	markdown: {
 		anchor: {
 			callback,
@@ -129,7 +133,6 @@ export default defineConfig({
 	title: 'Rollup 中文文档',
 	transformPageData,
 	vite: {
-		optimizeDeps: { include: ['moment-mini', '@braintree/sanitize-url'] },
 		plugins: [
 			renderMermaidGraphsPlugin(),
 			{

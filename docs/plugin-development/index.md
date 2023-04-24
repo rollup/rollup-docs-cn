@@ -564,14 +564,14 @@ type ShouldTransformCachedModuleHook = (options: {
 	meta: { [plugin: string]: any };
 	moduleSideEffects: boolean | 'no-treeshake';
 	syntheticNamedExports: boolean | string;
-}) => boolean;
+}) => boolean | NullValue;
 ```
 
 如果使用 Rollup 缓存（例如在观察模式下或通过 JavaScript API 明确使用），如果在 [`load`](#transform) 钩子之后，加载的 `code` 与缓存副本的代码相同，则 Rollup 将跳过模块的 [`transform`](#transform) 钩子。为了防止这种情况，插件可以实现此钩子并返回 `true`，以丢弃缓存副本并转换模块。
 
 此钩子还可用于查找已缓存的模块并访问其缓存的元信息。
 
-如果插件没有返回 `true`，则 Rollup 将为其他插件触发此钩子，否则所有剩余的插件都将被跳过。
+如果插件没有返回布尔值，则 Rollup 将为其他插件触发此钩子，否则所有剩余的插件都将被跳过。
 
 ### transform
 
