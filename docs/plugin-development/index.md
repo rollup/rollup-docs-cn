@@ -571,11 +571,7 @@ type ShouldTransformCachedModuleHook = (options: {
 
 此钩子还可用于查找已缓存的模块并访问其缓存的元信息。
 
-<<<<<<< HEAD
-如果插件没有返回 `true`，则 Rollup 将为其他插件触发此钩子，否则所有剩余的插件都将被跳过。
-=======
-If a plugin does not return a boolean, Rollup will trigger this hook for other plugins, otherwise all remaining plugins will be skipped.
->>>>>>> 28c7b7cfe8f329b7839c78a158d30016991b322b
+如果插件没有返回布尔值，则 Rollup 将为其他插件触发此钩子，否则所有剩余的插件都将被跳过。
 
 ### transform
 
@@ -1953,9 +1949,7 @@ function dependentPlugin() {
 			);
 			if (!parentPlugin) {
 				// 或者如果是可选的，可以静默处理
-				throw new Error(
-					`此插件依赖于 “${parentName}” 插件。`
-				);
+				throw new Error(`此插件依赖于 “${parentName}” 插件。`);
 			}
 			// 现在你可以在后续钩子中访问 API 方法
 			parentApi = parentPlugin.api;

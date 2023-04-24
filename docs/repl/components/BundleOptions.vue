@@ -9,13 +9,8 @@
 						class="repl-button remove"
 						@click="optionsStore.set(option.name, undefined)"
 					>
-<<<<<<< HEAD
 						<span class="label">移除</span>
-						<span class="icon-cancel"></span>
-=======
-						<span class="label">remove</span>
 						<span class="repl-icon-cancel"></span>
->>>>>>> 28c7b7cfe8f329b7839c78a158d30016991b322b
 					</button>
 				</h3>
 				<SelectOption

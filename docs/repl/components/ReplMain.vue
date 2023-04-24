@@ -9,13 +9,8 @@
 		<div class="right">
 			<h2>
 				...
-<<<<<<< HEAD
-				{{ rollupOutputStore.output.length > 1 ? '产出分块' : '产出包' }}
+				{{ rollupOutputStore.output.output.length > 1 ? '产出分块' : '产出包' }}
 				输出
-=======
-				{{ rollupOutputStore.output.output.length > 1 ? 'chunks come' : 'bundle comes' }}
-				out
->>>>>>> 28c7b7cfe8f329b7839c78a158d30016991b322b
 			</h2>
 			<div class="output">
 				<ReplOutput />

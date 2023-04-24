@@ -26,8 +26,8 @@ export default defineConfig({
 		['meta', { content: 'https://rollupjs.org/twitter-card.jpg', name: 'twitter:image' }]
 	],
 	locales: {
-		root: { label: 'English' },
-		zh: { label: '简体中文', link: 'https://cn.rollupjs.org' }
+		root: { label: '简体中文' },
+		zh: { label: 'English', link: 'https://rollupjs.org' }
 	},
 	markdown: {
 		anchor: {
