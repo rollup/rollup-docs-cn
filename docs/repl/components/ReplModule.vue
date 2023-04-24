@@ -4,6 +4,7 @@
 		<header>
 			<span v-if="editableHeader">
 				<input ref="input" v-model="module.name" @focus="selectName" placeholder="foo.js" />
+<<<<<<< HEAD
 				<button class="remove" @click="emit('remove')">
 					<span class="label">移除</span>
 					<span class="icon-cancel"></span>
@@ -12,6 +13,16 @@
 					<span class="label">(入口&nbsp;模块)</span>
 					<span v-if="module.isEntry" class="icon-minus"></span>
 					<span v-else class="icon-plus"></span>
+=======
+				<button class="repl-button remove" @click="emit('remove')">
+					<span class="label">remove</span>
+					<span class="repl-icon-cancel"></span>
+				</button>
+				<button class="repl-button toggle-entry" @click="module.isEntry = !module.isEntry">
+					<span class="label">(entry&nbsp;module)</span>
+					<span v-if="module.isEntry" class="repl-icon-minus"></span>
+					<span v-else class="repl-icon-plus"></span>
+>>>>>>> 28c7b7cfe8f329b7839c78a158d30016991b322b
 				</button>
 			</span>
 			<span v-else-if="showHeader" class="module-name">
@@ -161,11 +172,11 @@ button .label {
 	opacity: 1;
 }
 
-.entry-module button.toggle-entry .icon-minus {
+.entry-module button.toggle-entry .repl-icon-minus {
 	opacity: 0.6;
 }
 
-.entry-module button.toggle-entry:hover .icon-minus {
+.entry-module button.toggle-entry:hover .repl-icon-minus {
 	opacity: 1;
 }
 
@@ -178,9 +189,9 @@ button:active .label {
 	opacity: 1;
 }
 
-.icon-cancel,
-.icon-plus,
-.icon-minus {
+.repl-icon-cancel,
+.repl-icon-plus,
+.repl-icon-minus {
 	font-size: 0.8em;
 	transition: all 0.2s;
 }

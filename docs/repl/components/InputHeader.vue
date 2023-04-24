@@ -6,7 +6,11 @@
 				{{ example.title }}
 			</option>
 		</select>
+<<<<<<< HEAD
 		<button class="start-over" @click="startOver">重新开始</button>
+=======
+		<button class="repl-button start-over" @click="startOver">Start over</button>
+>>>>>>> 28c7b7cfe8f329b7839c78a158d30016991b322b
 	</header>
 </template>
 

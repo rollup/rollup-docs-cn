@@ -13,9 +13,15 @@
 		/>
 	</div>
 
+<<<<<<< HEAD
 	<button class="new-module" @click="createModule">
 		<span class="icon icon-plus"></span>
 		添加模块
+=======
+	<button class="repl-button new-module" @click="createModule">
+		<span class="repl-icon-plus"></span>
+		add module
+>>>>>>> 28c7b7cfe8f329b7839c78a158d30016991b322b
 	</button>
 </template>
 

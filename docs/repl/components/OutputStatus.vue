@@ -4,6 +4,7 @@
 		:class="waiting ? 'waiting' : error ? 'error' : warnings.length > 0 ? 'warnings' : 'success'"
 	>
 		<span v-if="waiting">
+<<<<<<< HEAD
 			<span class="icon icon-attention"></span>
 			加载 Rollup...
 		</span>
@@ -11,6 +12,15 @@
 		<span v-else-if="warnings.length > 0">
 			<span class="icon icon-attention" />
 			Rollup 执行完成但出现警告：
+=======
+			<span class="repl-icon-attention"></span>
+			Loading Rollup...
+		</span>
+		<StatusMessage v-else-if="error" :message="error" isError />
+		<span v-else-if="warnings.length > 0">
+			<span class="repl-icon-attention" />
+			Rollup completed with warnings:
+>>>>>>> 28c7b7cfe8f329b7839c78a158d30016991b322b
 			<ul class="warning-list">
 				<li v-for="(warning, i) in warnings" :key="i" class="warning">
 					<StatusMessage :message="warning" />
@@ -18,8 +28,13 @@
 			</ul>
 		</span>
 		<span v-else>
+<<<<<<< HEAD
 			<span class="icon icon-ok"></span>
 			Rollup 执行成功！
+=======
+			<span class="repl-icon-ok"></span>
+			Rollup successful!
+>>>>>>> 28c7b7cfe8f329b7839c78a158d30016991b322b
 		</span>
 	</div>
 </template>
