@@ -1949,7 +1949,9 @@ function dependentPlugin() {
 			);
 			if (!parentPlugin) {
 				// 或者如果是可选的，可以静默处理
-				throw new Error(`此插件依赖于 “${parentName}” 插件。`);
+				throw new Error(
+					`此插件依赖于 “${parentName}” 插件。`
+				);
 			}
 			// 现在你可以在后续钩子中访问 API 方法
 			parentApi = parentPlugin.api;
