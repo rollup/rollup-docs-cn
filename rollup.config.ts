@@ -1,4 +1,4 @@
-import { exit } from 'node:process';
+import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
@@ -140,11 +140,12 @@ export default async function (
 			writeLicenseBrowser(),
 			cleanBeforeWrite('browser/dist'),
 			{
+				// TODO remove after next Rollup dependency update
 				closeBundle() {
-					// On CI, MacOS runs sometimes do not close properly. This is a hack
+					// On CI, macOS runs sometimes do not close properly. This is a hack
 					// to fix this until the problem is understood.
 					console.log('Force quit.');
-					setTimeout(() => exit(0));
+					setTimeout(() => process.exit(0));
 				},
 				name: 'force-close'
 			}

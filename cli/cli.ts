@@ -22,5 +22,5 @@ if (command.help || (process.argv.length <= 2 && process.stdin.isTTY)) {
 		// do nothing
 	}
 
-	run(command);
+	run(command).then(() => process.exit(0));
 }
