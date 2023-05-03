@@ -1,6 +1,6 @@
 {
   "name": "rollup",
-  "version": "3.21.3",
+  "version": "3.21.4",
   "description": "Next-generation ES module bundler",
   "main": "dist/rollup.js",
   "module": "dist/es/rollup.js",
@@ -82,7 +82,7 @@
     "@rollup/pluginutils": "^5.0.2",
     "@types/estree": "1.0.1",
     "@types/mocha": "^10.0.1",
-    "@types/node": "^14.18.42",
+    "@types/node": "~14.18.42",
     "@types/yargs-parser": "^21.0.0",
     "@typescript-eslint/eslint-plugin": "^5.59.1",
     "@typescript-eslint/parser": "^5.59.1",
