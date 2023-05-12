@@ -65,7 +65,7 @@ export default ({
 
 ## 属性 {#properties}
 
-### 名字 {#name}
+### name {#name}
 
 |       |          |
 | ----: | :------- |
@@ -73,7 +73,7 @@ export default ({
 
 插件的名称，用于错误消息和警告。
 
-### 版本 {#version}
+### version {#version}
 
 |       |          |
 | ----: | :------- |
