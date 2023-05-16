@@ -10,7 +10,7 @@ Rollup 通常应该从命令行使用。你可以提供一个可选的 Rollup �
 
 ## 配置文件 {#configuration-files}
 
-Rollup 配置文件是可选的，但它们非常强大和方便，因此 **推荐** 使用。配置文件是一个 ES 模块，它导出一个默认对象，其中包含所需的选项：
+Rollup 配置文件是可选的，但它们非常强大和方便，因此**推荐**使用。配置文件是一个 ES 模块，它导出一个默认对象，其中包含所需的选项：
 
 ```javascript
 export default {
@@ -22,7 +22,7 @@ export default {
 };
 ```
 
-通常，它被称为 `rollup.config.js` 或 `rollup.config.mjs`，并位于项目的根目录中。除非使用 [`--configPlugin`](#configplugin-plugin) 或 [`--bundleConfigAsCjs`](#bundleconfigascjs) 选项，否则 Rollup 将直接使用 Node 导入该文件。请注意，使用原生 Node ES 模块时存在一些 [注意事项](#caveats-when-using-native-node-es-modules)，因为 Rollup 将遵循 [Node ESM 语义](https://nodejs.org/docs/latest-v14.x/api/packages.html#packages_determining_module_system)。
+通常，它被称为 `rollup.config.js` 或 `rollup.config.mjs`，并位于项目的根目录中。除非使用 [`--configPlugin`](#configplugin-plugin) 或 [`--bundleConfigAsCjs`](#bundleconfigascjs) 选项，否则 Rollup 将直接使用 Node 导入该文件。请注意，使用原生 Node ES 模块时存在一些[注意事项](#caveats-when-using-native-node-es-modules)，因为 Rollup 将遵循 [Node ESM 语义](https://nodejs.org/docs/latest-v14.x/api/packages.html#packages_determining_module_system)。
 
 如果你想使用 `require` 和 `module.exports` 编写 CommonJS 模块的配置文件，你应该将文件扩展名更改为 `.cjs`。
 
@@ -34,7 +34,7 @@ rollup --config rollup.config.ts --configPlugin typescript
 
 使用 `--configPlugin` 选项将始终强制将你的配置文件先转换为 CommonJS 格式。同时，查看 [Config Intellisense](#config-intellisense) 以获取在配置文件中使用 TypeScript 类型定义的更多方法。
 
-配置文件支持下面列出的选项。有关每个选项的详细信息，请参阅 [选项大全](../configuration-options/index.md)：
+配置文件支持下面列出的选项。有关每个选项的详细信息，请参阅[选项大全](../configuration-options/index.md)：
 
 ```javascript
 // rollup.config.js
@@ -131,7 +131,7 @@ export default {
 };
 ```
 
-你可以从配置文件中导出一个 **数组**，以便一次从多个不相关的输入进行打包，即使在监视模式下也可以。要使用相同的输入打出不同的包，你需要为每个输入提供一个输出选项数组：
+你可以从配置文件中导出一个**数组**，以便一次从多个不相关的输入进行打包，即使在监视模式下也可以。要使用相同的输入打出不同的包，你需要为每个输入提供一个输出选项数组：
 
 ```javascript
 // rollup.config.js (building more than one bundle)
@@ -439,7 +439,7 @@ export default {
 --watch.skipWrite           在监视时不要将文件写入磁盘
 ```
 
-以下标志仅通过命令行界面可用。所有其他标志都对应并覆盖其配置文件等效项，请参阅 [选项大列表](../configuration-options/index.md) 获取详细信息。
+以下标志仅通过命令行界面可用。所有其他标志都对应并覆盖其配置文件等效项，请参阅[选项大列表](../configuration-options/index.md)获取详细信息。
 
 ### `-h`/`--help` {#h-help}
 
@@ -523,7 +523,7 @@ _注意：在观察模式下，Rollup 的命令行界面将设置 `ROLLUP_WATCH`
 
 ### `--silent` {#silent}
 
-不在控制台上打印警告信息。如果你的配置文件包含一个 `onwarn` 处理程序，该处理程序仍然会被调用。要手动防止这种情况，你可以按照 [配置文件](#configuration-files) 结尾处所述的方式在配置文件中访问命令行选项。
+不在控制台上打印警告信息。如果你的配置文件包含一个 `onwarn` 处理程序，该处理程序仍然会被调用。要手动防止这种情况，你可以按照[配置文件](#configuration-files)结尾处所述的方式在配置文件中访问命令行选项。
 
 ### `--failAfterWarnings` {#failafterwarnings}
 
@@ -561,11 +561,11 @@ npm run build -- --environment BUILD:development
 
 ### `--stdin=ext` {#stdinext}
 
-在从 stdin 读取内容时指定虚拟文件扩展名。默认情况下，Rollup 将使用虚拟文件名 `-`，没有扩展名，用于从 stdin 读取的内容。但是，一些插件依赖于文件扩展名来确定是否处理文件。另请参见 [从 stdin 读取文件](#reading-a-file-from-stdin)。
+在从 stdin 读取内容时指定虚拟文件扩展名。默认情况下，Rollup 将使用虚拟文件名 `-`，没有扩展名，用于从 stdin 读取的内容。但是，一些插件依赖于文件扩展名来确定是否处理文件。另请参见[从 stdin 读取文件](#reading-a-file-from-stdin)。
 
 ### `--no-stdin` {#no-stdin}
 
-不要从 `stdin` 读取文件。设置此标志将防止将内容传输到 Rollup 并确保 Rollup 将 `-` 和 `-.[ext]` 解释为常规文件名，而不是将其解释为 `stdin` 的名称。另请参见 [从 stdin 读取文件](#reading-a-file-from-stdin)。
+不要从 `stdin` 读取文件。设置此标志将防止将内容传输到 Rollup 并确保 Rollup 将 `-` 和 `-.[ext]` 解释为常规文件名，而不是将其解释为 `stdin` 的名称。另请参见[从 stdin 读取文件](#reading-a-file-from-stdin)。
 
 ### `--watch.onStart <cmd>`，`--watch.onBundleStart <cmd>`，`--watch.onBundleEnd <cmd>`，`--watch.onEnd <cmd>`，`--watch.onError <cmd>` {#watchonstart-cmd-watchonbundlestart-cmd-watchonbundleend-cmd-watchonend-cmd-watchonerror-cmd}
 
