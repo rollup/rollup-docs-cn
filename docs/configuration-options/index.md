@@ -2333,33 +2333,19 @@ const element = angular.element;
 
 不过，该选项只记录顶层的语句。有时，例如在立即调用函数表达式的情况下，实际的副作用可能隐藏在一个嵌套表达式中。
 
-### output.experimentalMinChunkSize {#output-experimentalminchunksize}
+### output.experimentalMinChunkSize
 
-<<<<<<< HEAD
-|        |                                     |
-| -----: | :---------------------------------- |
-| 类型： | `number`                            |
-|  CLI： | `--experimentalMinChunkSize <size>` |
-| 默认： | `0`                                 |
-
-该选项用于为代码分割设置一个以字节为单位的最小 chunk 大小。当这个值大于 `0` 时，Rollup 将尝试把任何执行时没有副作用的 chunk，即任何只包含函数定义之类的 chunk 合并到另一个可能在类似条件下加载的块中。
-
-这意味着生成的 bundle 可能会加载还不需要的代码，用以减少 chunk 的数量。合并后的 chunk 必须是无副作用的，这个条件可以确保不会改变行为。
-
-但是，由于分块的工作方式，chunk 大小是在任何分块渲染插件，比如 minifiers 运行之前运行的，考虑这一点，这意味着你应该使用一个足够高的限制。
-=======
 |          |                                     |
 | -------: | :---------------------------------- |
-|    Type: | `number`                            |
+|    类型: | `number`                            |
 |     CLI: | `--experimentalMinChunkSize <size>` |
-| Default: | `1`                                 |
+| 默认: | `1`                                 |
 
-Set a minimal chunk size target in Byte for code-splitting setups. When this value is set to the default of `1`, Rollup will try to merge chunks that do not contain code except imports and reexports into other chunks. A merge will only be performed if it does not change what side effects are executed when any entry is loaded. For the value of `1`, only merges are permitted that do no increase the amount of code loaded for any entry.
+在代码分割(code-splitting)设置中，为字节设置一个最小代码块大小目标。当该值设置为默认值`1`时，Rollup将尝试将不包含代码（仅包含导入和重新导出）的块合并到其他代码块中。仅当合并不会改变任何入口加载时执行的副作用时，才会执行合并。对于值为`1`的情况，仅允许执行不增加任何入口加载的代码量的合并。
 
-Larger values will try to merge any chunk below the limit into other chunks. In that case, it is accepted that entries may load some unnecessary code. The algorithm always tries to merge in a way that minimizes the amount of unnecessary code, though.
+较大的值将尝试将低于限制的任何代码块合并到其他代码块中。在这种情况下，可能会加载一些不必要的代码，这是可以接受的。不过，该算法总是试图以最小化不必要代码量的方式进行合并。
 
-Unfortunately, due to the way chunking works, chunk size is measured before any chunk rendering plugins like minifiers ran, which means you should use a high enough limit to take this into account. When calculating the size, it will take tree-shaking of top-level statements into account, though.
->>>>>>> 174b618d5170d1afd14d6387e6cb4f6fb08da4d6
+不幸的是，由于块的渲染插件（如缩小器）运行之前，代码块大小是在测量之前进行的，这意味着您应该使用足够高的限制来考虑这一点。在计算大小时，它将考虑顶级语句的除屑优化。
 
 ### perf {#perf}
 
