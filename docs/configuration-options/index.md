@@ -2335,6 +2335,7 @@ const element = angular.element;
 
 ### output.experimentalMinChunkSize {#output-experimentalminchunksize}
 
+<<<<<<< HEAD
 |        |                                     |
 | -----: | :---------------------------------- |
 | 类型： | `number`                            |
@@ -2346,6 +2347,19 @@ const element = angular.element;
 这意味着生成的 bundle 可能会加载还不需要的代码，用以减少 chunk 的数量。合并后的 chunk 必须是无副作用的，这个条件可以确保不会改变行为。
 
 但是，由于分块的工作方式，chunk 大小是在任何分块渲染插件，比如 minifiers 运行之前运行的，考虑这一点，这意味着你应该使用一个足够高的限制。
+=======
+|          |                                     |
+| -------: | :---------------------------------- |
+|    Type: | `number`                            |
+|     CLI: | `--experimentalMinChunkSize <size>` |
+| Default: | `1`                                 |
+
+Set a minimal chunk size target in Byte for code-splitting setups. When this value is set to the default of `1`, Rollup will try to merge chunks that do not contain code except imports and reexports into other chunks. A merge will only be performed if it does not change what side effects are executed when any entry is loaded. For the value of `1`, only merges are permitted that do no increase the amount of code loaded for any entry.
+
+Larger values will try to merge any chunk below the limit into other chunks. In that case, it is accepted that entries may load some unnecessary code. The algorithm always tries to merge in a way that minimizes the amount of unnecessary code, though.
+
+Unfortunately, due to the way chunking works, chunk size is measured before any chunk rendering plugins like minifiers ran, which means you should use a high enough limit to take this into account. When calculating the size, it will take tree-shaking of top-level statements into account, though.
+>>>>>>> a9a83597f8ddf14b4f94a8c797bd3bf0f3a593a7
 
 ### perf {#perf}
 
