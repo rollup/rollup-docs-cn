@@ -1,5 +1,38 @@
 # rollup changelog
 
+## 3.22.1
+
+_2023-05-21_
+
+### Bug Fixes
+
+- Remove force quit again as it caused some issues (#5004)
+
+### Pull Requests
+
+- [#5001](https://github.com/rollup/rollup/pull/5001): chore(deps): update dependency @rollup/plugin-commonjs to v25 (@renovate[bot])
+- [#5002](https://github.com/rollup/rollup/pull/5002): chore(deps): update dependency eslint-plugin-unicorn to v47 (@renovate[bot])
+- [#5003](https://github.com/rollup/rollup/pull/5003): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5004](https://github.com/rollup/rollup/pull/5004): Do not force quit Rollup or close stdout (@lukastaegert)
+
+## 3.22.0
+
+_2023-05-17_
+
+### Features
+
+- Prevent empty non-facade chunks by merging them into other suitable chunks (#4989)
+- Avoid facade chunks in some situations involving reexports (#4989)
+- Improve algorithm for best merge target when using `experimentalMinChunkSize` to take tree-shaking into account (#4989)
+
+### Bug Fixes
+
+- Take side effects of external dependencies into account when merging chunks for `experimentalMinChunkSize` (#4989)
+
+### Pull Requests
+
+- [#4989](https://github.com/rollup/rollup/pull/4989): Prevent empty chunks and thoroughly improve experimentalMinChunkSize (@lukastaegert)
+
 ## 3.21.8
 
 _2023-05-16_
