@@ -2337,6 +2337,7 @@ const element = angular.element;
 
 |          |                                     |
 | -------: | :---------------------------------- |
+<<<<<<< HEAD
 |    类型： | `number`                            |
 |     CLI： | `--experimentalMinChunkSize <size>` |
 | 默认： | `1`                                 |
@@ -2346,6 +2347,17 @@ const element = angular.element;
 较大的值将尝试将低于限制的任何 chunk 合并到其他 chunk 中。在这种情况下，可能会加载一些不必要的代码，这是可以接受的。不过，该算法总是试图以最小化不必要代码量的方式进行合并。
 
 不幸的是，由于块的渲染插件（如缩小器）运行之前，chunk 大小是在测量之前进行的，这意味着您应该使用足够高的限制来考虑这一点。在计算大小时，它将考虑顶级语句的除屑优化。
+=======
+|    Type: | `number`                            |
+|     CLI: | `--experimentalMinChunkSize <size>` |
+| Default: | `1`                                 |
+
+Set a minimal chunk size target in Byte for code-splitting setups. When this value is set to the default of `1`, Rollup will try to merge chunks that do not contain code except imports and reexports into other chunks. A merge will only be performed if it does not change what side effects are executed when any entry is loaded. For the value of `1`, only merges are permitted that do no increase the amount of code loaded for any entry.
+
+Larger values will try to merge any chunk below the limit into other chunks. In that case, it is accepted that entries may load some unnecessary code. The algorithm always tries to merge in a way that minimizes the amount of unnecessary code, though.
+
+Unfortunately, due to the way chunking works, chunk size is measured before any chunk rendering plugins like minifiers ran, which means you should use a high enough limit to take this into account. When calculating the size, it will take tree-shaking of top-level statements into account, though.
+>>>>>>> 6797d576bf5b221e6592882d8d905da8dc978479
 
 ### perf {#perf}
 
