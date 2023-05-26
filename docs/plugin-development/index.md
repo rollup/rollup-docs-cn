@@ -1137,9 +1137,15 @@ function importMetaUrlCurrentModulePlugin() {
 
 ### this.emitFile
 
+<<<<<<< HEAD
 |       |                                                         |
 | ----: | :------------------------------------------------------ |
 | 类型: | `(emittedFile: EmittedChunk \| EmittedAsset) => string` |
+=======
+|  |  |
+| --: | :-- |
+| Type: | `(emittedFile: EmittedChunk \| EmittedPrebuiltChunk \| EmittedAsset) => string` |
+>>>>>>> b5ac3e51943de94c0d87b26d525b326166913258
 
 ```typescript
 interface EmittedChunk {
@@ -1152,6 +1158,14 @@ interface EmittedChunk {
 	preserveSignature?: 'strict' | 'allow-extension' | 'exports-only' | false;
 }
 
+interface EmittedPrebuiltChunk {
+	type: 'prebuilt-chunk';
+	fileName: string;
+	code: string;
+	exports?: string[];
+	map?: SourceMap;
+}
+
 interface EmittedAsset {
 	type: 'asset';
 	name?: string;
@@ -1161,9 +1175,15 @@ interface EmittedAsset {
 }
 ```
 
+<<<<<<< HEAD
 `emitFile` 方法可以生成一个新的文件，并将其包含在构建输出中。同时，它会返回一个 `referenceId`，可以在各种地方使用该 `referenceId` 来引用生成的文件。你可以生成代码块或者资源文件。
 
 在两种情况下，都可以提供 `name` 或 `fileName`。如果提供了 `fileName`，它将被直接用作生成文件的名称，如果这会导致冲突，则会抛出错误。否则，如果提供了`name`，则会将其用作相应的 [`output.chunkFileNames`](../configuration-options/index.md#output-chunkfilenames) 或 [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) 模式中的 `[name]` 的替换，可能会在文件名的末尾添加一个唯一的数字以避免冲突。如果既没有提供 `name` 也没有提供 `fileName`，则会使用默认名称。
+=======
+Emits a new file that is included in the build output and returns a `referenceId` that can be used in various places to reference the emitted file. You can emit chunks, prebuilt chunks or assets.
+
+When emitting chunks or assets, either a `name` or a `fileName` can be supplied. If a `fileName` is provided, it will be used unmodified as the name of the generated file, throwing an error if this causes a conflict. Otherwise, if a `name` is supplied, this will be used as substitution for `[name]` in the corresponding [`output.chunkFileNames`](../configuration-options/index.md#output-chunkfilenames) or [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) pattern, possibly adding a unique number to the end of the file name to avoid conflicts. If neither a `name` nor `fileName` is supplied, a default name will be used. Prebuilt chunks must always have a `fileName`.
+>>>>>>> b5ac3e51943de94c0d87b26d525b326166913258
 
 你可以通过 `import.meta.ROLLUP_FILE_URL_referenceId` 在任何由 [`load`](#load) 或 [`transform`](#transform) 插件钩子返回的代码中引用生成的文件的 URL。有关更多详细信息和示例，请参见 [File URL](#file-urls)。
 
@@ -1238,7 +1258,47 @@ export default {
 
 请注意，即使在 `implicitlyLoadedAfterOneOf` 中可以使用任何模块 ID，如果这样的 ID 不能与块唯一关联，例如因为 `id` 不能从现有的静态入口点隐式或显式地到达，或者因为文件被完全剪枝，Rollup 也会抛出错误。只使用入口点，无论是用户定义的还是先前发出的块，都将始终起作用。
 
+<<<<<<< HEAD
 如果 `type` 是 _`asset`_，则会发出一个具有给定 `source` 内容的任意新文件。可以通过 [`this.setAssetSource(referenceId, source)`](#this-setassetsource) 推迟设置 `source` 到稍后的时间，以便在生成阶段期间能够引用文件，同时为每个输出单独设置源。具有指定 `fileName` 的资源将始终生成单独的文件，而其他发出的资源可能会与现有资源进行去重，即使 `name` 不匹配，但它们具有相同的源。如果没有 `fileName` 的资源没有被去重，则将使用 [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) 名称模式。如果将 `needsCodeReference` 设置为 `true` ，并且此资源在输出中没有被任何代码引用，即没有通过 `import.meta.ROLLUP_FILE_URL_referenceId` 引用，则 Rollup 将不会发出它。这也尊重通过除屑优化除去的引用，即如果相应的 `import.meta.ROLLUP_FILE_URL_referenceId` 是源代码的一部分，但实际上没有使用并且引用被除屑优化除去，则不会发出该资源。
+=======
+If the `type` is `prebuilt-chunk`, it emits a chunk with fixed contents provided by the `code` parameter. At the moment, `fileName` is also required to provide the name of the chunk. If it exports some variables, we should list these via the optional `exports`. Via `map` we can provide a sourcemap that corresponds to `code`.
+
+To reference a prebuilt chunk in imports, we need to mark the "module" as external in the [`resolveId`](#resolveid) hook as prebuilt chunks are not part of the module graph. Instead, they behave like assets with chunk meta-data:
+
+```js
+function emitPrebuiltChunkPlugin() {
+	return {
+		name: 'emit-prebuilt-chunk',
+		load(id) {
+			if (id === '/my-prebuilt-chunk.js') {
+				return {
+					id,
+					external: true
+				};
+			}
+		},
+		buildStart() {
+			this.emitFile({
+				type: 'prebuilt-chunk',
+				fileName: 'my-prebuilt-chunk.js',
+				code: 'export const foo = "foo"',
+				exports: ['foo']
+			});
+		}
+	};
+}
+```
+
+Then you can reference the prebuilt chunk in your code:
+
+```js
+import { foo } from '/my-prebuilt-chunk.js';
+```
+
+Currently, emitting a prebuilt chunk is a basic feature. Looking forward to your feedback.
+
+If the `type` is _`asset`_, then this emits an arbitrary new file with the given `source` as content. It is possible to defer setting the `source` via [`this.setAssetSource(referenceId, source)`](#this-setassetsource) to a later time to be able to reference a file during the build phase while setting the source separately for each output during the generate phase. Assets with a specified `fileName` will always generate separate files while other emitted assets may be deduplicated with existing assets if they have the same source even if the `name` does not match. If an asset without a `fileName` is not deduplicated, the [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) name pattern will be used. If `needsCodeReference` is set to `true` and this asset is not referenced by any code in the output via `import.meta.ROLLUP_FILE_URL_referenceId`, then Rollup will not emit it. This also respects references removed via tree-shaking, i.e. if the corresponding `import.meta.ROLLUP_FILE_URL_referenceId` is part of the source code but is not actually used and the reference is removed by tree-shaking, then the asset is not emitted.
+>>>>>>> b5ac3e51943de94c0d87b26d525b326166913258
 
 ### this.error
 
