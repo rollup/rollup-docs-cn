@@ -1,7 +1,5 @@
 # rollup changelog
 
-<<<<<<< HEAD
-=======
 ## 3.23.1
 
 _2023-06-04_
@@ -49,7 +47,6 @@ _2023-05-21_
 - [#5003](https://github.com/rollup/rollup/pull/5003): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
 - [#5004](https://github.com/rollup/rollup/pull/5004): Do not force quit Rollup or close stdout (@lukastaegert)
 
->>>>>>> 7bbbcb5791a88e648ae33105ebf9b7deb70b55e1
 ## 3.22.0
 
 _2023-05-17_

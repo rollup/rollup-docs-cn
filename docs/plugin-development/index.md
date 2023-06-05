@@ -382,7 +382,7 @@ type ResolveDynamicImportHook = (
 
 如果动态导入未传递字符串作为参数，则此钩子可以访问原始 AST 节点以进行分析，并以以下方式略有不同：
 
-- 如果所有插件都返回 `null`，则将导入视为 `external`，而不会发出警告。
+- 如果所有插件都返回 `null`，则将导入视为 `external`，而不会产出警告。
 - 如果返回字符串，则此字符串不会被解释为模块 id，而是用作导入参数的替换。插件有责任确保生成的代码有效。
 - 要将此类导入解析为现有模块，仍然可以返回对象 `{id，external}`。
 
@@ -394,7 +394,7 @@ type ResolveDynamicImportHook = (
 | --: | :-- |
 | 类型: | `ResolveIdHook` |
 | 类别: | async, first |
-| 上一个钩子: | 如果我们正在解析入口点，则为 [`buildStart`](#buildstart)，如果我们正在解析导入，则为 [`moduleParsed`](#moduleparsed)，否则作为 [`resolveDynamicImport`](#resolvedynamicimport) 的后备。此外，此钩子可以通过调用 [`this.emitFile`](#this-emitfile) 来在构建阶段的插件钩子中触发以发出入口点，或随时调用 [`this.resolve`](#this-resolve) 手动解析 id。 |
+| 上一个钩子: | 如果我们正在解析入口点，则为 [`buildStart`](#buildstart)，如果我们正在解析导入，则为 [`moduleParsed`](#moduleparsed)，否则作为 [`resolveDynamicImport`](#resolvedynamicimport) 的后备。此外，此钩子可以通过调用 [`this.emitFile`](#this-emitfile) 来在构建阶段的插件钩子中触发以产出入口点，或随时调用 [`this.resolve`](#this-resolve) 手动解析 id。 |
 | 下一个钩子: | 如果尚未加载解析的 id，则为 [`load`](#load)，否则为 [`buildEnd`](#buildend)。 |
 
 ```typescript
@@ -431,7 +431,7 @@ import { foo } from '../bar.js';
 
 `importer` 是导入模块的完全解析的 id。在解析入口点时，`importer` 通常为 `undefined`。这里的一个例外是通过 [`this.emitFile`](#this-emitfile) 生成的入口点，这里可以提供一个 `importer` 参数。
 
-对于这些情况，`isEntry` 选项将告诉你我们正在解析用户定义的入口点、已发出的块，还是是否为 [`this.resolve`](#this-resolve) 上下文函数提供了 `isEntry` 参数。
+对于这些情况，`isEntry` 选项将告诉你我们正在解析用户定义的入口点、已产出的块，还是是否为 [`this.resolve`](#this-resolve) 上下文函数提供了 `isEntry` 参数。
 
 例如，你可以将其用作为入口点定义自定义代理模块的机制。以下插件将所有入口点代理到注入 polyfill 导入的模块中。
 
@@ -535,7 +535,7 @@ function externalizeDependencyPlugin() {
 
 可以在返回的对象中明确声明 `resolvedBy`。它将替换 [`this.resolve`](#this-resolve) 返回的相应字段。
 
-如果为外部模块返回 `assertions` 的值，则这将确定在生成 `"es"` 输出时如何呈现此模块的导入。例如，`{id: "foo", external: true, assertions: {type: "json"}}` 将导致此模块的导入显示为 `import "foo" assert {type: "json"}`。如果不传递值，则将使用 `assertions` 输入参数的值。传递一个空对象以删除任何断言。虽然 `assertions` 不影响产物模块的呈现，但它们仍然需要在模块的所有导入中保持一致，否则会发出警告。`load` 和 `transform` 钩子可以覆盖此选项。
+如果为外部模块返回 `assertions` 的值，则这将确定在生成 `"es"` 输出时如何呈现此模块的导入。例如，`{id: "foo", external: true, assertions: {type: "json"}}` 将导致此模块的导入显示为 `import "foo" assert {type: "json"}`。如果不传递值，则将使用 `assertions` 输入参数的值。传递一个空对象以删除任何断言。虽然 `assertions` 不影响产物模块的呈现，但它们仍然需要在模块的所有导入中保持一致，否则会产出警告。`load` 和 `transform` 钩子可以覆盖此选项。
 
 有关 `syntheticNamedExports` 选项的影响，请参见 [synthetic named exports](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将默认为 `false`。`load` 和 `transform` 钩子可以覆盖此选项。
 
@@ -868,7 +868,7 @@ interface ChunkInfo {
 
 在 `bundle.generate()` 结束时或在 `bundle.write()` 写入文件之前立即调用。要在写入文件后修改文件，请使用 [`writeBundle`](#writebundle) 钩子。`bundle` 提供正在写入或生成的文件的完整列表以及它们的详细信息。
 
-你可以通过在此钩子中从产物对象中删除它们来防止文件被发出。要发出其他文件，请使用 [`this.emitFile`](#this-emitfile) 插件上下文函数。
+你可以通过在此钩子中从产物对象中删除它们来防止文件被产出。要产出其他文件，请使用 [`this.emitFile`](#this-emitfile) 插件上下文函数。
 
 ::: danger
 
@@ -1050,16 +1050,16 @@ type ResolveFileUrlHook = (options: {
 }) => string | NullValue;
 ```
 
-允许自定义 Rollup 如何解析由插件通过 `this.emitFile` 发出的文件的 URL。默认情况下，Rollup 将生成代码 `import.meta.ROLLUP_FILE_URL_referenceId`，该代码应正确生成发出文件的绝对 URL，独立于输出格式和代码部署的主机系统。
+允许自定义 Rollup 如何解析由插件通过 `this.emitFile` 产出的文件的 URL。默认情况下，Rollup 将生成代码 `import.meta.ROLLUP_FILE_URL_referenceId`，该代码应正确生成产出文件的绝对 URL，独立于输出格式和代码部署的主机系统。
 
 为此，除了 CommonJS 和 UMD 之外的所有格式都假定它们在浏览器环境中运行，其中 `URL` 和 `document` 可用。如果失败或要生成更优化的代码，则可以使用此钩子自定义此行为。为此，可以使用以下信息：
 
 - `chunkId`：引用此文件的块的 ID。如果块文件名包含哈希，则此 ID 将包含占位符。如果最终出现在生成的代码中，Rollup 将使用实际文件名替换此占位符。
-- `fileName`：发出文件的路径和文件名，相对于 `output.dir`，没有前导的 `./`。同样，如果这是一个将在其名称中具有哈希的块，则它将包含占位符。
+- `fileName`：产出文件的路径和文件名，相对于 `output.dir`，没有前导的 `./`。同样，如果这是一个将在其名称中具有哈希的块，则它将包含占位符。
 - `format`：呈现的输出格式。
 - `moduleId`：引用此文件的原始模块的 ID。有助于有条件地以不同方式解析某些静态资源。
 - `referenceId`：文件的引用 ID。
-- `relativePath`：发出文件的路径和文件名，相对于引用该文件的块。此路径将不包含前导的 `./`，但可能包含前导的 `../`。
+- `relativePath`：产出文件的路径和文件名，相对于引用该文件的块。此路径将不包含前导的 `./`，但可能包含前导的 `../`。
 
 以下插件将始终相对于当前文档解析所有文件：
 
@@ -1137,15 +1137,9 @@ function importMetaUrlCurrentModulePlugin() {
 
 ### this.emitFile
 
-<<<<<<< HEAD
 |       |                                                         |
 | ----: | :------------------------------------------------------ |
-| 类型: | `(emittedFile: EmittedChunk \| EmittedAsset) => string` |
-=======
-|  |  |
-| --: | :-- |
-| Type: | `(emittedFile: EmittedChunk \| EmittedPrebuiltChunk \| EmittedAsset) => string` |
->>>>>>> 7bbbcb5791a88e648ae33105ebf9b7deb70b55e1
+| 类型: | `(emittedFile: EmittedChunk \| EmittedPrebuiltChunk \| EmittedAsset) => string` |
 
 ```typescript
 interface EmittedChunk {
@@ -1175,15 +1169,9 @@ interface EmittedAsset {
 }
 ```
 
-<<<<<<< HEAD
-`emitFile` 方法可以生成一个新的文件，并将其包含在构建输出中。同时，它会返回一个 `referenceId`，可以在各种地方使用该 `referenceId` 来引用生成的文件。你可以生成代码块或者资源文件。
+产出一个包含在生成产物中的新文件，并返回一个 `referenceId`，可以在各种地方使用它来引用生成的文件。你可能会产出代码块、预构建的代码块或者资源文件。
 
-在两种情况下，都可以提供 `name` 或 `fileName`。如果提供了 `fileName`，它将被直接用作生成文件的名称，如果这会导致冲突，则会抛出错误。否则，如果提供了`name`，则会将其用作相应的 [`output.chunkFileNames`](../configuration-options/index.md#output-chunkfilenames) 或 [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) 模式中的 `[name]` 的替换，可能会在文件名的末尾添加一个唯一的数字以避免冲突。如果既没有提供 `name` 也没有提供 `fileName`，则会使用默认名称。
-=======
-Emits a new file that is included in the build output and returns a `referenceId` that can be used in various places to reference the emitted file. You can emit chunks, prebuilt chunks or assets.
-
-When emitting chunks or assets, either a `name` or a `fileName` can be supplied. If a `fileName` is provided, it will be used unmodified as the name of the generated file, throwing an error if this causes a conflict. Otherwise, if a `name` is supplied, this will be used as substitution for `[name]` in the corresponding [`output.chunkFileNames`](../configuration-options/index.md#output-chunkfilenames) or [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) pattern, possibly adding a unique number to the end of the file name to avoid conflicts. If neither a `name` nor `fileName` is supplied, a default name will be used. Prebuilt chunks must always have a `fileName`.
->>>>>>> 7bbbcb5791a88e648ae33105ebf9b7deb70b55e1
+当生成代码块或者资源文件时，可以提供 `name` 或者 `fileName`。如果提供了 `fileName`，它将不会被修改，而是直接作为生成文件的名称，如果这样会导致冲突，则会抛出错误。否则，如果提供了 `name`，它将被用作对应的 [`output.chunkFileNames`](../configuration-options/index.md#output-chunkfilenames) 或者 [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) 模式中的 `[name]` 的替换，可能会在文件名的末尾添加一个唯一的数字，以避免冲突。如果既没有提供 `name` 也没有提供 `fileName`，则会使用默认名称。预构建的代码块必须始终有一个 `fileName`。
 
 你可以通过 `import.meta.ROLLUP_FILE_URL_referenceId` 在任何由 [`load`](#load) 或 [`transform`](#transform) 插件钩子返回的代码中引用生成的文件的 URL。有关更多详细信息和示例，请参见 [File URL](#file-urls)。
 
@@ -1256,14 +1244,11 @@ export default {
 
 如果没有动态导入，这将创建三个块，其中第一个块包含 `src/entry1` 的所有依赖项，第二个块仅包含 `src/entry2` 的依赖项，这些依赖项不包含在第一个块中，并从第一个块中导入它们，第三个块也是同样的情况。
 
-请注意，即使在 `implicitlyLoadedAfterOneOf` 中可以使用任何模块 ID，如果这样的 ID 不能与块唯一关联，例如因为 `id` 不能从现有的静态入口点隐式或显式地到达，或者因为文件被完全剪枝，Rollup 也会抛出错误。只使用入口点，无论是用户定义的还是先前发出的块，都将始终起作用。
+请注意，即使在 `implicitlyLoadedAfterOneOf` 中可以使用任何模块 ID，如果这样的 ID 不能与块唯一关联，例如因为 `id` 不能从现有的静态入口点隐式或显式地到达，或者因为文件被完全剪枝，Rollup 也会抛出错误。只使用入口点，无论是用户定义的还是先前产出的块，都将始终起作用。
 
-<<<<<<< HEAD
-如果 `type` 是 _`asset`_，则会发出一个具有给定 `source` 内容的任意新文件。可以通过 [`this.setAssetSource(referenceId, source)`](#this-setassetsource) 推迟设置 `source` 到稍后的时间，以便在生成阶段期间能够引用文件，同时为每个输出单独设置源。具有指定 `fileName` 的资源将始终生成单独的文件，而其他发出的资源可能会与现有资源进行去重，即使 `name` 不匹配，但它们具有相同的源。如果没有 `fileName` 的资源没有被去重，则将使用 [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) 名称模式。如果将 `needsCodeReference` 设置为 `true` ，并且此资源在输出中没有被任何代码引用，即没有通过 `import.meta.ROLLUP_FILE_URL_referenceId` 引用，则 Rollup 将不会发出它。这也尊重通过除屑优化除去的引用，即如果相应的 `import.meta.ROLLUP_FILE_URL_referenceId` 是源代码的一部分，但实际上没有使用并且引用被除屑优化除去，则不会发出该资源。
-=======
-If the `type` is `prebuilt-chunk`, it emits a chunk with fixed contents provided by the `code` parameter. At the moment, `fileName` is also required to provide the name of the chunk. If it exports some variables, we should list these via the optional `exports`. Via `map` we can provide a sourcemap that corresponds to `code`.
+如果 `type` 是 `prebuilt-chunk`，则它会产出一个具有由 `code` 参数提供的固定内容的块。目前，也需要 `fileName` 来提供块的名称。如果它导出一些变量，我们应该通过可选的 `exports` 列出这些变量。通过 `map` 我们可以提供一个对应于 `code` 的源映射。
 
-To reference a prebuilt chunk in imports, we need to mark the "module" as external in the [`resolveId`](#resolveid) hook as prebuilt chunks are not part of the module graph. Instead, they behave like assets with chunk meta-data:
+要在导入中引用预构建的块，我们需要在 [`resolveId`](#resolveid) 钩子中将 "module" 标记为外部，因为预构建的块不是模块图的一部分。相反，它们的行为类似于具有块元数据的资源：
 
 ```js
 function emitPrebuiltChunkPlugin() {
@@ -1289,16 +1274,16 @@ function emitPrebuiltChunkPlugin() {
 }
 ```
 
-Then you can reference the prebuilt chunk in your code:
+然后你可以在你的代码中引用预构建的块：
 
 ```js
+
 import { foo } from '/my-prebuilt-chunk.js';
 ```
 
-Currently, emitting a prebuilt chunk is a basic feature. Looking forward to your feedback.
+目前，产出预构建的块是一个基本功能。期待你的反馈。
 
-If the `type` is _`asset`_, then this emits an arbitrary new file with the given `source` as content. It is possible to defer setting the `source` via [`this.setAssetSource(referenceId, source)`](#this-setassetsource) to a later time to be able to reference a file during the build phase while setting the source separately for each output during the generate phase. Assets with a specified `fileName` will always generate separate files while other emitted assets may be deduplicated with existing assets if they have the same source even if the `name` does not match. If an asset without a `fileName` is not deduplicated, the [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) name pattern will be used. If `needsCodeReference` is set to `true` and this asset is not referenced by any code in the output via `import.meta.ROLLUP_FILE_URL_referenceId`, then Rollup will not emit it. This also respects references removed via tree-shaking, i.e. if the corresponding `import.meta.ROLLUP_FILE_URL_referenceId` is part of the source code but is not actually used and the reference is removed by tree-shaking, then the asset is not emitted.
->>>>>>> 7bbbcb5791a88e648ae33105ebf9b7deb70b55e1
+如果 `type` 是 _`asset`_，则它会产出一个具有给定 `source` 作为内容的任意新文件。可以通过 [`this.setAssetSource(referenceId, source)`](#this-setassetsource) 推迟设置 `source` 到稍后的时间，以便在构建阶段引用文件，同时在生成阶段为每个输出单独设置源。具有指定 `fileName` 的资产将始终生成单独的文件，而其他产出的资产可能会与现有资产进行去重，即使 `name` 不匹配。如果这样的资产没有被去重，则会使用 [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) 名称模式。如果 `needsCodeReference` 设置为 `true`，并且此资产在输出中没有任何代码通过 `import.meta.ROLLUP_FILE_URL_referenceId` 引用，则 Rollup 将不会产出它。同时这也遵从通过除屑优化删除的引用，即如果相应的 `import.meta.ROLLUP_FILE_URL_referenceId` 是源代码的一部分，但实际上没有使用，引用被除屑优化给删除掉，也不会打包出相关的资源文件。
 
 ### this.error
 
@@ -1322,7 +1307,7 @@ If the `type` is _`asset`_, then this emits an arbitrary new file with the given
 | ----: | :-------------------------------- |
 | 类型: | `(referenceId: string) => string` |
 
-获取通过 [`this.emitFile`](#this-emitfile) 发出的块或资源的文件名。文件名将相对于 `outputOptions.dir`。
+获取通过 [`this.emitFile`](#this-emitfile) 产出的块或资源的文件名。文件名将相对于 `outputOptions.dir`。
 
 ### this.getModuleIds
 
@@ -1659,9 +1644,9 @@ this.warn({ message: 'hmm...' });
 
 ## 文件 URLs {#file-urls}
 
-要在 JS 代码中引用文件 URL 引用，请使用 `import.meta.ROLLUP_FILE_URL_referenceId` 替换。这将生成依赖于输出格式的代码，并生成指向目标环境中发出的文件的 URL。请注意，除了 CommonJS 和 UMD 之外的所有格式都假定它们在浏览器环境中运行，其中 `URL` 和 `document` 可用。
+要在 JS 代码中引用文件 URL 引用，请使用 `import.meta.ROLLUP_FILE_URL_referenceId` 替换。这将生成依赖于输出格式的代码，并生成指向目标环境中产出的文件的 URL。请注意，除了 CommonJS 和 UMD 之外的所有格式都假定它们在浏览器环境中运行，其中 `URL` 和 `document` 可用。
 
-以下示例将检测 `.svg` 文件的导入，将导入的文件作为资源发出，并返回它们的 URL，例如用作 `img` 标签的 `src` 属性：
+以下示例将检测 `.svg` 文件的导入，将导入的文件作为资源产出，并返回它们的 URL，例如用作 `img` 标签的 `src` 属性：
 
 ```js
 function svgResolverPlugin() {
@@ -1706,7 +1691,7 @@ if (COMPILER_FLAG) {
 }
 ```
 
-如果插件将 `COMPLIER_FLAG` 替换为 `false`，那么我们将得到一个意外的结果：未引用的静态资源仍然会被发出但未使用。我们可以通过在调用 [`this.emitFile`](#this-emitfile) 时将 `needsCodeReference` 设置为 `true` 来解决这个问题，如下面的代码所示：
+如果插件将 `COMPLIER_FLAG` 替换为 `false`，那么我们将得到一个意外的结果：未引用的静态资源仍然会被产出但未使用。我们可以通过在调用 [`this.emitFile`](#this-emitfile) 时将 `needsCodeReference` 设置为 `true` 来解决这个问题，如下面的代码所示：
 
 ```js
 function svgResolverPlugin() {
@@ -1729,7 +1714,7 @@ function svgResolverPlugin() {
 
 现在，只有在代码中实际使用引用 `import.meta.ROLLUP_FILE_URL_referenceId` 时，静态资源才会添加到产物中。
 
-类似于静态资源，发出的块也可以通过 `import.meta.ROLLUP_FILE_URL_referenceId` 从 JS 代码中引用。
+类似于静态资源，产出的块也可以通过 `import.meta.ROLLUP_FILE_URL_referenceId` 从 JS 代码中引用。
 
 以下示例将检测以 `register-paint-worklet:` 为前缀的导入，并生成必要的代码和单独的块以生成 CSS 绘制工作流。请注意，这仅适用于现代浏览器，并且仅在输出格式设置为 `es` 时才有效。
 
