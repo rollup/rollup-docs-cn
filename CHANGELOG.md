@@ -1,5 +1,52 @@
 # rollup changelog
 
+## 3.23.1
+
+_2023-06-04_
+
+### Bug Fixes
+
+- Ensure the last segment of sourcemapBaseUrl is never omitted (#5022)
+
+### Pull Requests
+
+- [#5006](https://github.com/rollup/rollup/pull/5006): Better workflow caching (@lukastaegert)
+- [#5012](https://github.com/rollup/rollup/pull/5012): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5022](https://github.com/rollup/rollup/pull/5022): fix: add a trailing slash automatically for sourcemapBaseUrl (@TrickyPi)
+- [#5023](https://github.com/rollup/rollup/pull/5023): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+
+## 3.23.0
+
+_2023-05-22_
+
+### Features
+
+- Support emitting "prebuilt chunks" from plugins (#4990)
+
+### Bug Fixes
+
+- Mark Sets and Maps as pure when they receive an array literal as argument (#5005)
+
+### Pull Requests
+
+- [#4990](https://github.com/rollup/rollup/pull/4990): feat: this.emitFile support prebuilt-chunk type (@TrickyPi)
+- [#5005](https://github.com/rollup/rollup/pull/5005): feat: mark Set, Map, WeakSet and WeakMap with array arguments as pure (@TrickyPi)
+
+## 3.22.1
+
+_2023-05-21_
+
+### Bug Fixes
+
+- Remove force quit again as it caused some issues (#5004)
+
+### Pull Requests
+
+- [#5001](https://github.com/rollup/rollup/pull/5001): chore(deps): update dependency @rollup/plugin-commonjs to v25 (@renovate[bot])
+- [#5002](https://github.com/rollup/rollup/pull/5002): chore(deps): update dependency eslint-plugin-unicorn to v47 (@renovate[bot])
+- [#5003](https://github.com/rollup/rollup/pull/5003): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5004](https://github.com/rollup/rollup/pull/5004): Do not force quit Rollup or close stdout (@lukastaegert)
+
 ## 3.22.0
 
 _2023-05-17_
