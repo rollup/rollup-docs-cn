@@ -2021,7 +2021,15 @@ type HasModuleSideEffects = (id: string, external: boolean) => boolean;
 |  CLI： | `--treeshake.annotations`/`--no-treeshake.annotations` |
 | 默认： | `true`                                                 |
 
+<<<<<<< HEAD
 如果该选项值为 `false`，那么在确定函数调用和构造函数调用的副作用时，将会忽略纯注释的提示，比如，包含 `@__PURE__` 或 `#__PURE__` 的注释。这些注释需要紧接在调用代码之前才能生效。该选项的值设置为 `false`，以下代码将原封不动，否则以下包含 `@__PURE__` 注释的代码将被完全删除。
+=======
+If `false`, ignore hints from annotation in comments:
+
+##### `@__PURE__`
+
+Comments containing `@__PURE__` or `#__PURE__` mark a specific function call or constructor invocation as side effect free. That means that Rollup will tree-shake i.e. remove the call unless the return value is used in some code that is not tree-shaken. These annotations need to immediately precede the call invocation to take effect. The following code will be completely tree-shaken unless this option is set to `false`, in which case it will remain unchanged.
+>>>>>>> 3437c89d50ddb0e879fd46860094a37fd53078a8
 
 ```javascript
 /*@__PURE__*/ console.log('side-effect');
@@ -2035,7 +2043,30 @@ class Impure {
 /*@__PURE__*/ new Impure();
 ```
 
+<<<<<<< HEAD
 #### treeshake.correctVarValueBeforeDeclaration {#treeshake-correctvarvaluebeforedeclaration}
+=======
+##### `@__NO_SIDE_EFFECTS__`
+
+Comments containing `@__NO_SIDE_EFFECTS__` or `#__NO_SIDE_EFFECTS__` mark a function declaration itself as side effect free. When a function has been marked as having no side effects, all calls to that function will be considered to be side effect free. The following code will be completely tree-shaken unless this option is set to `false`, in which case it will remain unchanged.
+
+```javascript
+/*@__NO_SIDE_EFFECTS__*/
+function impure() {
+	console.log('side-effect');
+}
+
+/*@__NO_SIDE_EFFECTS__*/
+const impureArrowFn = () => {
+	console.log('side-effect');
+};
+
+impure(); // <-- call will be considered as side effect free
+impureArrowFn(); // <-- call will be considered as side effect free
+```
+
+#### treeshake.correctVarValueBeforeDeclaration
+>>>>>>> 3437c89d50ddb0e879fd46860094a37fd53078a8
 
 |  |  |
 | --: | :-- |
@@ -2337,6 +2368,7 @@ const element = angular.element;
 
 |          |                                     |
 | -------: | :---------------------------------- |
+<<<<<<< HEAD
 |    类型: | `number`                            |
 |    CLI: | `--experimentalMinChunkSize <size>` |
 |    默认: | `1`                                 |
@@ -2346,6 +2378,17 @@ const element = angular.element;
 较大的值将尝试将低于限制的任何 chunk 合并到其他 chunk 中。在这种情况下，可能会加载一些不必要的代码，不过也是可以接受的。同时该算法进行合并时总是尽可能地减少不必要的代码。
 
 不幸的是，由于块的渲染插件（如最小化压缩工具）运行之前，chunk 大小是在测量之前进行的，这意味着您应该给出足够高的限额。在计算大小时，它也将考虑对顶层语句的除屑优化。
+=======
+|    Type: | `number`                            |
+|     CLI: | `--experimentalMinChunkSize <size>` |
+| Default: | `1`                                 |
+
+Set a minimal chunk size target in Byte for code-splitting setups. When this value is set to the default of `1`, Rollup will try to merge chunks that do not contain code except imports and reexports into other chunks. A merge will only be performed if it does not change what side effects are executed when any entry is loaded. For the value of `1`, only merges are permitted that do no increase the amount of code loaded for any entry.
+
+Larger values will try to merge any chunk below the limit into other chunks. In that case, it is accepted that entries may load some unnecessary code. The algorithm always tries to merge in a way that minimizes the amount of unnecessary code, though.
+
+Unfortunately, due to the way chunking works, chunk size is measured before any chunk rendering plugins like minifiers ran, which means you should use a high enough limit to take this into account. When calculating the size, it will take tree-shaking of top-level statements into account, though.
+>>>>>>> 3437c89d50ddb0e879fd46860094a37fd53078a8
 
 ### perf {#perf}
 
