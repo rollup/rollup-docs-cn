@@ -2021,7 +2021,15 @@ type HasModuleSideEffects = (id: string, external: boolean) => boolean;
 |  CLI： | `--treeshake.annotations`/`--no-treeshake.annotations` |
 | 默认： | `true`                                                 |
 
+<<<<<<< HEAD
 如果该选项值为 `false`，那么在确定函数调用和构造函数调用的副作用时，将会忽略纯注释的提示，比如，包含 `@__PURE__` 或 `#__PURE__` 的注释。这些注释需要紧接在调用代码之前才能生效。该选项的值设置为 `false`，以下代码将原封不动，否则以下包含 `@__PURE__` 注释的代码将被完全删除。
+=======
+If `false`, ignore hints from annotation in comments:
+
+##### `@__PURE__`
+
+Comments containing `@__PURE__` or `#__PURE__` mark a specific function call or constructor invocation as side effect free. That means that Rollup will tree-shake i.e. remove the call unless the return value is used in some code that is not tree-shaken. These annotations need to immediately precede the call invocation to take effect. The following code will be completely tree-shaken unless this option is set to `false`, in which case it will remain unchanged.
+>>>>>>> de2d6ff047cfd88e5ebd297c6ef9b2cb7732ddc6
 
 ```javascript
 /*@__PURE__*/ console.log('side-effect');
@@ -2035,7 +2043,30 @@ class Impure {
 /*@__PURE__*/ new Impure();
 ```
 
+<<<<<<< HEAD
 #### treeshake.correctVarValueBeforeDeclaration {#treeshake-correctvarvaluebeforedeclaration}
+=======
+##### `@__NO_SIDE_EFFECTS__`
+
+Comments containing `@__NO_SIDE_EFFECTS__` or `#__NO_SIDE_EFFECTS__` mark a function declaration itself as side effect free. When a function has been marked as having no side effects, all calls to that function will be considered to be side effect free. The following code will be completely tree-shaken unless this option is set to `false`, in which case it will remain unchanged.
+
+```javascript
+/*@__NO_SIDE_EFFECTS__*/
+function impure() {
+	console.log('side-effect');
+}
+
+/*@__NO_SIDE_EFFECTS__*/
+const impureArrowFn = () => {
+	console.log('side-effect');
+};
+
+impure(); // <-- call will be considered as side effect free
+impureArrowFn(); // <-- call will be considered as side effect free
+```
+
+#### treeshake.correctVarValueBeforeDeclaration
+>>>>>>> de2d6ff047cfd88e5ebd297c6ef9b2cb7732ddc6
 
 |  |  |
 | --: | :-- |

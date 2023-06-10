@@ -1,5 +1,32 @@
 # rollup changelog
 
+## 3.24.1
+
+_2023-06-10_
+
+### Bug Fixes
+
+- Fix an issue where bundles with `@rollup/plugin-commonjs` were missing internal dependencies when code-splitting (#5029)
+- Do not use `process.exit(0)` in watch mode to avoid issues in embedded scenarios (#5027)
+
+### Pull Requests
+
+- [#5027](https://github.com/rollup/rollup/pull/5027): fix turborepo with rollup --watch (@plumber-dhaval)
+- [#5028](https://github.com/rollup/rollup/pull/5028): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5029](https://github.com/rollup/rollup/pull/5029): fix: get right sideEffectModules (@TrickyPi)
+
+## 3.24.0
+
+_2023-06-07_
+
+### Features
+
+- Add new annotation `/* #__NO_SIDE_EFFECTS__ */` to mark function declarations as side effect free (#5024)
+
+### Pull Requests
+
+- [#5024](https://github.com/rollup/rollup/pull/5024): feat: support `#__NO_SIDE_EFFECTS__` annotation for function declaration (@antfu)
+
 ## 3.23.1
 
 _2023-06-04_
