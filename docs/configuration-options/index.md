@@ -392,7 +392,23 @@ buildWithCache()
 	});
 ```
 
+<<<<<<< HEAD
 ### makeAbsoluteExternalsRelative {#makeabsoluteexternalsrelative}
+=======
+### logLevel
+
+|          |                        |
+| -------: | :--------------------- |
+|    Type: | `LogLevel \| "silent"` |
+|     CLI: | `--logLevel <level>`   |
+| Default: | `"info"`               |
+
+Determine which logs to process. See [`onLog`](#onlog) for the available log levels. The default `logLevel` of `"info"` means that info and warnings logs will be processed while debug logs will be swallowed, which means that they are neither passed to plugin [`onLog`](../plugin-development/index.md#onlog) hooks nor the `onLog` option or printed to the console.
+
+When using the CLI, errors will still be printed to the console as they are not processed via the logging system. See the [`--silent`](../command-line-interface/index.md#silent) flag for how to suppress error logs.
+
+### makeAbsoluteExternalsRelative
+>>>>>>> 36b8b6b16ac0dc66ef0dec28067639363cadff89
 
 |  |  |
 | --: | :-- |
@@ -422,6 +438,7 @@ buildWithCache()
 
 该选项限制 rollup 在读取模块或写入 chunk 时，同时能打开的文件数量。如果没有限制或者数值足够高，构建可能会失败，显示“EMFILE: Too many open files”（EMFILE：打开的文件数过多）。这取决于操作系统限制的句柄数（open file handles）大小。
 
+<<<<<<< HEAD
 ### onwarn {#onwarn}
 
 |  |  |
@@ -431,10 +448,59 @@ buildWithCache()
 该选项为一个拦截警告信息的函数。如果不提供，警告将去重并打印到控制台。当在命令行使用 [`--silent`](../command-line-interface/index.md#silent) 选项时，该选项是获取警告通知的唯一途径。
 
 该函数接收两个参数：警告对象和默认处理函数。其中，警告对象至少有一个 `code` 和一个 `message` 属性，用于控制如何处理不同种类的警告。另外，根据不同的警告类型，警告对象上会有其他的属性。可查看 [`utils/error.ts`](https://github.com/rollup/rollup/blob/master/src/utils/error.ts) 以获得完整的错误和警告列表，以及它们的代码和属性。
+=======
+### onLog
+
+|  |  |
+| --: | :-- |
+| Type: | `(level: LogLevel, log: RollupLog, defaultHandler: LogOrStringHandler) => void;` |
+
+```typescript
+type LogLevel = 'warn' | 'info' | 'debug';
+
+type LogOrStringHandler = (
+	level: LogLevel | 'error',
+	log: string | RollupLog
+) => void;
+
+// All possible properties, actual properties depend on log
+interface RollupLog {
+	binding?: string;
+	cause?: Error;
+	code?: string;
+	exporter?: string;
+	frame?: string; // always printed by the CLI
+	hook?: string;
+	id?: string; // always printed by the CLI
+	ids?: string[];
+	loc?: {
+		column: number;
+		file?: string;
+		line: number;
+	}; // always printed by the CLI if id is present
+	message: string; // the actual message, always printed by the CLI
+	meta?: any; // add custom plugin properties to logs
+	names?: string[];
+	plugin?: string; // added by Rollup for plugin logs, only printed for warnings
+	pluginCode?: string; // added by Rollup for plugin logs that contain a code
+	pos?: number;
+	reexporter?: string;
+	stack?: string; // url for additional information, always printed by the CLI
+	url?: string;
+}
+```
+
+A function that intercepts log messages. If not supplied, logs are printed to the console, whereby Rollup CLI aggregates certain `"warn"` logs and prints consolidated warnings after the build to reduce noise. This handler is also triggered when using the [`--silent`](../command-line-interface/index.md#silent) CLI option.
+
+The function receives three arguments: the log level, the log object and the default handler. Log objects have, at a minimum, a `code` and a `message` property, allowing you to control how different kinds of logs are handled. Other properties are added depending on the type of log. See [`utils/logs.ts`](https://github.com/rollup/rollup/blob/master/src/utils/logs.ts) for a complete list of built-in errors and logs together with their codes and properties.
+
+If the default handler is not invoked, the log will not be printed to the console. Moreover, you can change the log level by invoking the default handler with a different level. Using the additional level `"error"` will turn the log into a thrown error that has all properties of the log attached.
+>>>>>>> 36b8b6b16ac0dc66ef0dec28067639363cadff89
 
 ```js
 // rollup.config.js
 export default {
+<<<<<<< HEAD
 	//...,
 	onwarn(warning, warn) {
 		// 跳过指定类型的警告
@@ -449,28 +515,60 @@ export default {
 
 		// 使用默认处理函数兜底
 		warn(warning);
+=======
+	//...
+	onLog(level, log, handler) {
+		if (log.code === 'CIRCULAR_DEPENDENCY') {
+			return; // Ignore circular dependency warnings
+		}
+		if (level === 'warn') {
+			handler('error', log); // turn other warnings into errors
+		} else {
+			handler(level, info); // otherwise, just print the log
+		}
+>>>>>>> 36b8b6b16ac0dc66ef0dec28067639363cadff89
 	}
 };
 ```
 
+<<<<<<< HEAD
 很多警告还具有 `loc` 和 `frame` 属性，它们可以用来定位警告来源：
+=======
+This handler will not be invoked if logs are filtered out by the [`logLevel`](#loglevel) option. I.e. by default, `"debug"` logs will be swallowed.
+
+Some logs also have a `loc` property and a `frame` allowing you to locate the source of the log:
+>>>>>>> 36b8b6b16ac0dc66ef0dec28067639363cadff89
 
 ```js
 // rollup.config.js
 export default {
-  ...,
-  onwarn ({ loc, frame, message }) {
-    if (loc) {
-      console.warn(`${loc.file} (${loc.line}:${loc.column}) ${message}`);
-      if (frame) console.warn(frame);
-    } else {
-      console.warn(message);
-    }
-  }
+	//...
+	onLog(level, { loc, frame, message }) {
+		if (loc) {
+			console.warn(`${loc.file} (${loc.line}:${loc.column}) ${message}`);
+			if (frame) console.warn(frame);
+		} else {
+			console.warn(message);
+		}
+	}
 };
 ```
 
+<<<<<<< HEAD
 ### output.assetFileNames {#output-assetfilenames}
+=======
+### onwarn
+
+|  |  |
+| --: | :-- |
+| Type: | `(warning: RollupLog, defaultHandler: (warning: string \| RollupLog) => void) => void;` |
+
+A function that will intercept warning messages. It is very similar to [`onLog`](#onlog) but only receives warnings. If the default handler is invoked, the log will be handled as a warning. If both an `onLog` and `onwarn` handler are provided, the `onwarn` handler will only be invoked if `onLog` calls its default handler with a `level` of `warn`.
+
+See [`onLog`](#onlog) for more information.
+
+### output.assetFileNames
+>>>>>>> 36b8b6b16ac0dc66ef0dec28067639363cadff89
 
 |        |                                               |
 | -----: | :-------------------------------------------- |
@@ -2021,7 +2119,15 @@ type HasModuleSideEffects = (id: string, external: boolean) => boolean;
 |  CLI： | `--treeshake.annotations`/`--no-treeshake.annotations` |
 | 默认： | `true`                                                 |
 
+<<<<<<< HEAD
 如果该选项值为 `false`，那么在确定函数调用和构造函数调用的副作用时，将会忽略纯注释的提示，比如，包含 `@__PURE__` 或 `#__PURE__` 的注释。这些注释需要紧接在调用代码之前才能生效。该选项的值设置为 `false`，以下代码将原封不动，否则以下包含 `@__PURE__` 注释的代码将被完全删除。
+=======
+If `false`, ignore hints from annotation in comments:
+
+##### `@__PURE__`
+
+Comments containing `@__PURE__` or `#__PURE__` mark a specific function call or constructor invocation as side effect free. That means that Rollup will tree-shake i.e. remove the call unless the return value is used in some code that is not tree-shaken. These annotations need to immediately precede the call invocation to take effect. The following code will be completely tree-shaken unless this option is set to `false`, in which case it will remain unchanged.
+>>>>>>> 36b8b6b16ac0dc66ef0dec28067639363cadff89
 
 ```javascript
 /*@__PURE__*/ console.log('side-effect');
@@ -2035,7 +2141,30 @@ class Impure {
 /*@__PURE__*/ new Impure();
 ```
 
+<<<<<<< HEAD
 #### treeshake.correctVarValueBeforeDeclaration {#treeshake-correctvarvaluebeforedeclaration}
+=======
+##### `@__NO_SIDE_EFFECTS__`
+
+Comments containing `@__NO_SIDE_EFFECTS__` or `#__NO_SIDE_EFFECTS__` mark a function declaration itself as side effect free. When a function has been marked as having no side effects, all calls to that function will be considered to be side effect free. The following code will be completely tree-shaken unless this option is set to `false`, in which case it will remain unchanged.
+
+```javascript
+/*@__NO_SIDE_EFFECTS__*/
+function impure() {
+	console.log('side-effect');
+}
+
+/*@__NO_SIDE_EFFECTS__*/
+const impureArrowFn = () => {
+	console.log('side-effect');
+};
+
+impure(); // <-- call will be considered as side effect free
+impureArrowFn(); // <-- call will be considered as side effect free
+```
+
+#### treeshake.correctVarValueBeforeDeclaration
+>>>>>>> 36b8b6b16ac0dc66ef0dec28067639363cadff89
 
 |  |  |
 | --: | :-- |
