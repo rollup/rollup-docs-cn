@@ -1,5 +1,60 @@
 # rollup changelog
 
+## 3.25.1
+
+_2023-06-12_
+
+### Bug Fixes
+
+- Respect `__NO_SIDE_EFFECTS__` for async functions (#5031)
+
+### Pull Requests
+
+- [#5031](https://github.com/rollup/rollup/pull/5031): fix: `__NO_SIDE_EFFECTS__` annotation for async function (@antfu)
+
+## 3.25.0
+
+_2023-06-11_
+
+### Features
+
+- Add `this.info` and `this.debug` plugin context logging functions (#5026)
+- Add `onLog` option to read, map and filter logs (#5026)
+- Add `logLevel` option to fully suppress logs by level (#5026)
+- Support function logs in `this.warn`, `this.info` and `this.debug` to avoid heavy computations based on log level (#5026)
+- Add `onLog` plugin hook to read, filter and map logs from plugins (#5026)
+
+### Pull Requests
+
+- [#5026](https://github.com/rollup/rollup/pull/5026): Add Logging API (@lukastaegert)
+
+## 3.24.1
+
+_2023-06-10_
+
+### Bug Fixes
+
+- Fix an issue where bundles with `@rollup/plugin-commonjs` were missing internal dependencies when code-splitting (#5029)
+- Do not use `process.exit(0)` in watch mode to avoid issues in embedded scenarios (#5027)
+
+### Pull Requests
+
+- [#5027](https://github.com/rollup/rollup/pull/5027): fix turborepo with rollup --watch (@plumber-dhaval)
+- [#5028](https://github.com/rollup/rollup/pull/5028): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5029](https://github.com/rollup/rollup/pull/5029): fix: get right sideEffectModules (@TrickyPi)
+
+## 3.24.0
+
+_2023-06-07_
+
+### Features
+
+- Add new annotation `/* #__NO_SIDE_EFFECTS__ */` to mark function declarations as side effect free (#5024)
+
+### Pull Requests
+
+- [#5024](https://github.com/rollup/rollup/pull/5024): feat: support `#__NO_SIDE_EFFECTS__` annotation for function declaration (@antfu)
+
 ## 3.23.1
 
 _2023-06-04_
