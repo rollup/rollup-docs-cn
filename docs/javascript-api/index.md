@@ -16,7 +16,7 @@ Rollup 提供了一个可从 Node.js 使用的 JavaScript API。你很少需要�
 
 完成 `bundle` 对象后，应调用 `bundle.close()`，这将通过 [`closeBundle`](../plugin-development/index.md#closebundle) 钩子让插件清理它们的外部进程或服务。
 
-如果任一阶段发生错误，它将返回一个被拒绝的 Promise，其中包含一个 Error，你可以通过它们的 `code` 属性进行识别。除了 `code` 和 `message`，许多错误还具有其他属性，你可以用它们进行自定义报告，有关错误和警告的完整列表以及它们的代码和属性，请参阅 [`utils/error.ts`](https://github.com/rollup/rollup/blob/master/src/utils/error.ts)。
+如果任一阶段发生错误，它将返回一个 Promise，该 Promise 被 reject 得到一个 Error，你可以通过它们的 `code` 属性来识别。除了 `code` 和 `message`，许多错误还有其他属性，你可以用于自定义报告，见 [`utils/logs.ts`](https://github.com/rollup/rollup/blob/master/src/utils/logs.ts) 以获取完整的错误和日志列表，以及它们的代码和属性。
 
 ```javascript
 import { rollup } from 'rollup';
@@ -117,6 +117,10 @@ const inputOptions = {
 
 	// 进阶输入选项
 	cache,
+	logLevel,
+	makeAbsoluteExternalsRelative,
+	maxParallelFileOps,
+	onLog,
 	onwarn,
 	preserveEntrySignatures,
 	strictDeprecations,
@@ -132,6 +136,7 @@ const inputOptions = {
 
 	// 实验性
 	experimentalCacheExpiry,
+	experimentalLogSideEffects,
 	perf
 };
 ```
@@ -145,7 +150,7 @@ const outputOptions = {
 	// 核心输出选项
 	dir,
 	file,
-	format, // 必需
+	format,
 	globals,
 	name,
 	plugins,
@@ -155,10 +160,12 @@ const outputOptions = {
 	banner,
 	chunkFileNames,
 	compact,
+	dynamicImportInCjs,
 	entryFileNames,
 	extend,
-	externalLiveBindings,
+	externalImportAssertions,
 	footer,
+	generatedCode,
 	hoistTransitiveImports,
 	inlineDynamicImports,
 	interop,
@@ -170,8 +177,10 @@ const outputOptions = {
 	preserveModules,
 	preserveModulesRoot,
 	sourcemap,
+	sourcemapBaseUrl,
 	sourcemapExcludeSources,
 	sourcemapFile,
+	sourcemapIgnoreList,
 	sourcemapPathTransform,
 	validate,
 
@@ -179,14 +188,16 @@ const outputOptions = {
 	amd,
 	esModule,
 	exports,
+	externalLiveBindings,
 	freeze,
 	indent,
-	namespaceToStringTag,
 	noConflict,
-	preferConst,
 	sanitizeFileName,
 	strict,
-	systemNullSetters
+	systemNullSetters,
+
+	// experimental
+	experimentalMinChunkSize
 };
 ```
 

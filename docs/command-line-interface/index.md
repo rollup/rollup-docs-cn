@@ -48,6 +48,10 @@ export default {
 
 	// 进阶输入选项
 	cache,
+	logLevel,
+	makeAbsoluteExternalsRelative,
+	maxParallelFileOps,
+	onLog,
 	onwarn,
 	preserveEntrySignatures,
 	strictDeprecations,
@@ -64,6 +68,7 @@ export default {
 	// 实验性
 	experimentalCacheExpiry,
 	experimentalLogSideEffects,
+	experimentalMinChunkSize,
 	perf,
 
 	// 必需（可以是数组，用于描述多个输出）
@@ -81,9 +86,12 @@ export default {
 		banner,
 		chunkFileNames,
 		compact,
+		dynamicImportInCjs,
 		entryFileNames,
 		extend,
+		externalImportAssertions,
 		footer,
+		generatedCode,
 		hoistTransitiveImports,
 		inlineDynamicImports,
 		interop,
@@ -109,9 +117,7 @@ export default {
 		externalLiveBindings,
 		freeze,
 		indent,
-		namespaceToStringTag,
 		noConflict,
-		preferConst,
 		sanitizeFileName,
 		strict,
 		systemNullSetters,
@@ -124,9 +130,9 @@ export default {
 		buildDelay,
 		chokidar,
 		clearScreen,
-		skipWrite,
 		exclude,
-		include
+		include,
+		skipWrite
 	}
 };
 ```
@@ -396,6 +402,7 @@ export default {
 --inlineDynamicImports      使用动态导入时创建单次打包
 --no-interop                不包括交互操作块
 --intro <text>              在产物顶部插入的代码（位于包装器内部）
+--logLevel <level>          要显示哪种类型的日志
 --no-makeAbsoluteExternalsRelative 不规范化外部导入
 --maxParallelFileOps <value> 并行读取的文件数
 --minifyInternalExports     强制或禁用内部导出的缩小
@@ -523,7 +530,7 @@ _注意：在观察模式下，Rollup 的命令行界面将设置 `ROLLUP_WATCH`
 
 ### `--silent` {#silent}
 
-不在控制台上打印警告信息。如果你的配置文件包含一个 `onwarn` 处理程序，该处理程序仍然会被调用。要手动防止这种情况，你可以按照[配置文件](#configuration-files)结尾处所述的方式在配置文件中访问命令行选项。
+不要将警告打印到控制台。如果你的配置文件包含 `onLog` 或 `onwarn` 处理程序，则仍将调用此处理程序。对于具有 `onLog` 钩子的插件也是如此。为了防止这种情况，另外使用 [`logLevel`](../configuration-options/index.md#loglevel) 选项或传递 `--logLevel silent`。
 
 ### `--failAfterWarnings` {#failafterwarnings}
 
