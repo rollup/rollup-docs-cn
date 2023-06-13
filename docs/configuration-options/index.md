@@ -392,23 +392,19 @@ buildWithCache()
 	});
 ```
 
-<<<<<<< HEAD
-### makeAbsoluteExternalsRelative {#makeabsoluteexternalsrelative}
-=======
-### logLevel
+### logLevel {#loglevel}
 
 |          |                        |
 | -------: | :--------------------- |
-|    Type: | `LogLevel \| "silent"` |
+|    类型：| `LogLevel \| "silent"` |
 |     CLI: | `--logLevel <level>`   |
-| Default: | `"info"`               |
+|    默认：| `"info"`               |
 
-Determine which logs to process. See [`onLog`](#onlog) for the available log levels. The default `logLevel` of `"info"` means that info and warnings logs will be processed while debug logs will be swallowed, which means that they are neither passed to plugin [`onLog`](../plugin-development/index.md#onlog) hooks nor the `onLog` option or printed to the console.
+该选项决定哪些日志将被处理。查看 [`onLog`](#onlog) 以了解可用的日志级别。默认的 `logLevel` 为 `"info"`，这意味着 info 和 warning 日志将被处理，而 debug 日志将被忽略，这意味着它们既不会传递给插件 [`onLog`](../plugin-development/index.md#onlog) 钩子，也不会传递给 `onLog` 选项或打印到控制台。
 
-When using the CLI, errors will still be printed to the console as they are not processed via the logging system. See the [`--silent`](../command-line-interface/index.md#silent) flag for how to suppress error logs.
+当使用命令行时，错误日志仍将打印到控制台，因为它们不会通过日志系统处理。查看 [`--silent`](../command-line-interface/index.md#silent) 标志以了解如何抑制错误日志。
 
-### makeAbsoluteExternalsRelative
->>>>>>> 36b8b6b16ac0dc66ef0dec28067639363cadff89
+### makeAbsoluteExternalsRelative {#makeabsoluteexternalsrelative}
 
 |  |  |
 | --: | :-- |
@@ -438,18 +434,7 @@ When using the CLI, errors will still be printed to the console as they are not 
 
 该选项限制 rollup 在读取模块或写入 chunk 时，同时能打开的文件数量。如果没有限制或者数值足够高，构建可能会失败，显示“EMFILE: Too many open files”（EMFILE：打开的文件数过多）。这取决于操作系统限制的句柄数（open file handles）大小。
 
-<<<<<<< HEAD
-### onwarn {#onwarn}
-
-|  |  |
-| --: | :-- |
-| 类型： | `(warning: RollupWarning, defaultHandler: (warning: string \| RollupWarning) => void) => void;` |
-
-该选项为一个拦截警告信息的函数。如果不提供，警告将去重并打印到控制台。当在命令行使用 [`--silent`](../command-line-interface/index.md#silent) 选项时，该选项是获取警告通知的唯一途径。
-
-该函数接收两个参数：警告对象和默认处理函数。其中，警告对象至少有一个 `code` 和一个 `message` 属性，用于控制如何处理不同种类的警告。另外，根据不同的警告类型，警告对象上会有其他的属性。可查看 [`utils/error.ts`](https://github.com/rollup/rollup/blob/master/src/utils/error.ts) 以获得完整的错误和警告列表，以及它们的代码和属性。
-=======
-### onLog
+### onLog {#onlog}
 
 |  |  |
 | --: | :-- |
@@ -463,22 +448,22 @@ type LogOrStringHandler = (
 	log: string | RollupLog
 ) => void;
 
-// All possible properties, actual properties depend on log
+// 所有可能的属性，实际的属性都取决 log
 interface RollupLog {
 	binding?: string;
 	cause?: Error;
 	code?: string;
 	exporter?: string;
-	frame?: string; // always printed by the CLI
+	frame?: string; // 始终会被 CLI 打印出来
 	hook?: string;
-	id?: string; // always printed by the CLI
+	id?: string; // 始终会被 CLI 打印出来
 	ids?: string[];
 	loc?: {
 		column: number;
 		file?: string;
 		line: number;
-	}; // always printed by the CLI if id is present
-	message: string; // the actual message, always printed by the CLI
+	}; // 只要 id 存在，就始终会被 CLI 打印出来
+	message: string; // 实际信息，始终会被 CLI 打印出来
 	meta?: any; // add custom plugin properties to logs
 	names?: string[];
 	plugin?: string; // added by Rollup for plugin logs, only printed for warnings
@@ -495,49 +480,27 @@ A function that intercepts log messages. If not supplied, logs are printed to th
 The function receives three arguments: the log level, the log object and the default handler. Log objects have, at a minimum, a `code` and a `message` property, allowing you to control how different kinds of logs are handled. Other properties are added depending on the type of log. See [`utils/logs.ts`](https://github.com/rollup/rollup/blob/master/src/utils/logs.ts) for a complete list of built-in errors and logs together with their codes and properties.
 
 If the default handler is not invoked, the log will not be printed to the console. Moreover, you can change the log level by invoking the default handler with a different level. Using the additional level `"error"` will turn the log into a thrown error that has all properties of the log attached.
->>>>>>> 36b8b6b16ac0dc66ef0dec28067639363cadff89
 
 ```js
 // rollup.config.js
 export default {
-<<<<<<< HEAD
-	//...,
-	onwarn(warning, warn) {
-		// 跳过指定类型的警告
-		if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return;
-
-		// 抛出其他类型的警告
-		// 使用 Object.assign 拷贝 new Error(warning.message)
-		// 将使命令行打印额外的信息，如警告位置
-		// 和帮助 URL。
-		if (warning.code === 'MISSING_EXPORT')
-			throw Object.assign(new Error(), warning);
-
-		// 使用默认处理函数兜底
-		warn(warning);
-=======
 	//...
 	onLog(level, log, handler) {
 		if (log.code === 'CIRCULAR_DEPENDENCY') {
-			return; // Ignore circular dependency warnings
+			return; // 忽略循环依赖警告
 		}
 		if (level === 'warn') {
-			handler('error', log); // turn other warnings into errors
+			handler('error', log); // 将其他警告转为错误
 		} else {
-			handler(level, info); // otherwise, just print the log
+			handler(level, info); // 否则直接打印出日志
 		}
->>>>>>> 36b8b6b16ac0dc66ef0dec28067639363cadff89
 	}
 };
 ```
 
-<<<<<<< HEAD
-很多警告还具有 `loc` 和 `frame` 属性，它们可以用来定位警告来源：
-=======
-This handler will not be invoked if logs are filtered out by the [`logLevel`](#loglevel) option. I.e. by default, `"debug"` logs will be swallowed.
+这个处理程序不会在日志被 [`logLevel`](#loglevel) 选项过滤掉时被调用。例如，默认情况下，`"debug"` 日志将被忽略。
 
-Some logs also have a `loc` property and a `frame` allowing you to locate the source of the log:
->>>>>>> 36b8b6b16ac0dc66ef0dec28067639363cadff89
+一些日志也有 `loc` 和 `frame` 属性，允许你定位日志的源：
 
 ```js
 // rollup.config.js
@@ -554,21 +517,17 @@ export default {
 };
 ```
 
-<<<<<<< HEAD
-### output.assetFileNames {#output-assetfilenames}
-=======
-### onwarn
+### onwarn {#onwarn}
 
 |  |  |
 | --: | :-- |
-| Type: | `(warning: RollupLog, defaultHandler: (warning: string \| RollupLog) => void) => void;` |
+| 类型： | `(warning: RollupLog, defaultHandler: (warning: string \| RollupLog) => void) => void;` |
 
-A function that will intercept warning messages. It is very similar to [`onLog`](#onlog) but only receives warnings. If the default handler is invoked, the log will be handled as a warning. If both an `onLog` and `onwarn` handler are provided, the `onwarn` handler will only be invoked if `onLog` calls its default handler with a `level` of `warn`.
+一个函数，用于拦截警告信息。它与 [`onLog`](#onlog) 非常相似，但只接收警告。如果调用默认处理程序，日志将被处理为警告。如果提供了 `onLog` 和 `onwarn` 处理程序，只有当 `onLog` 调用其默认处理程序时，`onwarn` 处理程序才会被调用，且 `level` 为 `warn`。
 
-See [`onLog`](#onlog) for more information.
+查看 [`onLog`](#onlog) 了解更多信息
 
-### output.assetFileNames
->>>>>>> 36b8b6b16ac0dc66ef0dec28067639363cadff89
+### output.assetFileNames {#output-assetfilenames}
 
 |        |                                               |
 | -----: | :-------------------------------------------- |
@@ -2119,15 +2078,11 @@ type HasModuleSideEffects = (id: string, external: boolean) => boolean;
 |  CLI： | `--treeshake.annotations`/`--no-treeshake.annotations` |
 | 默认： | `true`                                                 |
 
-<<<<<<< HEAD
-如果该选项值为 `false`，那么在确定函数调用和构造函数调用的副作用时，将会忽略纯注释的提示，比如，包含 `@__PURE__` 或 `#__PURE__` 的注释。这些注释需要紧接在调用代码之前才能生效。该选项的值设置为 `false`，以下代码将原封不动，否则以下包含 `@__PURE__` 注释的代码将被完全删除。
-=======
-If `false`, ignore hints from annotation in comments:
+如果该选项值为 `false`，则忽略注释中的注解提示：
 
-##### `@__PURE__`
+##### `@__PURE__` {#pure}
 
-Comments containing `@__PURE__` or `#__PURE__` mark a specific function call or constructor invocation as side effect free. That means that Rollup will tree-shake i.e. remove the call unless the return value is used in some code that is not tree-shaken. These annotations need to immediately precede the call invocation to take effect. The following code will be completely tree-shaken unless this option is set to `false`, in which case it will remain unchanged.
->>>>>>> 36b8b6b16ac0dc66ef0dec28067639363cadff89
+包含 `@__PURE__` 或 `#__PURE__` 的注释标记特定的函数调用或构造函数调用为无副作用。这意味着 Rollup 将除屑优化，即移除调用，除非返回值在一些未除屑优化的代码中被使用。这些注解需要紧跟在调用调用之前才能生效。以下代码将完全除屑优化，除非将该选项设置为 `false`，否则它将保持不变。
 
 ```javascript
 /*@__PURE__*/ console.log('side-effect');
@@ -2141,12 +2096,9 @@ class Impure {
 /*@__PURE__*/ new Impure();
 ```
 
-<<<<<<< HEAD
-#### treeshake.correctVarValueBeforeDeclaration {#treeshake-correctvarvaluebeforedeclaration}
-=======
-##### `@__NO_SIDE_EFFECTS__`
+##### `@__NO_SIDE_EFFECTS__` {#nosideeffects}
 
-Comments containing `@__NO_SIDE_EFFECTS__` or `#__NO_SIDE_EFFECTS__` mark a function declaration itself as side effect free. When a function has been marked as having no side effects, all calls to that function will be considered to be side effect free. The following code will be completely tree-shaken unless this option is set to `false`, in which case it will remain unchanged.
+包含 `@__NO_SIDE_EFFECTS__` 或者 `#__NO_SIDE_EFFECTS__` 的注释标记函数声明本身是无副作用的。当一个函数被标记为没有副作用时，所有对该函数的调用都将被认为是没有副作用的。下面的代码将被完全除屑优化，除非将该选项设置为 `false`，否则它将保持不变。
 
 ```javascript
 /*@__NO_SIDE_EFFECTS__*/
@@ -2163,8 +2115,7 @@ impure(); // <-- call will be considered as side effect free
 impureArrowFn(); // <-- call will be considered as side effect free
 ```
 
-#### treeshake.correctVarValueBeforeDeclaration
->>>>>>> 36b8b6b16ac0dc66ef0dec28067639363cadff89
+#### treeshake.correctVarValueBeforeDeclaration {#treeshake-correctvarvaluebeforedeclaration}
 
 |  |  |
 | --: | :-- |
