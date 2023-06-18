@@ -1,5 +1,20 @@
 # rollup changelog
 
+<<<<<<< HEAD
+=======
+## 3.25.1
+
+_2023-06-12_
+
+### Bug Fixes
+
+- Respect `__NO_SIDE_EFFECTS__` for async functions (#5031)
+
+### Pull Requests
+
+- [#5031](https://github.com/rollup/rollup/pull/5031): fix: `__NO_SIDE_EFFECTS__` annotation for async function (@antfu)
+
+>>>>>>> 833314c1621420e031340c1894e7863e062f7761
 ## 3.25.0
 
 _2023-06-11_
