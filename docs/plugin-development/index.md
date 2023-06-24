@@ -22,19 +22,11 @@ Rollup 插件是一个对象，具有 [属性](#properties)、[构建钩子](#bu
 // rollup-plugin-my-example.js
 export default function myExample () {
   return {
-<<<<<<< HEAD
     name: 'my-example', // 此名称将出现在警告和错误中
     resolveId ( source ) {
       if (source === 'virtual-module') {
         // 这表示 rollup 不应询问其他插件或
         // 从文件系统检查以找到此 ID
-=======
-    name: 'my-example', // this name will show up in logs and errors
-    resolveId ( source ) {
-      if (source === 'virtual-module') {
-        // this signals that Rollup should not ask other plugins or check
-        // the file system to find this id
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
         return source;
       }
       return null; // 其他ID应按通常方式处理
@@ -79,11 +71,7 @@ export default ({
 | ----: | :------- |
 | 类型: | `string` |
 
-<<<<<<< HEAD
 插件的名称，用于在警告和错误消息中标识插件。
-=======
-The name of the plugin, for use in error messages and logs.
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 
 ### version {#version}
 
@@ -277,11 +265,7 @@ flowchart TB
 | 上一个钩子： | [`moduleParsed`](#moduleparsed)、[`resolveId`](#resolveid) 或 [`resolveDynamicImport`](#resolvedynamicimport) |
 | 下一个钩子： | 输出生成阶段的 [`outputOptions`](#outputoptions)，因为这是构建阶段的最后一个钩子 |
 
-<<<<<<< HEAD
 在 Rollup 完成产物但尚未调用 `generate` 或 `write` 之前调用；也可以返回一个 Promise。如果在构建过程中发生错误，则将其传递给此钩子。
-=======
-Called when Rollup has finished bundling, but before `generate` or `write` is called; you can also return a Promise. If an error occurred during the build, it is passed on to this hook.
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 
 ### buildStart
 
@@ -475,11 +459,7 @@ Like the [`options`](#options) hook, this hook does not have access to most [plu
 
 替换或操作传递给 `rollup.rollup` 的选项对象。返回 `null` 不会替换任何内容。如果只需要读取选项，则建议使用 [`buildStart`](#buildstart) 钩子，因为该钩子可以访问所有 `options` 钩子的转换考虑后的选项。
 
-<<<<<<< HEAD
 如 [`onLog](#onlog) 钩子一样，此钩子不具有大多数 [插件上下文](#plugin-context) 实用程序函数的访问权限，因为它可能在 Rollup 完全配置之前运行。唯一支持的属性是 [`this.meta`](#this-meta) 以及 [`this.error`](#this-error)、[`this.warn`](#this-warn)、[`this.info`](#this-info) 和 [`this.debug`](#this-debug) 用于记录和错误。
-=======
-Like the [`onLog`](#onlog) hook, this hook does not have access to most [plugin context](#plugin-context) utility functions as it is run before Rollup is fully configured. The only supported properties are [`this.meta`](#this-meta) as well as [`this.error`](#this-error), [`this.warn`](#this-warn), [`this.info`](#this-info) and [`this.debug`](#this-debug) for logging and errors.
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 
 ### resolveDynamicImport
 
@@ -758,11 +738,7 @@ interface SourceDescription {
 | 类别: | async, parallel |
 | 上一个/下一个钩子: | 此钩子可以在构建和输出生成阶段的任何时候触发。如果是这种情况，则当前构建仍将继续，但会安排一个新的构建在当前构建完成后开始，从 [`options`](#options) 开始 |
 
-<<<<<<< HEAD
 在 `--watch` 模式下，每当 Rollup 检测到监视文件的更改时，就会通知插件。如果返回一个 Promise，则 Rollup 将等待 Promise 解析后再安排另一个构建。此钩子不能由输出插件使用。第二个参数包含更改事件的其他详细信息。
-=======
-Notifies a plugin whenever Rollup has detected a change to a monitored file in `--watch` mode. If a Promise is returned, Rollup will wait for the Promise to resolve before scheduling another build. This hook cannot be used by output plugins. The second argument contains additional details of the change event.
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 
 ## 输出生成钩子 {#output-generation-hooks}
 
@@ -1151,11 +1127,7 @@ function retainImportExpressionPlugin() {
 | 上一个钩子: | [`renderStart`](#renderstart) 到 [`renderChunk`](#renderchunk) 中的任何一个钩子 |
 | 下一个钩子: | 如果调用了此钩子，则输出生成阶段的最后一个钩子，并且如果生成了另一个输出，则可能再次跟随 [`outputOptions`](#outputoptions) |
 
-<<<<<<< HEAD
 当 rollup 在`bundle.generate()`或`bundle.write()`期间遇到错误时调用。将错误传递给此钩子。要在生成成功完成时得到通知，请使用`generateBundle`钩子。
-=======
-Called when Rollup encounters an error during `bundle.generate()` or `bundle.write()`. The error is passed to this hook. To get notified when generation completes successfully, use the `generateBundle` hook.
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 
 ### renderStart
 
@@ -1274,8 +1246,6 @@ function importMetaUrlCurrentModulePlugin() {
 通常建议从依赖于监视文件的钩子中使用 `this.addWatchFile`。
 
 ### this.debug
-<<<<<<< HEAD
-=======
 
 |  |  |
 | --: | :-- |
@@ -1301,7 +1271,6 @@ function plugin() {
 ```
 
 ### this.emitFile
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 
 |  |  |
 | --: | :-- |
@@ -1480,7 +1449,6 @@ import { foo } from '/my-prebuilt-chunk.js';
 
 |  |  |
 | --: | :-- |
-<<<<<<< HEAD
 | 类型： | `(error: string \| RollupLog \| Error, position?: number \| { column: number; line: number }) => never` |
 
 结构上等同于 [`this.warn`](#this-warn)，除了它还会中止捆绑过程并显示错误。有关 `RollupLog` 类型的信息，请参阅 [`onLog`](../configuration-options/index.md#onlog) 选项。
@@ -1490,17 +1458,6 @@ import { foo } from '/my-prebuilt-chunk.js';
 在 [`onLog`](#onlog) 钩子之外的所有钩子中，错误将被增强为 `code: "PLUGIN_ERROR"` 和 `plugin: plugin.name` 属性。如果 `code` 属性已经存在，并且代码不是以 `PLUGIN_` 开头，则它将重命名为 `pluginCode`。
 
 在 [`onLog`](#onlog) 钩子中，这个函数是将警告转换为错误的简单方法，同时保留警告的所有附加属性：
-=======
-| Type: | `(error: string \| RollupLog \| Error, position?: number \| { column: number; line: number }) => never` |
-
-Structurally equivalent to [`this.warn`](#this-warn), except that it will also abort the bundling process with an error. See the [`onLog`](../configuration-options/index.md#onlog) option for information about the `RollupLog` type.
-
-If an Error instance is passed, it will be used as-is, otherwise a new Error instance will be created with the given error message and all additional provided properties.
-
-In all hooks except the [`onLog`](#onlog) hook, the error will be augmented with `code: "PLUGIN_ERROR"` and `plugin: plugin.name`properties. If a`code`property already exists and the code does not start with`PLUGIN_`, it will be renamed to `pluginCode`.
-
-In the [`onLog`](#onlog) hook, this function is an easy way to turn warnings into errors while keeping all additional properties of the warning:
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 
 ```js
 function myPlugin() {
@@ -1515,11 +1472,7 @@ function myPlugin() {
 }
 ```
 
-<<<<<<< HEAD
 当在 `transform` 钩子中使用时，当前模块的 `id` 也将被添加，并且可以提供一个 `position`。这是一个字符索引或文件位置，它将用于增强日志，包括 `pos`，`loc`（一个标准的 `{ file, line, column }` 对象）和 `frame`（显示位置的代码片段）。
-=======
-When used in the `transform` hook, the `id` of the current module will also be added and a `position` can be supplied. This is a character index or file location which will be used to augment the log with `pos`, `loc` (a standard `{ file, line, column }` object) and `frame` (a snippet of code showing the location).
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 
 ### this.getCombinedSourcemap
 
@@ -1616,7 +1569,6 @@ interface ResolvedId {
 | ----: | :--------------- |
 | Type: | `() => string[]` |
 
-<<<<<<< HEAD
 获取以前已监视的文件的 ID。包括通过 `this.addWatchFile` 添加的插件和在构建期间由 Rollup 隐式添加的文件。
 
 ### this.info {#this-info}
@@ -1628,19 +1580,6 @@ interface ResolvedId {
 生成一个 `"info"` 日志。有关详细信息，请参阅 [`this.warn`](#this-warn)。信息日志始终会被 Rollup 添加 `code: "PLUGIN_LOG"`。由于这些日志默认会被显示，因此请使用它们来显示所有用户在每次构建时都会看到的信息，而不是警告。
 
 如果 [`logLevel`](../configuration-options/index.md#loglevel) 选项设置为 `"warn"` 或 `"silent"`，则此方法不会执行任何操作。
-=======
-Get ids of the files which has been watched previously. Include both files added by plugins with `this.addWatchFile` and files added implicitly by Rollup during the build.
-
-### this.info
-
-|  |  |
-| --: | :-- |
-| Type: | `(log: string \| RollupLog \| (() => RollupLog \| string), position?: number \| { column: number; line: number }) => void` |
-
-Generate an `"info"` log. See [`this.warn`](#this-warn) for details. Info logs always get `code: "PLUGIN_LOG"` added by Rollup. As these logs are displayed by default, use them for information that is not a warning but makes sense to display to all users on every build.
-
-If the [`logLevel`](../configuration-options/index.md#loglevel) option is set to `"warn"` or `"silent"`, this method will do nothing.
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 
 ### this.load
 
@@ -1864,17 +1803,9 @@ type Resolve = (
 
 |  |  |
 | --: | :-- |
-<<<<<<< HEAD
 | 类型: | `(log: string \| RollupLog \| (() => RollupLog \| string), position?: number \| { column: number; line: number }) => void` |
 
 使用此方法将为构建生成警告，这些警告是具有日志级别 `"warn"` 的日志。有关 `RollupLog` 类型的信息，请参阅 [`onLog`](../configuration-options/index.md#onlog) 选项。要生成其他日志，请参阅 [`this.info`](#this-info) 和 [`this.debug`](#this-debug)。要生成错误，请参阅 [`this.error`](#this-error)。
-=======
-| Type: | `(log: string \| RollupLog \| (() => RollupLog \| string), position?: number \| { column: number; line: number }) => void` |
-
-Using this method will generate warnings for a build, which are logs with log level `"warn"`. See the [`onLog`](../configuration-options/index.md#onlog) option for information about the `RollupLog` type. To generate other logs, see also [`this.info`](#this-info) and [`this.debug`](#this-debug). To generate errors, see [`this.error`](#this-error).
-
-Just like internally generated warnings, these logs will be first passed to and filtered by plugin [`onLog`](#onlog) hooks before they are forwarded to custom [`onLog`](../configuration-options/index.md#onlog) or [`onwarn`](../configuration-options/index.md#onwarn) handlers or printed to the console.
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 
 与内部生成的警告一样，这些日志将首先传递给并过滤插件 [`onLog`](#onlog) 钩子，然后再转发到自定义 [`onLog`](../configuration-options/index.md#onlog) 或 [`onwarn`](../configuration-options/index.md#onwarn) 处理程序或打印到控制台。
 
@@ -1882,11 +1813,7 @@ Just like internally generated warnings, these logs will be first passed to and 
 
 ```js
 this.warn('hmm...');
-<<<<<<< HEAD
 // 等价于
-=======
-// is equivalent to
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 this.warn({
 	message: 'hmm...',
 	pluginCode: 'CODE_TO_IDENTIFY_LOG',
@@ -1894,24 +1821,9 @@ this.warn({
 });
 ```
 
-<<<<<<< HEAD
 我们鼓励你使用一个带有 `pluginCode` 属性的对象，因为这将允许用户在 [`onLog`](../configuration-options/index.md#onlog) 处理程序中轻松过滤这些日志。如果需要添加其他信息，可以使用 `meta` 属性。如果日志包含 `code` 并且尚未具有 `pluginCode` 属性，则将其重命名为 `pluginCode`，因为 Rollup 总是会为插件警告添加一个 `code`，值为 `PLUGIN_WARNING`。要防止此行为，插件可以使用传递给 [`buildStart`](#buildstart) 钩子的标准化 `onLog` 选项。从插件调用此选项不会在将日志传递给插件 `onLog` 处理程序和 `onLog` 或 `onwarn` 处理程序时更改属性。
 
 如果需要执行昂贵的计算来生成日志，也可以传递返回 `string` 或 `RollupLog` 对象的函数。如果日志未被 [`logLevel`](../configuration-options/index.md#loglevel) 选项过滤，则仅调用此函数。
-=======
-We encourage you to use objects with a `pluginCode` property as that will allow users to easily filter for those logs in an `onLog` handler. If you need to add additional information, you can use the `meta` property. If the log contains a `code` and does not yet have a `pluginCode` property, it will be renamed to `pluginCode` as plugin warnings always get a `code` of `PLUGIN_WARNING` added by Rollup. To prevent this behavior, plugins can instead use the normalized `onLog` option passed to the [`buildStart`](#buildstart) hook. Calling this option from a plugin will not change properties when passing the log to plugin `onLog` handlers and `onLog` or `onwarn` handlers.
-
-If you need to do expensive computations to generate a log, you can also pass a function returning either a `string` or a `RollupLog` object. This function will only be called if the log is not filtered by the [`logLevel`](../configuration-options/index.md#loglevel) option.
-
-```js
-// This will only run if the logLevel is set to "debug"
-this.debug(() => generateExpensiveDebugLog());
-```
-
-When used in the `transform` hook, the `id` of the current module will also be added and a `position` can be supplied. This is a character index or file location which will be used to augment the log with `pos`, `loc` (a standard `{ file, line, column }` object) and `frame` (a snippet of code showing the location).
-
-If the [`logLevel`](../configuration-options/index.md#loglevel) option is set to `"silent"`, this method will do nothing.
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 
 ```js
 // 仅在 logLevel 设置为 "debug" 时才会运行
@@ -1985,11 +1897,7 @@ if (COMPILER_FLAG) {
 }
 ```
 
-<<<<<<< HEAD
 如果插件将 `COMPLIER_FLAG` 替换为 `false`，那么我们将得到一个意外的结果：未引用的静态资源仍然会被产出但未使用。我们可以通过在调用 [`this.emitFile`](#this-emitfile) 时将 `needsCodeReference` 设置为 `true` 来解决这个问题，如下面的代码所示：
-=======
-If a plugin replaces `COMPILER_FLAG` with `false`, then we will get an unexpected result: The unreferenced asset is still emitted but unused. We can resolve this problem by setting `needsCodeReference` to true when calling [`this.emitFile`](#this-emitfile), like in the following code:
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 
 ```js
 function svgResolverPlugin() {

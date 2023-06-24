@@ -392,7 +392,6 @@ buildWithCache()
 	});
 ```
 
-<<<<<<< HEAD
 ### logLevel {#loglevel}
 
 |          |                        |
@@ -406,21 +405,6 @@ buildWithCache()
 当使用命令行时，错误日志仍将打印到控制台，因为它们不会通过日志系统处理。查看 [`--silent`](../command-line-interface/index.md#silent) 标志以了解如何抑制错误日志。
 
 ### makeAbsoluteExternalsRelative {#makeabsoluteexternalsrelative}
-=======
-### logLevel
-
-|          |                        |
-| -------: | :--------------------- |
-|    Type: | `LogLevel \| "silent"` |
-|     CLI: | `--logLevel <level>`   |
-| Default: | `"info"`               |
-
-Determine which logs to process. See [`onLog`](#onlog) for the available log levels. The default `logLevel` of `"info"` means that info and warnings logs will be processed while debug logs will be swallowed, which means that they are neither passed to plugin [`onLog`](../plugin-development/index.md#onlog) hooks nor the `onLog` option or printed to the console.
-
-When using the CLI, errors will still be printed to the console as they are not processed via the logging system. See the [`--silent`](../command-line-interface/index.md#silent) flag for how to suppress error logs.
-
-### makeAbsoluteExternalsRelative
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 
 |  |  |
 | --: | :-- |
@@ -450,11 +434,7 @@ When using the CLI, errors will still be printed to the console as they are not 
 
 该选项限制 rollup 在读取模块或写入 chunk 时，同时能打开的文件数量。如果没有限制或者数值足够高，构建可能会失败，显示“EMFILE: Too many open files”（EMFILE：打开的文件数过多）。这取决于操作系统限制的句柄数（open file handles）大小。
 
-<<<<<<< HEAD
 ### onLog {#onlog}
-=======
-### onLog
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 
 |  |  |
 | --: | :-- |
@@ -468,37 +448,22 @@ type LogOrStringHandler = (
 	log: string | RollupLog
 ) => void;
 
-<<<<<<< HEAD
 // 所有可能的属性，实际的属性都取决 log
-=======
-// All possible properties, actual properties depend on log
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 interface RollupLog {
 	binding?: string;
 	cause?: Error;
 	code?: string;
 	exporter?: string;
-<<<<<<< HEAD
 	frame?: string; // 始终会被 CLI 打印出来
 	hook?: string;
 	id?: string; // 始终会被 CLI 打印出来
-=======
-	frame?: string; // always printed by the CLI
-	hook?: string;
-	id?: string; // always printed by the CLI
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 	ids?: string[];
 	loc?: {
 		column: number;
 		file?: string;
 		line: number;
-<<<<<<< HEAD
 	}; // 只要 id 存在，就始终会被 CLI 打印出来
 	message: string; // 实际信息，始终会被 CLI 打印出来
-=======
-	}; // always printed by the CLI if id is present
-	message: string; // the actual message, always printed by the CLI
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 	meta?: any; // add custom plugin properties to logs
 	names?: string[];
 	plugin?: string; // added by Rollup for plugin logs, only printed for warnings
@@ -522,35 +487,20 @@ export default {
 	//...
 	onLog(level, log, handler) {
 		if (log.code === 'CIRCULAR_DEPENDENCY') {
-<<<<<<< HEAD
 			return; // 忽略循环依赖警告
 		}
 		if (level === 'warn') {
 			handler('error', log); // 将其他警告转为错误
 		} else {
 			handler(level, info); // 否则直接打印出日志
-=======
-			return; // Ignore circular dependency warnings
-		}
-		if (level === 'warn') {
-			handler('error', log); // turn other warnings into errors
-		} else {
-			handler(level, info); // otherwise, just print the log
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 		}
 	}
 };
 ```
 
-<<<<<<< HEAD
 这个处理程序不会在日志被 [`logLevel`](#loglevel) 选项过滤掉时被调用。例如，默认情况下，`"debug"` 日志将被忽略。
 
 一些日志也有 `loc` 和 `frame` 属性，允许你定位日志的源：
-=======
-This handler will not be invoked if logs are filtered out by the [`logLevel`](#loglevel) option. I.e. by default, `"debug"` logs will be swallowed.
-
-Some logs also have a `loc` property and a `frame` allowing you to locate the source of the log:
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 
 ```js
 // rollup.config.js
@@ -567,21 +517,7 @@ export default {
 };
 ```
 
-<<<<<<< HEAD
 ### onwarn {#onwarn}
-=======
-### onwarn
-
-|  |  |
-| --: | :-- |
-| Type: | `(warning: RollupLog, defaultHandler: (warning: string \| RollupLog) => void) => void;` |
-
-A function that will intercept warning messages. It is very similar to [`onLog`](#onlog) but only receives warnings. If the default handler is invoked, the log will be handled as a warning. If both an `onLog` and `onwarn` handler are provided, the `onwarn` handler will only be invoked if `onLog` calls its default handler with a `level` of `warn`.
-
-See [`onLog`](#onlog) for more information.
-
-### output.assetFileNames
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 
 |  |  |
 | --: | :-- |
@@ -2142,19 +2078,11 @@ type HasModuleSideEffects = (id: string, external: boolean) => boolean;
 |  CLI： | `--treeshake.annotations`/`--no-treeshake.annotations` |
 | 默认： | `true`                                                 |
 
-<<<<<<< HEAD
 如果该选项值为 `false`，则忽略注释中的注解提示：
 
 ##### `@__PURE__` {#pure}
 
 包含 `@__PURE__` 或 `#__PURE__` 的注释标记特定的函数调用或构造函数调用为无副作用。这意味着 Rollup 将除屑优化，即移除调用，除非返回值在一些未除屑优化的代码中被使用。这些注解需要紧跟在调用调用之前才能生效。以下代码将完全除屑优化，除非将该选项设置为 `false`，否则它将保持不变。
-=======
-If `false`, ignore hints from annotation in comments:
-
-##### `@__PURE__`
-
-Comments containing `@__PURE__` or `#__PURE__` mark a specific function call or constructor invocation as side effect free. That means that Rollup will tree-shake i.e. remove the call unless the return value is used in some code that is not tree-shaken. These annotations need to immediately precede the call invocation to take effect. The following code will be completely tree-shaken unless this option is set to `false`, in which case it will remain unchanged.
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 
 ```javascript
 /*@__PURE__*/ console.log('side-effect');
@@ -2168,15 +2096,9 @@ class Impure {
 /*@__PURE__*/ new Impure();
 ```
 
-<<<<<<< HEAD
 ##### `@__NO_SIDE_EFFECTS__` {#nosideeffects}
 
 包含 `@__NO_SIDE_EFFECTS__` 或者 `#__NO_SIDE_EFFECTS__` 的注释标记函数声明本身是无副作用的。当一个函数被标记为没有副作用时，所有对该函数的调用都将被认为是没有副作用的。下面的代码将被完全除屑优化，除非将该选项设置为 `false`，否则它将保持不变。
-=======
-##### `@__NO_SIDE_EFFECTS__`
-
-Comments containing `@__NO_SIDE_EFFECTS__` or `#__NO_SIDE_EFFECTS__` mark a function declaration itself as side effect free. When a function has been marked as having no side effects, all calls to that function will be considered to be side effect free. The following code will be completely tree-shaken unless this option is set to `false`, in which case it will remain unchanged.
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 
 ```javascript
 /*@__NO_SIDE_EFFECTS__*/
@@ -2193,11 +2115,7 @@ impure(); // <-- call will be considered as side effect free
 impureArrowFn(); // <-- call will be considered as side effect free
 ```
 
-<<<<<<< HEAD
 #### treeshake.correctVarValueBeforeDeclaration {#treeshake-correctvarvaluebeforedeclaration}
-=======
-#### treeshake.correctVarValueBeforeDeclaration
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 
 |  |  |
 | --: | :-- |

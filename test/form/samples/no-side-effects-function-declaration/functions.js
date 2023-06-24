@@ -51,8 +51,6 @@ export const fnF = (args) => {
   return args
 }
 
-<<<<<<< HEAD
-=======
 // #__NO_SIDE_EFFECTS__
 export async function fnG(args) {
   console.log(args)
@@ -89,7 +87,6 @@ export async function * fnK(args) {
   return args
 }
 
->>>>>>> 833314c1621420e031340c1894e7863e062f7761
 /*#__NO_SIDE_EFFECTS__*/ 
 export default function fnDefault(args) {
   console.log(args)
