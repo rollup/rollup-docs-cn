@@ -459,7 +459,7 @@ Like the [`options`](#options) hook, this hook does not have access to most [plu
 
 替换或操作传递给 `rollup.rollup` 的选项对象。返回 `null` 不会替换任何内容。如果只需要读取选项，则建议使用 [`buildStart`](#buildstart) 钩子，因为该钩子可以访问所有 `options` 钩子的转换考虑后的选项。
 
-如 [`onLog](#onlog) 钩子一样，此钩子不具有大多数 [插件上下文](#plugin-context) 实用程序函数的访问权限，因为它可能在 Rollup 完全配置之前运行。唯一支持的属性是 [`this.meta`](#this-meta) 以及 [`this.error`](#this-error)、[`this.warn`](#this-warn)、[`this.info`](#this-info) 和 [`this.debug`](#this-debug) 用于记录和错误。
+如 [`onLog`](#onlog) 钩子一样，此钩子不具有大多数 [插件上下文](#plugin-context) 实用程序函数的访问权限，因为它可能在 Rollup 完全配置之前运行。唯一支持的属性是 [`this.meta`](#this-meta) 以及 [`this.error`](#this-error)、[`this.warn`](#this-warn)、[`this.info`](#this-info) 和 [`this.debug`](#this-debug) 用于记录和错误。
 
 ### resolveDynamicImport
 
