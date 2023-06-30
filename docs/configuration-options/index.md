@@ -138,7 +138,7 @@ export default {
 
 当使用命令行时，多个入口只需要多次使用该选项输入。当作为第一个选项提供时，相当于不以 `--input` 为前缀：
 
-```sh
+```shell
 rollup --format es --input src/entry1.js --input src/entry2.js
 # 等同于
 rollup src/entry1.js src/entry2.js --format es
@@ -146,13 +146,13 @@ rollup src/entry1.js src/entry2.js --format es
 
 可以使用 `=` 赋值来命名 chunk：
 
-```sh
+```shell
 rollup main=src/entry1.js other=src/entry2.js --format es
 ```
 
 可以使用引号指定包含空格的文件名：
 
-```sh
+```shell
 rollup "main entry"="src/entry 1.js" "src/other entry.js" --format es
 ```
 

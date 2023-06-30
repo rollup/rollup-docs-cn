@@ -356,6 +356,7 @@ export default {
 许多选项都有等效的命令行标志。在这些情况下，如果你正在使用配置文件，则此处传递的任何参数都将覆盖配置文件。以下是所有支持的选项列表：
 
 ```
+<<<<<<< HEAD
 -c, --config <filename>     使用此配置文件
 														（如果使用参数但未指定值，则默认为 rollup.config.js）
 -d, --dir <dirname>         用于块的目录（如果不存在，则打印到 stdout）
@@ -444,10 +445,102 @@ export default {
 --watch.onError <cmd>       在 "ERROR" 事件上运行的 Shell 命令
 --watch.onStart <cmd>       在 "START" 事件上运行的 Shell 命令
 --watch.skipWrite           在监视时不要将文件写入磁盘
+=======
+-c, --config <filename>     Use this config file (if argument is used but value
+                              is unspecified, defaults to rollup.config.js)
+-d, --dir <dirname>         Directory for chunks (if absent, prints to stdout)
+-e, --external <ids>        Comma-separate list of module IDs to exclude
+-f, --format <format>       Type of output (amd, cjs, es, iife, umd, system)
+-g, --globals <pairs>       Comma-separate list of `moduleID:Global` pairs
+-h, --help                  Show this help message
+-i, --input <filename>      Input (alternative to <entry file>)
+-m, --sourcemap             Generate sourcemap (`-m inline` for inline map)
+-n, --name <name>           Name for UMD export
+-o, --file <output>         Single output file (if absent, prints to stdout)
+-p, --plugin <plugin>       Use the plugin specified (may be repeated)
+-v, --version               Show version number
+-w, --watch                 Watch files in bundle and rebuild on changes
+--amd.autoId                Generate the AMD ID based off the chunk name
+--amd.basePath <prefix>     Path to prepend to auto generated AMD ID
+--amd.define <name>         Function to use in place of `define`
+--amd.forceJsExtensionForImports Use `.js` extension in AMD imports
+--amd.id <id>               ID for AMD module (default is anonymous)
+--assetFileNames <pattern>  Name pattern for emitted assets
+--banner <text>             Code to insert at top of bundle (outside wrapper)
+--chunkFileNames <pattern>  Name pattern for emitted secondary chunks
+--compact                   Minify wrapper code
+--context <variable>        Specify top-level `this` value
+--no-dynamicImportInCjs     Write external dynamic CommonJS imports as require
+--entryFileNames <pattern>  Name pattern for emitted entry chunks
+--environment <values>      Settings passed to config file (see example)
+--no-esModule               Do not add __esModule property
+--exports <mode>            Specify export mode (auto, default, named, none)
+--extend                    Extend global variable defined by --name
+--no-externalImportAssertions Omit import assertions in "es" output
+--no-externalLiveBindings   Do not generate code to support live bindings
+--failAfterWarnings         Exit with an error if the build produced warnings
+--filterLogs <filter>       Filter log messages
+--footer <text>             Code to insert at end of bundle (outside wrapper)
+--no-freeze                 Do not freeze namespace objects
+--generatedCode <preset>    Which code features to use (es5/es2015)
+--generatedCode.arrowFunctions Use arrow functions in generated code
+--generatedCode.constBindings Use "const" in generated code
+--generatedCode.objectShorthand Use shorthand properties in generated code
+--no-generatedCode.reservedNamesAsProps Always quote reserved names as props
+--generatedCode.symbols     Use symbols in generated code
+--no-hoistTransitiveImports Do not hoist transitive imports into entry chunks
+--no-indent                 Don't indent result
+--inlineDynamicImports      Create single bundle when using dynamic imports
+--no-interop                Do not include interop block
+--intro <text>              Code to insert at top of bundle (inside wrapper)
+--logLevel <level>          Which kind of logs to display
+--no-makeAbsoluteExternalsRelative Prevent normalization of external imports
+--maxParallelFileOps <value> How many files to read in parallel
+--minifyInternalExports     Force or disable minification of internal exports
+--noConflict                Generate a noConflict method for UMD globals
+--outro <text>              Code to insert at end of bundle (inside wrapper)
+--perf                      Display performance timings
+--no-preserveEntrySignatures Avoid facade chunks for entry points
+--preserveModules           Preserve module structure
+--preserveModulesRoot       Put preserved modules under this path at root level
+--preserveSymlinks          Do not follow symlinks when resolving files
+--no-sanitizeFileName       Do not replace invalid characters in file names
+--shimMissingExports        Create shim variables for missing exports
+--silent                    Don't print warnings
+--sourcemapBaseUrl <url>    Emit absolute sourcemap URLs with given base
+--sourcemapExcludeSources   Do not include source code in source maps
+--sourcemapFile <file>      Specify bundle position for source maps
+--stdin=ext                 Specify file extension used for stdin input
+--no-stdin                  Do not read "-" from stdin
+--no-strict                 Don't emit `"use strict";` in the generated modules
+--strictDeprecations        Throw errors for deprecated features
+--no-systemNullSetters      Do not replace empty SystemJS setters with `null`
+--no-treeshake              Disable tree-shaking optimisations
+--no-treeshake.annotations  Ignore pure call annotations
+--treeshake.correctVarValueBeforeDeclaration Deoptimize variables until declared
+--treeshake.manualPureFunctions <names> Manually declare functions as pure
+--no-treeshake.moduleSideEffects Assume modules have no side effects
+--no-treeshake.propertyReadSideEffects Ignore property access side effects
+--no-treeshake.tryCatchDeoptimization Do not turn off try-catch-tree-shaking
+--no-treeshake.unknownGlobalSideEffects Assume unknown globals do not throw
+--validate                  Validate output
+--waitForBundleInput        Wait for bundle input files
+--watch.buildDelay <number> Throttle watch rebuilds
+--no-watch.clearScreen      Do not clear the screen when rebuilding
+--watch.exclude <files>     Exclude files from being watched
+--watch.include <files>     Limit watching to specified files
+--watch.onBundleEnd <cmd>   Shell command to run on `"BUNDLE_END"` event
+--watch.onBundleStart <cmd> Shell command to run on `"BUNDLE_START"` event
+--watch.onEnd <cmd>         Shell command to run on `"END"` event
+--watch.onError <cmd>       Shell command to run on `"ERROR"` event
+--watch.onStart <cmd>       Shell command to run on `"START"` event
+--watch.skipWrite           Do not write files to disk when watching
+>>>>>>> 1b62c336b8e927e846cd2c04563ae0868a5d5832
 ```
 
 以下标志仅通过命令行界面可用。所有其他标志都对应并覆盖其配置文件等效项，请参阅[选项大列表](../configuration-options/index.md)获取详细信息。
 
+<<<<<<< HEAD
 ### `-h`/`--help` {#h-help}
 
 打印帮助文档。
@@ -493,6 +586,13 @@ rollup -i input.js -f es -p node-resolve -p commonjs,json
 ```shell
 rollup -i input.js -f es -p 'terser={output: {beautify: true, indent_level: 2}}'
 ```
+=======
+### `--bundleConfigAsCjs`
+
+This option will force your configuration to be transpiled to CommonJS.
+
+This allows you to use CommonJS idioms like `__dirname` or `require.resolve` in your configuration even if the configuration itself is written as an ES module.
+>>>>>>> 1b62c336b8e927e846cd2c04563ae0868a5d5832
 
 ### `--configPlugin <plugin>` {#configplugin-plugin}
 
@@ -512,6 +612,7 @@ rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript
 
 使用此选项将使 Rollup 首先将你的配置文件转译为 ES 模块，然后再执行它。如果要转译为 CommonJS，请还传递 [`--bundleConfigAsCjs`](#bundleconfigascjs) 选项。
 
+<<<<<<< HEAD
 ### `--bundleConfigAsCjs` {#bundleconfigascjs}
 
 此选项将强制将你的配置转译为 CommonJS。
@@ -537,10 +638,13 @@ _注意：在观察模式下，Rollup 的命令行界面将设置 `ROLLUP_WATCH`
 一旦构建完成，如果出现任何警告，则以错误退出构建。
 
 ### `--environment <values>` {#environment-values}
+=======
+### `--environment <values>`
+>>>>>>> 1b62c336b8e927e846cd2c04563ae0868a5d5832
 
 通过 `process.ENV` 传递其他设置到配置文件。
 
-```sh
+```shell
 rollup -c --environment INCLUDE_DEPS,BUILD:production
 ```
 
@@ -562,9 +666,118 @@ npm run build -- --environment BUILD:development
 
 则配置文件将接收到 `process.env.INCLUDE_DEPS === 'true'` 和 `process.env.BUILD === 'development'`。
 
+<<<<<<< HEAD
 ### `--waitForBundleInput` {#waitforbundleinput}
 
 如果入口点文件中有一个文件不可用，这不会引发错误。相反，在开始构建之前，它将等待所有文件都存在。这在监视模式下特别有用，当 Rollup 正在使用另一个进程的输出时。
+=======
+### `--failAfterWarnings`
+
+Exit the build with an error if any warnings occurred, once the build is complete.
+
+### `--filterLogs <filter>`
+
+Only display certain log messages based on custom filters. In its most basic form, a filter is a `key:value` pair where the key is a property of the log object and the value is an allowed value. For instance
+
+```shell
+rollup -c --filterLogs code:EVAL
+```
+
+will only display log messages where `log.code === 'EVAL'`. You can specify multiple filters by separating them with a comma or using the option multiple times:
+
+```shell
+rollup -c --filterLogs "code:FOO,message:This is the message" --filterLogs code:BAR
+```
+
+This will display all logs where the `code` is either `"FOO"` or `"BAR"` or where the `message` is `"This is the message"`.
+
+For situations where you cannot easily add additional command line parameters, you can also use the `ROLLUP_FILTER_LOGS` environment variable. The value of this variable will be handled the same way as if you specified `--filterLogs` on the command line and supports a comma-separated list of filters.
+
+There is also some advanced syntax available for more complex filters.
+
+- `!` will negate a filter:
+
+  ```shell
+  rollup -c --filterLogs "!code:CIRCULAR_DEPENDENCY"
+  ```
+
+  will display all logs except circular dependency warnings.
+
+- `*` matches any sub-string when used in a filter value:
+
+  ```shell
+  rollup -c --filterLogs "code:*_ERROR,message:*error*"
+  ```
+
+  will only display logs where either the `code` ends with `_ERROR` or the message contains the string `error`.
+
+- `&` intersects several filters:
+
+  ```shell
+  rollup -c --filterLogs "code:CIRCULAR_DEPENDENCY&ids:*/main.js*"
+  ```
+
+  will only display logs where both the `code` is `"CIRCULAR_DEPENDENCY"` and the `ids` contain `/main.js`. This makes use of another feature:
+
+- if the value is an object, it will be converted to a string via `JSON.stringify` before applying the filter. Other non-string values will be directly cast to string.
+- nested properties are supported as well:
+
+  ```shell
+  rollup -c --filterLogs "foo.bar:value"
+  ```
+
+  will only display logs where the property `log.foo.bar` has the value `"value"`.
+
+### `-h`/`--help`
+
+Print the help document.
+
+### `-p <plugin>`, `--plugin <plugin>`
+
+Use the specified plugin. There are several ways to specify plugins here:
+
+- Via a relative path:
+
+  ```shell
+  rollup -i input.js -f es -p ./my-plugin.js
+  ```
+
+  The file should export a function returning a plugin object.
+
+- Via the name of a plugin that is installed in a local or global `node_modules` folder:
+
+  ```shell
+  rollup -i input.js -f es -p @rollup/plugin-node-resolve
+  ```
+
+  If the plugin name does not start with `rollup-plugin-` or `@rollup/plugin-`, Rollup will automatically try adding these prefixes:
+
+  ```shell
+  rollup -i input.js -f es -p node-resolve
+  ```
+
+- Via an inline implementation:
+
+  ```shell
+  rollup -i input.js -f es -p '{transform: (c, i) => `/* ${JSON.stringify(i)} */\n${c}`}'
+  ```
+
+If you want to load more than one plugin, you can repeat the option or supply a comma-separated list of names:
+
+```shell
+rollup -i input.js -f es -p node-resolve -p commonjs,json
+```
+
+By default, plugin functions will be called with no argument to create the plugin. You can however pass a custom argument as well:
+
+```shell
+rollup -i input.js -f es -p 'terser={output: {beautify: true, indent_level: 2}}'
+```
+
+### `--silent`
+
+Don't print warnings to the console. If your configuration file contains an `onLog` or `onwarn` handler, this handler will still be called. The same goes for plugins with an `onLog` hook. To prevent that, additionally use the [`logLevel`](../configuration-options/index.md#loglevel) option or pass `--logLevel silent`.
+>>>>>>> 1b62c336b8e927e846cd2c04563ae0868a5d5832
 
 ### `--stdin=ext` {#stdinext}
 
@@ -574,11 +787,29 @@ npm run build -- --environment BUILD:development
 
 不要从 `stdin` 读取文件。设置此标志将防止将内容传输到 Rollup 并确保 Rollup 将 `-` 和 `-.[ext]` 解释为常规文件名，而不是将其解释为 `stdin` 的名称。另请参见[从 stdin 读取文件](#reading-a-file-from-stdin)。
 
+<<<<<<< HEAD
 ### `--watch.onStart <cmd>`，`--watch.onBundleStart <cmd>`，`--watch.onBundleEnd <cmd>`，`--watch.onEnd <cmd>`，`--watch.onError <cmd>` {#watchonstart-cmd-watchonbundlestart-cmd-watchonbundleend-cmd-watchonend-cmd-watchonerror-cmd}
+=======
+### `-v`/`--version`
+
+Print the installed version number.
+
+### `--waitForBundleInput`
+
+This will not throw an error if one of the entry point files is not available. Instead, it will wait until all files are present before starting the build. This is useful, especially in watch mode, when Rollup is consuming the output of another process.
+
+### `-w`/`--watch`
+
+Rebuild the bundle when its source files change on disk.
+
+_Note: While in watch mode, the `ROLLUP_WATCH` environment variable will be set to `"true"` by Rollup's command line interface and can be checked by other processes. Plugins should instead check [`this.meta.watchMode`](../plugin-development/index.md#this-meta), which is independent of the command line interface._
+
+### `--watch.onStart <cmd>`, `--watch.onBundleStart <cmd>`, `--watch.onBundleEnd <cmd>`, `--watch.onEnd <cmd>`, `--watch.onError <cmd>`
+>>>>>>> 1b62c336b8e927e846cd2c04563ae0868a5d5832
 
 在监视模式下，为监视事件代码运行一个 shell 命令 `<cmd>`。另请参见 [rollup.watch](../javascript-api/index.md#rollup-watch)。
 
-```sh
+```shell
 rollup -c --watch --watch.onEnd="node ./afterBuildScript.js"
 ```
 
