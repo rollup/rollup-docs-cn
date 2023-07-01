@@ -389,6 +389,7 @@ export default {
 --no-externalImportAssertions 在 "es" 输出中省略导入断言
 --no-externalLiveBindings   不生成支持实时绑定的代码
 --failAfterWarnings         如果生成的构建产生警告，则退出并显示错误
+--filterLogs <filter>       过滤日志信息
 --footer <text>             在产物底部插入的代码（位于包装器之外）
 --no-freeze                 不冻结命名空间对象
 --generatedCode <preset>    使用哪些代码特性（es5/es2015）
@@ -448,6 +449,112 @@ export default {
 
 以下标志仅通过命令行界面可用。所有其他标志都对应并覆盖其配置文件等效项，请参阅[选项大列表](../configuration-options/index.md)获取详细信息。
 
+### `--bundleConfigAsCjs` {#bundleconfigascjs}
+
+此选项将强制将你的配置转译为 CommonJS。
+
+这允许你在配置中使用 CommonJS 常用的变量/方法，例如 `__dirname` 或 `require.resolve`，即使配置本身是作为 ES 模块编写的。
+
+### `--configPlugin <plugin>` {#configplugin-plugin}
+
+允许指定 Rollup 插件来转译或控制解析配置文件。主要好处是可以使用非 JavaScript 的配置文件。例如，如果你安装了 `@rollup/plugin-typescript`，则以下内容将允许你使用 TypeScript 编写配置文件：
+
+```shell
+rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript
+```
+
+对于 TypeScript，请确保在 `tsconfig.json` 的 `include` 路径中包含 Rollup 配置文件。例如：
+
+```
+"include": ["src/**/*", "rollup.config.ts"],
+```
+
+此选项支持与 [`--plugin`](#p-plugin-plugin-plugin) 选项相同的语法，即你可以多次指定该选项，可以省略 `@rollup/plugin-` 前缀，只需编写 `typescript`，并可以通过 `={...}` 指定插件选项。
+
+使用此选项将使 Rollup 首先将你的配置文件转译为 ES 模块，然后再执行它。如果要转译为 CommonJS，请还传递 [`--bundleConfigAsCjs`](#bundleconfigascjs) 选项。
+
+### `--environment <values>` {#environment-values}
+
+通过 `process.ENV` 传递其他设置到配置文件。
+
+```shell
+rollup -c --environment INCLUDE_DEPS,BUILD:production
+```
+
+将设置 `process.env.INCLUDE_DEPS === 'true'` 和 `process.env.BUILD === 'production'`。你可以多次使用此选项。在这种情况下，后续设置的变量将覆盖先前的定义。这使你可以覆盖 `package.json` 脚本中的环境变量：
+
+```json
+{
+	"scripts": {
+		"build": "rollup -c --environment INCLUDE_DEPS,BUILD:production"
+	}
+}
+```
+
+如果通过以下方式调用此脚本：
+
+```shell
+npm run build -- --environment BUILD:development
+```
+
+则配置文件将接收到 `process.env.INCLUDE_DEPS === 'true'` 和 `process.env.BUILD === 'development'`。
+
+### `--failAfterWarnings` {#failafterwarnings}
+
+一旦构建完成，如果出现任何警告，则以错误退出构建。
+
+### `--filterLogs <filter>`{#filterlogs-filter}
+
+根据自定义的过滤器可以仅展示特定的日志。一个过滤器最基本的形式是一个 `key:value` 键值对，其中键是日志对象的属性，而值是允许的值。例如：
+
+```shell
+rollup -c --filterLogs code:EVAL
+```
+仅会展示 `log.code === 'EVAL'` 的日志消息。可以通过使用逗号分隔它们或多次使用该选项来指定多个过滤器：
+
+```shell
+rollup -c --filterLogs "code:FOO,message:This is the message" --filterLogs code:BAR
+```
+
+这将展示所有 `code` 为 `"FOO"` 或 `"BAR"`，或者 `message` 为 `"This is the message"` 的日志。
+
+对于无法添加额外命令行参数的情况，还可以使用 `ROLLUP_FILTER_LOGS` 环境变量。该变量的值将被处理为与在命令行上指定 `--filterLogs` 相同，并支持逗号分隔的过滤器列表。
+
+还有一些高级语法可用于更复杂的过滤器。
+
+- `!` 对过滤器进行取反操作：
+
+  ```shell
+  rollup -c --filterLogs "!code:CIRCULAR_DEPENDENCY"
+  ```
+
+  将展示 CIRCULAR_DEPENDENCY (循环依赖) 警告外的其他日志。
+
+- `*` 在过滤器值中可以匹配任何子字符串：
+
+  ```shell
+  rollup -c --filterLogs "code:*_ERROR,message:*error*"
+  ```
+
+  只会展示 `code` 以 `_ERROR` 结尾或者 `message` 包含字符串 `error` 的日志。
+
+- `&` 多个过滤器取交集：
+
+  ```shell
+  rollup -c --filterLogs "code:CIRCULAR_DEPENDENCY&ids:*/main.js*"
+  ```
+
+  只会展示 `code` 为 `"CIRCULAR_DEPENDENCY"` 并且 `ids` 包含 `/main.js` 的日志。这利用了另一个特性：
+
+- 如果值是一个对象，在应用过滤器之前，将通过 `JSON.stringify` 将其转换为字符串。其他非字符串值将直接转换为字符串。
+- 支持嵌套属性：
+
+  ```shell
+  rollup -c --filterLogs "foo.bar:value"
+  ```
+
+  只会展示属性 `log.foo.bar` 的值为 `"value"` 的日志。
+
 ### `-h`/`--help` {#h-help}
 
 打印帮助文档。
@@ -494,77 +601,9 @@ rollup -i input.js -f es -p node-resolve -p commonjs,json
 rollup -i input.js -f es -p 'terser={output: {beautify: true, indent_level: 2}}'
 ```
 
-### `--configPlugin <plugin>` {#configplugin-plugin}
-
-允许指定 Rollup 插件来转译或控制解析配置文件。主要好处是可以使用非 JavaScript 的配置文件。例如，如果你安装了 `@rollup/plugin-typescript`，则以下内容将允许你使用 TypeScript 编写配置文件：
-
-```shell
-rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript
-```
-
-对于 TypeScript，请确保在 `tsconfig.json` 的 `include` 路径中包含 Rollup 配置文件。例如：
-
-```
-"include": ["src/**/*", "rollup.config.ts"],
-```
-
-此选项支持与 [`--plugin`](#p-plugin-plugin-plugin) 选项相同的语法，即你可以多次指定该选项，可以省略 `@rollup/plugin-` 前缀，只需编写 `typescript`，并可以通过 `={...}` 指定插件选项。
-
-使用此选项将使 Rollup 首先将你的配置文件转译为 ES 模块，然后再执行它。如果要转译为 CommonJS，请还传递 [`--bundleConfigAsCjs`](#bundleconfigascjs) 选项。
-
-### `--bundleConfigAsCjs` {#bundleconfigascjs}
-
-此选项将强制将你的配置转译为 CommonJS。
-
-这允许你在配置中使用 CommonJS 常用的变量/方法，例如 `__dirname` 或 `require.resolve`，即使配置本身是作为 ES 模块编写的。
-
-### `-v`/`--version` {#v-version}
-
-打印已安装的版本号。
-
-### `-w`/`--watch` {#w-watch}
-
-当其源文件在磁盘上发生更改时重新打包。
-
-_注意：在观察模式下，Rollup 的命令行界面将设置 `ROLLUP_WATCH` 环境变量为 `"true"`，其他进程可以进行检查。插件应该检查 [`this.meta.watchMode`](../plugin-development/index.md#this-meta)，它独立于命令行界面。_
-
 ### `--silent` {#silent}
 
 不要将警告打印到控制台。如果你的配置文件包含 `onLog` 或 `onwarn` 处理程序，则仍将调用此处理程序。对于具有 `onLog` 钩子的插件也是如此。为了防止这种情况，另外使用 [`logLevel`](../configuration-options/index.md#loglevel) 选项或传递 `--logLevel silent`。
-
-### `--failAfterWarnings` {#failafterwarnings}
-
-一旦构建完成，如果出现任何警告，则以错误退出构建。
-
-### `--environment <values>` {#environment-values}
-
-通过 `process.ENV` 传递其他设置到配置文件。
-
-```sh
-rollup -c --environment INCLUDE_DEPS,BUILD:production
-```
-
-将设置 `process.env.INCLUDE_DEPS === 'true'` 和 `process.env.BUILD === 'production'`。你可以多次使用此选项。在这种情况下，后续设置的变量将覆盖先前的定义。这使你可以覆盖 `package.json` 脚本中的环境变量：
-
-```json
-{
-	"scripts": {
-		"build": "rollup -c --environment INCLUDE_DEPS,BUILD:production"
-	}
-}
-```
-
-如果通过以下方式调用此脚本：
-
-```shell
-npm run build -- --environment BUILD:development
-```
-
-则配置文件将接收到 `process.env.INCLUDE_DEPS === 'true'` 和 `process.env.BUILD === 'development'`。
-
-### `--waitForBundleInput` {#waitforbundleinput}
-
-如果入口点文件中有一个文件不可用，这不会引发错误。相反，在开始构建之前，它将等待所有文件都存在。这在监视模式下特别有用，当 Rollup 正在使用另一个进程的输出时。
 
 ### `--stdin=ext` {#stdinext}
 
@@ -574,11 +613,25 @@ npm run build -- --environment BUILD:development
 
 不要从 `stdin` 读取文件。设置此标志将防止将内容传输到 Rollup 并确保 Rollup 将 `-` 和 `-.[ext]` 解释为常规文件名，而不是将其解释为 `stdin` 的名称。另请参见[从 stdin 读取文件](#reading-a-file-from-stdin)。
 
+### `-v`/`--version` {#v-version}
+
+打印已安装的版本号。
+
+### `--waitForBundleInput` {#waitforbundleinput}
+
+如果入口点文件中有一个文件不可用，这不会引发错误。相反，在开始构建之前，它将等待所有文件都存在。这在监视模式下特别有用，当 Rollup 正在使用另一个进程的输出时。
+
+### `-w`/`--watch` {#w-watch}
+
+当其源文件在磁盘上发生更改时重新打包。
+
+_注意：在观察模式下，Rollup 的命令行界面将设置 `ROLLUP_WATCH` 环境变量为 `"true"`，其他进程可以进行检查。插件应该检查 [`this.meta.watchMode`](../plugin-development/index.md#this-meta)，它独立于命令行界面。_
+
 ### `--watch.onStart <cmd>`，`--watch.onBundleStart <cmd>`，`--watch.onBundleEnd <cmd>`，`--watch.onEnd <cmd>`，`--watch.onError <cmd>` {#watchonstart-cmd-watchonbundlestart-cmd-watchonbundleend-cmd-watchonend-cmd-watchonerror-cmd}
 
 在监视模式下，为监视事件代码运行一个 shell 命令 `<cmd>`。另请参见 [rollup.watch](../javascript-api/index.md#rollup-watch)。
 
-```sh
+```shell
 rollup -c --watch --watch.onEnd="node ./afterBuildScript.js"
 ```
 

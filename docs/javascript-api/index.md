@@ -280,7 +280,7 @@ const watchOptions = {
 
 有关 `inputOptions` 和 `outputOptions` 的详细信息，请参见上文，或者查阅 [选项大全](../configuration-options/index.md) 以获取有关 `chokidar`、`include` 和 `exclude` 的信息。
 
-### 以编程方式加载配置文件 {#programmatically-loading-a-config-file}
+## 以编程方式加载配置文件 {#programmatically-loading-a-config-file}
 
 rollup 通过一个单独的入口点公开了它用来在命令行界面中加载配置文件的工具函数，为加载配置提供帮助，此工具函数接收一个解析过的 `fileName` （文件路径）和可选的包含命令行参数的对象：
 
@@ -314,4 +314,25 @@ loadConfigFile(path.resolve(__dirname, 'rollup.config.js'), {
 	// 你也可以直接将选项传给 "rollup.watch"
 	rollup.watch(options);
 });
+```
+
+## 应用高级日志过滤器 {#applying-advanced-log-filters}
+
+虽然命令行界面提供了通过 [`--filterLogs`](../command-line-interface/index.md#filterlogs-filter) 标志对日志进行强大过滤的方式，但在使用 JavaScript API 时，直接使用此功能是不可用的。然而，Rollup 提供了一个辅助函数 `getLogFilter`，可以使用与 CLI 相同的语法生成过滤器。这在指定自定义的 `onLog` 处理方法以及希望为第三方系统提供与 Rollup CLI 类似的过滤功能体验时非常有用。该函数接受一个字符串数组作为参数。需要注意的是，它不会像 CLI 那样拆分以逗号分隔的过滤器列表。
+
+```js
+// rollup.config.mjs
+import { getLogFilter } from 'rollup/getLogFilter';
+
+const logFilter = getLogFilter(['code:FOO', 'code:BAR']);
+
+export default {
+	input: 'main.js',
+	output: { format: 'es' },
+	onLog(level, log, handler) {
+		if (logFilter(log)) {
+			handler(level, log);
+		}
+	}
+};
 ```
