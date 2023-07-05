@@ -1,6 +1,6 @@
 {
   "name": "@rollup/browser",
-  "version": "3.26.0",
+  "version": "3.26.1",
   "description": "Next-generation ES module bundler browser build",
   "main": "dist/rollup.browser.js",
   "module": "dist/es/rollup.browser.js",
@@ -27,7 +27,7 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/rollup.d.ts",
+      "types": "./dist/rollup.browser.d.ts",
       "require": "./dist/rollup.browser.js",
       "import": "./dist/es/rollup.browser.js"
     },
