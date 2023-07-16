@@ -475,11 +475,11 @@ interface RollupLog {
 }
 ```
 
-A function that intercepts log messages. If not supplied, logs are printed to the console, whereby Rollup CLI aggregates certain `"warn"` logs and prints consolidated warnings after the build to reduce noise. This handler is also triggered when using the [`--silent`](../command-line-interface/index.md#silent) CLI option.
+一个用于截取日志信息的函数。如果未提供，日志将打印到控制台，其中 Rollup CLI 会聚合某些 `"warn"` 日志，并在构建完成后打印汇总的警告，以减少干扰。当使用 [`--silent`](../command-line-interface/index.md#silent) 命令行选项时，也会触发此处理程序。
 
-The function receives three arguments: the log level, the log object and the default handler. Log objects have, at a minimum, a `code` and a `message` property, allowing you to control how different kinds of logs are handled. Other properties are added depending on the type of log. See [`utils/logs.ts`](https://github.com/rollup/rollup/blob/master/src/utils/logs.ts) for a complete list of built-in errors and logs together with their codes and properties.
+该函数接收三个参数：日志级别、日志对象和默认处理程序。日志对象至少有一个 `code` 和一个 `message` 属性，允许你控制如何处理不同类型的日志。其他属性根据日志类型添加。参见 [`utils/logs.ts`](https://github.com/rollup/rollup/blob/master/src/utils/logs.ts)，查看内置错误和日志的完整列表，以及它们的代码和属性。
 
-If the default handler is not invoked, the log will not be printed to the console. Moreover, you can change the log level by invoking the default handler with a different level. Using the additional level `"error"` will turn the log into a thrown error that has all properties of the log attached.
+如果不调用默认处理程序，日志将不会打印到控制台。此外，您可以通过调用不同级别的默认处理程序来改变日志级别。使用附加级别 `"error"` 将把日志转换为一个抛出的错误，该错误具有附加的所有日志属性。
 
 ```js
 // rollup.config.js
