@@ -400,7 +400,7 @@ rollup src/main.js src/main2.js -f es -d dist
 ```
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <script type="module">
 	import main2 from './dist/main2.js';
 	main2();
@@ -422,7 +422,7 @@ npm install --save-dev systemjs
 然后根据需要在 HTML 页面中加载一个或两个入口点：
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <script src="node_modules/systemjs/dist/s.min.js"></script>
 <script>
 	System.import('./dist/main2.js').then(({ default: main }) => main());
