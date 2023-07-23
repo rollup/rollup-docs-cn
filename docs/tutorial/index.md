@@ -94,10 +94,14 @@ node
 
 为了避免重复输入，我们可以创建一个包含所有必要选项的配置文件。配置文件是用 JavaScript 编写的，比原始的 CLI 更加灵活。
 
+<<<<<<< HEAD
 在项目根目录中创建一个名为 `rollup.config.js` 的文件，并添加以下代码：
+=======
+Create a file in the project root called `rollup.config.mjs`, and add the following code:
+>>>>>>> dc89523737db3021961aac66a71353c2c68fddd5
 
 ```js
-// rollup.config.js
+// rollup.config.mjs
 export default {
 	input: 'src/main.js',
 	output: {
@@ -124,11 +128,15 @@ rollup -c -o bundle-2.js # `-o` 等价于 `--file`（曾用名为 "output"）
 
 _注意：Rollup 本身会处理配置文件，这就是为什么我们可以使用 `export default` 语法的原因 – 代码没有被 Babel 或任何类似的工具转换，因此你只能使用在你当前使用的 Node 版本中支持的 ES2015 功能。_
 
+<<<<<<< HEAD
 你也可以选择指定不同于默认的 `rollup.config.js` 的配置文件：
+=======
+You can, if you like, specify a different config file from the default `rollup.config.mjs`:
+>>>>>>> dc89523737db3021961aac66a71353c2c68fddd5
 
 ```shell
-rollup --config rollup.config.dev.js
-rollup --config rollup.config.prod.js
+rollup --config rollup.config.dev.mjs
+rollup --config rollup.config.prod.mjs
 ```
 
 ## 本地安装 Rollup {#installing-rollup-locally}
@@ -210,10 +218,14 @@ export default function () {
 }
 ```
 
+<<<<<<< HEAD
 在 `rollup.config.js` 文件中加入 JSON plugin：
+=======
+Edit your `rollup.config.mjs` file to include the JSON plugin:
+>>>>>>> dc89523737db3021961aac66a71353c2c68fddd5
 
 ```js
-// rollup.config.js
+// rollup.config.mjs
 import json from '@rollup/plugin-json';
 
 export default {
@@ -252,10 +264,14 @@ _注意：结果中只导入了我们实际需要的数据 ——`name`、`devDe
 npm install --save-dev @rollup/plugin-terser
 ```
 
+<<<<<<< HEAD
 编辑你的 `rollup.config.js` 文件，添加另一个最小化压缩的输出。我们选择 `iife` 作为格式。该格式会将代码封装起来，以便可以通过浏览器中的 `script` 标签使用，同时避免与其他代码产生不必要的交互。由于设置了一个导出，因此我们需要提供一个全局变量的名称，该变量将由我们的产物创建，以便其他代码可以通过此变量访问我们的导出。
+=======
+Edit your `rollup.config.mjs` file to add a second minified output. As format, we choose `iife`. This format wraps the code so that it can be consumed via a `script` tag in the browser while avoiding unwanted interactions with other code. As we have an export, we need to provide the name of a global variable that will be created by our bundle so that other code can access our export via this variable.
+>>>>>>> dc89523737db3021961aac66a71353c2c68fddd5
 
 ```js
-// rollup.config.js
+// rollup.config.mjs
 import json from '@rollup/plugin-json';
 import terser from '@rollup/plugin-terser';
 
