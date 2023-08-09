@@ -93,9 +93,16 @@ async function generateOutputs(bundle) {
         //       code: string | null;       // 此模块中的剩余代码
         //     };
         //   },
+<<<<<<< HEAD
         //   name: string                   // 用于命名模式的此 chunk 的名称
         //   referencedFiles: string[]      // 通过 import.meta.ROLLUP_FILE_URL_<id> 引用的文件
         //   type: 'chunk',                 // 表示这是一个 chunk
+=======
+        //   name: string                   // the name of this chunk as used in naming patterns
+        //   preliminaryFileName: string    // the preliminary file name of this chunk with hash placeholders
+        //   referencedFiles: string[]      // files referenced via import.meta.ROLLUP_FILE_URL_<id>
+        //   type: 'chunk',                 // signifies that this is a chunk
+>>>>>>> 017678dc6ee9bd0b8e3292e84b5bc8568e9607d4
         // }
         console.log('Chunk', chunkOrAsset.modules);
       }
