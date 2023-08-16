@@ -94,6 +94,7 @@ async function generateOutputs(bundle) {
         //     };
         //   },
         //   name: string                   // 用于命名模式的此 chunk 的名称
+		//   preliminaryFileName: string    // 此 chunk 带有哈希占位符的初始文件名
         //   referencedFiles: string[]      // 通过 import.meta.ROLLUP_FILE_URL_<id> 引用的文件
         //   type: 'chunk',                 // 表示这是一个 chunk
         // }

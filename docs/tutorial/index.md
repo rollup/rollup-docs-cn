@@ -17,7 +17,7 @@ npm install rollup --global
 # or `npm i rollup -g` for short
 ```
 
-你现在可以运行 `rollup` 命令了， 试一试吧！
+你现在可以运行 `rollup` 命令了，试一试吧！
 
 ```shell
 rollup
@@ -55,7 +55,7 @@ export default 'hello world!';
 rollup src/main.js -f cjs
 ```
 
-`-f` 选项 (是 `--format` 的缩写) 指定了产物的类型 — 在本例中是 CommonJS (可以在 Node.js 中运行)。 因为我们没有指定输出文件，所以它将直接打印到 `stdout`：
+`-f` 选项 (是 `--format` 的缩写) 指定了产物的类型 — 在本例中是 CommonJS (可以在 Node.js 中运行)。因为我们没有指定输出文件，所以它将直接打印到 `stdout`：
 
 ```js
 'use strict';
@@ -75,7 +75,7 @@ module.exports = main;
 rollup src/main.js -o bundle.js -f cjs
 ```
 
-(你也可以使用 `rollup src/main.js -f cjs > bundle.js`，但是后面我们会看到，如果你需要生成 sourcemaps 的话，这种方式的灵活性会更低。)
+（你也可以使用 `rollup src/main.js -f cjs > bundle.js`，但是后面我们会看到，如果你需要生成 sourcemaps 的话，这种方式的灵活性会更低。）
 
 尝试运行这段代码：
 
@@ -244,7 +244,7 @@ _注意：结果中只导入了我们实际需要的数据 ——`name`、`devDe
 
 ## 使用输出插件 {#using-output-plugins}
 
-某些插件也可以专门应用于某些输出. 有关特定输出插件可以做什么的详细信息，请参见 [插件钩子](../plugin-development/index.md#build-hooks)。简而言之，这些插件只能在 Rollup 的主要分析完成后修改代码。如果使用不兼容的插件作为特定输出插件，Rollup 将会发出警告。一个可能的用例是压缩产物以在浏览器中使用。
+某些插件也可以专门应用于某些输出。有关特定输出插件可以做什么的详细信息，请参见 [插件钩子](../plugin-development/index.md#build-hooks)。简而言之，这些插件只能在 Rollup 的主要分析完成后修改代码。如果使用不兼容的插件作为特定输出插件，Rollup 将会发出警告。一个可能的用例是压缩产物以在浏览器中使用。
 
 让我们扩展上一个示例，提供一个最小化的构建和一个非最小化的构建。为此，我们需要安装 `@rollup/plugin-terser`：
 
