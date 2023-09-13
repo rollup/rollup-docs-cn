@@ -1,5 +1,44 @@
 # rollup changelog
 
+## 3.29.1
+
+_2023-09-10_
+
+### Bug Fixes
+
+- Fix time measurement of plugin hooks in watch mode (#5114)
+- Ensure accessing document.currentScript in import.meta.url returns correct results (#5118)
+
+### Pull Requests
+
+- [#5114](https://github.com/rollup/rollup/pull/5114): fix(perf): avoid superfluous timer wrappings in watch mode (@ZhengLiu2825)
+- [#5118](https://github.com/rollup/rollup/pull/5118): fix: access document.currentScript at the top level (@TrickyPi)
+- [#5125](https://github.com/rollup/rollup/pull/5125): chore(deps): update actions/checkout action to v4 (@renovate[bot])
+- [#5126](https://github.com/rollup/rollup/pull/5126): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5129](https://github.com/rollup/rollup/pull/5129): re-enbale repl-artefacts workflow for rollup-swc branch (@TrickyPi)
+
+## 3.29.0
+
+_2023-09-06_
+
+### Features
+
+- Add output.sourcemapFileNames option (#5105)
+- Add generic type parameter for `api` to Plugin type (#5112)
+
+### Bug Fixes
+
+- Ensure mutations of CustomEvent details are tracked (#5123)
+
+### Pull Requests
+
+- [#5105](https://github.com/rollup/rollup/pull/5105): Added option to name sourcemap files, i.e. a output.sourcemapFileName… (@atti187)
+- [#5108](https://github.com/rollup/rollup/pull/5108): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5109](https://github.com/rollup/rollup/pull/5109): Docs: load full path of rollup.browser.js for Rollup V4 (@TrickyPi)
+- [#5112](https://github.com/rollup/rollup/pull/5112): feat(types): add generic type for plugin api (@sxzz)
+- [#5115](https://github.com/rollup/rollup/pull/5115): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5123](https://github.com/rollup/rollup/pull/5123): Deoptimize custom event detail (@lukastaegert)
+
 ## 3.28.1
 
 _2023-08-22_
