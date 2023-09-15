@@ -1470,7 +1470,27 @@ export default {
 
 如果 `output` 设置了值，那么 `sourcemapFile` 不是必须的，这种情况下，它的值会通过输出文件名中添加“.map”推断出来。
 
+<<<<<<< HEAD
 ### output.sourcemapIgnoreList {#output-sourcemapignorelist}
+=======
+### output.sourcemapFileNames
+
+|       |                                                |
+| ----: | :--------------------------------------------- |
+| Type: | `string \| ((chunkInfo: ChunkInfo) => string)` |
+|  CLI: | `--sourcemapFileNames <pattern>`               |
+
+The pattern to use for sourcemaps, or a function that is called per sourcemap to return such a pattern. Patterns support the following placeholders:
+
+- `[format]`: The rendering format defined in the output options, e.g. `es` or `cjs`.
+- `[hash]`: A hash based only on the content of the final generated sourcemap. You can also set a specific hash length via e.g. `[hash:10]`.
+- `[chunkhash]`: The same hash as the one used for the corresponding generated chunk (if any).
+- `[name]`: The file name (without extension) of the entry point, unless the object form of input was used to define a different name.
+
+Forward slashes `/` can be used to place files in sub-directories. When using a function, `chunkInfo` is a reduced version of the one in [`generateBundle`](../plugin-development/index.md#generatebundle) without properties that depend on file names and no information about the rendered modules as rendering only happens after file names have been generated. You can however access a list of included `moduleIds`. See also [`output.assetFileNames`](#output-assetfilenames), [`output.chunkFileNames`](#output-chunkfilenames).
+
+### output.sourcemapIgnoreList
+>>>>>>> e1a78ff8e61295edc88890f834e8763176692be6
 
 |  |  |
 | --: | :-- |
