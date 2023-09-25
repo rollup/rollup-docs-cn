@@ -106,6 +106,7 @@ export default {
 		sourcemapBaseUrl,
 		sourcemapExcludeSources,
 		sourcemapFile,
+		sourcemapFileNames,
 		sourcemapIgnoreList,
 		sourcemapPathTransform,
 		validate,
@@ -420,6 +421,7 @@ export default {
 --sourcemapBaseUrl <url>    使用给定的基本 URL 发出绝对源映射 URL
 --sourcemapExcludeSources   在源映射中不包括源代码
 --sourcemapFile <file>      指定源映射的包位置
+--sourcemapFileNames <pattern> 编译后 sourcemap 的命名模式
 --stdin=ext                 指定用于标准输入的文件扩展名
 --no-stdin                  不要从 stdin 读取 "-"
 --no-strict                 不在生成的模块中发出 `"use strict";`

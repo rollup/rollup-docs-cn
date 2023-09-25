@@ -1470,6 +1470,24 @@ export default {
 
 如果 `output` 设置了值，那么 `sourcemapFile` 不是必须的，这种情况下，它的值会通过输出文件名中添加“.map”推断出来。
 
+### output.sourcemapFileNames
+
+|       |                                                |
+| ----: | :--------------------------------------------- |
+| 类型： | `string \| ((chunkInfo: ChunkInfo) => string)` |
+|  CLI: | `--sourcemapFileNames <pattern>`               |
+
+该选项指定 sourcemap 的模式，或者是一个根据每个 sourcemap 调用以返回此类模式的函数。该模式支持以下占位符：
+
+- `[format]`：在输出选项中定义的渲染格式，例如 `es` 或 `cjs`。
+- `[hash]`：一个仅基于最终生成的 sourcemap 内容的哈希值。也可以通过例如 `[hash:10]` 设置特定的哈希长度。
+- `[chunkhash]`：与对应生成的 chunk（如果有的话）使用的哈希值相同。
+- `[name]`：除非使用输入的对象形式定义了不同的名称，否则该文件名（不包括扩展名）就是入口起点的名称。
+
+正斜杠 `/` 可以用来将文件放在子目录中。当使用函数时，`chunkInfo` 是 [`generateBundle`](../plugin-development/index.md#generatebundle) 中的简化版本，不包含依赖于文件名的属性，也没有关于渲染模块的信息，因为渲染只在生成文件名之后发生。但是，你可以访问其中的 `moduleIds` 列表。另请参见 [`output.assetFileNames`](#output-assetfilenames)，[`output.chunkFileNames`](#output-chunkfilenames)。
+
+Forward slashes `/` can be used to place files in sub-directories. When using a function, `chunkInfo` is a reduced version of the one in [`generateBundle`](../plugin-development/index.md#generatebundle) without properties that depend on file names and no information about the rendered modules as rendering only happens after file names have been generated. You can however access a list of included `moduleIds`. See also [`output.assetFileNames`](#output-assetfilenames), [`output.chunkFileNames`](#output-chunkfilenames).
+
 ### output.sourcemapIgnoreList {#output-sourcemapignorelist}
 
 |  |  |
