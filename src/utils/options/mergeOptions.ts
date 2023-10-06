@@ -53,7 +53,7 @@ export async function mergeOptions(
 	const logLevel = config.logLevel || LOGLEVEL_INFO;
 	const onLog = getOnLog(config, logLevel, printLog);
 	const log = getLogger(plugins, onLog, watchMode, logLevel);
-	const inputOptions = await mergeInputOptions(config, command, plugins, log, onLog);
+	const inputOptions = mergeInputOptions(config, command, plugins, log, onLog);
 	if (command.output) {
 		Object.assign(command, command.output);
 	}
@@ -75,14 +75,14 @@ export async function mergeOptions(
 			...Object.keys(commandAliases),
 			'bundleConfigAsCjs',
 			'config',
+			'configPlugin',
 			'environment',
+			'failAfterWarnings',
 			'filterLogs',
 			'plugin',
 			'silent',
-			'failAfterWarnings',
 			'stdin',
-			'waitForBundleInput',
-			'configPlugin'
+			'waitForBundleInput'
 		],
 		'CLI flags',
 		log,
@@ -127,30 +127,21 @@ function mergeInputOptions(
 ): InputOptions {
 	const getOption = (name: keyof InputOptions): any => overrides[name] ?? config[name];
 	const inputOptions: CompleteInputOptions<keyof InputOptions> = {
-		acorn: getOption('acorn'),
-		acornInjectPlugins: config.acornInjectPlugins as
-			| (() => unknown)[]
-			| (() => unknown)
-			| undefined,
 		cache: config.cache as false | RollupCache | undefined,
 		context: getOption('context'),
 		experimentalCacheExpiry: getOption('experimentalCacheExpiry'),
 		experimentalLogSideEffects: getOption('experimentalLogSideEffects'),
 		external: getExternal(config, overrides),
-		inlineDynamicImports: getOption('inlineDynamicImports'),
 		input: getOption('input') || [],
 		logLevel: getOption('logLevel'),
 		makeAbsoluteExternalsRelative: getOption('makeAbsoluteExternalsRelative'),
-		manualChunks: getOption('manualChunks'),
 		maxParallelFileOps: getOption('maxParallelFileOps'),
-		maxParallelFileReads: getOption('maxParallelFileReads'),
 		moduleContext: getOption('moduleContext'),
 		onLog,
 		onwarn: undefined,
 		perf: getOption('perf'),
 		plugins,
 		preserveEntrySignatures: getOption('preserveEntrySignatures'),
-		preserveModules: getOption('preserveModules'),
 		preserveSymlinks: getOption('preserveSymlinks'),
 		shimMissingExports: getOption('shimMissingExports'),
 		strictDeprecations: getOption('strictDeprecations'),
@@ -235,15 +226,14 @@ async function mergeOutputOptions(
 		chunkFileNames: getOption('chunkFileNames'),
 		compact: getOption('compact'),
 		dir: getOption('dir'),
-		dynamicImportFunction: getOption('dynamicImportFunction'),
 		dynamicImportInCjs: getOption('dynamicImportInCjs'),
 		entryFileNames: getOption('entryFileNames'),
 		esModule: getOption('esModule'),
-		experimentalDeepDynamicChunkOptimization: getOption('experimentalDeepDynamicChunkOptimization'),
 		experimentalMinChunkSize: getOption('experimentalMinChunkSize'),
 		exports: getOption('exports'),
 		extend: getOption('extend'),
 		externalImportAssertions: getOption('externalImportAssertions'),
+		externalImportAttributes: getOption('externalImportAttributes'),
 		externalLiveBindings: getOption('externalLiveBindings'),
 		file: getOption('file'),
 		footer: getOption('footer'),
@@ -269,12 +259,10 @@ async function mergeOutputOptions(
 		manualChunks: getOption('manualChunks'),
 		minifyInternalExports: getOption('minifyInternalExports'),
 		name: getOption('name'),
-		namespaceToStringTag: getOption('namespaceToStringTag'),
 		noConflict: getOption('noConflict'),
 		outro: getOption('outro'),
 		paths: getOption('paths'),
 		plugins: await normalizePluginOption(config.plugins),
-		preferConst: getOption('preferConst'),
 		preserveModules: getOption('preserveModules'),
 		preserveModulesRoot: getOption('preserveModulesRoot'),
 		sanitizeFileName: getOption('sanitizeFileName'),

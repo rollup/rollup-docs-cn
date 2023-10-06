@@ -8,7 +8,7 @@ import type { FinaliserOptions } from './index';
 export default function es(
 	magicString: MagicStringBundle,
 	{ accessedGlobals, indent: t, intro, outro, dependencies, exports, snippets }: FinaliserOptions,
-	{ externalLiveBindings, freeze, namespaceToStringTag }: NormalizedOutputOptions
+	{ externalLiveBindings, freeze, generatedCode: { symbols } }: NormalizedOutputOptions
 ): void {
 	const { n } = snippets;
 
@@ -21,7 +21,7 @@ export default function es(
 		snippets,
 		externalLiveBindings,
 		freeze,
-		namespaceToStringTag
+		symbols
 	);
 	if (intro) magicString.prepend(intro);
 
@@ -37,8 +37,8 @@ function getImportBlock(
 	{ _ }: GenerateCodeSnippets
 ): string[] {
 	const importBlock: string[] = [];
-	for (const { importPath, reexports, imports, name, assertions } of dependencies) {
-		const assertion = assertions ? `${_}assert${_}${assertions}` : '';
+	for (const { importPath, reexports, imports, name, attributes } of dependencies) {
+		const assertion = attributes ? `${_}assert${_}${attributes}` : '';
 		const pathWithAssertion = `'${importPath}'${assertion};`;
 		if (!reexports && !imports) {
 			importBlock.push(`import${_}${pathWithAssertion}`);

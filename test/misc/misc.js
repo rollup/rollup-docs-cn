@@ -16,8 +16,6 @@ describe('misc', () => {
 						load: freeze(() => `export default 0;`)
 					}
 				]),
-				acornInjectPlugins: freeze([]),
-				acorn: freeze({}),
 				treeshake: freeze({})
 			})
 		);
@@ -111,7 +109,7 @@ describe('misc', () => {
 				assert.equal(warnings.length, 0);
 				assert.deepEqual(
 					output.map(({ fileName }) => fileName),
-					['main1.js', 'main2.js', 'dep-9394ae8f.js', 'dyndep-d5d54b59.js']
+					['main1.js', 'main2.js', 'dep-OBdYcLqx.js', 'dyndep-t4Fvao3e.js']
 				);
 			});
 	});
@@ -247,32 +245,6 @@ console.log(x);
 		assert.ok(subfeature.code.startsWith("import { fn } from '../../main'"));
 		assert.strictEqual(subsubfeature.fileName, 'base/main/feature/sub/sub');
 		assert.ok(subsubfeature.code.startsWith("import { fn } from '../../../main'"));
-	});
-
-	it('throws the proper error on max call stack exception', async () => {
-		const count = 10_000;
-		let source = '';
-		for (let index = 0; index < count; index++) {
-			source += `if (foo) {`;
-		}
-		for (let index = 0; index < count; index++) {
-			source += '}';
-		}
-		try {
-			await rollup.rollup({
-				input: {
-					input: 'input'
-				},
-				plugins: [
-					loader({
-						input: source
-					})
-				]
-			});
-		} catch (error) {
-			assert.notDeepStrictEqual(error.message, 'Maximum call stack size exceeded');
-			assert.strictEqual(error.name, 'RollupError');
-		}
 	});
 
 	it('supports rendering es after rendering iife with inlined dynamic imports', async () => {
