@@ -15,8 +15,6 @@ export interface RollupError extends RollupLog {
 	watchFiles?: string[];
 }
 
-export type RollupWarning = RollupLog;
-
 export interface RollupLog {
 	binding?: string;
 	cause?: unknown;
@@ -93,20 +91,20 @@ export interface SourceMap {
 export type SourceMapInput = ExistingRawSourceMap | string | null | { mappings: '' };
 
 interface ModuleOptions {
-	assertions: Record<string, string>;
+	attributes: Record<string, string>;
 	meta: CustomPluginOptions;
 	moduleSideEffects: boolean | 'no-treeshake';
 	syntheticNamedExports: boolean | string;
 }
 
 export interface SourceDescription extends Partial<PartialNull<ModuleOptions>> {
-	ast?: AcornNode;
+	ast?: AstNode;
 	code: string;
 	map?: SourceMapInput;
 }
 
 export interface TransformModuleJSON {
-	ast?: AcornNode;
+	ast?: AstNode;
 	code: string;
 	// note if plugins use new this.cache to opt-out auto transform cache
 	customTransformCache: boolean;
@@ -117,7 +115,7 @@ export interface TransformModuleJSON {
 }
 
 export interface ModuleJSON extends TransformModuleJSON, ModuleOptions {
-	ast: AcornNode;
+	ast: AstNode;
 	dependencies: string[];
 	id: string;
 	resolvedIds: ResolvedIdMap;
@@ -173,7 +171,7 @@ export type EmittedFile = EmittedAsset | EmittedChunk | EmittedPrebuiltChunk;
 export type EmitFile = (emittedFile: EmittedFile) => string;
 
 interface ModuleInfo extends ModuleOptions {
-	ast: AcornNode | null;
+	ast: AstNode | null;
 	code: string | null;
 	dynamicImporters: readonly string[];
 	dynamicallyImportedIdResolutions: readonly ResolvedId[];
@@ -181,8 +179,6 @@ interface ModuleInfo extends ModuleOptions {
 	exportedBindings: Record<string, string[]> | null;
 	exports: string[] | null;
 	hasDefaultExport: boolean | null;
-	/** @deprecated Use `moduleSideEffects` instead */
-	hasModuleSideEffects: boolean | 'no-treeshake';
 	id: string;
 	implicitlyLoadedAfterOneOf: readonly string[];
 	implicitlyLoadedBefore: readonly string[];
@@ -205,6 +201,11 @@ type LoggingFunctionWithPosition = (
 	pos?: number | { column: number; line: number }
 ) => void;
 
+export type ParseAst = (
+	input: string,
+	options?: { allowReturnOutsideFunction?: boolean }
+) => AstNode;
+
 export interface PluginContext extends MinimalPluginContext {
 	addWatchFile: (id: string) => void;
 	cache: PluginCache;
@@ -219,14 +220,12 @@ export interface PluginContext extends MinimalPluginContext {
 	load: (
 		options: { id: string; resolveDependencies?: boolean } & Partial<PartialNull<ModuleOptions>>
 	) => Promise<ModuleInfo>;
-	/** @deprecated Use `this.getModuleIds` instead */
-	moduleIds: IterableIterator<string>;
-	parse: (input: string, options?: any) => AcornNode;
+	parse: ParseAst;
 	resolve: (
 		source: string,
 		importer?: string,
 		options?: {
-			assertions?: Record<string, string>;
+			attributes?: Record<string, string>;
 			custom?: CustomPluginOptions;
 			isEntry?: boolean;
 			skipSelf?: boolean;
@@ -265,13 +264,13 @@ export type ResolveIdHook = (
 	this: PluginContext,
 	source: string,
 	importer: string | undefined,
-	options: { assertions: Record<string, string>; custom?: CustomPluginOptions; isEntry: boolean }
+	options: { attributes: Record<string, string>; custom?: CustomPluginOptions; isEntry: boolean }
 ) => ResolveIdResult;
 
 export type ShouldTransformCachedModuleHook = (
 	this: PluginContext,
 	options: {
-		ast: AcornNode;
+		ast: AstNode;
 		code: string;
 		id: string;
 		meta: CustomPluginOptions;
@@ -286,8 +285,6 @@ export type IsExternal = (
 	importer: string | undefined,
 	isResolved: boolean
 ) => boolean;
-
-export type IsPureModule = (id: string) => boolean | NullValue;
 
 export type HasModuleSideEffects = (id: string, external: boolean) => boolean;
 
@@ -323,9 +320,9 @@ export type RenderChunkHook = (
 
 export type ResolveDynamicImportHook = (
 	this: PluginContext,
-	specifier: string | AcornNode,
+	specifier: string | AstNode,
 	importer: string,
-	options: { assertions: Record<string, string> }
+	options: { attributes: Record<string, string> }
 ) => ResolveIdResult;
 
 export type ResolveImportMetaHook = (
@@ -566,31 +563,21 @@ export type SourcemapIgnoreListOption = (
 export type InputPluginOption = MaybePromise<Plugin | NullValue | false | InputPluginOption[]>;
 
 export interface InputOptions {
-	acorn?: Record<string, unknown>;
-	acornInjectPlugins?: ((...arguments_: any[]) => unknown)[] | ((...arguments_: any[]) => unknown);
 	cache?: boolean | RollupCache;
 	context?: string;
 	experimentalCacheExpiry?: number;
 	experimentalLogSideEffects?: boolean;
 	external?: ExternalOption;
-	/** @deprecated Use the "inlineDynamicImports" output option instead. */
-	inlineDynamicImports?: boolean;
 	input?: InputOption;
 	logLevel?: LogLevelOption;
 	makeAbsoluteExternalsRelative?: boolean | 'ifRelativeSource';
-	/** @deprecated Use the "manualChunks" output option instead. */
-	manualChunks?: ManualChunksOption;
 	maxParallelFileOps?: number;
-	/** @deprecated Use the "maxParallelFileOps" option instead. */
-	maxParallelFileReads?: number;
 	moduleContext?: ((id: string) => string | NullValue) | { [id: string]: string };
 	onLog?: LogHandlerWithDefault;
 	onwarn?: WarningHandlerWithDefault;
 	perf?: boolean;
 	plugins?: InputPluginOption;
 	preserveEntrySignatures?: PreserveEntrySignaturesOption;
-	/** @deprecated Use the "preserveModules" output option instead. */
-	preserveModules?: boolean;
 	preserveSymlinks?: boolean;
 	shimMissingExports?: boolean;
 	strictDeprecations?: boolean;
@@ -603,31 +590,20 @@ export interface InputOptionsWithPlugins extends InputOptions {
 }
 
 export interface NormalizedInputOptions {
-	acorn: Record<string, unknown>;
-	acornInjectPlugins: (() => unknown)[];
 	cache: false | undefined | RollupCache;
 	context: string;
 	experimentalCacheExpiry: number;
 	experimentalLogSideEffects: boolean;
 	external: IsExternal;
-	/** @deprecated Use the "inlineDynamicImports" output option instead. */
-	inlineDynamicImports: boolean | undefined;
 	input: string[] | { [entryAlias: string]: string };
 	logLevel: LogLevelOption;
 	makeAbsoluteExternalsRelative: boolean | 'ifRelativeSource';
-	/** @deprecated Use the "manualChunks" output option instead. */
-	manualChunks: ManualChunksOption | undefined;
 	maxParallelFileOps: number;
-	/** @deprecated Use the "maxParallelFileOps" option instead. */
-	maxParallelFileReads: number;
 	moduleContext: (id: string) => string;
 	onLog: LogHandler;
-	onwarn: (warning: RollupLog) => void;
 	perf: boolean;
 	plugins: Plugin[];
 	preserveEntrySignatures: PreserveEntrySignaturesOption;
-	/** @deprecated Use the "preserveModules" output option instead. */
-	preserveModules: boolean | undefined;
 	preserveSymlinks: boolean;
 	shimMissingExports: boolean;
 	strictDeprecations: boolean;
@@ -703,17 +679,15 @@ export interface OutputOptions {
 	compact?: boolean;
 	// only required for bundle.write
 	dir?: string;
-	/** @deprecated Use the "renderDynamicImport" plugin hook instead. */
-	dynamicImportFunction?: string;
 	dynamicImportInCjs?: boolean;
 	entryFileNames?: string | ((chunkInfo: PreRenderedChunk) => string);
 	esModule?: boolean | 'if-default-prop';
-	/** @deprecated This option is no longer needed and ignored. */
-	experimentalDeepDynamicChunkOptimization?: boolean;
 	experimentalMinChunkSize?: number;
 	exports?: 'default' | 'named' | 'none' | 'auto';
 	extend?: boolean;
+	/** @deprecated Use "externalImportAttributes" instead. */
 	externalImportAssertions?: boolean;
+	externalImportAttributes?: boolean;
 	externalLiveBindings?: boolean;
 	// only required for bundle.write
 	file?: string;
@@ -730,14 +704,10 @@ export interface OutputOptions {
 	manualChunks?: ManualChunksOption;
 	minifyInternalExports?: boolean;
 	name?: string;
-	/** @deprecated Use "generatedCode.symbols" instead. */
-	namespaceToStringTag?: boolean;
 	noConflict?: boolean;
 	outro?: string | AddonFunction;
 	paths?: OptionsPaths;
 	plugins?: OutputPluginOption;
-	/** @deprecated Use "generatedCode.constBindings" instead. */
-	preferConst?: boolean;
 	preserveModules?: boolean;
 	preserveModulesRoot?: string;
 	sanitizeFileName?: boolean | ((fileName: string) => string);
@@ -760,17 +730,15 @@ export interface NormalizedOutputOptions {
 	chunkFileNames: string | ((chunkInfo: PreRenderedChunk) => string);
 	compact: boolean;
 	dir: string | undefined;
-	/** @deprecated Use the "renderDynamicImport" plugin hook instead. */
-	dynamicImportFunction: string | undefined;
 	dynamicImportInCjs: boolean;
 	entryFileNames: string | ((chunkInfo: PreRenderedChunk) => string);
 	esModule: boolean | 'if-default-prop';
-	/** @deprecated This option is no longer needed and ignored. */
-	experimentalDeepDynamicChunkOptimization: boolean;
 	experimentalMinChunkSize: number;
 	exports: 'default' | 'named' | 'none' | 'auto';
 	extend: boolean;
+	/** @deprecated Use "externalImportAttributes" instead. */
 	externalImportAssertions: boolean;
+	externalImportAttributes: boolean;
 	externalLiveBindings: boolean;
 	file: string | undefined;
 	footer: AddonFunction;
@@ -786,14 +754,10 @@ export interface NormalizedOutputOptions {
 	manualChunks: ManualChunksOption;
 	minifyInternalExports: boolean;
 	name: string | undefined;
-	/** @deprecated Use "generatedCode.symbols" instead. */
-	namespaceToStringTag: boolean;
 	noConflict: boolean;
 	outro: AddonFunction;
 	paths: OptionsPaths;
 	plugins: OutputPlugin[];
-	/** @deprecated Use "generatedCode.constBindings" instead. */
-	preferConst: boolean;
 	preserveModules: boolean;
 	preserveModulesRoot: string | undefined;
 	sanitizeFileName: (fileName: string) => string;
@@ -997,7 +961,7 @@ export type RollupWatcher = AwaitingEventEmitter<{
 
 export function watch(config: RollupWatchOptions | RollupWatchOptions[]): RollupWatcher;
 
-interface AcornNode {
+interface AstNode {
 	end: number;
 	start: number;
 	type: string;
