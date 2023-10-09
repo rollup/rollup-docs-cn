@@ -85,6 +85,10 @@ export default class VariableDeclaration extends NodeBase {
 		}
 	}
 
+	removeAnnotations(code: MagicString) {
+		this.declarations[0].removeAnnotations(code);
+	}
+
 	render(
 		code: MagicString,
 		options: RenderOptions,
@@ -175,6 +179,7 @@ export default class VariableDeclaration extends NodeBase {
 		for (const { node, start, separator, contentEnd, end } of separatedNodes) {
 			if (!node.included) {
 				code.remove(start, end);
+				node.removeAnnotations(code);
 				continue;
 			}
 			node.render(code, options);

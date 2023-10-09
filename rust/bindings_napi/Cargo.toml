@@ -1,0 +1,19 @@
+[package]
+name = "bindings_napi"
+version = "0.0.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+# Default enable napi4 feature, see https://nodejs.org/api/n-api.html#node-api-version-matrix
+napi = { version = "2.13.3", default-features = false, features = ["napi4"] }
+napi-derive = "2.13.0"
+parse_ast = { path = "../parse_ast" }
+xxhash = { path = "../xxhash" }
+
+[build-dependencies]
+napi-build = "2.0.1"
