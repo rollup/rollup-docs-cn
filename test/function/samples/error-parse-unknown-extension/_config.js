@@ -7,13 +7,9 @@ module.exports = defineTest({
 		'throws with an extended error message when failing to parse a file without .(m)js extension',
 	error: {
 		cause: {
+			code: 'PARSE_ERROR',
 			pos: 0,
-			loc: {
-				line: 1,
-				column: 0
-			},
-			raisedAt: 1,
-			message: 'Unexpected token (1:0)'
+			message: 'Expression expected'
 		},
 		code: 'PARSE_ERROR',
 		id: ID_CSS,
@@ -30,6 +26,7 @@ module.exports = defineTest({
 			3: }
 		`,
 		watchFiles: [ID_CSS, ID_MAIN],
-		message: 'Unexpected token (Note that you need plugins to import files that are not JavaScript)'
+		message:
+			'Expression expected (Note that you need plugins to import files that are not JavaScript)'
 	}
 });
