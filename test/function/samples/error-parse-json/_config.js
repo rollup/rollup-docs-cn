@@ -7,13 +7,9 @@ module.exports = defineTest({
 		'throws with an extended error message when failing to parse a file with ".json" extension',
 	error: {
 		cause: {
+			code: 'PARSE_ERROR',
 			pos: 10,
-			loc: {
-				line: 2,
-				column: 8
-			},
-			raisedAt: 11,
-			message: 'Unexpected token (2:8)'
+			message: "Expected ';', '}' or <eof>"
 		},
 		code: 'PARSE_ERROR',
 		id: ID_JSON,
@@ -30,6 +26,7 @@ module.exports = defineTest({
 			3: }
 		`,
 		watchFiles: [ID_JSON, ID_MAIN],
-		message: 'Unexpected token (Note that you need @rollup/plugin-json to import JSON files)'
+		message:
+			"Expected ';', '}' or <eof> (Note that you need @rollup/plugin-json to import JSON files)"
 	}
 });
