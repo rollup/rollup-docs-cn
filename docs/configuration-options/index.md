@@ -492,7 +492,11 @@ export default {
 		if (level === 'warn') {
 			handler('error', log); // 将其他警告转为错误
 		} else {
+<<<<<<< HEAD
 			handler(level, info); // 否则直接打印出日志
+=======
+			handler(level, log); // otherwise, just print the log
+>>>>>>> e2f947f28ef921568ae03af9b9e868b9e7c712fa
 		}
 	}
 };
@@ -678,6 +682,7 @@ Promise.resolve()
 
 该选项用于指定是否扩展 `umd` 或 `iife` 格式中 `name` 选项定义的全局变量。当值为 `true` 时，该全局变量将定义为 `(global.name = global.name || {})`。当值为 `false` 时，`name` 选项指定的全局变量将被覆盖为 `(global.name = {})`。
 
+<<<<<<< HEAD
 ### output.externalImportAssertions {#output-externalimportassertions}
 
 |        |                                                              |
@@ -687,6 +692,17 @@ Promise.resolve()
 | 默认： | `true`                                                       |
 
 该选项表示如果输出格式为 `es`，是否在输出中为外部引入添加引入断言。默认情况下，断言取自输入文件，但插件可以在之后添加或删除断言。例如，`import "foo" assert {type: "json"}` 将导致相同的引入出现在输出中，除非该选项赋值为 `false`。需要注意的是，一个模块的所有引入需要有一致的断言，否则会发出警告。
+=======
+### output.externalImportAttributes
+
+|          |                                                              |
+| -------: | :----------------------------------------------------------- |
+|    Type: | `boolean`                                                    |
+|     CLI: | `--externalImportAttributes`/`--no-externalImportAttributes` |
+| Default: | `true`                                                       |
+
+Whether to add import attributes to external imports in the output if the output format is `es`. By default, attributes are taken from the input files, but plugins can add or remove attributes later. E.g. `import "foo" assert {type: "json"}` will cause the same import to appear in the output unless the option is set to `false`. Note that all imports of a module need to have consistent attributes, otherwise a warning is emitted.
+>>>>>>> e2f947f28ef921568ae03af9b9e868b9e7c712fa
 
 ### output.generatedCode {#output-generatedcode}
 
@@ -1655,6 +1671,7 @@ console.log(shared);
 
 除非你知道自己在做什么，否则尽量别使用这些选项！
 
+<<<<<<< HEAD
 ### acorn {#acorn}
 
 |        |                |
@@ -1683,6 +1700,9 @@ export default {
 在你的 Rollup 配置中。请注意，这与使用 Babel 不同，因为生成的输出文件仍将包含 JSX，而 Babel 会将其替换为有效的 JavaScript 代码。
 
 ### context {#context}
+=======
+### context
+>>>>>>> e2f947f28ef921568ae03af9b9e868b9e7c712fa
 
 |        |                               |
 | -----: | :---------------------------- |
@@ -2111,10 +2131,18 @@ class Impure {
 	}
 }
 
-/*@__PURE__*/ new Impure();
+/*@__PURE__ There may be additional text in the comment */ new Impure();
 ```
 
+<<<<<<< HEAD
 ##### `@__NO_SIDE_EFFECTS__` {#nosideeffects}
+=======
+Such an annotation is considered _valid_ if it directly precedes a function call or constructor invocation and is only separated from the callee by white-space or comments. The only exception are parentheses that wrap a call or invocation.
+
+Invalid annotations are removed and Rollup emits a warning. Valid annotations remain in the code unless their function call or constructor invocation is removed as well.
+
+##### `@__NO_SIDE_EFFECTS__`
+>>>>>>> e2f947f28ef921568ae03af9b9e868b9e7c712fa
 
 包含 `@__NO_SIDE_EFFECTS__` 或者 `#__NO_SIDE_EFFECTS__` 的注释标记函数声明本身是无副作用的。当一个函数被标记为没有副作用时，所有对该函数的调用都将被认为是没有副作用的。下面的代码将被完全除屑优化，除非将该选项设置为 `false`，否则它将保持不变。
 
@@ -2133,7 +2161,15 @@ impure(); // <-- call will be considered as side effect free
 impureArrowFn(); // <-- call will be considered as side effect free
 ```
 
+<<<<<<< HEAD
 #### treeshake.correctVarValueBeforeDeclaration {#treeshake-correctvarvaluebeforedeclaration}
+=======
+Such an annotation is considered _valid_ if it directly precedes a function declaration or a constant variable declaration where the first declared variable is a function and is only separated from the declaration by white-space or comments.
+
+Invalid annotations are removed and Rollup emits a warning. Valid annotations remain in the code unless their declaration is removed as well
+
+#### treeshake.correctVarValueBeforeDeclaration
+>>>>>>> e2f947f28ef921568ae03af9b9e868b9e7c712fa
 
 |  |  |
 | --: | :-- |
@@ -2585,6 +2621,7 @@ export default {
 
 ☢️ 这些选项已经废弃，可能从未来的 Rollup 版本中移除。
 
+<<<<<<< HEAD
 ### inlineDynamicImports {#inlinedynamicimports}
 
 _请使用具有相同签名的 [`output.inlineDynamicImports`](#output-inlinedynamicimports) 选项代替。_
@@ -2663,3 +2700,16 @@ console.log(String(namespace));
 ### preserveModules {#preservemodules}
 
 _请使用具有相同签名的 [`output.preserveModules`](#output-preservemodules) 选项代替。_
+=======
+### output.externalImportAssertions
+
+_Use the [`output.externalImportAttributes`](#output-externalimportattributes) option instead._
+
+|          |                                                              |
+| -------: | :----------------------------------------------------------- |
+|    Type: | `boolean`                                                    |
+|     CLI: | `--externalImportAssertions`/`--no-externalImportAssertions` |
+| Default: | `true`                                                       |
+
+Whether to add import assertions to external imports in the output if the output format is `es`. By default, assertions are taken from the input files, but plugins can add or remove assertions later. E.g. `import "foo" assert {type: "json"}` will cause the same import to appear in the output unless the option is set to `false`. Note that all imports of a module need to have consistent assertions, otherwise a warning is emitted.
+>>>>>>> e2f947f28ef921568ae03af9b9e868b9e7c712fa
