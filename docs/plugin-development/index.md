@@ -12,7 +12,7 @@ Rollup 插件是一个对象，具有 [属性](#properties)、[构建钩子](#bu
 
 插件允许你通过例如在打包之前进行转译代码或在`node_modules`文件夹中查找第三方模块来自定义 Rollup 的行为。有关如何使用它们的示例，请参见 [使用插件](../tutorial/index.md#using-plugins)。
 
-插件列表可以在 [github.com/rollup/awesome](https://github.com/rollup/awesome) 上找到。如果你想建议一个插件，请提交一个 Pull Request。
+插件列表可以在 [github.com/rollup/awesome](https://github.com/rollup/awesome) 上找到。如果你想给某个插件提交建议，请提交一个 Pull Request。
 
 ## 一个简单的示例 {#a-simple-example}
 
