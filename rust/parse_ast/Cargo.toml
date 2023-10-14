@@ -1,0 +1,18 @@
+[package]
+name = "parse_ast"
+version = "0.0.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.75"
+swc = "0.268.7"
+swc_common = "0.33.0"
+swc_ecma_ast = "0.110.0"
+swc_ecma_parser = "0.141.1"
+swc_error_reporters = "0.17.0"
+parking_lot = "0.12.1"
+swc_ecma_lints = "0.89.3"
+swc_ecma_transforms_base = "0.134.3"
+swc_ecma_visit = "0.96.0"
