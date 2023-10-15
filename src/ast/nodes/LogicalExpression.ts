@@ -7,7 +7,6 @@ import {
 	removeLineBreaks,
 	type RenderOptions
 } from '../../utils/renderHelpers';
-import { removeAnnotations } from '../../utils/treeshakeNode';
 import type { DeoptimizableEntity } from '../DeoptimizableEntity';
 import type { HasEffectsContext, InclusionContext } from '../ExecutionContext';
 import type { NodeInteraction, NodeInteractionCalled } from '../NodeInteractions';
@@ -19,6 +18,7 @@ import {
 	UNKNOWN_PATH
 } from '../utils/PathTracker';
 import type * as NodeType from './NodeType';
+import { Flag, isFlagSet, setFlag } from './shared/BitFlags';
 import {
 	type ExpressionEntity,
 	type LiteralValueOrUnknown,
@@ -35,9 +35,16 @@ export default class LogicalExpression extends NodeBase implements Deoptimizable
 	declare right: ExpressionNode;
 	declare type: NodeType.tLogicalExpression;
 
+	//private isBranchResolutionAnalysed = false;
+	private get isBranchResolutionAnalysed(): boolean {
+		return isFlagSet(this.flags, Flag.isBranchResolutionAnalysed);
+	}
+	private set isBranchResolutionAnalysed(value: boolean) {
+		this.flags = setFlag(this.flags, Flag.isBranchResolutionAnalysed, value);
+	}
+
 	// We collect deoptimization information if usedBranch !== null
 	private expressionsToBeDeoptimized: DeoptimizableEntity[] = [];
-	private isBranchResolutionAnalysed = false;
 	private usedBranch: ExpressionNode | null = null;
 
 	deoptimizeArgumentsOnInteractionAtPath(
@@ -54,7 +61,10 @@ export default class LogicalExpression extends NodeBase implements Deoptimizable
 			const unusedBranch = this.usedBranch === this.left ? this.right : this.left;
 			this.usedBranch = null;
 			unusedBranch.deoptimizePath(UNKNOWN_PATH);
-			const { context, expressionsToBeDeoptimized } = this;
+			const {
+				scope: { context },
+				expressionsToBeDeoptimized
+			} = this;
 			this.expressionsToBeDeoptimized = EMPTY_ARRAY as unknown as DeoptimizableEntity[];
 			for (const expression of expressionsToBeDeoptimized) {
 				expression.deoptimizeCache();
@@ -160,6 +170,10 @@ export default class LogicalExpression extends NodeBase implements Deoptimizable
 		}
 	}
 
+	removeAnnotations(code: MagicString) {
+		this.left.removeAnnotations(code);
+	}
+
 	render(
 		code: MagicString,
 		options: RenderOptions,
@@ -182,10 +196,10 @@ export default class LogicalExpression extends NodeBase implements Deoptimizable
 				if (preventASI) {
 					removeLineBreaks(code, removePos, this.right.start);
 				}
+				this.left.removeAnnotations(code);
 			} else {
 				code.remove(operatorPos, this.end);
 			}
-			removeAnnotations(this, code);
 			this.getUsedBranch()!.render(code, options, {
 				isCalleeOfRenderedParent,
 				preventASI,

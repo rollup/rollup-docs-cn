@@ -95,7 +95,7 @@ export type ResolvedDynamicImport = (
 ) & { node: ImportExpression };
 
 export interface ChunkDependency {
-	assertions: string | null;
+	attributes: string | null;
 	defaultVariableName: string | undefined;
 	globalName: string | false | undefined;
 	importPath: string;
@@ -701,6 +701,10 @@ export default class Chunk {
 			outputOptions
 		);
 		if (banner) magicString.prepend(banner);
+		if (format === 'es' || format === 'cjs') {
+			const shebang = facadeModule !== null && facadeModule.info.isEntry && facadeModule.shebang;
+			shebang && magicString.prepend(`#!${shebang}\n`);
+		}
 		if (footer) magicString.append(footer);
 
 		return {
@@ -947,17 +951,17 @@ export default class Chunk {
 			);
 	}
 
-	private getDynamicImportStringAndAssertions(
+	private getDynamicImportStringAndAttributes(
 		resolution: ExternalModule | string | null,
 		fileName: string
-	): [importPath: string, assertions: string | null | true] {
+	): [importPath: string, attributes: string | null | true] {
 		if (resolution instanceof ExternalModule) {
 			const chunk = this.externalChunkByModule.get(resolution)!;
-			return [`'${chunk.getImportPath(fileName)}'`, chunk.getImportAssertions(this.snippets)];
+			return [`'${chunk.getImportPath(fileName)}'`, chunk.getImportAttributes(this.snippets)];
 		}
 		return [
 			resolution || '',
-			(this.outputOptions.format === 'es' && this.outputOptions.externalImportAssertions) || null
+			(this.outputOptions.format === 'es' && this.outputOptions.externalImportAttributes) || null
 		];
 	}
 
@@ -1140,7 +1144,7 @@ export default class Chunk {
 			const importPath = dep.getImportPath(fileName);
 
 			renderedDependencies.set(dep, {
-				assertions: dep instanceof ExternalChunk ? dep.getImportAssertions(this.snippets) : null,
+				attributes: dep instanceof ExternalChunk ? dep.getImportAttributes(this.snippets) : null,
 				defaultVariableName: dep.defaultVariableName,
 				globalName:
 					dep instanceof ExternalChunk &&
@@ -1189,7 +1193,12 @@ export default class Chunk {
 			renderedModules,
 			snippets
 		} = this;
-		const { compact, dynamicImportFunction, format, freeze, namespaceToStringTag } = outputOptions;
+		const {
+			compact,
+			format,
+			freeze,
+			generatedCode: { symbols }
+		} = outputOptions;
 		const { _, cnst, n } = snippets;
 		this.setDynamicImportResolutions(fileName);
 		this.setImportMetaResolutions(fileName);
@@ -1204,14 +1213,13 @@ export default class Chunk {
 
 		const renderOptions: RenderOptions = {
 			accessedDocumentCurrentScript: false,
-			dynamicImportFunction,
 			exportNamesByVariable,
 			format,
 			freeze,
 			indent,
-			namespaceToStringTag,
 			pluginDriver,
 			snippets,
+			symbols,
 			useOriginalName: null
 		};
 
@@ -1299,7 +1307,7 @@ export default class Chunk {
 				}
 			} else {
 				const { node, resolution } = resolvedDynamicImport;
-				const [resolutionString, assertions] = this.getDynamicImportStringAndAssertions(
+				const [resolutionString, attributes] = this.getDynamicImportStringAndAttributes(
 					resolution,
 					fileName
 				);
@@ -1312,15 +1320,20 @@ export default class Chunk {
 					accessedGlobalsByScope,
 					resolutionString,
 					false,
-					assertions
+					attributes
 				);
 			}
 		}
 	}
 
 	private setIdentifierRenderResolutions() {
-		const { format, interop, namespaceToStringTag, preserveModules, externalLiveBindings } =
-			this.outputOptions;
+		const {
+			format,
+			generatedCode: { symbols },
+			interop,
+			preserveModules,
+			externalLiveBindings
+		} = this.outputOptions;
 		const syntheticExports = new Set<SyntheticNamedExportVariable>();
 		for (const exportName of this.getExportNames()) {
 			const exportVariable = this.exportsByName.get(exportName)!;
@@ -1347,7 +1360,7 @@ export default class Chunk {
 		if (this.needsExportsShim) {
 			usedNames.add(MISSING_EXPORT_SHIM_VARIABLE);
 		}
-		if (namespaceToStringTag) {
+		if (symbols) {
 			usedNames.add('Symbol');
 		}
 		switch (format) {

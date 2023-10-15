@@ -11,7 +11,7 @@ import type VariableDeclaration from './VariableDeclaration';
 import { type Node, NodeBase } from './shared/Node';
 
 export default class ExportNamedDeclaration extends NodeBase {
-	declare assertions: ImportAttribute[];
+	declare attributes: ImportAttribute[];
 	declare declaration: FunctionDeclaration | ClassDeclaration | VariableDeclaration | null;
 	declare needsBoundaries: true;
 	declare source: Literal<string> | null;
@@ -28,7 +28,11 @@ export default class ExportNamedDeclaration extends NodeBase {
 	}
 
 	initialise(): void {
-		this.context.addExport(this);
+		this.scope.context.addExport(this);
+	}
+
+	removeAnnotations(code: MagicString) {
+		this.declaration?.removeAnnotations(code);
 	}
 
 	render(code: MagicString, options: RenderOptions, nodeRenderOptions?: NodeRenderOptions): void {

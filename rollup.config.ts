@@ -13,7 +13,10 @@ import { moduleAliases } from './build-plugins/aliases';
 import cleanBeforeWrite from './build-plugins/clean-before-write';
 import { copyBrowserTypes, copyNodeTypes } from './build-plugins/copy-types';
 import emitModulePackageFile from './build-plugins/emit-module-package-file';
+import { emitNativeEntry } from './build-plugins/emit-native-entry';
+import emitWasmFile from './build-plugins/emit-wasm-file';
 import esmDynamicImport from './build-plugins/esm-dynamic-import';
+import { externalNativeImport } from './build-plugins/external-native-import';
 import { fsEventsReplacement } from './build-plugins/fs-events-replacement';
 import getLicenseHandler from './build-plugins/generate-license-file';
 import getBanner from './build-plugins/get-banner';
@@ -46,7 +49,8 @@ const nodePlugins: readonly Plugin[] = [
 		include: 'node_modules/**'
 	}),
 	typescript(),
-	cleanBeforeWrite('dist')
+	cleanBeforeWrite('dist'),
+	externalNativeImport()
 ];
 
 export default async function (
@@ -62,6 +66,7 @@ export default async function (
 		input: {
 			'getLogFilter.js': 'src/utils/getLogFilter.ts',
 			'loadConfigFile.js': 'cli/run/loadConfigFile.ts',
+			'parseAst.js': 'src/utils/parseAst.ts',
 			'rollup.js': 'src/node-entry.ts'
 		},
 		onwarn,
@@ -80,6 +85,7 @@ export default async function (
 		},
 		plugins: [
 			...nodePlugins,
+			emitNativeEntry(),
 			addCliEntry(),
 			esmDynamicImport(),
 			!command.configTest && collectLicenses(),
@@ -93,10 +99,21 @@ export default async function (
 		return commonJSBuild;
 	}
 
+	const exitOnCloseBundle: Plugin = {
+		closeBundle() {
+			// On CI, macOS runs sometimes do not close properly. This is a hack
+			// to fix this until the problem is understood.
+			console.log('Force quit.');
+			setTimeout(() => process.exit(0));
+		},
+		name: 'force-close'
+	};
+
 	const esmBuild: RollupOptions = {
 		...commonJSBuild,
 		input: {
 			'getLogFilter.js': 'src/utils/getLogFilter.ts',
+			'parseAst.js': 'src/utils/parseAst.ts',
 			'rollup.js': 'src/node-entry.ts'
 		},
 		output: {
@@ -108,6 +125,11 @@ export default async function (
 		},
 		plugins: [...nodePlugins, emitModulePackageFile(), collectLicenses(), writeLicense()]
 	};
+
+	if (command.configIsBuildNode) {
+		(esmBuild.plugins as Plugin[]).push(exitOnCloseBundle);
+		return [commonJSBuild, esmBuild];
+	}
 
 	const { collectLicenses: collectLicensesBrowser, writeLicense: writeLicenseBrowser } =
 		getLicenseHandler(fileURLToPath(new URL('browser', import.meta.url)));
@@ -142,15 +164,8 @@ export default async function (
 			collectLicensesBrowser(),
 			writeLicenseBrowser(),
 			cleanBeforeWrite('browser/dist'),
-			{
-				closeBundle() {
-					// On CI, macOS runs sometimes do not close properly. This is a hack
-					// to fix this until the problem is understood.
-					console.log('Force quit.');
-					setTimeout(() => process.exit(0));
-				},
-				name: 'force-close'
-			}
+			emitWasmFile(),
+			exitOnCloseBundle
 		],
 		strictDeprecations: true,
 		treeshake
