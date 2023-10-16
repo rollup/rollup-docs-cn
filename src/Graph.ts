@@ -1,4 +1,3 @@
-import * as acorn from 'acorn';
 import flru from 'flru';
 import type ExternalModule from './ExternalModule';
 import Module from './Module';
@@ -6,6 +5,7 @@ import { ModuleLoader, type UnresolvedModule } from './ModuleLoader';
 import GlobalScope from './ast/scopes/GlobalScope';
 import { PathTracker } from './ast/utils/PathTracker';
 import type {
+	AstNode,
 	ModuleInfo,
 	ModuleJSON,
 	NormalizedInputOptions,
@@ -17,7 +17,6 @@ import type {
 import { PluginDriver } from './utils/PluginDriver';
 import Queue from './utils/Queue';
 import { BuildPhase } from './utils/buildPhase';
-import { addAnnotations } from './utils/commentAnnotations';
 import { analyseModuleExecution } from './utils/executionOrder';
 import { LOGLEVEL_WARN } from './utils/logging';
 import {
@@ -53,8 +52,7 @@ function normalizeEntryModules(
 }
 
 export default class Graph {
-	readonly acornParser: typeof acorn.Parser;
-	readonly astLru = flru<acorn.Node>(5);
+	readonly astLru = flru<AstNode>(5);
 	readonly cachedModules = new Map<string, ModuleJSON>();
 	readonly deoptimizationTracker = new PathTracker();
 	entryModules: Module[] = [];
@@ -100,7 +98,6 @@ export default class Graph {
 			watcher.onCurrentRun('close', handleClose);
 		}
 		this.pluginDriver = new PluginDriver(this, options, options.plugins, this.pluginCache);
-		this.acornParser = acorn.Parser.extend(...(options.acornInjectPlugins as any[]));
 		this.moduleLoader = new ModuleLoader(this, this.modulesById, this.options, this.pluginDriver);
 		this.fileOperationQueue = new Queue(options.maxParallelFileOps);
 		this.pureFunctions = getPureFunctions(options);
@@ -121,34 +118,6 @@ export default class Graph {
 		timeEnd('mark included statements', 2);
 
 		this.phase = BuildPhase.GENERATE;
-	}
-
-	contextParse(code: string, options: Partial<acorn.Options> = {}): acorn.Node {
-		const onCommentOrig = options.onComment;
-		const comments: acorn.Comment[] = [];
-
-		options.onComment =
-			onCommentOrig && typeof onCommentOrig == 'function'
-				? (block, text, start, end, ...parameters) => {
-						comments.push({ end, start, type: block ? 'Block' : 'Line', value: text });
-						return onCommentOrig.call(options, block, text, start, end, ...parameters);
-				  }
-				: comments;
-
-		const ast = this.acornParser.parse(code, {
-			...(this.options.acorn as unknown as acorn.Options),
-			...options
-		});
-
-		if (typeof onCommentOrig == 'object') {
-			onCommentOrig.push(...comments);
-		}
-
-		options.onComment = onCommentOrig;
-
-		addAnnotations(comments, ast, code);
-
-		return ast;
 	}
 
 	getCache(): RollupCache {

@@ -311,7 +311,11 @@ interface SourceDescription {
 }
 ```
 
+<<<<<<< HEAD
 定义自定义加载器。返回 `null` 将延迟到其他 `load` 函数（最终默认从文件系统加载）。为了避免额外的解析开销，例如由于某些原因该钩子已经使用 `this.parse` 生成 AST，该钩子可以选择返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个具有每个节点的 `start` 和 `end` 属性的标准 ESTree AST。如果转换不移动代码，则可以通过将 `map` 设置为 `null` 来保留现有的源码映射。否则，你可能需要生成源映射。有关 [源代码转换](#source-code-transformations) 的详细信息，请参见该部分。
+=======
+Defines a custom loader. Returning `null` defers to other `load` functions (and eventually the default behavior of loading from the file system). To prevent additional parsing overhead in case e.g. this hook already used [`this.parse`](#this-parse) to generate an AST for some reason, this hook can optionally return a `{ code, ast, map }` object. The `ast` must be a standard ESTree AST with `start` and `end` properties for each node. If the transformation does not move code, you can preserve existing sourcemaps by setting `map` to `null`. Otherwise, you might need to generate the source map. See the section on [source code transformations](#source-code-transformations).
+>>>>>>> 061a0387c8654222620f602471d66afd3c582048
 
 如果 `moduleSideEffects` 返回 `false`，并且没有其他模块从该模块导入任何内容，则即使该模块具有副作用，该模块也不会包含在产物中。如果返回 `true`，则 Rollup 将使用其默认算法包含模块中具有副作用的所有语句（例如修改全局或导出变量）。如果返回 `"no-treeshake"`，则将关闭此模块的除屑优化，并且即使该模块为空，也将在生成的块之一中包含它。如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由第一个解析此模块的 `resolveId` 钩子，[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `true` 确定。`transform` 钩子可以覆盖此设置。
 
@@ -417,7 +421,7 @@ function plugin2() {
 
 ```typescript
 type ResolveDynamicImportHook = (
-	specifier: string | AcornNode,
+	specifier: string | AstNode,
 	importer: string,
 	options: { assertions: Record<string, string> }
 ) => ResolveIdResult;
@@ -508,6 +512,7 @@ function injectPolyfillPlugin() {
 				return { id: POLYFILL_ID, moduleSideEffects: true };
 			}
 			if (options.isEntry) {
+<<<<<<< HEAD
 				// 确定实际的入口点是什么。
 				// 我们需要“skipSelf”来避免无限循环
 				const resolution = await this.resolve(source, importer, {
@@ -516,6 +521,12 @@ function injectPolyfillPlugin() {
 				});
 				// 如果无法解析或是外部引用
 				// 则直接返回错误
+=======
+				// Determine what the actual entry would have been.
+				const resolution = await this.resolve(source, importer, options);
+				// If it cannot be resolved or is external, just return it
+				// so that Rollup can display an error
+>>>>>>> 061a0387c8654222620f602471d66afd3c582048
 				if (!resolution || resolution.external) return resolution;
 				// 在代理的加载钩子中，我们需要知道入口点是否有默认导出。
 				// 然而，我们不再拥有完整的“resolution”对象，
@@ -613,7 +624,7 @@ function externalizeDependencyPlugin() {
 
 ```typescript
 type ShouldTransformCachedModuleHook = (options: {
-	ast: AcornNode;
+	ast: AstNode;
 	code: string;
 	id: string;
 	meta: { [plugin: string]: any };
@@ -651,7 +662,11 @@ interface SourceDescription {
 }
 ```
 
+<<<<<<< HEAD
 可用于转换单个模块。为了避免额外的解析开销，例如此钩子已经使用 `this.parse` 生成了 AST，此钩子可以选择性地返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个标准的 ESTree AST，每个节点都有 `start` 和 `end` 属性。如果转换不移动代码，则可以通过将 `map` 设置为 `null` 来保留现有的源映射。否则，你可能需要生成源映射。请参见 [源代码转换](#source-code-transformations) 一节。
+=======
+Can be used to transform individual modules. To prevent additional parsing overhead in case e.g. this hook already used [`this.parse`](#this-parse) to generate an AST for some reason, this hook can optionally return a `{ code, ast, map }` object. The `ast` must be a standard ESTree AST with `start` and `end` properties for each node. If the transformation does not move code, you can preserve existing sourcemaps by setting `map` to `null`. Otherwise, you might need to generate the source map. See [the section on source code transformations](#source-code-transformations).
+>>>>>>> 061a0387c8654222620f602471d66afd3c582048
 
 请注意，在观察模式下或明确使用缓存时，当重新构建时，此钩子的结果会被缓存，仅当模块的 `code` 发生更改或上次触发此钩子时添加了通过 `this.addWatchFile` 添加的文件时，才会再次触发该模块的钩子。
 
@@ -1534,6 +1549,7 @@ export default function addProxyPlugin() {
 				// 不代理使用代理的 ID
 				return null;
 			}
+<<<<<<< HEAD
 			// 确保将任何 resolveId 选项传递给 this.resolve
 			// 以获取模块 ID
 			const resolution = await this.resolve(source, importer, {
@@ -1541,6 +1557,12 @@ export default function addProxyPlugin() {
 				...options
 			});
 			// 只能预加载现有且非外部的 ID
+=======
+			// We make sure to pass on any resolveId options to
+			// this.resolve to get the module id
+			const resolution = await this.resolve(source, importer, options);
+			// We can only pre-load existing and non-external ids
+>>>>>>> 061a0387c8654222620f602471d66afd3c582048
 			if (resolution && !resolution.external) {
 				// 将整个解析信息传递下去
 				const moduleInfo = await this.load(resolution);
@@ -1666,11 +1688,27 @@ export default function dynamicChunkLogsPlugin() {
 
 ### this.parse
 
+<<<<<<< HEAD
 |        |                                                                 |
 | -----: | :-------------------------------------------------------------- |
 | 类型： | `(code: string, acornOptions?: AcornOptions) => ESTree.Program` |
 
 使用 Rollup 的内部 acorn 实例将代码解析为 AST。
+=======
+|       |                                                            |
+| ----: | :--------------------------------------------------------- |
+| Type: | `(code: string, options?: ParseOptions) => ESTree.Program` |
+
+```typescript
+interface ParseOptions {
+	allowReturnOutsideFunction?: boolean;
+}
+```
+
+Use Rollup's internal SWC-based parser to parse code to an [ESTree-compatible](https://github.com/estree/estree) AST.
+
+- `allowReturnOutsideFunction`: When `true` this allows return statements to be outside functions to e.g. support parsing CommonJS code.
+>>>>>>> 061a0387c8654222620f602471d66afd3c582048
 
 ### this.resolve
 
@@ -1699,7 +1737,11 @@ type Resolve = (
 
 使用 Rollup 使用的相同插件解析导入到模块 id（即文件名），并确定导入是否应为外部。如果 Rollup 或任何插件无法解析导入，但用户未明确将其标记为外部，则返回 `null`。如果返回绝对外部 id，则应通过 [`makeAbsoluteExternalsRelative`](../configuration-options/index.md#makeabsoluteexternalsrelative) 选项或在 [`resolveId`](#resolveid) 钩子中进行显式插件选择，将其保持为绝对输出，`external` 将是 `"absolute"` 而不是 `true`。
 
+<<<<<<< HEAD
 如果传递 `skipSelf: true`，则在解析时将跳过从中调用 `this.resolve` 的插件的 `resolveId` 钩子。当其他插件在处理原始 `this.resolve` 调用时，使用 _完全相同的 `source` 和 `importer`_ 在其 `resolveId` 钩子中也调用 `this.resolve` 时，原始插件的 `resolveId` 钩子也将跳过这些调用。这里的理由是插件已经声明在此时点它“不知道”如何解析这个特定的 `source` 和 `importer` 组合。如果你不想要这种行为，请不要使用 `skipSelf`，但如果必要，可以实现自己的无限循环预防机制。
+=======
+The default of `skipSelf` is `true`, So the `resolveId` hook of the plugin from which `this.resolve` is called will be skipped when resolving. When other plugins themselves also call `this.resolve` in their `resolveId` hooks with the _exact same `source` and `importer`_ while handling the original `this.resolve` call, then the `resolveId` hook of the original plugin will be skipped for those calls as well. The rationale here is that the plugin already stated that it "does not know" how to resolve this particular combination of `source` and `importer` at this point in time. If you do not want this behaviour, set `skipSelf` to `false` and implement your own infinite loop prevention mechanism if necessary.
+>>>>>>> 061a0387c8654222620f602471d66afd3c582048
 
 你还可以通过 `custom` 选项传递插件特定选项的对象，有关详细信息，请参见 [自定义解析器选项](#custom-resolver-options)。
 
@@ -1754,6 +1796,7 @@ this.debug(() => generateExpensiveDebugLog());
 
 如果 [`logLevel`](../configuration-options/index.md#loglevel) 选项设置为 `"silent"`，则此方法不会执行任何操作。
 
+<<<<<<< HEAD
 ## 已弃用的上下文函数 {#deprecated-context-functions}
 
 ☢️ 这些上下文实用程序函数已弃用，可能会在未来的 Rollup 版本中删除。
@@ -1769,6 +1812,9 @@ this.debug(() => generateExpensiveDebugLog());
   或通过 `Array.from(this.moduleIds)` 转换为数组。
 
 ## 文件 URLs {#file-urls}
+=======
+## File URLs
+>>>>>>> 061a0387c8654222620f602471d66afd3c582048
 
 要在 JS 代码中引用文件 URL 引用，请使用 `import.meta.ROLLUP_FILE_URL_referenceId` 替换。这将生成依赖于输出格式的代码，并生成指向目标环境中产出的文件的 URL。请注意，除了 CommonJS 和 UMD 之外的所有格式都假定它们在浏览器环境中运行，其中 `URL` 和 `document` 可用。
 
