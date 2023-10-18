@@ -9,13 +9,13 @@ import type * as NodeType from './NodeType';
 import { NodeBase } from './shared/Node';
 
 export default class ImportDeclaration extends NodeBase {
-	declare assertions?: ImportAttribute[];
+	declare attributes: ImportAttribute[];
 	declare needsBoundaries: true;
 	declare source: Literal<string>;
 	declare specifiers: (ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier)[];
 	declare type: NodeType.tImportDeclaration;
 
-	// Do not bind specifiers or assertions
+	// Do not bind specifiers or attributes
 	bind(): void {}
 
 	hasEffects(): boolean {
@@ -23,7 +23,7 @@ export default class ImportDeclaration extends NodeBase {
 	}
 
 	initialise(): void {
-		this.context.addImport(this);
+		this.scope.context.addImport(this);
 	}
 
 	render(code: MagicString, _options: RenderOptions, nodeRenderOptions?: NodeRenderOptions): void {
