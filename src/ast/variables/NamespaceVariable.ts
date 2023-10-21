@@ -129,7 +129,7 @@ export default class NamespaceVariable extends Variable {
 			format,
 			freeze,
 			indent: t,
-			namespaceToStringTag,
+			symbols,
 			snippets: { _, cnst, getObject, getPropertyAccess, n, s }
 		} = options;
 		const memberVariables = this.getMemberVariables();
@@ -157,7 +157,7 @@ export default class NamespaceVariable extends Variable {
 			)}])`;
 		} else {
 			// The helper to merge namespaces will also take care of freezing and toStringTag
-			if (namespaceToStringTag) {
+			if (symbols) {
 				output = `/*#__PURE__*/Object.defineProperty(${output},${_}Symbol.toStringTag,${_}${getToStringTagValue(
 					getObject
 				)})`;
@@ -185,7 +185,8 @@ export default class NamespaceVariable extends Variable {
 		this.mergedNamespaces = mergedNamespaces;
 		const moduleExecIndex = this.context.getModuleExecIndex();
 		for (const identifier of this.references) {
-			if (identifier.context.getModuleExecIndex() <= moduleExecIndex) {
+			const { context } = identifier.scope;
+			if (context.getModuleExecIndex() <= moduleExecIndex) {
 				this.referencedEarly = true;
 				break;
 			}

@@ -21,11 +21,13 @@ module.exports = {
 		'coverage',
 		'_tmp',
 		'cache',
-		'wasm',
+		'native.d.ts',
 		'/test/*/samples/**/*.*',
 		'!/test/*/samples/**/_config.js',
 		'!/test/*/samples/**/rollup.config.js',
-		'!.vitepress'
+		'!.vitepress',
+		'/wasm/',
+		'/wasm-node/'
 	],
 	overrides: [
 		{

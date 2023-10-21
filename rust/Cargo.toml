@@ -1,0 +1,11 @@
+[profile.release]
+lto = true
+
+[workspace]
+resolver = "2"
+members = [
+    "bindings_napi",
+    "bindings_wasm",
+    "parse_ast",
+    "xxhash"
+]

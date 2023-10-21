@@ -12,16 +12,12 @@ export const URL_MAXPARALLELFILEOPS = 'configuration-options/#maxparallelfileops
 export const URL_OUTPUT_AMD_ID = 'configuration-options/#output-amd-id';
 export const URL_OUTPUT_AMD_BASEPATH = 'configuration-options/#output-amd-basepath';
 export const URL_OUTPUT_DIR = 'configuration-options/#output-dir';
-export const URL_OUTPUT_DYNAMICIMPORTFUNCTION =
-	'configuration-options/#output-dynamicimportfunction';
 export const URL_OUTPUT_EXPORTS = 'configuration-options/#output-exports';
 export const URL_OUTPUT_EXTEND = 'configuration-options/#output-extend';
+export const URL_OUTPUT_EXTERNALIMPORTATTRIBUTES =
+	'configuration-options/#output-externalimportattributes';
 export const URL_OUTPUT_FORMAT = 'configuration-options/#output-format';
 export const URL_OUTPUT_GENERATEDCODE = 'configuration-options/#output-generatedcode';
-export const URL_OUTPUT_EXPERIMENTALDEEPCHUNKOPTIMIZATION =
-	'configuration-options/#output-experimentaldeepdynamicchunkoptimization';
-export const URL_OUTPUT_GENERATEDCODE_CONSTBINDINGS =
-	'configuration-options/#output-generatedcode-constbindings';
 export const URL_OUTPUT_GENERATEDCODE_SYMBOLS =
 	'configuration-options/#output-generatedcode-symbols';
 export const URL_OUTPUT_GLOBALS = 'configuration-options/#output-globals';
@@ -34,6 +30,8 @@ export const URL_OUTPUT_SOURCEMAPBASEURL = 'configuration-options/#output-source
 export const URL_OUTPUT_SOURCEMAPFILE = 'configuration-options/#output-sourcemapfile';
 export const URL_PRESERVEENTRYSIGNATURES = 'configuration-options/#preserveentrysignatures';
 export const URL_TREESHAKE = 'configuration-options/#treeshake';
+export const URL_TREESHAKE_PURE = 'configuration-options/#pure';
+export const URL_TREESHAKE_NOSIDEEFFECTS = 'configuration-options/#no-side-effects';
 export const URL_TREESHAKE_MODULESIDEEFFECTS = 'configuration-options/#treeshake-modulesideeffects';
 export const URL_WATCH = 'configuration-options/#watch';
 
