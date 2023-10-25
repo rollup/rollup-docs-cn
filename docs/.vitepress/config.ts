@@ -1,4 +1,5 @@
 import alias from '@rollup/plugin-alias';
+import type { Plugin } from 'vite';
 import { defineConfig } from 'vitepress';
 import { moduleAliases } from '../../build-plugins/aliases';
 import replaceBrowserModules from '../../build-plugins/replace-browser-modules';
@@ -102,7 +103,7 @@ export default defineConfig({
 					},
 					{
 						link: '/migration/',
-						text: '迁移到 Rollup 3'
+						text: '迁移到 Rollup 4'
 					},
 					{
 						link: '/tools/',
@@ -147,7 +148,7 @@ export default defineConfig({
 				}
 			},
 			examplesPlugin(),
-			alias(moduleAliases)
+			alias(moduleAliases) as unknown as Plugin
 		]
 	}
 });

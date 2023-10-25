@@ -2,7 +2,6 @@ import isReference, { type NodeWithFieldDefinition } from 'is-reference';
 import type MagicString from 'magic-string';
 import type { NormalizedTreeshakingOptions } from '../../rollup/types';
 import { BLANK } from '../../utils/blank';
-import { logIllegalImportReassignment } from '../../utils/logs';
 import { PureFunctionKey } from '../../utils/pureFunctions';
 import type { NodeRenderOptions, RenderOptions } from '../../utils/renderHelpers';
 import type { DeoptimizableEntity } from '../DeoptimizableEntity';
@@ -21,6 +20,7 @@ import LocalVariable from '../variables/LocalVariable';
 import type Variable from '../variables/Variable';
 import * as NodeType from './NodeType';
 import type SpreadElement from './SpreadElement';
+import { Flag, isFlagSet, setFlag } from './shared/BitFlags';
 import {
 	type ExpressionEntity,
 	type LiteralValueOrUnknown,
@@ -43,7 +43,17 @@ export default class Identifier extends NodeBase implements PatternNode {
 	declare name: string;
 	declare type: NodeType.tIdentifier;
 	variable: Variable | null = null;
-	private isTDZAccess: boolean | null = null;
+
+	private get isTDZAccess(): boolean | null {
+		if (!isFlagSet(this.flags, Flag.tdzAccessDefined)) {
+			return null;
+		}
+		return isFlagSet(this.flags, Flag.tdzAccess);
+	}
+	private set isTDZAccess(value: boolean) {
+		this.flags = setFlag(this.flags, Flag.tdzAccessDefined, true);
+		this.flags = setFlag(this.flags, Flag.tdzAccess, value);
+	}
 
 	addExportedVariables(
 		variables: Variable[],
@@ -63,10 +73,10 @@ export default class Identifier extends NodeBase implements PatternNode {
 
 	declare(kind: string, init: ExpressionEntity): LocalVariable[] {
 		let variable: LocalVariable;
-		const { treeshake } = this.context.options;
+		const { treeshake } = this.scope.context.options;
 		switch (kind) {
 			case 'var': {
-				variable = this.scope.addDeclaration(this, this.context, init, true);
+				variable = this.scope.addDeclaration(this, this.scope.context, init, true);
 				if (treeshake && treeshake.correctVarValueBeforeDeclaration) {
 					// Necessary to make sure the init is deoptimized. We cannot call deoptimizePath here.
 					variable.markInitializersForDeoptimization();
@@ -75,13 +85,13 @@ export default class Identifier extends NodeBase implements PatternNode {
 			}
 			case 'function': {
 				// in strict mode, functions are only hoisted within a scope but not across block scopes
-				variable = this.scope.addDeclaration(this, this.context, init, false);
+				variable = this.scope.addDeclaration(this, this.scope.context, init, false);
 				break;
 			}
 			case 'let':
 			case 'const':
 			case 'class': {
-				variable = this.scope.addDeclaration(this, this.context, init, false);
+				variable = this.scope.addDeclaration(this, this.scope.context, init, false);
 				break;
 			}
 			case 'parameter': {
@@ -107,9 +117,6 @@ export default class Identifier extends NodeBase implements PatternNode {
 	}
 
 	deoptimizePath(path: ObjectPath): void {
-		if (path.length === 0 && !this.scope.contains(this.name)) {
-			this.disallowImportReassignment();
-		}
 		// We keep conditional chaining because an unknown Node could have an
 		// Identifier as property that might be deoptimized by default
 		this.variable?.deoptimizePath(path);
@@ -145,7 +152,8 @@ export default class Identifier extends NodeBase implements PatternNode {
 			return true;
 		}
 		return (
-			(this.context.options.treeshake as NormalizedTreeshakingOptions).unknownGlobalSideEffects &&
+			(this.scope.context.options.treeshake as NormalizedTreeshakingOptions)
+				.unknownGlobalSideEffects &&
 			this.variable instanceof GlobalVariable &&
 			!this.isPureFunction(EMPTY_PATH) &&
 			this.variable.hasEffectsOnInteractionAtPath(
@@ -188,7 +196,7 @@ export default class Identifier extends NodeBase implements PatternNode {
 		if (!this.included) {
 			this.included = true;
 			if (this.variable !== null) {
-				this.context.includeVariableInModule(this.variable);
+				this.scope.context.includeVariableInModule(this.variable);
 			}
 		}
 	}
@@ -202,7 +210,8 @@ export default class Identifier extends NodeBase implements PatternNode {
 
 	isPossibleTDZ(): boolean {
 		// return cached value to avoid issues with the next tree-shaking pass
-		if (this.isTDZAccess !== null) return this.isTDZAccess;
+		const cachedTdzAccess = this.isTDZAccess;
+		if (cachedTdzAccess !== null) return cachedTdzAccess;
 
 		if (
 			!(
@@ -211,7 +220,7 @@ export default class Identifier extends NodeBase implements PatternNode {
 				this.variable.kind in tdzVariableKinds &&
 				// we ignore possible TDZs due to circular module dependencies as
 				// otherwise we get many false positives
-				this.variable.module === this.context.module
+				this.variable.module === this.scope.context.module
 			)
 		) {
 			return (this.isTDZAccess = false);
@@ -275,15 +284,8 @@ export default class Identifier extends NodeBase implements PatternNode {
 		this.deoptimized = true;
 		if (this.variable instanceof LocalVariable) {
 			this.variable.consolidateInitializers();
-			this.context.requestTreeshakingPass();
+			this.scope.context.requestTreeshakingPass();
 		}
-	}
-
-	private disallowImportReassignment(): never {
-		return this.context.error(
-			logIllegalImportReassignment(this.name, this.context.module.id),
-			this.start
-		);
 	}
 
 	private getVariableRespectingTDZ(): ExpressionEntity | null {
@@ -294,7 +296,7 @@ export default class Identifier extends NodeBase implements PatternNode {
 	}
 
 	private isPureFunction(path: ObjectPath) {
-		let currentPureFunction = this.context.manualPureFunctions[this.name];
+		let currentPureFunction = this.scope.context.manualPureFunctions[this.name];
 		for (const segment of path) {
 			if (currentPureFunction) {
 				if (currentPureFunction[PureFunctionKey]) {

@@ -57,8 +57,6 @@ export default {
 	strictDeprecations,
 
 	// 危险区域
-	acorn,
-	acornInjectPlugins,
 	context,
 	moduleContext,
 	preserveSymlinks,
@@ -89,7 +87,7 @@ export default {
 		dynamicImportInCjs,
 		entryFileNames,
 		extend,
-		externalImportAssertions,
+		externalImportAttributes,
 		footer,
 		generatedCode,
 		hoistTransitiveImports,

@@ -311,7 +311,7 @@ interface SourceDescription {
 }
 ```
 
-定义自定义加载器。返回 `null` 将延迟到其他 `load` 函数（最终默认从文件系统加载）。为了避免额外的解析开销，例如由于某些原因该钩子已经使用 `this.parse` 生成 AST，该钩子可以选择返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个具有每个节点的 `start` 和 `end` 属性的标准 ESTree AST。如果转换不移动代码，则可以通过将 `map` 设置为 `null` 来保留现有的源码映射。否则，你可能需要生成源映射。有关 [源代码转换](#source-code-transformations) 的详细信息，请参见该部分。
+定义一个自定义加载器。返回 `null` 将推迟到其他 `load` 函数（最终是从文件系统加载的默认行为）。为了防止在某些情况下（例如，此钩子已经使用 [`this.parse`](#this-parse) 生成了 AST）产生额外的解析开销，此钩子可以选择返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个标准的 ESTree AST，每个节点都有 `start` 和 `end` 属性。如果转换不移动代码，则可以通过将 `map` 设置为 `null` 来保留现有的源映射。否则，你可能需要生成源映射。请参阅 [源代码转换](#source-code-transformations) 部分。
 
 如果 `moduleSideEffects` 返回 `false`，并且没有其他模块从该模块导入任何内容，则即使该模块具有副作用，该模块也不会包含在产物中。如果返回 `true`，则 Rollup 将使用其默认算法包含模块中具有副作用的所有语句（例如修改全局或导出变量）。如果返回 `"no-treeshake"`，则将关闭此模块的除屑优化，并且即使该模块为空，也将在生成的块之一中包含它。如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由第一个解析此模块的 `resolveId` 钩子，[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `true` 确定。`transform` 钩子可以覆盖此设置。
 
@@ -417,7 +417,7 @@ function plugin2() {
 
 ```typescript
 type ResolveDynamicImportHook = (
-	specifier: string | AcornNode,
+	specifier: string | AstNode,
 	importer: string,
 	options: { assertions: Record<string, string> }
 ) => ResolveIdResult;
@@ -508,14 +508,10 @@ function injectPolyfillPlugin() {
 				return { id: POLYFILL_ID, moduleSideEffects: true };
 			}
 			if (options.isEntry) {
-				// 确定实际的入口点是什么。
-				// 我们需要“skipSelf”来避免无限循环
-				const resolution = await this.resolve(source, importer, {
-					skipSelf: true,
-					...options
-				});
-				// 如果无法解析或是外部引用
-				// 则直接返回错误
+				// 决定实际的入口点是什么。
+				const resolution = await this.resolve(source, importer, options);
+				// 如果它不能被解析或是外部的，就返回它
+				// 这样 Rollup 就可以显示一个错误
 				if (!resolution || resolution.external) return resolution;
 				// 在代理的加载钩子中，我们需要知道入口点是否有默认导出。
 				// 然而，我们不再拥有完整的“resolution”对象，
@@ -613,7 +609,7 @@ function externalizeDependencyPlugin() {
 
 ```typescript
 type ShouldTransformCachedModuleHook = (options: {
-	ast: AcornNode;
+	ast: AstNode;
 	code: string;
 	id: string;
 	meta: { [plugin: string]: any };
@@ -651,7 +647,7 @@ interface SourceDescription {
 }
 ```
 
-可用于转换单个模块。为了避免额外的解析开销，例如此钩子已经使用 `this.parse` 生成了 AST，此钩子可以选择性地返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个标准的 ESTree AST，每个节点都有 `start` 和 `end` 属性。如果转换不移动代码，则可以通过将 `map` 设置为 `null` 来保留现有的源映射。否则，你可能需要生成源映射。请参见 [源代码转换](#source-code-transformations) 一节。
+可以被用来转换单个模块。为了防止额外的解析开销，例如，这个钩子已经使用 [`this.parse`](#this-parse) 生成了一个 AST，这个钩子可以选择返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个标准的 ESTree AST，每个节点都有 `start` 和 `end` 属性。如果转换不移动代码，你可以通过将 `map` 设置为 `null` 来保留现有的 sourcemaps。否则，你可能需要生成源映射。请参阅 [源代码转换](#source-code-transformations) 部分。
 
 请注意，在观察模式下或明确使用缓存时，当重新构建时，此钩子的结果会被缓存，仅当模块的 `code` 发生更改或上次触发此钩子时添加了通过 `this.addWatchFile` 添加的文件时，才会再次触发该模块的钩子。
 
@@ -1534,13 +1530,10 @@ export default function addProxyPlugin() {
 				// 不代理使用代理的 ID
 				return null;
 			}
-			// 确保将任何 resolveId 选项传递给 this.resolve
-			// 以获取模块 ID
-			const resolution = await this.resolve(source, importer, {
-				skipSelf: true,
-				...options
-			});
-			// 只能预加载现有且非外部的 ID
+			// 我们确保将任何 resolveId 选项传递给
+			// this.resolve 以获取模块 id
+			const resolution = await this.resolve(source, importer, options);
+			// 我们只能预加载现有的和非外部的 id
 			if (resolution && !resolution.external) {
 				// 将整个解析信息传递下去
 				const moduleInfo = await this.load(resolution);
@@ -1666,11 +1659,19 @@ export default function dynamicChunkLogsPlugin() {
 
 ### this.parse
 
-|        |                                                                 |
-| -----: | :-------------------------------------------------------------- |
-| 类型： | `(code: string, acornOptions?: AcornOptions) => ESTree.Program` |
+|       |                                                            |
+| ----: | :--------------------------------------------------------- |
+| 类型： | `(code: string, options?: ParseOptions) => ESTree.Program` |
 
-使用 Rollup 的内部 acorn 实例将代码解析为 AST。
+```typescript
+interface ParseOptions {
+	allowReturnOutsideFunction?: boolean;
+}
+```
+
+使用 Rollup 的内部基于 SWC 的解析器将代码解析为 [ESTree-compatible](https://github.com/estree/estree) AST。
+
+- `allowReturnOutsideFunction`: When `true` this allows return statements to be outside functions to e.g. support parsing CommonJS code.
 
 ### this.resolve
 
@@ -1699,7 +1700,7 @@ type Resolve = (
 
 使用 Rollup 使用的相同插件解析导入到模块 id（即文件名），并确定导入是否应为外部。如果 Rollup 或任何插件无法解析导入，但用户未明确将其标记为外部，则返回 `null`。如果返回绝对外部 id，则应通过 [`makeAbsoluteExternalsRelative`](../configuration-options/index.md#makeabsoluteexternalsrelative) 选项或在 [`resolveId`](#resolveid) 钩子中进行显式插件选择，将其保持为绝对输出，`external` 将是 `"absolute"` 而不是 `true`。
 
-如果传递 `skipSelf: true`，则在解析时将跳过从中调用 `this.resolve` 的插件的 `resolveId` 钩子。当其他插件在处理原始 `this.resolve` 调用时，使用 _完全相同的 `source` 和 `importer`_ 在其 `resolveId` 钩子中也调用 `this.resolve` 时，原始插件的 `resolveId` 钩子也将跳过这些调用。这里的理由是插件已经声明在此时点它“不知道”如何解析这个特定的 `source` 和 `importer` 组合。如果你不想要这种行为，请不要使用 `skipSelf`，但如果必要，可以实现自己的无限循环预防机制。
+`skipSelf` 的默认值是 `true`，因此在解析时将跳过调用 `this.resolve` 的插件的 `resolveId` 钩子。当其他插件在处理原始 `this.resolve` 调用时，也使用 _完全相同的 `source` 和 `importer`_ 在其 `resolveId` 钩子中调用 `this.resolve` 时，原始插件的 `resolveId` 钩子也将跳过这些调用。这里的原理是，插件已经声明它在此时点上“不知道”如何解析这个特定的 `source` 和 `importer` 组合。如果你不想要这种行为，将 `skipSelf` 设置为 `false`，并在必要时实现自己的无限循环预防机制。
 
 你还可以通过 `custom` 选项传递插件特定选项的对象，有关详细信息，请参见 [自定义解析器选项](#custom-resolver-options)。
 
@@ -1753,20 +1754,6 @@ this.debug(() => generateExpensiveDebugLog());
 当在 `transform` 钩子中使用时，当前模块的 `id` 也将被添加，并且可以提供 `position`。这是一个字符索引或文件位置，它将用于使用 `pos`、`loc`（标准的 `{ file, line, column }` 对象）和 `frame`（显示位置的代码片段）增强日志。
 
 如果 [`logLevel`](../configuration-options/index.md#loglevel) 选项设置为 `"silent"`，则此方法不会执行任何操作。
-
-## 已弃用的上下文函数 {#deprecated-context-functions}
-
-☢️ 这些上下文实用程序函数已弃用，可能会在未来的 Rollup 版本中删除。
-
-- `this.moduleIds: IterableIterator<string>` - _**使用 [`this.getModuleIds`](#this-getmoduleids)**_ - 一个 `Iterator`，可以访问当前图形中的所有模块 ID。可以通过以下方式进行迭代
-
-  ```js
-  for (const moduleId of this.moduleIds) {
-  	/* ... */
-  }
-  ```
-
-  或通过 `Array.from(this.moduleIds)` 转换为数组。
 
 ## 文件 URLs {#file-urls}
 
