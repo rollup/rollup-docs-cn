@@ -492,11 +492,7 @@ export default {
 		if (level === 'warn') {
 			handler('error', log); // 将其他警告转为错误
 		} else {
-<<<<<<< HEAD
 			handler(level, info); // 否则直接打印出日志
-=======
-			handler(level, log); // otherwise, just print the log
->>>>>>> de1c7b6b30f44047026922c168d3a876fdd5514f
 		}
 	}
 };
@@ -682,27 +678,15 @@ Promise.resolve()
 
 该选项用于指定是否扩展 `umd` 或 `iife` 格式中 `name` 选项定义的全局变量。当值为 `true` 时，该全局变量将定义为 `(global.name = global.name || {})`。当值为 `false` 时，`name` 选项指定的全局变量将被覆盖为 `(global.name = {})`。
 
-<<<<<<< HEAD
-### output.externalImportAssertions {#output-externalimportassertions}
-
-|        |                                                              |
-| -----: | :----------------------------------------------------------- |
-| 类型： | `boolean`                                                    |
-|  CLI： | `--externalImportAssertions`/`--no-externalImportAssertions` |
-| 默认： | `true`                                                       |
-
-该选项表示如果输出格式为 `es`，是否在输出中为外部引入添加引入断言。默认情况下，断言取自输入文件，但插件可以在之后添加或删除断言。例如，`import "foo" assert {type: "json"}` 将导致相同的引入出现在输出中，除非该选项赋值为 `false`。需要注意的是，一个模块的所有引入需要有一致的断言，否则会发出警告。
-=======
-### output.externalImportAttributes
+### output.externalImportAttributes {#output-externalimportattributes}
 
 |          |                                                              |
 | -------: | :----------------------------------------------------------- |
-|    Type: | `boolean`                                                    |
-|     CLI: | `--externalImportAttributes`/`--no-externalImportAttributes` |
-| Default: | `true`                                                       |
+|  类型：   | `boolean`                                                    |
+|  CLI：   | `--externalImportAttributes`/`--no-externalImportAttributes` |
+|  默认：   | `true`                                                       |
 
-Whether to add import attributes to external imports in the output if the output format is `es`. By default, attributes are taken from the input files, but plugins can add or remove attributes later. E.g. `import "foo" assert {type: "json"}` will cause the same import to appear in the output unless the option is set to `false`. Note that all imports of a module need to have consistent attributes, otherwise a warning is emitted.
->>>>>>> de1c7b6b30f44047026922c168d3a876fdd5514f
+是否在输出中为外部引入添加导入属性，如果输出格式为 `es`。默认情况下，属性来自输入文件，但插件可以稍后添加或删除属性。例如，`import "foo" assert {type: "json"}` 将导致相同的导入出现在输出中，除非将该选项设置为 `false`。请注意，模块的所有导入都需要具有一致的属性，否则会发出警告。
 
 ### output.generatedCode {#output-generatedcode}
 
@@ -1502,8 +1486,6 @@ export default {
 
 正斜杠 `/` 可以用来将文件放在子目录中。当使用函数时，`chunkInfo` 是 [`generateBundle`](../plugin-development/index.md#generatebundle) 中的简化版本，不包含依赖于文件名的属性，也没有关于渲染模块的信息，因为渲染只在生成文件名之后发生。但是，你可以访问其中的 `moduleIds` 列表。另请参见 [`output.assetFileNames`](#output-assetfilenames)，[`output.chunkFileNames`](#output-chunkfilenames)。
 
-Forward slashes `/` can be used to place files in sub-directories. When using a function, `chunkInfo` is a reduced version of the one in [`generateBundle`](../plugin-development/index.md#generatebundle) without properties that depend on file names and no information about the rendered modules as rendering only happens after file names have been generated. You can however access a list of included `moduleIds`. See also [`output.assetFileNames`](#output-assetfilenames), [`output.chunkFileNames`](#output-chunkfilenames).
-
 ### output.sourcemapIgnoreList {#output-sourcemapignorelist}
 
 |  |  |
@@ -1671,38 +1653,7 @@ console.log(shared);
 
 除非你知道自己在做什么，否则尽量别使用这些选项！
 
-<<<<<<< HEAD
-### acorn {#acorn}
-
-|        |                |
-| -----: | :------------- |
-| 类型： | `AcornOptions` |
-
-该选项用于指定要传递给 Acorn `parse` 函数的选项，比如 `allowReserved: true`。查看 [Acorn 文档](https://github.com/acornjs/acorn/tree/master/acorn#interface) 了解更多选项。
-
-### acornInjectPlugins {#acorninjectplugins}
-
-|        |                                                |
-| -----: | :--------------------------------------------- |
-| 类型： | `AcornPluginFunction \| AcornPluginFunction[]` |
-
-该选项用于指定注入到 Acorn 中的单个插件或者插件数组。例如要支持 JSX 预发，你可以指定
-
-```javascript
-import jsx from 'acorn-jsx';
-
-export default {
-	// … 其他选项 …
-	acornInjectPlugins: [jsx()]
-};
-```
-
-在你的 Rollup 配置中。请注意，这与使用 Babel 不同，因为生成的输出文件仍将包含 JSX，而 Babel 会将其替换为有效的 JavaScript 代码。
-
 ### context {#context}
-=======
-### context
->>>>>>> de1c7b6b30f44047026922c168d3a876fdd5514f
 
 |        |                               |
 | -----: | :---------------------------- |
@@ -2134,15 +2085,11 @@ class Impure {
 /*@__PURE__ There may be additional text in the comment */ new Impure();
 ```
 
-<<<<<<< HEAD
-##### `@__NO_SIDE_EFFECTS__` {#nosideeffects}
-=======
-Such an annotation is considered _valid_ if it directly precedes a function call or constructor invocation and is only separated from the callee by white-space or comments. The only exception are parentheses that wrap a call or invocation.
+这样的标记被认为是 _有效的_，如果它直接在函数调用或构造函数调用之前，并且只被空格或注释与被调用者分隔。唯一的例外是括号，它包裹了一个调用或调用。
 
-Invalid annotations are removed and Rollup emits a warning. Valid annotations remain in the code unless their function call or constructor invocation is removed as well.
+无效的注解将被删除，并且 Rollup 会发出警告。有效的注解将保留在代码中，除非它们的函数调用或构造函数调用也被删除。
 
 ##### `@__NO_SIDE_EFFECTS__`
->>>>>>> de1c7b6b30f44047026922c168d3a876fdd5514f
 
 包含 `@__NO_SIDE_EFFECTS__` 或者 `#__NO_SIDE_EFFECTS__` 的注释标记函数声明本身是无副作用的。当一个函数被标记为没有副作用时，所有对该函数的调用都将被认为是没有副作用的。下面的代码将被完全除屑优化，除非将该选项设置为 `false`，否则它将保持不变。
 
@@ -2161,15 +2108,11 @@ impure(); // <-- call will be considered as side effect free
 impureArrowFn(); // <-- call will be considered as side effect free
 ```
 
-<<<<<<< HEAD
-#### treeshake.correctVarValueBeforeDeclaration {#treeshake-correctvarvaluebeforedeclaration}
-=======
-Such an annotation is considered _valid_ if it directly precedes a function declaration or a constant variable declaration where the first declared variable is a function and is only separated from the declaration by white-space or comments.
+这样的一个标记被认为是 _有效的_，如果它直接在函数声明或常量变量声明之前，并且第一个声明的变量是一个函数，并且只被空格或注释与声明分隔。
 
-Invalid annotations are removed and Rollup emits a warning. Valid annotations remain in the code unless their declaration is removed as well
+无效的注解将被删除，并且 Rollup 会发出警告。有效的注解将保留在代码中，除非它们的声明也被删除。
 
 #### treeshake.correctVarValueBeforeDeclaration
->>>>>>> de1c7b6b30f44047026922c168d3a876fdd5514f
 
 |  |  |
 | --: | :-- |
@@ -2621,95 +2564,14 @@ export default {
 
 ☢️ 这些选项已经废弃，可能从未来的 Rollup 版本中移除。
 
-<<<<<<< HEAD
-### inlineDynamicImports {#inlinedynamicimports}
+### output.externalImportAssertions {#output-externalimportassertions}
 
-_请使用具有相同签名的 [`output.inlineDynamicImports`](#output-inlinedynamicimports) 选项代替。_
-
-### manualChunks {#manualchunks}
-
-_请使用具有相同签名的 [`output.manualChunks`](#output-manualchunks) 选项代替。_
-
-### maxParallelFileReads {#maxparallelfilereads}
-
-_请使用 [`maxParallelFileOps`](#maxparallelfileops) 选项代替。_
-
-|        |                                   |
-| -----: | :-------------------------------- |
-| 类型： | `number`                          |
-|  CLI： | `--maxParallelFileReads <number>` |
-| 默认： | 20                                |
-
-该选项限制 Rollup 在读取模块时并行打开的文件数量。如果没有限制，或者数值足够高，构建可能会失败，显示“EMFILE: Too many open files”（EMFILE：打开的文件数过多）。这取决于操作系统限制的句柄数（open file handles）大小。
-
-### output.dynamicImportFunction {#output-dynamicimportfunction}
-
-_请使用 [`renderDynamicImport`](../plugin-development/index.md#renderdynamicimport) 插件钩子代替。_
-
-|        |                                  |
-| -----: | :------------------------------- |
-| 类型： | `string`                         |
-|  CLI： | `--dynamicImportFunction <name>` |
-| 默认： | `import`                         |
-
-当输出为 ES bundle 时，该选项将会把动态引入函数重命名为该选项指定的名称。这对于使用了动态引入 polyfill 的代码非常有用，比如 [这个库](https://github.com/uupaa/dynamic-import-polyfill)。
-
-### output.experimentalDeepDynamicChunkOptimization {#output-experimentaldeepdynamicchunkoptimization}
-
-_该选项不再需要_
-
-|  |  |
-| --: | :-- |
-| 类型： | `boolean` |
-| CLI： | `--experimentalDeepDynamicChunkOptimization`/`--no-experimentalDeepDynamicChunkOptimization` |
-| 默认： | `false` |
-
-该选项是用来防止全部 chunk 优化算法带来的性能问题。由于该算法现在快得多，所以现在这个选项被 Rollup 忽略，不应该再使用。
-
-### output.preferConst {#output-preferconst}
-
-_请使用 [`output.generatedCode.constBindings`](#output-generatedcode-constbindings) 选项代替。_
-
-|        |                                    |
-| -----: | :--------------------------------- |
-| 类型： | `boolean`                          |
-|  CLI： | `--preferConst`/`--no-preferConst` |
-| 默认： | `false`                            |
-
-该选项表示在导出中使用 `const` 而不是 `var`。
-
-### output.namespaceToStringTag {#output-namespacetostringtag}
-
-_请使用 [`output.generatedCode.symbols`](#output-generatedcode-symbols) 选项代替。_
-
-|        |                                                      |
-| -----: | :--------------------------------------------------- |
-| 类型： | `boolean`                                            |
-|  CLI： | `--namespaceToStringTag`/`--no-namespaceToStringTag` |
-| 默认： | `false`                                              |
-
-该选项确定是否允许向命名空间对象添加符合规范的 `.toString()`。如果值为 `true`，
-
-```javascript
-import * as namespace from './file.js';
-console.log(String(namespace));
-```
-
-将总是打印`[object Module]`。
-
-### preserveModules {#preservemodules}
-
-_请使用具有相同签名的 [`output.preserveModules`](#output-preservemodules) 选项代替。_
-=======
-### output.externalImportAssertions
-
-_Use the [`output.externalImportAttributes`](#output-externalimportattributes) option instead._
+_使用 [`output.externalImportAttributes`](#output-externalimportattributes) 选项代替。_
 
 |          |                                                              |
 | -------: | :----------------------------------------------------------- |
-|    Type: | `boolean`                                                    |
-|     CLI: | `--externalImportAssertions`/`--no-externalImportAssertions` |
-| Default: | `true`                                                       |
+| 类型：   | `boolean`                                                    |
+|  CLI：   | `--externalImportAssertions`/`--no-externalImportAssertions` |
+| 默认：   | `true`                                                       |
 
-Whether to add import assertions to external imports in the output if the output format is `es`. By default, assertions are taken from the input files, but plugins can add or remove assertions later. E.g. `import "foo" assert {type: "json"}` will cause the same import to appear in the output unless the option is set to `false`. Note that all imports of a module need to have consistent assertions, otherwise a warning is emitted.
->>>>>>> de1c7b6b30f44047026922c168d3a876fdd5514f
+是否在输出中为外部导入添加导入断言，如果输出格式为 `es`。默认情况下，断言来自输入文件，但是插件可以稍后添加或删除断言。例如，`import "foo" assert {type: "json"}` 将导致相同的导入出现在输出中，除非将该选项设置为 `false`。请注意，模块的所有导入都需要具有一致的断言，否则将发出警告。

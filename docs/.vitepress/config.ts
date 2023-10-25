@@ -103,11 +103,7 @@ export default defineConfig({
 					},
 					{
 						link: '/migration/',
-<<<<<<< HEAD
-						text: '迁移到 Rollup 3'
-=======
-						text: 'Migrating to Rollup 4'
->>>>>>> de1c7b6b30f44047026922c168d3a876fdd5514f
+						text: '迁移到 Rollup 4'
 					},
 					{
 						link: '/tools/',

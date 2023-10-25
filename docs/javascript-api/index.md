@@ -126,13 +126,7 @@ const inputOptions = {
 	preserveEntrySignatures,
 	strictDeprecations,
 
-<<<<<<< HEAD
 	// 危险区域
-	acorn,
-	acornInjectPlugins,
-=======
-	// danger zone
->>>>>>> de1c7b6b30f44047026922c168d3a876fdd5514f
 	context,
 	moduleContext,
 	preserveSymlinks,
