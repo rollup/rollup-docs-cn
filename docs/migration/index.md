@@ -47,7 +47,7 @@ If your plugin handles import assertions, note that in the [`resolveId`](../plug
 
 ## 迁移到 Rollup 3 {#migrating-to-rollup-3}
 
-This is a list of the most important topics you may encounter when migrating from Rollup 2 to Rollup 3. For a full list of breaking changes, we advise you to consult the
+这里是你在从 Rollup 2 迁移到 Rollup 3 时可能遇到的最重要的主题列表。有关所有破坏性更新的完整列表，我们建议你查阅：
 
 - [Rollup 3 更新日志](https://github.com/rollup/rollup/blob/master/CHANGELOG.md#300)
 
