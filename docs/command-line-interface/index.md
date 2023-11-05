@@ -555,7 +555,13 @@ rollup -c --filterLogs "code:FOO,message:This is the message" --filterLogs code:
 
   只会展示属性 `log.foo.bar` 的值为 `"value"` 的日志。
 
-### `-h`/`--help` {#h-help}
+### `--forceExit`
+
+执行完毕后强制退出进程。在某些情况下，插件或其依赖可能无法正确清理并阻止 CLI 进程退出。根本原因可能很难诊断，而此标志提供了一个逃生口，直到找到并解决该问题。
+
+请注意，这可能会破坏某些工作流程，并且不一定始终正常工作。
+
+### `-h`/`--help`
 
 打印帮助文档。
 
