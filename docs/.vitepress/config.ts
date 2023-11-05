@@ -50,7 +50,7 @@ export default defineConfig({
 			indexName: 'rollup_docs_CN'
 		},
 		editLink: {
-			pattern: 'https://github.com/rollup/rollup/edit/master/docs/:path',
+			pattern: 'https://github.com/rollup/rollup-docs-cn/edit/master/docs/:path',
 			text: '在 GitHub 上编辑此页'
 		},
 		footer: {
