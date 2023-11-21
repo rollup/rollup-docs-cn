@@ -1,5 +1,32 @@
 # rollup changelog
 
+## 4.5.1
+
+_2023-11-21_
+
+### Bug Fixes
+
+- Do not error when a function expression uses the same name for a parameter and its id (#5262)
+
+### Pull Requests
+
+- [#5257](https://github.com/rollup/rollup/pull/5257): Fix graphs in docs, improve REPL colors (@lukastaegert)
+- [#5262](https://github.com/rollup/rollup/pull/5262): Allow function expression parameters to shadow the function id (@lukastaegert)
+
+## 4.5.0
+
+_2023-11-18_
+
+### Bug Fixes
+
+- Show a proper error when using native Rollup on armv7 musl Linux (#5255)
+
+### Pull Requests
+
+- [#5251](https://github.com/rollup/rollup/pull/5251): doc fix import assertions to attributes in API plugin development page (@lhapaipai)
+- [#5253](https://github.com/rollup/rollup/pull/5253): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5255](https://github.com/rollup/rollup/pull/5255): Error for armv7 musl build (@lukastaegert)
+
 ## 4.4.1
 
 _2023-11-14_
