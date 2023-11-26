@@ -304,7 +304,7 @@ interface SourceDescription {
 	code: string;
 	map?: string | SourceMap;
 	ast?: ESTree.Program;
-	assertions?: { [key: string]: string } | null;
+	attributes?: { [key: string]: string } | null;
 	meta?: { [plugin: string]: any } | null;
 	moduleSideEffects?: boolean | 'no-treeshake' | null;
 	syntheticNamedExports?: boolean | string | null;
@@ -315,7 +315,7 @@ interface SourceDescription {
 
 如果 `moduleSideEffects` 返回 `false`，并且没有其他模块从该模块导入任何内容，则即使该模块具有副作用，该模块也不会包含在产物中。如果返回 `true`，则 Rollup 将使用其默认算法包含模块中具有副作用的所有语句（例如修改全局或导出变量）。如果返回 `"no-treeshake"`，则将关闭此模块的除屑优化，并且即使该模块为空，也将在生成的块之一中包含它。如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由第一个解析此模块的 `resolveId` 钩子，[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `true` 确定。`transform` 钩子可以覆盖此设置。
 
-`assertions` 包含导入此模块时使用的导入断言。目前，它们不会影响产物模块的呈现，而是用于文档目的。如果返回 `null` 或省略标志，则 `assertions` 将由第一个解析此模块的 `resolveId` 钩子或此模块的第一个导入中存在的断言确定。`transform` 钩子可以覆盖此设置。
+`attributes` 包含导入此模块时使用的导入属性。目前，它们不会影响产物模块的呈现，而是用于文档目的。如果返回 `null` 或省略标志，则 `attributes` 将由第一个解析此模块的 `resolveId` 钩子或此模块的第一个导入中存在的断言确定。`transform` 钩子可以覆盖此设置。
 
 有关 `syntheticNamedExports` 选项的影响，请参见 [合成命名导出](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将由第一个解析此模块的 `resolveId` 钩子确定，或者最终默认为 `false`。`transform` 钩子可以覆盖此设置。
 
@@ -457,7 +457,7 @@ type ResolveIdHook = (
 	source: string,
 	importer: string | undefined,
 	options: {
-		assertions: Record<string, string>;
+		attributes: Record<string, string>;
 		custom?: { [plugin: string]: any };
 		isEntry: boolean;
 	}
@@ -468,7 +468,7 @@ type ResolveIdResult = string | null | false | PartialResolvedId;
 interface PartialResolvedId {
 	id: string;
 	external?: boolean | 'absolute' | 'relative';
-	assertions?: Record<string, string> | null;
+	attributes?: Record<string, string> | null;
 	meta?: { [plugin: string]: any } | null;
 	moduleSideEffects?: boolean | 'no-treeshake' | null;
 	resolvedBy?: string | null;
@@ -482,9 +482,9 @@ interface PartialResolvedId {
 import { foo } from '../bar.js';
 ```
 
-这个 source 的路径是 `"../bar.js"`.
+这个 source就是 `"../bar.js"`.
 
-`importer` 是导入模块的完全解析的 id。在解析入口点时，`importer` 通常为 `undefined`。这里的一个例外是通过 [`this.emitFile`](#this-emitfile) 生成的入口点，这里可以提供一个 `importer` 参数。
+`importer` 是导入模块的解析完全后的 id。在解析入口点时，`importer` 通常为 `undefined`。这里的一个例外是通过 [`this.emitFile`](#this-emitfile) 生成的入口点，这里可以提供一个 `importer` 参数。
 
 对于这些情况，`isEntry` 选项将告诉你我们正在解析用户定义的入口点、已产出的块，还是是否为 [`this.resolve`](#this-resolve) 上下文函数提供了 `isEntry` 参数。
 
@@ -560,7 +560,7 @@ function injectPolyfillPlugin() {
 }
 ```
 
-`assertions` 参数告诉你导入中存在哪些导入断言。例如，`import "foo" assert {type: "json"}` 将传递 `assertions: {type: "json}"`。
+`attributes` 参数告诉你导入中存在哪些导入属性。例如，`import "foo" assert {type: "json"}` 将传递 `attributes: {type: "json}"`。
 
 如果返回 `null`，则会转而使用其他 `resolveId` 函数，最终使用默认的解析行为。如果返回 `false`，则表示 `source` 应被视为外部模块，不包含在产物中。如果这发生在相对导入中，则会像使用 `external` 选项时一样重新规范化 id。
 
@@ -586,13 +586,13 @@ function externalizeDependencyPlugin() {
 
 可以在返回的对象中明确声明 `resolvedBy`。它将替换 [`this.resolve`](#this-resolve) 返回的相应字段。
 
-如果为外部模块返回 `assertions` 的值，则这将确定在生成 `"es"` 输出时如何呈现此模块的导入。例如，`{id: "foo", external: true, assertions: {type: "json"}}` 将导致此模块的导入显示为 `import "foo" assert {type: "json"}`。如果不传递值，则将使用 `assertions` 输入参数的值。传递一个空对象以删除任何断言。虽然 `assertions` 不影响产物模块的呈现，但它们仍然需要在模块的所有导入中保持一致，否则会产出警告。`load` 和 `transform` 钩子可以覆盖此选项。
+如果为外部模块返回 `attributes` 的值，则这将确定在生成 `"es"` 输出时如何呈现此模块的导入。例如，`{id: "foo", external: true, attributes: {type: "json"}}` 将导致此模块的导入显示为 `import "foo" assert {type: "json"}`。如果不传递值，则将使用 `attributes` 输入参数的值。传递一个空对象以删除任何断言。虽然 `attributes` 不影响产物模块的呈现，但它们仍然需要在模块的所有导入中保持一致，否则会产出警告。`load` 和 `transform` 钩子可以覆盖此选项。
 
 有关 `syntheticNamedExports` 选项的影响，请参见 [synthetic named exports](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将默认为 `false`。`load` 和 `transform` 钩子可以覆盖此选项。
 
 有关如何使用 `meta` 选项，请参见 [custom module meta-data](#custom-module-meta-data)。如果返回 `null` 或省略选项，则 `meta` 将默认为空对象。`load` 和 `transform` 钩子可以添加或替换此对象的属性。
 
-请注意，虽然 `resolveId` 将为模块的每个导入调用一次，并且因此可以多次解析为相同的 `id`，但是 `external`、`assertions`、`meta`、`moduleSideEffects` 或 `syntheticNamedExports` 的值只能在加载模块之前设置一次。原因是在此调用之后，Rollup 将继续使用该模块的 [`load`](#load) 和 [`transform`](#transform) 钩子，这些钩子可能会覆盖这些值，并且如果它们这样做，则应优先考虑。
+请注意，虽然 `resolveId` 将为模块的每个导入调用一次，并且因此可以多次解析为相同的 `id`，但是 `external`、`attributes`、`meta`、`moduleSideEffects` 或 `syntheticNamedExports` 的值只能在加载模块之前设置一次。原因是在此调用之后，Rollup 将继续使用该模块的 [`load`](#load) 和 [`transform`](#transform) 钩子，这些钩子可能会覆盖这些值，并且如果它们这样做，则应优先考虑。
 
 当通过 [`this.resolve`](#this-resolve) 从插件触发此钩子时，可以向此钩子传递自定义选项对象。虽然此对象将不被修改，但插件应遵循添加具有对象的 `custom` 属性的约定，其中键对应于选项所针对的插件的名称。有关详细信息，请参见 [custom resolver options](#custom-resolver-options)。
 
