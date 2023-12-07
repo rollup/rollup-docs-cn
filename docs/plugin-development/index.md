@@ -315,13 +315,21 @@ interface SourceDescription {
 
 如果 `moduleSideEffects` 返回 `false`，并且没有其他模块从该模块导入任何内容，则即使该模块具有副作用，该模块也不会包含在产物中。如果返回 `true`，则 Rollup 将使用其默认算法包含模块中具有副作用的所有语句（例如修改全局或导出变量）。如果返回 `"no-treeshake"`，则将关闭此模块的除屑优化，并且即使该模块为空，也将在生成的块之一中包含它。如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由第一个解析此模块的 `resolveId` 钩子，[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `true` 确定。`transform` 钩子可以覆盖此设置。
 
+<<<<<<< HEAD
 `attributes` 包含导入此模块时使用的导入属性。目前，它们不会影响产物模块的呈现，而是用于文档目的。如果返回 `null` 或省略标志，则 `attributes` 将由第一个解析此模块的 `resolveId` 钩子或此模块的第一个导入中存在的断言确定。`transform` 钩子可以覆盖此设置。
+=======
+`attributes` contain the import attributes that were used when this module was imported. At the moment, they do not influence rendering for bundled modules but rather serve documentation purposes. If `null` is returned or the flag is omitted, then `attributes` will be determined by the first `resolveId` hook that resolved this module, or the attributes present in the first import of this module. The `transform` hook can override this.
+>>>>>>> 179b0ca8337826598cd74473d11bf14f7b3fa342
 
 有关 `syntheticNamedExports` 选项的影响，请参见 [合成命名导出](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将由第一个解析此模块的 `resolveId` 钩子确定，或者最终默认为 `false`。`transform` 钩子可以覆盖此设置。
 
 有关如何使用 `meta` 选项的 [自定义模块元数据](#custom-module-meta-data)。如果此钩子返回 `meta` 对象，则该对象将与 `resolveId` 钩子返回的任何 `meta` 对象浅合并。如果没有钩子返回 `meta` 对象，则默认为一个空对象。`transform` 钩子可以进一步添加或替换该对象的属性。
 
+<<<<<<< HEAD
 你可以使用 [`this.getModuleInfo`](#this-getmoduleinfo) 在此钩子中查找 `assertions`、`meta`、`moduleSideEffects` 和 `syntheticNamedExports` 的先前值。
+=======
+You can use [`this.getModuleInfo`](#this-getmoduleinfo) to find out the previous values of `attributes`, `meta`, `moduleSideEffects` and `syntheticNamedExports` inside this hook.
+>>>>>>> 179b0ca8337826598cd74473d11bf14f7b3fa342
 
 ### moduleParsed
 
@@ -419,7 +427,7 @@ function plugin2() {
 type ResolveDynamicImportHook = (
 	specifier: string | AstNode,
 	importer: string,
-	options: { assertions: Record<string, string> }
+	options: { attributes: Record<string, string> }
 ) => ResolveIdResult;
 ```
 
@@ -431,7 +439,11 @@ type ResolveDynamicImportHook = (
 
 为动态导入定义自定义解析器。返回 `false` 表示应将导入保留，不要传递给其他解析器，从而使其成为外部导入。与 [`resolveId`](#resolveid) 钩子类似，你还可以返回一个对象，将导入解析为不同的 id，同时将其标记为外部导入。
 
+<<<<<<< HEAD
 `assertions` 告诉你导入中存在哪些导入断言。即 `import("foo", {assert: {type: "json"}})` 将传递 `assertions: {type: "json"}`。
+=======
+`attributes` tells you which import attributes were present in the import. I.e. `import("foo", {assert: {type: "json"}})` will pass along `attributes: {type: "json"}`.
+>>>>>>> 179b0ca8337826598cd74473d11bf14f7b3fa342
 
 如果动态导入作为字符串参数传递，则从此钩子返回的字符串将被解释为现有模块 id，而返回 `null` 将推迟到其他解析器，最终到达 `resolveId`。
 
@@ -560,7 +572,11 @@ function injectPolyfillPlugin() {
 }
 ```
 
+<<<<<<< HEAD
 `attributes` 参数告诉你导入中存在哪些导入属性。例如，`import "foo" assert {type: "json"}` 将传递 `attributes: {type: "json}"`。
+=======
+`attributes` tells you which import attributes were present in the import. I.e. `import "foo" assert {type: "json"}` will pass along `attributes: {type: "json"}`.
+>>>>>>> 179b0ca8337826598cd74473d11bf14f7b3fa342
 
 如果返回 `null`，则会转而使用其他 `resolveId` 函数，最终使用默认的解析行为。如果返回 `false`，则表示 `source` 应被视为外部模块，不包含在产物中。如果这发生在相对导入中，则会像使用 `external` 选项时一样重新规范化 id。
 
@@ -586,13 +602,21 @@ function externalizeDependencyPlugin() {
 
 可以在返回的对象中明确声明 `resolvedBy`。它将替换 [`this.resolve`](#this-resolve) 返回的相应字段。
 
+<<<<<<< HEAD
 如果为外部模块返回 `attributes` 的值，则这将确定在生成 `"es"` 输出时如何呈现此模块的导入。例如，`{id: "foo", external: true, attributes: {type: "json"}}` 将导致此模块的导入显示为 `import "foo" assert {type: "json"}`。如果不传递值，则将使用 `attributes` 输入参数的值。传递一个空对象以删除任何断言。虽然 `attributes` 不影响产物模块的呈现，但它们仍然需要在模块的所有导入中保持一致，否则会产出警告。`load` 和 `transform` 钩子可以覆盖此选项。
+=======
+If you return a value for `attributes` for an external module, this will determine how imports of this module will be rendered when generating `"es"` output. E.g. `{id: "foo", external: true, attributes: {type: "json"}}` will cause imports of this module appear as `import "foo" assert {type: "json"}`. If you do not pass a value, the value of the `attributes` input parameter will be used. Pass an empty object to remove any attributes. While `attributes` do not influence rendering for bundled modules, they still need to be consistent across all imports of a module, otherwise a warning is emitted. The `load` and `transform` hooks can override this.
+>>>>>>> 179b0ca8337826598cd74473d11bf14f7b3fa342
 
 有关 `syntheticNamedExports` 选项的影响，请参见 [synthetic named exports](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将默认为 `false`。`load` 和 `transform` 钩子可以覆盖此选项。
 
 有关如何使用 `meta` 选项，请参见 [custom module meta-data](#custom-module-meta-data)。如果返回 `null` 或省略选项，则 `meta` 将默认为空对象。`load` 和 `transform` 钩子可以添加或替换此对象的属性。
 
+<<<<<<< HEAD
 请注意，虽然 `resolveId` 将为模块的每个导入调用一次，并且因此可以多次解析为相同的 `id`，但是 `external`、`attributes`、`meta`、`moduleSideEffects` 或 `syntheticNamedExports` 的值只能在加载模块之前设置一次。原因是在此调用之后，Rollup 将继续使用该模块的 [`load`](#load) 和 [`transform`](#transform) 钩子，这些钩子可能会覆盖这些值，并且如果它们这样做，则应优先考虑。
+=======
+Note that while `resolveId` will be called for each import of a module and can therefore resolve to the same `id` many times, values for `external`, `attributes`, `meta`, `moduleSideEffects` or `syntheticNamedExports` can only be set once before the module is loaded. The reason is that after this call, Rollup will continue with the [`load`](#load) and [`transform`](#transform) hooks for that module that may override these values and should take precedence if they do so.
+>>>>>>> 179b0ca8337826598cd74473d11bf14f7b3fa342
 
 当通过 [`this.resolve`](#this-resolve) 从插件触发此钩子时，可以向此钩子传递自定义选项对象。虽然此对象将不被修改，但插件应遵循添加具有对象的 `custom` 属性的约定，其中键对应于选项所针对的插件的名称。有关详细信息，请参见 [custom resolver options](#custom-resolver-options)。
 
@@ -640,7 +664,7 @@ interface SourceDescription {
 	code: string;
 	map?: string | SourceMap;
 	ast?: ESTree.Program;
-	assertions?: { [key: string]: string } | null;
+	attributes?: { [key: string]: string } | null;
 	meta?: { [plugin: string]: any } | null;
 	moduleSideEffects?: boolean | 'no-treeshake' | null;
 	syntheticNamedExports?: boolean | string | null;
@@ -663,13 +687,21 @@ interface SourceDescription {
 
 如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子、[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `true` 确定。
 
+<<<<<<< HEAD
 `assertions` 包含导入此模块时使用的导入断言。目前，它们不会影响产物模块的呈现，而是用于文档目的。如果返回 `null` 或省略标志，则 `assertions` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子或此模块的第一个导入中存在的断言确定。
+=======
+`attributes` contain the import attributes that were used when this module was imported. At the moment, they do not influence rendering for bundled modules but rather serve documentation purposes. If `null` is returned or the flag is omitted, then `attributes` will be determined by the `load` hook that loaded this module, the first `resolveId` hook that resolved this module, or the attributes present in the first import of this module.
+>>>>>>> 179b0ca8337826598cd74473d11bf14f7b3fa342
 
 有关 `syntheticNamedExports` 选项的影响，请参见 [合成命名导出](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子、[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `false` 确定。
 
 有关如何使用 `meta` 选项，请参见 [自定义模块元数据](#custom-module-meta-data)。如果返回 `null` 或省略选项，则 `meta` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子或最终默认为空对象确定。
 
+<<<<<<< HEAD
 你可以使用 [`this.getModuleInfo`](#this-getmoduleinfo) 在此钩子中查找 `assertions`、`meta`、`moduleSideEffects` 和 `syntheticNamedExports` 的先前值。
+=======
+You can use [`this.getModuleInfo`](#this-getmoduleinfo) to find out the previous values of `attributes`, `meta`, `moduleSideEffects` and `syntheticNamedExports` inside this hook.
+>>>>>>> 179b0ca8337826598cd74473d11bf14f7b3fa342
 
 ### watchChange
 
@@ -874,13 +906,20 @@ function augmentWithDatePlugin() {
 
 |  |  |
 | --: | :-- |
+<<<<<<< HEAD
 | 类型: | `(options: OutputOptions, bundle: { [fileName: string]: AssetInfo \| ChunkInfo }, isWrite: boolean) => void` |
 | 类别: | async, sequential |
 | 上一个钩子: | [`augmentChunkHash`](#augmentchunkhash) |
 | 下一个钩子: | 如果输出是通过 `bundle.write(...)` 生成的，则为 [`writeBundle`](#writebundle)，否则这是输出生成阶段的最后一个钩子，并且可能再次跟随 [`outputOptions`](#outputoptions)，如果生成了另一个输出。 |
+=======
+| Type: | `(options: OutputOptions, bundle: { [fileName: string]: OutputAsset \| OutputChunk }, isWrite: boolean) => void` |
+| Kind: | async, sequential |
+| Previous: | [`augmentChunkHash`](#augmentchunkhash) |
+| Next: | [`writeBundle`](#writebundle) if the output was generated via `bundle.write(...)`, otherwise this is the last hook of the output generation phase and may again be followed by [`outputOptions`](#outputoptions) if another output is generated |
+>>>>>>> 179b0ca8337826598cd74473d11bf14f7b3fa342
 
 ```typescript
-interface AssetInfo {
+interface OutputAsset {
 	fileName: string;
 	name?: string;
 	needsCodeReference: boolean;
@@ -888,7 +927,7 @@ interface AssetInfo {
 	type: 'asset';
 }
 
-interface ChunkInfo {
+interface OutputChunk {
 	code: string;
 	dynamicImports: string[];
 	exports: string[];
@@ -914,6 +953,7 @@ interface ChunkInfo {
 	name: string;
 	preliminaryFileName: string;
 	referencedFiles: string[];
+	sourcemapFileName: string | null;
 	type: 'chunk';
 }
 ```
@@ -1181,7 +1221,11 @@ function importMetaUrlCurrentModulePlugin() {
 | ----: | :--------------------- |
 | 类型: | `(id: string) => void` |
 
+<<<<<<< HEAD
 添加要在监视模式下监视的其他文件，以便更改这些文件将触发重建。`id` 可以是文件或目录的绝对路径，也可以是相对于当前工作目录的路径。此上下文函数只能在构建阶段的钩子中使用，即在 `buildStart`、`load`、 `resolveId` 和 `transform` 中。
+=======
+Adds additional files to be monitored in watch mode so that changes to these files will trigger rebuilds. `id` can be an absolute path to a file or directory or a path relative to the current working directory. This context function can be used in all plugin hooks except `closeBundle`. However, it will not have an effect when used in [output generation hooks](#output-generation-hooks) if [`watch.skipWrite`](../configuration-options/index.md#watch-skipwrite) is set to `true`.
+>>>>>>> 179b0ca8337826598cd74473d11bf14f7b3fa342
 
 **注意**：通常在监视模式下，为了提高重建速度，`transform` 钩子只会在给定模块的内容实际更改时触发。从 `transform` 钩子中使用 `this.addWatchFile` 将确保如果监视的文件更改，则也将重新评估此模块的 `transform` 钩子。
 
@@ -1331,10 +1375,10 @@ export default {
 function emitPrebuiltChunkPlugin() {
 	return {
 		name: 'emit-prebuilt-chunk',
-		load(id) {
-			if (id === '/my-prebuilt-chunk.js') {
+		resolveId(source) {
+			if (source === './my-prebuilt-chunk.js') {
 				return {
-					id,
+					id: source,
 					external: true
 				};
 			}
@@ -1354,7 +1398,7 @@ function emitPrebuiltChunkPlugin() {
 然后你可以在你的代码中引用预构建的块：
 
 ```js
-import { foo } from '/my-prebuilt-chunk.js';
+import { foo } from './my-prebuilt-chunk.js';
 ```
 
 目前，产出预构建的块是一个基本功能。期待你的反馈。
@@ -1430,6 +1474,7 @@ for (const moduleId of this.getModuleIds()) {
 
 ```typescript
 interface ModuleInfo {
+<<<<<<< HEAD
 	id: string; // 模块的 ID，方便使用
 	code: string | null; // 模块的源代码，如果是外部模块或尚未可用，则为 `null`
 	ast: ESTree.Program; // 如果可用，则为解析的抽象语法树
@@ -1461,6 +1506,39 @@ interface ResolvedId {
 	moduleSideEffects: boolean | 'no-treeshake'; // 是否观察到模块的副作用，是否启用了除屑优化
 	resolvedBy: string; // 哪个插件解析了此模块，如果由 Rollup 自身解析，则为“rollup”
 	syntheticNamedExports: boolean | string; // 模块是否允许导入不存在的命名导出
+=======
+	id: string; // the id of the module, for convenience
+	code: string | null; // the source code of the module, `null` if external or not yet available
+	ast: ESTree.Program; // the parsed abstract syntax tree if available
+	hasDefaultExport: boolean | null; // is there a default export, `null` if external or not yet available
+	isEntry: boolean; // is this a user- or plugin-defined entry point
+	isExternal: boolean; // for external modules that are referenced but not included in the graph
+	isIncluded: boolean | null; // is the module included after tree-shaking, `null` if external or not yet available
+	importedIds: string[]; // the module ids statically imported by this module
+	importedIdResolutions: ResolvedId[]; // how statically imported ids were resolved, for use with this.load
+	importers: string[]; // the ids of all modules that statically import this module
+	exportedBindings: Record<string, string[]> | null; // contains all exported variables associated with the path of `from`, `null` if external
+	exports: string[] | null; // all exported variables, `null` if external
+	dynamicallyImportedIds: string[]; // the module ids imported by this module via dynamic import()
+	dynamicallyImportedIdResolutions: ResolvedId[]; // how ids imported via dynamic import() were resolved
+	dynamicImporters: string[]; // the ids of all modules that import this module via dynamic import()
+	implicitlyLoadedAfterOneOf: string[]; // implicit relationships, declared via this.emitFile
+	implicitlyLoadedBefore: string[]; // implicit relationships, declared via this.emitFile
+	attributes: { [key: string]: string }; // import attributes for this module
+	meta: { [plugin: string]: any }; // custom module meta-data
+	moduleSideEffects: boolean | 'no-treeshake'; // are imports of this module included if nothing is imported from it
+	syntheticNamedExports: boolean | string; // final value of synthetic named exports
+}
+
+interface ResolvedId {
+	id: string; // the id of the imported module
+	external: boolean | 'absolute'; // is this module external, "absolute" means it will not be rendered as relative in the module
+	attributes: { [key: string]: string }; // import attributes for this import
+	meta: { [plugin: string]: any }; // custom module meta-data when resolving the module
+	moduleSideEffects: boolean | 'no-treeshake'; // are side effects of the module observed, is tree-shaking enabled
+	resolvedBy: string; // which plugin resolved this module, "rollup" if resolved by Rollup itself
+	syntheticNamedExports: boolean | string; // does the module allow importing non-existing named exports
+>>>>>>> 179b0ca8337826598cd74473d11bf14f7b3fa342
 }
 ```
 
@@ -1468,6 +1546,7 @@ interface ResolvedId {
 
 在构建期间，此对象表示有关模块的当前可用信息，但在 [`buildEnd`](#buildend) 钩子之前可能不准确：
 
+<<<<<<< HEAD
 - `id` 和 `isExternal` 永远不会更改。
 - `code`、`ast`、`hasDefaultExport`、`exports` 和 `exportedBindings` 仅在解析后可用，即在 [`moduleParsed`](#moduleparsed) 钩子中或在等待 [`this.load`](#this-load) 后。此时，它们将不再更改。
 - 如果 `isEntry` 为 `true`，则它将不再更改。但是，模块可以在解析后通过 [`this.emitFile`](#this-emitfile) 或因为插件在解析入口点时通过 [`this.load`](#this-load) 检查潜在入口点而成为入口点。因此，在 [`transform`](#transform) 钩子中不建议依赖此标志。在 `buildEnd` 之后，它将不再更改。
@@ -1476,6 +1555,16 @@ interface ResolvedId {
 - `isIncluded` 仅在 `buildEnd` 后可用，在此时它将不再更改。
 - 当模块已解析并解析其依赖项时，`importedIds`、`importedIdResolutions`、`dynamicallyImportedIds` 和 `dynamicallyImportedIdResolutions` 可用。这是在 `moduleParsed` 钩子中或在等待 [`this.load`](#this-load) 时使用 `resolveDependencies` 标志的情况。此时，它们将不再更改。
 - `assertions`、`meta`、`moduleSideEffects` 和 `syntheticNamedExports` 可以通过 [`load`](#load) 和 [`transform`](#transform) 钩子更改。此外，虽然大多数属性是只读的，但这些属性是可写的，如果在触发 `buildEnd` 钩子之前发生更改，则会捕获更改。`meta` 本身不应被覆盖，但随时可以突变其属性以存储有关模块的元信息。这样做的好处是，如果使用了缓存，例如从 CLI 使用观察模式，则 `meta` 将被持久化并从缓存中恢复。
+=======
+- `id` and `isExternal` will never change.
+- `code`, `ast`, `hasDefaultExport`, `exports` and `exportedBindings` are only available after parsing, i.e. in the [`moduleParsed`](#moduleparsed) hook or after awaiting [`this.load`](#this-load). At that point, they will no longer change.
+- if `isEntry` is `true`, it will no longer change. It is however possible for modules to become entry points after they are parsed, either via [`this.emitFile`](#this-emitfile) or because a plugin inspects a potential entry point via [`this.load`](#this-load) in the [`resolveId`](#resolveid) hook when resolving an entry point. Therefore, it is not recommended relying on this flag in the [`transform`](#transform) hook. It will no longer change after `buildEnd`.
+- Similarly, `implicitlyLoadedAfterOneOf` can receive additional entries at any time before `buildEnd` via [`this.emitFile`](#this-emitfile).
+- `importers`, `dynamicImporters` and `implicitlyLoadedBefore` will start as empty arrays, which receive additional entries as new importers and implicit dependents are discovered. They will no longer change after `buildEnd`.
+- `isIncluded` is only available after `buildEnd`, at which point it will no longer change.
+- `importedIds`, `importedIdResolutions`, `dynamicallyImportedIds` and `dynamicallyImportedIdResolutions` are available when a module has been parsed and its dependencies have been resolved. This is the case in the `moduleParsed` hook or after awaiting [`this.load`](#this-load) with the `resolveDependencies` flag. At that point, they will no longer change.
+- `attributes`, `meta`, `moduleSideEffects` and `syntheticNamedExports` can be changed by [`load`](#load) and [`transform`](#transform) hooks. Moreover, while most properties are read-only, these properties are writable and changes will be picked up if they occur before the `buildEnd` hook is triggered. `meta` itself should not be overwritten, but it is ok to mutate its properties at any time to store meta information about a module. The advantage of doing this instead of keeping state in a plugin is that `meta` is persisted to and restored from the cache if it is used, e.g. when using watch mode from the CLI.
+>>>>>>> 179b0ca8337826598cd74473d11bf14f7b3fa342
 
 如果找不到模块 ID，则返回 `null`。
 
@@ -1507,7 +1596,7 @@ interface ResolvedId {
 type Load = (options: {
 	id: string;
 	resolveDependencies?: boolean;
-	assertions?: Record<string, string> | null;
+	attributes?: Record<string, string> | null;
 	meta?: CustomPluginOptions | null;
 	moduleSideEffects?: boolean | 'no-treeshake' | null;
 	syntheticNamedExports?: boolean | string | null;
@@ -1520,7 +1609,11 @@ type Load = (options: {
 
 返回的 Promise 将在模块完全转换和解析之后但在解析任何导入之前解析。这意味着生成的 `ModuleInfo` 将具有空的 `importedIds`、`dynamicallyImportedIds`、`importedIdResolutions` 和 `dynamicallyImportedIdResolutions`。这有助于避免在 `resolveId` 钩子中等待 `this.load` 时出现死锁情况。如果你对 `importedIds` 和 `dynamicallyImportedIds` 感兴趣，可以实现 `moduleParsed` 钩子或传递 `resolveDependencies` 标志，这将使 `this.load` 返回的 Promise 等待所有依赖项 ID 解析。
 
+<<<<<<< HEAD
 请注意，关于 `assertions`、`meta`、`moduleSideEffects` 和 `syntheticNamedExports` 选项，与 `resolveId` 钩子相同的限制适用：仅当模块尚未加载时，它们的值才会生效。因此，非常重要的是首先使用 `this.resolve` 查找任何插件是否想要在其 `resolveId` 钩子中设置这些选项的特殊值，并在适当时将这些选项传递给 `this.load`。下面的示例展示了如何处理包含特殊代码注释的模块以添加代理模块。请注意重新导出默认导出的特殊处理：
+=======
+Note that with regard to the `attributes`, `meta`, `moduleSideEffects` and `syntheticNamedExports` options, the same restrictions apply as for the `resolveId` hook: Their values only have an effect if the module has not been loaded yet. Thus, it is very important to use `this.resolve` first to find out if any plugins want to set special values for these options in their `resolveId` hook, and pass these options on to `this.load` if appropriate. The example below showcases how this can be handled to add a proxy module for modules containing a special code comment. Note the special handling for re-exporting the default export:
+>>>>>>> 179b0ca8337826598cd74473d11bf14f7b3fa342
 
 ```js
 export default function addProxyPlugin() {
@@ -1686,7 +1779,7 @@ type Resolve = (
 	options?: {
 		skipSelf?: boolean;
 		isEntry?: boolean;
-		assertions?: { [key: string]: string };
+		attributes?: { [key: string]: string };
 		custom?: { [plugin: string]: any };
 	}
 ) => ResolvedId;
@@ -1706,9 +1799,15 @@ type Resolve = (
 
 你在这里传递的 `isEntry` 值将传递给处理此调用的 [`resolveId`](#resolveid) 钩子，否则如果有导入器，则传递 `false`，如果没有，则传递 `true`。
 
+<<<<<<< HEAD
 如果为 `assertions` 传递对象，则它将模拟使用断言解析导入，例如 `assertions: {type: "json"}` 模拟解析 `import "foo" assert {type: "json"}`。这将传递给处理此调用的任何 [`resolveId`](#resolveid) 钩子，并最终成为返回的对象的一部分。
 
 在从 `resolveId` 钩子调用此函数时，你应始终检查是否有意义将 `isEntry`、`custom` 和 `assertions` 选项传递下去。
+=======
+If you pass an object for `attributes`, it will simulate resolving an import with an assertion, e.g. `attributes: {type: "json"}` simulates resolving `import "foo" assert {type: "json"}`. This will be passed to any [`resolveId`](#resolveid) hooks handling this call and may ultimately become part of the returned object.
+
+When calling this function from a `resolveId` hook, you should always check if it makes sense for you to pass along the `isEntry`, `custom` and `attributes` options.
+>>>>>>> 179b0ca8337826598cd74473d11bf14f7b3fa342
 
 `resolvedBy` 的值指示哪个插件解析了此源。如果它是由 Rollup 本身解析的，则该值将为 "rollup"。如果插件中的 `resolveId` 钩子解析此源，则该值将是插件的名称，除非它为 `resolvedBy` 返回了显式值。此标志仅用于调试和文档目的，Rollup 不会进一步处理它。
 
