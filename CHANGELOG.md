@@ -1,5 +1,98 @@
 # rollup changelog
 
+## 4.7.0
+
+_2023-12-08_
+
+### Features
+
+- Add build for Linux riscv64 architecture (#5288)
+
+### Bug Fixes
+
+- Improve error message when native Windows build does not start (#5284)
+
+### Pull Requests
+
+- [#5278](https://github.com/rollup/rollup/pull/5278): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5281](https://github.com/rollup/rollup/pull/5281): Add logs and experimentalLogSideEffects to REPL (@lukastaegert)
+- [#5284](https://github.com/rollup/rollup/pull/5284): Add friendly error for missing MSVC redistributable (@sapphi-red)
+- [#5285](https://github.com/rollup/rollup/pull/5285): chore(deps): update dependency vite to v5.0.5 [security] (@renovate[bot])
+- [#5288](https://github.com/rollup/rollup/pull/5288): Add support for linux riscv64 gnu (@kxxt)
+- [#5290](https://github.com/rollup/rollup/pull/5290): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+
+## 4.6.1
+
+_2023-11-30_
+
+### Bug Fixes
+
+- Resolve a situation where declaring the same `var` several times was considered a conflict (#5276)
+
+### Pull Requests
+
+- [#5275](https://github.com/rollup/rollup/pull/5275): Add TNG as special sponsor (@lukastaegert)
+- [#5276](https://github.com/rollup/rollup/pull/5276): Allow to redeclare parameters multiple times in nested scopes (@lukastaegert)
+
+## 4.6.0
+
+_2023-11-26_
+
+### Features
+
+- Allow `this.addWatchFile` in all plugin hooks (#5270)
+
+### Bug Fixes
+
+- Show helpful error when native binaries are not installed due to an `npm` issue (#5267)
+- Do not access `this` context in `this.addWatchFile` so it does not need to be bound when passed around (#5270)
+
+### Pull Requests
+
+- [#5267](https://github.com/rollup/rollup/pull/5267): Add friendly error for npm bug (@sapphi-red)
+- [#5270](https://github.com/rollup/rollup/pull/5270): Allow this.addWatchFile in all hooks (@lukastaegert)
+- [#5272](https://github.com/rollup/rollup/pull/5272): Debug deployed graphs (@lukastaegert)
+
+## 4.5.2
+
+_2023-11-24_
+
+### Bug Fixes
+
+- Handle files with UTF-8 BOM when using the commonjs plugin (#5268)
+
+### Pull Requests
+
+- [#5268](https://github.com/rollup/rollup/pull/5268): fix: strip BOM before calling transform hook (@TrickyPi)
+- [#5269](https://github.com/rollup/rollup/pull/5269): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+
+## 4.5.1
+
+_2023-11-21_
+
+### Bug Fixes
+
+- Do not error when a function expression uses the same name for a parameter and its id (#5262)
+
+### Pull Requests
+
+- [#5257](https://github.com/rollup/rollup/pull/5257): Fix graphs in docs, improve REPL colors (@lukastaegert)
+- [#5262](https://github.com/rollup/rollup/pull/5262): Allow function expression parameters to shadow the function id (@lukastaegert)
+
+## 4.5.0
+
+_2023-11-18_
+
+### Bug Fixes
+
+- Show a proper error when using native Rollup on armv7 musl Linux (#5255)
+
+### Pull Requests
+
+- [#5251](https://github.com/rollup/rollup/pull/5251): doc fix import assertions to attributes in API plugin development page (@lhapaipai)
+- [#5253](https://github.com/rollup/rollup/pull/5253): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5255](https://github.com/rollup/rollup/pull/5255): Error for armv7 musl build (@lukastaegert)
+
 ## 4.4.1
 
 _2023-11-14_
