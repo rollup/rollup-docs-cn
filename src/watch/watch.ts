@@ -35,7 +35,7 @@ export class Watcher {
 	readonly emitter: RollupWatcher;
 
 	private buildDelay = 0;
-	private buildTimeout: NodeJS.Timer | null = null;
+	private buildTimeout: ReturnType<typeof setTimeout> | null = null;
 	private closed = false;
 	private readonly invalidatedIds = new Map<string, ChangeEvent>();
 	private rerun = false;
@@ -207,7 +207,13 @@ export class Task {
 				return;
 			}
 			this.updateWatchedFiles(result);
-			this.skipWrite || (await Promise.all(this.outputs.map(output => result!.write(output))));
+			if (!this.skipWrite) {
+				await Promise.all(this.outputs.map(output => result!.write(output)));
+				if (this.closed) {
+					return;
+				}
+				this.updateWatchedFiles(result!);
+			}
 			await this.watcher.emitter.emit('event', {
 				code: 'BUNDLE_END',
 				duration: Date.now() - start,
