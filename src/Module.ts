@@ -183,8 +183,8 @@ function getAndExtendSideEffectModules(variable: Variable, module: Module): Set<
 			currentVariable instanceof ExportDefaultVariable
 				? currentVariable.getDirectOriginalVariable()
 				: currentVariable instanceof SyntheticNamedExportVariable
-				? currentVariable.syntheticNamespace
-				: null;
+					? currentVariable.syntheticNamespace
+					: null;
 		if (!currentVariable || referencedVariables.has(currentVariable)) {
 			break;
 		}
@@ -810,10 +810,6 @@ export default class Module {
 			const shebangEndPosition = code.indexOf('\n');
 			this.shebang = code.slice(2, shebangEndPosition);
 		}
-		/* eslint-disable-next-line unicorn/number-literal-case */
-		if (code.charCodeAt(0) === 0xfe_ff) {
-			code = code.slice(1);
-		}
 
 		timeStart('generate ast', 3);
 
@@ -1027,7 +1023,7 @@ export default class Module {
 			if (node.exported) {
 				// export * as name from './other'
 
-				const name = node.exported.name;
+				const name = node.exported instanceof Literal ? node.exported.value : node.exported.name;
 				this.assertUniqueExportName(name, node.exported.start);
 				this.reexportDescriptions.set(name, {
 					localName: '*',
@@ -1101,10 +1097,10 @@ export default class Module {
 				specifier instanceof ImportDefaultSpecifier
 					? 'default'
 					: specifier instanceof ImportNamespaceSpecifier
-					? '*'
-					: specifier.imported instanceof Identifier
-					? specifier.imported.name
-					: specifier.imported.value;
+						? '*'
+						: specifier.imported instanceof Identifier
+							? specifier.imported.name
+							: specifier.imported.value;
 			this.importDescriptions.set(localName, {
 				module: null as never, // filled in later
 				name,
