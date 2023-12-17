@@ -14,8 +14,9 @@ const bindingsByPlatformAndArch = {
 		x64: { base: 'darwin-x64' }
 	},
 	linux: {
-		arm: { base: 'linux-arm-gnueabihf' },
+		arm: { base: 'linux-arm-gnueabihf', musl: null },
 		arm64: { base: 'linux-arm64-gnu', musl: 'linux-arm64-musl' },
+		riscv64: { base: 'linux-riscv64-gnu', musl: null },
 		x64: { base: 'linux-x64-gnu', musl: 'linux-x64-musl' }
 	},
 	win32: {
@@ -25,8 +26,15 @@ const bindingsByPlatformAndArch = {
 	}
 };
 
-const imported = bindingsByPlatformAndArch[platform]?.[arch];
-if (!imported) {
+const msvcLinkFilenameByArch = {
+	arm64: 'vc_redist.arm64.exe',
+	ia32: 'vc_redist.x86.exe',
+	x64: 'vc_redist.x64.exe'
+};
+
+const packageBase = getPackageBase();
+
+if (!packageBase) {
 	throw new Error(
 		`Your current platform "${platform}" and architecture "${arch}" combination is not yet supported by the native Rollup build. Please use the WASM build "@rollup/wasm-node" instead.
 
@@ -44,9 +52,48 @@ If this is important to you, please consider supporting Rollup to make a native 
 	);
 }
 
-const packageBase = imported.musl && isMusl() ? imported.musl : imported.base;
+function getPackageBase() {
+	const imported = bindingsByPlatformAndArch[platform]?.[arch];
+	if (!imported) {
+		return null;
+	}
+	if ('musl' in imported && isMusl()) {
+		return imported.musl;
+	}
+	return imported.base;
+}
+
 const localName = `./rollup.${packageBase}.node`;
-const { parse, parseAsync, xxhashBase64Url } = require(
+const requireWithFriendlyError = id => {
+	try {
+		return require(id);
+	} catch (error) {
+		if (
+			platform === 'win32' &&
+			error instanceof Error &&
+			error.code === 'ERR_DLOPEN_FAILED' &&
+			error.message.includes('The specified module could not be found')
+		) {
+			const msvcDownloadLink = `https://aka.ms/vs/17/release/${msvcLinkFilenameByArch[arch]}`;
+			throw new Error(
+				`Failed to load module ${id}. ` +
+					'Required DLL was not found. ' +
+					'This error usually happens when Microsoft Visual C++ Redistributable is not installed. ' +
+					`You can download it from ${msvcDownloadLink}`,
+				{ cause: error }
+			);
+		}
+
+		throw new Error(
+			`Cannot find module ${id}. ` +
+				`npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). ` +
+				'Please try `npm i` again after removing both package-lock.json and node_modules directory.',
+			{ cause: error }
+		);
+	}
+};
+
+const { parse, parseAsync, xxhashBase64Url } = requireWithFriendlyError(
 	existsSync(join(__dirname, localName)) ? localName : `@rollup/rollup-${packageBase}`
 );
 

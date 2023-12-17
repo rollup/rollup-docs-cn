@@ -12,7 +12,6 @@ import { readJson, runAndGetStdout, runWithEcho } from './helpers.js';
 import {
 	BROWSER_PACKAGE,
 	CHANGELOG,
-	DOCUMENTATION_BRANCH,
 	MAIN_BRANCH,
 	MAIN_LOCKFILE,
 	MAIN_PACKAGE
@@ -83,8 +82,8 @@ async function getNewVersion(mainPackage, isMainBranch) {
 	const availableIncrements = isMainBranch
 		? ['patch', 'minor']
 		: semverPreRelease(version)
-		? ['prerelease']
-		: ['premajor', 'preminor', 'prepatch'];
+			? ['prerelease']
+			: ['premajor', 'preminor', 'prepatch'];
 
 	const { newVersion } = await inquirer.prompt([
 		{
@@ -224,13 +223,11 @@ async function commitChanges(newVersion, gitTag, isMainBranch) {
 	]);
 	await runWithEcho('git', ['commit', '-m', newVersion]);
 	await runWithEcho('git', ['tag', gitTag]);
-	isMainBranch && (await runWithEcho('git', ['branch', DOCUMENTATION_BRANCH, '--force', gitTag]));
 }
 
 function pushChanges(gitTag) {
 	return Promise.all([
 		runWithEcho('git', ['push', 'origin', 'HEAD']),
-		runWithEcho('git', ['push', 'origin', gitTag]),
-		isMainBranch && runWithEcho('git', ['push', '--force', 'origin', DOCUMENTATION_BRANCH])
+		runWithEcho('git', ['push', 'origin', gitTag])
 	]);
 }
