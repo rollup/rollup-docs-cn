@@ -3,7 +3,8 @@ import { env } from 'node:process';
 import GitHub from 'github-api';
 import semverPreRelease from 'semver/functions/prerelease.js';
 import { cyan } from './colors.js';
-import { CHANGELOG } from './release-constants.js';
+import { runWithEcho } from './helpers.js';
+import { CHANGELOG, DOCUMENTATION_BRANCH } from './release-constants.js';
 import {
 	getCurrentCommitMessage,
 	getFirstChangelogEntry,
@@ -50,11 +51,22 @@ const includedPRs = await getIncludedPRs(
 	isPreRelease
 );
 
+const gitTag = getGitTag(newVersion);
 if (changelogEntry) {
-	await createReleaseNotes(changelogEntry, getGitTag(newVersion));
+	await createReleaseNotes(changelogEntry, gitTag);
 }
 await postReleaseComments(includedPRs, issues, newVersion);
 
+if (!isPreRelease) {
+	await runWithEcho('git', ['branch', DOCUMENTATION_BRANCH, '--force', gitTag]);
+	await runWithEcho('git', ['push', '--force', 'origin', DOCUMENTATION_BRANCH]);
+}
+
+/**
+ * @param {string} changelog
+ * @param {string} tag
+ * @return {Promise<void>}
+ */
 function createReleaseNotes(changelog, tag) {
 	return repo.createRelease({
 		body: changelog,
@@ -63,12 +75,24 @@ function createReleaseNotes(changelog, tag) {
 	});
 }
 
+/**
+ * @param {import('./release-helpers.js').IncludedPR[]} includedPRs
+ * @param {import('github-api').Issues} issues
+ * @param {string} version
+ * @return {Promise<void>}
+ */
 async function postReleaseComments(includedPRs, issues, version) {
 	const installNote = semverPreRelease(version)
 		? `Note that this is a pre-release, so to test it, you need to install Rollup via \`npm install rollup@${version}\` or \`npm install rollup@beta\`. It will likely become part of a regular release later.`
 		: 'You can test it via `npm install rollup`.';
 
 	let caughtError = null;
+
+	/**
+	 * @param {number} issueNumber
+	 * @param {string} comment
+	 * @return {Promise<unknown>}
+	 */
 	const addComment = (issueNumber, comment) =>
 		// Add a small timeout to avoid rate limiting issues
 		new Promise(resolve => setTimeout(resolve, 500)).then(() =>

@@ -1,5 +1,6 @@
 import type { NormalizedOutputOptions } from '../rollup/types';
 import RESERVED_NAMES from './RESERVED_NAMES';
+import { stringifyObjectKeyIfNeeded, VALID_IDENTIFIER_REGEXP } from './identifierHelpers';
 
 export interface GenerateCodeSnippets {
 	_: string;
@@ -58,7 +59,7 @@ export function getGenerateCodeSnippets({
 				return `${name ? `${cnst} ${name}${_}=${_}` : ''}${asyncString}${
 					singleParameter ? parameters[0] : `(${parameters.join(`,${_}`)})`
 				}${_}=>${_}`;
-		  }
+			}
 		: getNonArrowFunctionIntro;
 
 	const getDirectReturnFunction: GenerateCodeSnippets['getDirectReturnFunction'] = (
@@ -75,7 +76,7 @@ export function getGenerateCodeSnippets({
 					: ''
 				: `{${lineBreakIndent ? `${n}${lineBreakIndent.base}${lineBreakIndent.t}` : _}${
 						functionReturn ? 'return ' : ''
-				  }`
+					}`
 		}`,
 		arrowFunctions
 			? `${name ? ';' : ''}${lineBreakIndent ? `${n}${lineBreakIndent.base}` : ''}`
@@ -83,8 +84,8 @@ export function getGenerateCodeSnippets({
 	];
 
 	const isValidPropertyName = reservedNamesAsProps
-		? (name: string): boolean => validPropertyName.test(name)
-		: (name: string): boolean => !RESERVED_NAMES.has(name) && validPropertyName.test(name);
+		? (name: string): boolean => VALID_IDENTIFIER_REGEXP.test(name)
+		: (name: string): boolean => !RESERVED_NAMES.has(name) && VALID_IDENTIFIER_REGEXP.test(name);
 
 	return {
 		_,
@@ -112,10 +113,10 @@ export function getGenerateCodeSnippets({
 			return `{${fields
 				.map(([key, value]) => {
 					if (key === null) return `${prefix}${value}`;
-					const needsQuotes = !isValidPropertyName(key);
-					return key === value && objectShorthand && !needsQuotes
+					const keyInObject = stringifyObjectKeyIfNeeded(key);
+					return key === value && objectShorthand && key === keyInObject
 						? prefix + key
-						: `${prefix}${needsQuotes ? `'${key}'` : key}:${_}${value}`;
+						: `${prefix}${keyInObject}:${_}${value}`;
 				})
 				.join(`,`)}${
 				fields.length === 0 ? '' : lineBreakIndent ? `${n}${lineBreakIndent.base}` : _
@@ -130,5 +131,3 @@ export function getGenerateCodeSnippets({
 
 const wrapIfNeeded = (code: string, needsParens: boolean | undefined): string =>
 	needsParens ? `(${code})` : code;
-
-const validPropertyName = /^(?!\d)[\w$]+$/;
