@@ -315,13 +315,13 @@ interface SourceDescription {
 
 如果 `moduleSideEffects` 返回 `false`，并且没有其他模块从该模块导入任何内容，则即使该模块具有副作用，该模块也不会包含在产物中。如果返回 `true`，则 Rollup 将使用其默认算法包含模块中具有副作用的所有语句（例如修改全局或导出变量）。如果返回 `"no-treeshake"`，则将关闭此模块的除屑优化，并且即使该模块为空，也将在生成的块之一中包含它。如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由第一个解析此模块的 `resolveId` 钩子，[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `true` 确定。`transform` 钩子可以覆盖此设置。
 
-`attributes` 包含导入此模块时使用的导入属性。目前，它们不会影响产物模块的呈现，而是用于文档目的。如果返回 `null` 或省略标志，则 `attributes` 将由第一个解析此模块的 `resolveId` 钩子或此模块的第一个导入中存在的断言确定。`transform` 钩子可以覆盖此设置。
+`attributes` 包括导入此模块时使用的导入属性。目前，它们不会影响产物模块的呈现，而是用于文档目的。如果返回 `null` 或省略标志，则 `attributes` 将由第一个解析此模块的 `resolveId` 钩子或此模块的第一个导入中存在的断言确定。`transform` 钩子可以覆盖此设置。
 
 有关 `syntheticNamedExports` 选项的影响，请参见 [合成命名导出](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将由第一个解析此模块的 `resolveId` 钩子确定，或者最终默认为 `false`。`transform` 钩子可以覆盖此设置。
 
 有关如何使用 `meta` 选项的 [自定义模块元数据](#custom-module-meta-data)。如果此钩子返回 `meta` 对象，则该对象将与 `resolveId` 钩子返回的任何 `meta` 对象浅合并。如果没有钩子返回 `meta` 对象，则默认为一个空对象。`transform` 钩子可以进一步添加或替换该对象的属性。
 
-你可以使用 [`this.getModuleInfo`](#this-getmoduleinfo) 在此钩子中查找 `assertions`、`meta`、`moduleSideEffects` 和 `syntheticNamedExports` 的先前值。
+你可以使用 [`this.getModuleInfo`](#this-getmoduleinfo) 在此钩子中查找 `attributes`、`meta`、`moduleSideEffects` 和 `syntheticNamedExports` 的先前值。
 
 ### moduleParsed
 
@@ -419,7 +419,7 @@ function plugin2() {
 type ResolveDynamicImportHook = (
 	specifier: string | AstNode,
 	importer: string,
-	options: { assertions: Record<string, string> }
+	options: { attributes: Record<string, string> }
 ) => ResolveIdResult;
 ```
 
@@ -431,7 +431,7 @@ type ResolveDynamicImportHook = (
 
 为动态导入定义自定义解析器。返回 `false` 表示应将导入保留，不要传递给其他解析器，从而使其成为外部导入。与 [`resolveId`](#resolveid) 钩子类似，你还可以返回一个对象，将导入解析为不同的 id，同时将其标记为外部导入。
 
-`assertions` 告诉你导入中存在哪些导入断言。即 `import("foo", {assert: {type: "json"}})` 将传递 `assertions: {type: "json"}`。
+`attributes` 告诉你导入中存在哪些导入属性。即 `import("foo", {assert: {type: "json"}})` 将传递 `attributes: {type: "json"}`。
 
 如果动态导入作为字符串参数传递，则从此钩子返回的字符串将被解释为现有模块 id，而返回 `null` 将推迟到其他解析器，最终到达 `resolveId`。
 
@@ -560,7 +560,7 @@ function injectPolyfillPlugin() {
 }
 ```
 
-`attributes` 参数告诉你导入中存在哪些导入属性。例如，`import "foo" assert {type: "json"}` 将传递 `attributes: {type: "json}"`。
+`attributes` 告诉你导入中存在哪些导入属性。例如，`import "foo" assert {type: "json"}` 将传递 `attributes: {type: "json}"`。
 
 如果返回 `null`，则会转而使用其他 `resolveId` 函数，最终使用默认的解析行为。如果返回 `false`，则表示 `source` 应被视为外部模块，不包含在产物中。如果这发生在相对导入中，则会像使用 `external` 选项时一样重新规范化 id。
 
@@ -586,13 +586,13 @@ function externalizeDependencyPlugin() {
 
 可以在返回的对象中明确声明 `resolvedBy`。它将替换 [`this.resolve`](#this-resolve) 返回的相应字段。
 
-如果为外部模块返回 `attributes` 的值，则这将确定在生成 `"es"` 输出时如何呈现此模块的导入。例如，`{id: "foo", external: true, attributes: {type: "json"}}` 将导致此模块的导入显示为 `import "foo" assert {type: "json"}`。如果不传递值，则将使用 `attributes` 输入参数的值。传递一个空对象以删除任何断言。虽然 `attributes` 不影响产物模块的呈现，但它们仍然需要在模块的所有导入中保持一致，否则会产出警告。`load` 和 `transform` 钩子可以覆盖此选项。
+如果你为 `attributes` 返回外部模块的值，则这将确定在生成 `"es"` 输出时如何呈现此模块的导入。例如，`{id: "foo", external: true, attributes: {type: "json"}}` 将导致此模块的导入显示为 `import "foo" assert {type: "json"}`。如果不传递值，则将使用 `attributes` 输入参数的值。传递一个空对象以删除任何断言。虽然 `attributes` 不影响产物模块的呈现，但它们仍然需要在模块的所有导入中保持一致，否则会产出警告。`load` 和 `transform` 钩子可以覆盖此选项。
 
 有关 `syntheticNamedExports` 选项的影响，请参见 [synthetic named exports](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将默认为 `false`。`load` 和 `transform` 钩子可以覆盖此选项。
 
 有关如何使用 `meta` 选项，请参见 [custom module meta-data](#custom-module-meta-data)。如果返回 `null` 或省略选项，则 `meta` 将默认为空对象。`load` 和 `transform` 钩子可以添加或替换此对象的属性。
 
-请注意，虽然 `resolveId` 将为模块的每个导入调用一次，并且因此可以多次解析为相同的 `id`，但是 `external`、`attributes`、`meta`、`moduleSideEffects` 或 `syntheticNamedExports` 的值只能在加载模块之前设置一次。原因是在此调用之后，Rollup 将继续使用该模块的 [`load`](#load) 和 [`transform`](#transform) 钩子，这些钩子可能会覆盖这些值，并且如果它们这样做，则应优先考虑。
+注意，虽然 `resolveId` 将为模块的每个导入调用一次，并且因此可以多次解析为相同的 `id`，但是 `external`、`attributes`、`meta`、`moduleSideEffects` 或 `syntheticNamedExports` 的值只能在加载模块之前设置一次。原因是在此调用之后，Rollup 将继续使用该模块的 [`load`](#load) 和 [`transform`](#transform) 钩子，这些钩子可能会覆盖这些值，并且如果它们这样做，则应优先考虑。
 
 当通过 [`this.resolve`](#this-resolve) 从插件触发此钩子时，可以向此钩子传递自定义选项对象。虽然此对象将不被修改，但插件应遵循添加具有对象的 `custom` 属性的约定，其中键对应于选项所针对的插件的名称。有关详细信息，请参见 [custom resolver options](#custom-resolver-options)。
 
@@ -640,7 +640,7 @@ interface SourceDescription {
 	code: string;
 	map?: string | SourceMap;
 	ast?: ESTree.Program;
-	assertions?: { [key: string]: string } | null;
+	attributes?: { [key: string]: string } | null;
 	meta?: { [plugin: string]: any } | null;
 	moduleSideEffects?: boolean | 'no-treeshake' | null;
 	syntheticNamedExports?: boolean | string | null;
@@ -663,7 +663,7 @@ interface SourceDescription {
 
 如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子、[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `true` 确定。
 
-`assertions` 包含导入此模块时使用的导入断言。目前，它们不会影响产物模块的呈现，而是用于文档目的。如果返回 `null` 或省略标志，则 `assertions` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子或此模块的第一个导入中存在的断言确定。
+`attributes` 包括了导入的属性，这些属性在导入此模块时使用。目前，它们不会影响产物模块的呈现，而是用于文档目的。如果返回 `null` 或省略标志，则 `attributes` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子或此模块的第一个导入中存在的属性确定。
 
 有关 `syntheticNamedExports` 选项的影响，请参见 [合成命名导出](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子、[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `false` 确定。
 
@@ -874,13 +874,13 @@ function augmentWithDatePlugin() {
 
 |  |  |
 | --: | :-- |
-| 类型: | `(options: OutputOptions, bundle: { [fileName: string]: AssetInfo \| ChunkInfo }, isWrite: boolean) => void` |
+| 类型: | `(options: OutputOptions, bundle: { [fileName: string]: OutputAsset \| OutputChunk }, isWrite: boolean) => void` |
 | 类别: | async, sequential |
 | 上一个钩子: | [`augmentChunkHash`](#augmentchunkhash) |
-| 下一个钩子: | 如果输出是通过 `bundle.write(...)` 生成的，则为 [`writeBundle`](#writebundle)，否则这是输出生成阶段的最后一个钩子，并且可能再次跟随 [`outputOptions`](#outputoptions)，如果生成了另一个输出。 |
+| 下一个钩子: | [`writeBundle`](#writebundle) 如果输出是通过 `bundle.write(...)` 生成的，则为，否则这是输出生成阶段的最后一个钩子，并且可能再次跟随 [`outputOptions`](#outputoptions)，如果生成了另一个输出。 |
 
 ```typescript
-interface AssetInfo {
+interface OutputAsset {
 	fileName: string;
 	name?: string;
 	needsCodeReference: boolean;
@@ -888,7 +888,7 @@ interface AssetInfo {
 	type: 'asset';
 }
 
-interface ChunkInfo {
+interface OutputChunk {
 	code: string;
 	dynamicImports: string[];
 	exports: string[];
@@ -914,6 +914,7 @@ interface ChunkInfo {
 	name: string;
 	preliminaryFileName: string;
 	referencedFiles: string[];
+	sourcemapFileName: string | null;
 	type: 'chunk';
 }
 ```
@@ -1181,7 +1182,7 @@ function importMetaUrlCurrentModulePlugin() {
 | ----: | :--------------------- |
 | 类型: | `(id: string) => void` |
 
-添加要在监视模式下监视的其他文件，以便更改这些文件将触发重建。`id` 可以是文件或目录的绝对路径，也可以是相对于当前工作目录的路径。此上下文函数只能在构建阶段的钩子中使用，即在 `buildStart`、`load`、 `resolveId` 和 `transform` 中。
+添加额外的文件以在监视模式下监视，以便更改这些文件将触发重建。`id` 可以是文件或目录的绝对路径，也可以是相对于当前工作目录的路径。此上下文函数可以在所有插件钩子中使用，除了 `closeBundle`。但是，如果 [`watch.skipWrite`](../configuration-options/index.md#watch-skipwrite) 设置为 `true`，则在 [输出生成钩子](#output-generation-hooks) 中使用它将不起作用。
 
 **注意**：通常在监视模式下，为了提高重建速度，`transform` 钩子只会在给定模块的内容实际更改时触发。从 `transform` 钩子中使用 `this.addWatchFile` 将确保如果监视的文件更改，则也将重新评估此模块的 `transform` 钩子。
 
@@ -1331,10 +1332,10 @@ export default {
 function emitPrebuiltChunkPlugin() {
 	return {
 		name: 'emit-prebuilt-chunk',
-		load(id) {
-			if (id === '/my-prebuilt-chunk.js') {
+		resolveId(source) {
+			if (source === './my-prebuilt-chunk.js') {
 				return {
-					id,
+					id: source,
 					external: true
 				};
 			}
@@ -1354,7 +1355,7 @@ function emitPrebuiltChunkPlugin() {
 然后你可以在你的代码中引用预构建的块：
 
 ```js
-import { foo } from '/my-prebuilt-chunk.js';
+import { foo } from './my-prebuilt-chunk.js';
 ```
 
 目前，产出预构建的块是一个基本功能。期待你的反馈。
@@ -1447,7 +1448,7 @@ interface ModuleInfo {
 	dynamicImporters: string[]; // 动态导入此模块的所有模块的 ID
 	implicitlyLoadedAfterOneOf: string[]; // 隐式关系，通过 this.emitFile 声明
 	implicitlyLoadedBefore: string[]; // 隐式关系，通过 this.emitFile 声明
-	assertions: { [key: string]: string }; // 此模块的导入断言
+	attributes: { [key: string]: string }; // 此模块的导入属性
 	meta: { [plugin: string]: any }; // 自定义模块元数据
 	moduleSideEffects: boolean | 'no-treeshake'; // 如果未从中导入任何内容，则是否包含此模块的导入
 	syntheticNamedExports: boolean | string; // 合成命名导出的最终值
@@ -1456,7 +1457,7 @@ interface ModuleInfo {
 interface ResolvedId {
 	id: string; // 导入模块的 ID
 	external: boolean | 'absolute'; // 此模块是否为外部模块，“absolute”表示它不会在模块中呈现为相对路径
-	assertions: { [key: string]: string }; // 此导入的导入断言
+	attributes: { [key: string]: string }; // 此导入的导入属性
 	meta: { [plugin: string]: any }; // 解析模块时的自定义模块元数据
 	moduleSideEffects: boolean | 'no-treeshake'; // 是否观察到模块的副作用，是否启用了除屑优化
 	resolvedBy: string; // 哪个插件解析了此模块，如果由 Rollup 自身解析，则为“rollup”
@@ -1475,7 +1476,7 @@ interface ResolvedId {
 - `importers`、`dynamicImporters` 和 `implicitlyLoadedBefore` 将以空数组开始，随着发现新的导入者和隐式依赖项而接收其他条目。在 `buildEnd` 之后，它们将不再更改。
 - `isIncluded` 仅在 `buildEnd` 后可用，在此时它将不再更改。
 - 当模块已解析并解析其依赖项时，`importedIds`、`importedIdResolutions`、`dynamicallyImportedIds` 和 `dynamicallyImportedIdResolutions` 可用。这是在 `moduleParsed` 钩子中或在等待 [`this.load`](#this-load) 时使用 `resolveDependencies` 标志的情况。此时，它们将不再更改。
-- `assertions`、`meta`、`moduleSideEffects` 和 `syntheticNamedExports` 可以通过 [`load`](#load) 和 [`transform`](#transform) 钩子更改。此外，虽然大多数属性是只读的，但这些属性是可写的，如果在触发 `buildEnd` 钩子之前发生更改，则会捕获更改。`meta` 本身不应被覆盖，但随时可以突变其属性以存储有关模块的元信息。这样做的好处是，如果使用了缓存，例如从 CLI 使用观察模式，则 `meta` 将被持久化并从缓存中恢复。
+- `attributes`、`meta`、`moduleSideEffects` 和 `syntheticNamedExports` 可以通过 [`load`](#load) 和 [`transform`](#transform) 钩子更改。此外，尽管大多数属性是只读的，但这些属性是可写的，并且如果在触发 `buildEnd` 钩子之前发生更改，这些更改将被捕获。不应该覆盖 `meta` 本身，但随时可以修改其属性以存储有关模块的元信息。这样做的优势是，与在插件中保持状态相比，在缓存中使用时会将 `meta` 持久化并恢复，例如当从CLI使用监视模式时。
 
 如果找不到模块 ID，则返回 `null`。
 
@@ -1507,7 +1508,7 @@ interface ResolvedId {
 type Load = (options: {
 	id: string;
 	resolveDependencies?: boolean;
-	assertions?: Record<string, string> | null;
+	attributes?: Record<string, string> | null;
 	meta?: CustomPluginOptions | null;
 	moduleSideEffects?: boolean | 'no-treeshake' | null;
 	syntheticNamedExports?: boolean | string | null;
@@ -1686,7 +1687,7 @@ type Resolve = (
 	options?: {
 		skipSelf?: boolean;
 		isEntry?: boolean;
-		assertions?: { [key: string]: string };
+		attributes?: { [key: string]: string };
 		custom?: { [plugin: string]: any };
 	}
 ) => ResolvedId;

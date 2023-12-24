@@ -12,7 +12,6 @@ import { readJson, runAndGetStdout, runWithEcho } from './helpers.js';
 import {
 	BROWSER_PACKAGE,
 	CHANGELOG,
-	DOCUMENTATION_BRANCH,
 	MAIN_BRANCH,
 	MAIN_LOCKFILE,
 	MAIN_PACKAGE
@@ -37,8 +36,8 @@ chdir(fileURLToPath(new URL('..', import.meta.url)));
 
 const [gh, currentBranch] = await Promise.all([
 	getGithubApi(),
-	runAndGetStdout('git', ['branch', '--show-current']),
-	runWithEcho('git', ['pull', '--ff-only'])
+	runAndGetStdout('git', ['branch', '--show-current'])
+	// runWithEcho('git', ['pull', '--ff-only'])
 ]);
 const [mainPackage, mainLockFile, browserPackage, repo, changelog] = await Promise.all([
 	readJson(MAIN_PACKAGE),
@@ -62,7 +61,7 @@ const [newVersion, includedPRs] = await Promise.all([
 const gitTag = getGitTag(newVersion);
 try {
 	if (isMainBranch) {
-		await addStubChangelogEntry(newVersion, repo, changelog, includedPRs);
+		await addStubChangelogEntry(newVersion, changelog, includedPRs);
 	}
 	await updatePackages(mainPackage, mainLockFile, browserPackage, newVersion);
 	await installDependenciesAndLint();
@@ -71,20 +70,30 @@ try {
 	}
 	await commitChanges(newVersion, gitTag, isMainBranch);
 } catch (error) {
-	console.error(`Error during release, rolling back changes: ${error.message}`);
+	console.error(
+		`Error during release, rolling back changes: ${error instanceof Error ? error.message : error}`
+	);
 	console.error('Run `git reset --hard` to roll back changes.');
 	throw error;
 }
 
 await pushChanges(gitTag);
 
+/**
+ * @param {Record<string,any>} mainPackage
+ * @param {boolean} isMainBranch
+ * @return {Promise<string>}
+ */
 async function getNewVersion(mainPackage, isMainBranch) {
 	const { version } = mainPackage;
+	/**
+	 * @type {import('semver').ReleaseType[]}
+	 */
 	const availableIncrements = isMainBranch
 		? ['patch', 'minor']
 		: semverPreRelease(version)
-		? ['prerelease']
-		: ['premajor', 'preminor', 'prepatch'];
+			? ['prerelease']
+			: ['premajor', 'preminor', 'prepatch'];
 
 	const { newVersion } = await inquirer.prompt([
 		{
@@ -104,7 +113,13 @@ async function getNewVersion(mainPackage, isMainBranch) {
 	return newVersion;
 }
 
-async function addStubChangelogEntry(version, repo, changelog, includedPRs) {
+/**
+ * @param {string} version
+ * @param {string} changelog
+ * @param {import('./release-helpers.js').IncludedPR[]} includedPRs
+ * @return {Promise<void>}
+ */
+async function addStubChangelogEntry(version, changelog, includedPRs) {
 	const { currentVersion, index } = getFirstChangelogEntry(changelog);
 	if (currentVersion === version) {
 		console.error(
@@ -128,13 +143,22 @@ breaking changes in the release while the tests are running.`)
 	);
 }
 
+/**
+ * @param {string} version
+ * @param {import('./release-helpers.js').IncludedPR[]} prs
+ * @return {string}
+ */
 function getNewLogEntry(version, prs) {
 	if (prs.length === 0) {
 		throw new Error(`Release does not contain any PRs`);
 	}
 	const firstPr = prs[0].pr;
 	const date = new Date().toISOString().slice(0, 10);
-	const { minor, patch } = semverParse(version);
+	const parsedVersion = semverParse(version);
+	if (!parsedVersion) {
+		throw new Error(`Could not parse version ${version}.`);
+	}
+	const { minor, patch } = parsedVersion;
 	let sections = getDummyLogSection('Bug Fixes', firstPr);
 	if (patch === 0) {
 		sections = getDummyLogSection('Features', firstPr) + sections;
@@ -156,6 +180,11 @@ ${prs
 	.join('\n')}`;
 }
 
+/**
+ * @param {string} headline
+ * @param {number} pr
+ * @return {string}
+ */
 function getDummyLogSection(headline, pr) {
 	return `### ${headline}
 
@@ -164,6 +193,9 @@ function getDummyLogSection(headline, pr) {
 `;
 }
 
+/**
+ * @return {Promise<void>}
+ */
 async function installDependenciesAndLint() {
 	await Promise.all([
 		runWithEcho('npm', ['ci', '--ignore-scripts']),
@@ -172,6 +204,10 @@ async function installDependenciesAndLint() {
 	await runWithEcho('npm', ['run', 'ci:lint']);
 }
 
+/**
+ * @param {string} version
+ * @return {Promise<void>}
+ */
 async function waitForChangelogUpdate(version) {
 	let changelogEntry = '';
 	while (true) {
@@ -195,6 +231,13 @@ async function waitForChangelogUpdate(version) {
 	}
 }
 
+/**
+ * @param {Record<string,any>} mainPackage
+ * @param {Record<string,any>} mainLockFile
+ * @param {Record<string,any>} browserPackage
+ * @param {string} newVersion
+ * @return {Promise<Awaited<void>[]>}
+ */
 function updatePackages(mainPackage, mainLockFile, browserPackage, newVersion) {
 	return Promise.all([
 		writeFile(MAIN_PACKAGE, updatePackageVersionAndGetString(mainPackage, newVersion)),
@@ -203,17 +246,33 @@ function updatePackages(mainPackage, mainLockFile, browserPackage, newVersion) {
 	]);
 }
 
+/**
+ * @param {Record<string,any>} packageContent
+ * @param {string} version
+ * @return {string}
+ */
 function updatePackageVersionAndGetString(packageContent, version) {
 	packageContent.version = version;
 	return JSON.stringify(packageContent, null, 2) + '\n';
 }
 
+/**
+ * @param {Record<string,any>} lockfileContent
+ * @param {string} version
+ * @return {string}
+ */
 function updateLockFileVersionAndGetString(lockfileContent, version) {
 	lockfileContent.version = version;
 	lockfileContent.packages[''].version = version;
 	return JSON.stringify(lockfileContent, null, 2) + '\n';
 }
 
+/**
+ * @param {string} newVersion
+ * @param {string} gitTag
+ * @param {boolean} isMainBranch
+ * @return {Promise<void>}
+ */
 async function commitChanges(newVersion, gitTag, isMainBranch) {
 	await runWithEcho('git', [
 		'add',
@@ -224,13 +283,15 @@ async function commitChanges(newVersion, gitTag, isMainBranch) {
 	]);
 	await runWithEcho('git', ['commit', '-m', newVersion]);
 	await runWithEcho('git', ['tag', gitTag]);
-	isMainBranch && (await runWithEcho('git', ['branch', DOCUMENTATION_BRANCH, '--force', gitTag]));
 }
 
+/**
+ * @param {string} gitTag
+ * @return {Promise<unknown>}
+ */
 function pushChanges(gitTag) {
 	return Promise.all([
 		runWithEcho('git', ['push', 'origin', 'HEAD']),
-		runWithEcho('git', ['push', 'origin', gitTag]),
-		isMainBranch && runWithEcho('git', ['push', '--force', 'origin', DOCUMENTATION_BRANCH])
+		runWithEcho('git', ['push', 'origin', gitTag])
 	]);
 }

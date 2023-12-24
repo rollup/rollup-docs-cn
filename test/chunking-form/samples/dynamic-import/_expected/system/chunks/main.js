@@ -3,12 +3,12 @@ System.register([], (function (exports, module) {
 	return {
 		execute: (function () {
 
-			const sharedValue = exports('s', 'shared');
+			const sharedValue = exports("s", 'shared');
 
 			assert.equal(sharedValue, 'shared');
 
-			const promise = exports('p', module.import('./other.js').then(result =>
-				assert.deepEqual(result, { value: 'shared' })
+			const promise = exports("p", module.import('./other.js').then(result =>
+				assert.deepEqual(result, { value: 'shared', extra: 'extra' })
 			));
 
 		})
