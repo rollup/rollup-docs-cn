@@ -77,13 +77,6 @@ const helpOptionLines = splitHelpText.filter(line => line.startsWith('-'));
 
 const cliFlagsText = commandReferenceText
 	.split('\n## ')
-<<<<<<< HEAD
-	.find(text => text.startsWith('命令行标志'));
-const optionListLines = cliFlagsText
-	.match(/```\n([\S\s]*?)\n```/)[1]
-	.split('\n')
-	.filter(line => line.startsWith('-'));
-=======
 	.find(text => text.startsWith('Command line flags'));
 if (!cliFlagsText) {
 	throw new Error('Could not find "Command line flags" section.');
@@ -93,7 +86,6 @@ if (!cliMarkdownSection) {
 	throw new Error('Could not find markdown section in "Command line flags" section.');
 }
 const optionListLines = cliMarkdownSection[1].split('\n').filter(line => line.startsWith('-'));
->>>>>>> 7403a6a26f64f1f49e02040f92caa398ba1a994c
 
 for (const [index, line] of helpOptionLines.entries()) {
 	const optionListLine = optionListLines[index];

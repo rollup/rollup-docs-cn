@@ -20,12 +20,6 @@
 		<StatusMessage v-else-if="error" :message="error" isError />
 		<span v-else-if="hasWarnings">
 			<span class="repl-icon-attention" />
-<<<<<<< HEAD
-			Rollup 执行完成但出现警告：
-			<ul class="warning-list">
-				<li v-for="(warning, i) in warnings" :key="i" class="warning">
-					<StatusMessage :message="warning" />
-=======
 			Rollup completed with warnings:
 			<ul class="log-list">
 				<li v-for="([, log], i) in logs" :key="i" class="log">
@@ -34,11 +28,10 @@
 			</ul>
 		</span>
 		<span v-else-if="logs.length > 0">
-			Rollup completed with logs:
+			Rollup 执行完成但出现警告：
 			<ul class="log-list">
 				<li v-for="([, log], i) in logs" :key="i" class="log">
 					<StatusMessage :message="log" />
->>>>>>> 7403a6a26f64f1f49e02040f92caa398ba1a994c
 				</li>
 			</ul>
 		</span>
