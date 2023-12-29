@@ -6,8 +6,20 @@
   <a href="https://www.npmjs.com/package/rollup">
     <img src="https://img.shields.io/npm/v/rollup.svg" alt="npm version" >
   </a>
+<<<<<<< HEAD
+=======
+  <a href="https://nodejs.org/en/about/previous-releases">
+    <img src="https://img.shields.io/node/v/rollup.svg" alt="node compatibility">
+  </a>
+  <a href="https://packagephobia.now.sh/result?p=rollup">
+    <img src="https://packagephobia.now.sh/badge?p=rollup" alt="install size" >
+  </a>
+  <a href="https://codecov.io/gh/rollup/rollup">
+    <img src="https://codecov.io/gh/rollup/rollup/graph/badge.svg" alt="code coverage" >
+  </a>
+>>>>>>> d8b4aa689fac4e4460d5a923bb538e197a58f9d0
   <a href="#backers" alt="sponsors on Open Collective">
-      <img src="https://opencollective.com/rollup/backers/badge.svg" alt="backers" >
+    <img src="https://opencollective.com/rollup/backers/badge.svg" alt="backers" >
   </a> 
   <a href="#sponsors" alt="Sponsors on Open Collective">
     <img src="https://opencollective.com/rollup/sponsors/badge.svg" alt="sponsors" >
@@ -15,8 +27,13 @@
   <a href="https://github.com/rollup/rollup/blob/master/LICENSE.md">
     <img src="https://img.shields.io/npm/l/rollup.svg" alt="license">
   </a>
+<<<<<<< HEAD
   <a href='https://rollup-docs-cn.netlify.app'>
     <img src='https://api.netlify.com/api/v1/badges/f1abf685-0ad9-49d6-a16f-02b2ee7ba2a7/deploy-status'>
+=======
+  <a href='https://is.gd/rollup_chat?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge'>
+    <img src='https://img.shields.io/discord/466787075518365708?color=778cd1&label=chat' alt='Join the chat at https://is.gd/rollup_chat'>
+>>>>>>> d8b4aa689fac4e4460d5a923bb538e197a58f9d0
   </a>
 </p>
 
