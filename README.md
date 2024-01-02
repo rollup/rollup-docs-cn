@@ -24,13 +24,11 @@
   <a href="https://github.com/rollup/rollup/blob/master/LICENSE.md">
     <img src="https://img.shields.io/npm/l/rollup.svg" alt="license">
   </a>
-<<<<<<< HEAD
   <a href='https://rollup-docs-cn.netlify.app'>
     <img src='https://api.netlify.com/api/v1/badges/f1abf685-0ad9-49d6-a16f-02b2ee7ba2a7/deploy-status'>
-=======
+  </a>
   <a href='https://is.gd/rollup_chat?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge'>
     <img src='https://img.shields.io/discord/466787075518365708?color=778cd1&label=chat' alt='Join the chat at https://is.gd/rollup_chat'>
->>>>>>> 347a34745b2679c1192535db3c0f60889861d3ad
   </a>
 </p>
 
