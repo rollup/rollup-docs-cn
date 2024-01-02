@@ -6,8 +6,6 @@
   <a href="https://www.npmjs.com/package/rollup">
     <img src="https://img.shields.io/npm/v/rollup.svg" alt="npm version" >
   </a>
-<<<<<<< HEAD
-=======
   <a href="https://nodejs.org/en/about/previous-releases">
     <img src="https://img.shields.io/node/v/rollup.svg" alt="node compatibility">
   </a>
@@ -17,7 +15,6 @@
   <a href="https://codecov.io/gh/rollup/rollup">
     <img src="https://codecov.io/gh/rollup/rollup/graph/badge.svg" alt="code coverage" >
   </a>
->>>>>>> 347a34745b2679c1192535db3c0f60889861d3ad
   <a href="#backers" alt="sponsors on Open Collective">
     <img src="https://opencollective.com/rollup/backers/badge.svg" alt="backers" >
   </a> 
