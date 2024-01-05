@@ -1851,7 +1851,7 @@ const hello = require('your-lib').hello;
 const { hello } = require('your-lib');
 ```
 
-问题是，如果你使用 `named` 导出，但 _也_ 会有一个 `default` 导出，用户将不得不类似这样做来使用默认到处：
+问题是，如果你使用 `named` 导出，但 _也_ 会有一个 `default` 导出，用户将不得不类似这样做来使用默认导出：
 
 ```js
 // your-lib 包入口
