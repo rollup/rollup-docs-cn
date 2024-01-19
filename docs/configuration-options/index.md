@@ -2329,7 +2329,7 @@ const illegalAccess = foo.quux.tooDeep;
 ```js
 function otherFn() {
 	// 尽管该函数时在 try 语句中使用，但是下列代码
-	// 然会被当做无副作用而被移除
+	// 依然会被当做无副作用而被移除
 	Object.create(null);
 }
 
