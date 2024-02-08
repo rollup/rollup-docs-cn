@@ -109,15 +109,21 @@ export default {
 如果你想将一组文件转换为另一种格式，并同时保持文件结构和导出签名，推荐的方法是将每个文件变成一个入口文件，而不是使用 [`output.preserveModules`](#output-preservemodules)，后者可能会导出被除屑优化，并产生由插件创建的虚拟文件。你可以动态地处理，例如通过 `glob` 包。
 
 ```js
-import glob from 'glob';
+import { globSync } from 'glob';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export default {
 	input: Object.fromEntries(
+<<<<<<< HEAD
 		glob.sync('src/**/*.js').map(file => [
 			// 这里将删除 `src/` 以及每个文件的扩展名。
 			// 因此，例如 src/nested/foo.js 会变成 nested/foo
+=======
+		globSync('src/**/*.js').map(file => [
+			// This remove `src/` as well as the file extension from each
+			// file, so e.g. src/nested/foo.js becomes nested/foo
+>>>>>>> 63a91a663a33ba06025c6838e5bbeb794df93af7
 			path.relative(
 				'src',
 				file.slice(0, file.length - path.extname(file).length)
