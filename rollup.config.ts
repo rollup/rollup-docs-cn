@@ -48,7 +48,7 @@ const nodePlugins: readonly Plugin[] = [
 		ignoreTryCatch: false,
 		include: 'node_modules/**'
 	}),
-	typescript(),
+	typescript({ skipLibCheck: true }),
 	cleanBeforeWrite('dist'),
 	externalNativeImport()
 ];
@@ -148,7 +148,7 @@ export default async function (
 			nodeResolve({ browser: true }),
 			json(),
 			commonjs(),
-			typescript(),
+			typescript({ skipLibCheck: true }),
 			terser({ module: true, output: { comments: 'some' } }),
 			collectLicensesBrowser(),
 			writeLicenseBrowser(),

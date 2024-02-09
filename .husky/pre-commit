@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
 npx zhlint docs/**/*.md --fix
 if [ \"$SKIP_BUILD\" != \"true\" ]; then npm run build:docs; fi
 git add -A
+=======
+npx lint-staged
+>>>>>>> 8b57b74a242d5fd0b37e8bf1b6f21fc7e55231b1
