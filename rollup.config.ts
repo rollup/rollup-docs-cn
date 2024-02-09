@@ -89,7 +89,7 @@ export default async function (
 			addCliEntry(),
 			esmDynamicImport(),
 			!command.configTest && collectLicenses(),
-			copyNodeTypes()
+			!command.configTest && copyNodeTypes()
 		],
 		strictDeprecations: true,
 		treeshake
