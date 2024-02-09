@@ -39,14 +39,14 @@
     "build:wasm": "wasm-pack build rust/bindings_wasm --out-dir ../../wasm --target web --no-pack && shx rm wasm/.gitignore",
     "build:wasm:node": "wasm-pack build rust/bindings_wasm --out-dir ../../wasm-node --target nodejs --no-pack && shx rm wasm-node/.gitignore",
     "update:napi": "npm run build:napi && npm run build:copy-native",
-    "build:js": "rollup --config rollup.config.ts --configPlugin typescript --forceExit",
-    "build:js:node": "rollup --config rollup.config.ts --configPlugin typescript --configIsBuildNode --forceExit",
+    "build:js": "rollup --config rollup.config.ts --configPlugin 'typescript={skipLibCheck:true}' --forceExit",
+    "build:js:node": "rollup --config rollup.config.ts --configPlugin 'typescript={skipLibCheck:true}' --configIsBuildNode --forceExit",
     "build:prepare": "concurrently -c green,blue \"npm run build:napi -- --release\" \"npm:build:js:node\" && npm run build:copy-native",
     "update:js": "npm run build:js && npm run build:copy-native",
     "build:copy-native": "shx mkdir -p dist && shx cp rollup.*.node dist/",
     "dev": "vitepress dev docs",
-    "build:cjs": "rollup --config rollup.config.ts --configPlugin typescript --configTest --forceExit",
-    "build:bootstrap": "shx mv dist dist-build && node dist-build/bin/rollup --config rollup.config.ts --configPlugin typescript --forceExit && shx rm -rf dist-build",
+    "build:cjs": "rollup --config rollup.config.ts --configPlugin 'typescript={skipLibCheck:true}' --configTest --forceExit",
+    "build:bootstrap": "shx mv dist dist-build && node dist-build/bin/rollup --config rollup.config.ts --configPlugin 'typescript={skipLibCheck:true}' --forceExit && shx rm -rf dist-build",
     "build:docs": "vitepress build docs",
     "build:ast-converters": "node scripts/generate-ast-converters.js",
     "preview:docs": "vitepress preview docs",
@@ -84,7 +84,7 @@
     "test:only": "mocha test/test.js",
     "test:typescript": "shx rm -rf test/typescript/dist && shx cp -r dist test/typescript/ && tsc --noEmit -p test/typescript && tsc --noEmit && tsc --noEmit -p scripts",
     "test:browser": "mocha test/browser/index.js",
-    "watch": "rollup --config rollup.config.ts --configPlugin typescript --watch"
+    "watch": "rollup --config rollup.config.ts --configPlugin 'typescript={skipLibCheck:true}' --watch"
   },
   "repository": "rollup/rollup",
   "keywords": [
