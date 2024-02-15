@@ -683,6 +683,8 @@ type AddonFunction = (chunk: RenderedChunk) => string | Promise<string>;
 
 type OutputPluginOption = MaybePromise<OutputPlugin | NullValue | false | OutputPluginOption[]>;
 
+type HashCharacters = 'base64' | 'base36' | 'hex';
+
 export interface OutputOptions {
 	amd?: AmdOptions;
 	assetFileNames?: string | ((chunkInfo: PreRenderedAsset) => string);
@@ -708,6 +710,7 @@ export interface OutputOptions {
 	freeze?: boolean;
 	generatedCode?: GeneratedCodePreset | GeneratedCodeOptions;
 	globals?: GlobalsOption;
+	hashCharacters?: HashCharacters;
 	hoistTransitiveImports?: boolean;
 	indent?: string | boolean;
 	inlineDynamicImports?: boolean;
@@ -722,6 +725,7 @@ export interface OutputOptions {
 	plugins?: OutputPluginOption;
 	preserveModules?: boolean;
 	preserveModulesRoot?: string;
+	reexportProtoFromExternal?: boolean;
 	sanitizeFileName?: boolean | ((fileName: string) => string);
 	sourcemap?: boolean | 'inline' | 'hidden';
 	sourcemapBaseUrl?: string;
@@ -758,6 +762,7 @@ export interface NormalizedOutputOptions {
 	freeze: boolean;
 	generatedCode: NormalizedGeneratedCodeOptions;
 	globals: GlobalsOption;
+	hashCharacters: HashCharacters;
 	hoistTransitiveImports: boolean;
 	indent: true | string;
 	inlineDynamicImports: boolean;
@@ -772,6 +777,7 @@ export interface NormalizedOutputOptions {
 	plugins: OutputPlugin[];
 	preserveModules: boolean;
 	preserveModulesRoot: string | undefined;
+	reexportProtoFromExternal: boolean;
 	sanitizeFileName: (fileName: string) => string;
 	sourcemap: boolean | 'inline' | 'hidden';
 	sourcemapBaseUrl: string | undefined;
