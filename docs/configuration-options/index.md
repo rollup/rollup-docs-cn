@@ -1064,7 +1064,7 @@ import('external2').then(console.log);
   	.then(console.log);
   ```
 
-  于 `"auto"` 类似，如果不需要命名空间，Rollup 将使用一个更简单的辅助函数：
+  与 `"auto"` 类似，如果不需要命名空间，Rollup 将使用一个更简单的辅助函数：
 
   ```js
   // 输入
