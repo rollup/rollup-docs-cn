@@ -109,15 +109,21 @@ export default {
 如果你想将一组文件转换为另一种格式，并同时保持文件结构和导出签名，推荐的方法是将每个文件变成一个入口文件，而不是使用 [`output.preserveModules`](#output-preservemodules)，后者可能会导出被除屑优化，并产生由插件创建的虚拟文件。你可以动态地处理，例如通过 `glob` 包。
 
 ```js
-import glob from 'glob';
+import { globSync } from 'glob';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export default {
 	input: Object.fromEntries(
+<<<<<<< HEAD
 		glob.sync('src/**/*.js').map(file => [
 			// 这里将删除 `src/` 以及每个文件的扩展名。
 			// 因此，例如 src/nested/foo.js 会变成 nested/foo
+=======
+		globSync('src/**/*.js').map(file => [
+			// This remove `src/` as well as the file extension from each
+			// file, so e.g. src/nested/foo.js becomes nested/foo
+>>>>>>> 67d7f102750e5a655a6a69a0bd04260e83bbb487
 			path.relative(
 				'src',
 				file.slice(0, file.length - path.extname(file).length)
@@ -537,10 +543,17 @@ export default {
 
 该选项的值是一个匹配模式，用于自定义构建结果中的静态资源名称，或者值为一个函数，对每个资源调用以返回匹配模式。这种模式支持以下的占位符：
 
+<<<<<<< HEAD
 - `[extname]`：包含点的静态资源文件扩展名，例如 `.css`。
 - `[ext]`：不包含点的文件扩展名，例如 `css`。
 - `[hash]`：基于静态资源内容的哈希。也可以通过例如 `[hash:10]` 设置一个特定的哈希值长度。
 - `[name]`：静态资源的名称，不包含扩展名。
+=======
+- `[extname]`: The file extension of the asset including a leading dot, e.g. `.css`.
+- `[ext]`: The file extension without a leading dot, e.g. `css`.
+- `[hash]`: A hash based on the content of the asset. You can also set a specific hash length via e.g. `[hash:10]`. By default, it will create a base-64 hash. If you need a reduced character sets, see [`output.hashCharacters`](#output-hashcharacters)
+- `[name]`: The file name of the asset excluding any extension.
+>>>>>>> 67d7f102750e5a655a6a69a0bd04260e83bbb487
 
 正斜杠 `/` 可以用来划分文件到子目录。当值为函数时，`assetInfo` 是 [`generateBundle`](../plugin-development/index.md#generatebundle) 中没有 `fileName` 的简化版本。另见[`output.chunkFileNames`](#output-chunkfilenames)，[`output.entryFileNames`](#output-entryfilenames)。
 
@@ -584,9 +597,15 @@ export default {
 
 该选项用于对代码分割中产生的 chunk 自定义命名，其值也可以是一个函数，对每个 chunk 调用以返回匹配模式。这种模式支持以下的占位符：
 
+<<<<<<< HEAD
 - `[format]`：输出（output）选项中定义的格式（format），例如 `es` 或 `cjs`。
 - `[hash]`：仅基于最终生成的 chunk 内容的哈希值，其中包括 [`renderChunk`](../plugin-development/index.md#renderchunk) 中的转换部分和其依赖文件哈希值。你也可以通过例如 `[hash:10]` 设置一个特定的哈希值长度。
 - `[name]`：chunk 的名称。它可以通过 [`output.manualChunks`](#output-manualchunks) 选项显示的设置，或者通过插件调用 [`this.emitFile`](../plugin-development/index.md#this-emitfile) 设置。否则，它将会根据 chunk 的内容确定。
+=======
+- `[format]`: The rendering format defined in the output options, e.g. `es` or `cjs`.
+- `[hash]`: A hash based only on the content of the final generated chunk, including transformations in [`renderChunk`](../plugin-development/index.md#renderchunk) and any referenced file hashes. You can also set a specific hash length via e.g. `[hash:10]`. By default, it will create a base-64 hash. If you need a reduced character sets, see [`output.hashCharacters`](#output-hashcharacters)
+- `[name]`: The name of the chunk. This can be explicitly set via the [`output.manualChunks`](#output-manualchunks) option or when the chunk is created by a plugin via [`this.emitFile`](../plugin-development/index.md#this-emitfile). Otherwise, it will be derived from the chunk contents.
+>>>>>>> 67d7f102750e5a655a6a69a0bd04260e83bbb487
 
 正斜杠 `/` 可以用来划分文件到子目录。当值为函数时，`chunkInfo` 是 [`generateBundle`](../plugin-development/index.md#generatebundle) 的简化版本，其中不包含依赖于文件名的属性，且没有关于所渲染模块的信息，因为只有在文件名生成之后才会渲染。另见 [`output.assetFileNames`](#output-assetfilenames)，[`output.entryFileNames`](#output-entryfilenames)。
 
@@ -660,9 +679,15 @@ Promise.resolve()
 
 该选项用于指定 chunks 的入口文件模式，其值也可以是一个函数，对每个入口 chunk 调用以返回匹配模式。这种模式支持以下的占位符：
 
+<<<<<<< HEAD
 - `[format]`：输出（output）选项中定义的格式（format），例如 `es` 或 `cjs`。
 - `[hash]`：仅基于最终生成的入口 chunk 内容的哈希值，其中包括 [`renderChunk`](../plugin-development/index.md#renderchunk) 中的转换部分和其依赖文件哈希值。你也可以通过例如 `[hash:10]` 设置一个特定的哈希值长度。
 - `[name]`：入口文件的文件名（不包含扩展名），除非当入口文件为对象时，才用来定义不同的名称。
+=======
+- `[format]`: The rendering format defined in the output options, e.g. `es` or `cjs`.
+- `[hash]`: A hash based only on the content of the final generated entry chunk, including transformations in [`renderChunk`](../plugin-development/index.md#renderchunk) and any referenced file hashes. You can also set a specific hash length via e.g. `[hash:10]`. By default, it will create a base-64 hash. If you need a reduced character sets, see [`output.hashCharacters`](#output-hashcharacters)
+- `[name]`: The file name (without extension) of the entry point, unless the object form of input was used to define a different name.
+>>>>>>> 67d7f102750e5a655a6a69a0bd04260e83bbb487
 
 正斜杠 `/` 可以用来划分文件到子目录。当值为函数时，`chunkInfo` 是 [`generateBundle`](../plugin-development/index.md#generatebundle) 的简化版本，其中不包含依赖于文件名的属性，且没有关于所渲染模块的信息，因为只有在文件名生成之后才会渲染。但是，你可以访问包含 `moduleIds` 的列表。另见 [`output.assetFileNames`](#output-assetfilenames)，[`output.chunkFileNames`](#output-chunkfilenames)。
 
@@ -863,7 +888,25 @@ const foo = 42;
 exports.foo = foo;
 ```
 
+<<<<<<< HEAD
 ### output.hoistTransitiveImports {#output-hoisttransitiveimports}
+=======
+### output.hashCharacters
+
+|          |                                 |
+| -------: | :------------------------------ |
+|    Type: | `"base64" \| "base32" \| "hex"` |
+|     CLI: | `--hashCharacters <name>`       |
+| Default: | `"base64"`                      |
+
+This determines the character set that Rollup is allowed to use in file hashes.
+
+- the default `"base64"` will use url-safe base-64 hashes with potential characters `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_`.
+- `"base36"` will only use lower-case letters and numbers `abcdefghijklmnopqrstuvwxyz0123456789`.
+- `"hex"` will create hexadecimal hashes with characters `abcdef0123456789`.
+
+### output.hoistTransitiveImports
+>>>>>>> 67d7f102750e5a655a6a69a0bd04260e83bbb487
 
 |        |                                                          |
 | -----: | :------------------------------------------------------- |
@@ -1479,10 +1522,17 @@ export default {
 
 该选项指定 sourcemap 的模式，或者是一个根据每个 sourcemap 调用以返回此类模式的函数。该模式支持以下占位符：
 
+<<<<<<< HEAD
 - `[format]`：在输出选项中定义的渲染格式，例如 `es` 或 `cjs`。
 - `[hash]`：一个仅基于最终生成的 sourcemap 内容的哈希值。也可以通过例如 `[hash:10]` 设置特定的哈希长度。
 - `[chunkhash]`：与对应生成的 chunk（如果有的话）使用的哈希值相同。
 - `[name]`：除非使用输入的对象形式定义了不同的名称，否则该文件名（不包括扩展名）就是入口起点的名称。
+=======
+- `[format]`: The rendering format defined in the output options, e.g. `es` or `cjs`.
+- `[hash]`: A hash based only on the content of the final generated sourcemap. You can also set a specific hash length via e.g. `[hash:10]`. By default, it will create a base-64 hash. If you need a reduced character sets, see [`output.hashCharacters`](#output-hashcharacters)
+- `[chunkhash]`: The same hash as the one used for the corresponding generated chunk (if any).
+- `[name]`: The file name (without extension) of the entry point, unless the object form of input was used to define a different name.
+>>>>>>> 67d7f102750e5a655a6a69a0bd04260e83bbb487
 
 正斜杠 `/` 可以用来将文件放在子目录中。当使用函数时，`chunkInfo` 是 [`generateBundle`](../plugin-development/index.md#generatebundle) 中的简化版本，不包含依赖于文件名的属性，也没有关于渲染模块的信息，因为渲染只在生成文件名之后发生。但是，你可以访问其中的 `moduleIds` 列表。另请参见 [`output.assetFileNames`](#output-assetfilenames)，[`output.chunkFileNames`](#output-chunkfilenames)。
 
@@ -1945,7 +1995,56 @@ export default {
 
 该选项决定在 UMD bundle 中生成一个额外的 `noConflict` 导出。在 IIFE 场景中调用此方法时，该方法将返回打包的导出，同时将相应的全局变量恢复为其先前的值。
 
+<<<<<<< HEAD
 ### output.sanitizeFileName {#output-sanitizefilename}
+=======
+### output.reexportProtoFromExternal
+
+|  |  |
+| --: | :-- |
+| Type: | `boolean` |
+| CLI: | `--reexportProtoFromExternal`/`--no-reexportProtoFromExternal` |
+| Default: | `true` |
+
+This option is only effective when [`output.format`](#output-format) is set to one of `['amd', 'cjs', 'iife', 'umd']` and [`output.externalLiveBindings`](#output-externallivebindings) is set to false.
+
+For maximum compatibility, Rollup reexports `__proto__` from an external module by default. However, for common use cases, it is strongly recommended to set this value to false as it effectively reduces the output size.
+
+```js
+// the input file
+export * from 'rollup';
+```
+
+```js
+// the output file if the output.format is cjs
+'use strict';
+
+// reexportProtoFromExternal is true
+var rollup = require('rollup');
+
+Object.prototype.hasOwnProperty.call(rollup, '__proto__') &&
+	!Object.prototype.hasOwnProperty.call(exports, '__proto__') &&
+	Object.defineProperty(exports, '__proto__', {
+		enumerable: true,
+		value: rollup['__proto__']
+	});
+
+Object.keys(rollup).forEach(function (k) {
+	if (k !== 'default' && !Object.prototype.hasOwnProperty.call(exports, k))
+		exports[k] = rollup[k];
+});
+
+// reexportProtoFromExternal is false
+var rollup = require('rollup');
+
+Object.keys(rollup).forEach(function (k) {
+	if (k !== 'default' && !Object.prototype.hasOwnProperty.call(exports, k))
+		exports[k] = rollup[k];
+});
+```
+
+### output.sanitizeFileName
+>>>>>>> 67d7f102750e5a655a6a69a0bd04260e83bbb487
 
 |        |                                            |
 | -----: | :----------------------------------------- |
