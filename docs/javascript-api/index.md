@@ -339,7 +339,7 @@ export default {
 
 ## 访问解析器 {#accessing-the-parser}
 
-为了使用 Rollup 的解析器解析任意代码，插件可以使用 [`this.parse`](../plugin-development/index.md#this-parse) 。若要在 Rollup 构建之外使用此功能，解析器也会作为单独的导出文件公开。它的签名与 `this.parse` 相同：
+为了使用 Rollup 的解析器解析任意代码，插件可以使用 [`this.parse`](../plugin-development/index.md#this-parse) 。为了在 Rollup 构建的上下文之外使用这个功能，解析器也作为一个单独的导出项暴露出来。它的签名与 `this.parse` 相同：
 
 ```js
 import { parseAst } from 'rollup/parseAst';
