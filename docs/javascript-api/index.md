@@ -337,9 +337,9 @@ export default {
 };
 ```
 
-## Accessing the parser
+## 访问解析器 {#accessing-the-parser}
 
-In order to parse arbitrary code using Rollup's parser, plugins can use [`this.parse`](../plugin-development/index.md#this-parse). To use this functionality outside the context of a Rollup build, the parser is also exposed as a separate export. It has the same signature as `this.parse`:
+为了使用 Rollup 的解析器解析任意代码，插件可以使用 [`this.parse`](../plugin-development/index.md#this-parse) 。为了在 Rollup 构建的上下文之外使用这个功能，解析器也作为一个单独的导出项暴露出来。它的签名与 `this.parse` 相同：
 
 ```js
 import { parseAst } from 'rollup/parseAst';
@@ -370,7 +370,7 @@ assert.deepEqual(
 );
 ```
 
-There is also an asynchronous version that parses in a different thread in the non-wasm builds of Rollup:
+在 Rollup 的非 wasm 版本中，还有一个异步版本在不同的线程中进行解析：
 
 ```js
 import { parseAstAsync } from 'rollup/parseAst';
