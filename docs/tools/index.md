@@ -259,11 +259,7 @@ import { rollup } from "https://esm.sh/@rollup/browser";
 const bundle = await rollup({ //...
 ```
 
-<<<<<<< HEAD
-或者你可以从 npm 安装 rollup 并使用 [node 兼容层](https://deno.land/std@0.110.0/node)：
-=======
-But it is not suitable for complex compiling. Alternatively you can install rollup from npm:
->>>>>>> 27690dc0830adf30e1fff30d14887da0f5480c11
+但是对于复杂的编译任务来说，它并不适用。或者你可以从 npm 安装 rollup：
 
 ```js
 import { rollup } from "npm:rollup";
@@ -271,8 +267,4 @@ import { rollup } from "npm:rollup";
 const bundle = await rollup({ //...
 ```
 
-<<<<<<< HEAD
-请确保使用 `--unstable` 标志运行 deno。如果你计划使用 `bundle.write()`，请不要忘记 `--allow-read` 和 `--allow-write`。
-=======
-Notice: Deno will request some permissions when running Rollup.
->>>>>>> 27690dc0830adf30e1fff30d14887da0f5480c11
+请注意：在运行 Rollup 的时候，Deno 会请求一些权限。
