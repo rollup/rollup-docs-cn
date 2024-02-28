@@ -90,6 +90,7 @@ export default {
 		externalImportAttributes,
 		footer,
 		generatedCode,
+		hashCharacters,
 		hoistTransitiveImports,
 		inlineDynamicImports,
 		interop,
@@ -390,6 +391,7 @@ export default {
 --failAfterWarnings         如果生成的构建产生警告，则退出并显示错误
 --filterLogs <filter>       过滤日志信息
 --footer <text>             在产物底部插入的代码（位于包装器之外）
+--forceExit                 当任务完成后，强制结束进程
 --no-freeze                 不冻结命名空间对象
 --generatedCode <preset>    使用哪些代码特性（es5/es2015）
 --generatedCode.arrowFunctions 在生成的代码中使用箭头函数
@@ -397,6 +399,7 @@ export default {
 --generatedCode.objectShorthand 在生成的代码中使用简写属性
 --no-generatedCode.reservedNamesAsProps 始终引用保留名称作为 props
 --generatedCode.symbols     在生成的代码中使用符号
+--hashCharacters <name>     使用指定的字符集来生成文件的哈希值
 --no-hoistTransitiveImports 不将中转导入提升到入口块中
 --no-indent                 不缩进结果
 --inlineDynamicImports      使用动态导入时创建单次打包
@@ -413,6 +416,7 @@ export default {
 --preserveModules           保留模块结构
 --preserveModulesRoot       将保留的模块放置在根路径下的此路径下
 --preserveSymlinks          解析文件时不要跟随符号链接
+--no-reexportProtoFromExternal 在使用重新导出星号（'*'）时，忽略 __proto__
 --no-sanitizeFileName       不要替换文件名中的无效字符
 --shimMissingExports        为丢失的导出创建卡扣变量
 --silent                    不打印警告
@@ -510,6 +514,7 @@ npm run build -- --environment BUILD:development
 ```shell
 rollup -c --filterLogs code:EVAL
 ```
+
 仅会展示 `log.code === 'EVAL'` 的日志消息。可以通过使用逗号分隔它们或多次使用该选项来指定多个过滤器：
 
 ```shell

@@ -340,11 +340,11 @@ interface SourceDescription {
 
 ### onLog
 
-|                |                                                        |
-| -------------: | :----------------------------------------------------- |
-|          类型： | `(level: LogLevel, log: RollupLog) => boolean \| null` |
-|          类别： | sync, sequential                                       |
-| 上一个/下一个钩子： | 此钩子可以在任何时候触发。                |
+|  |  |
+| --: | :-- |
+| 类型： | `(level: LogLevel, log: RollupLog) => boolean \| null` |
+| 类别： | sync, sequential |
+| 上一个/下一个钩子： | 此钩子可以在任何时候触发。 |
 
 请参阅 [`onLog`](../configuration-options/index.md#onlog) 选项以了解可用的 `Loglevel` 值和 `RollupLog` 类型。
 
@@ -1215,8 +1215,8 @@ function plugin() {
 
 ### this.emitFile
 
-|       |                                                         |
-| ----: | :------------------------------------------------------ |
+|  |  |
+| --: | :-- |
 | 类型: | `(emittedFile: EmittedChunk \| EmittedPrebuiltChunk \| EmittedAsset) => string` |
 
 ```typescript
@@ -1660,8 +1660,8 @@ export default function dynamicChunkLogsPlugin() {
 
 ### this.parse
 
-|       |                                                            |
-| ----: | :--------------------------------------------------------- |
+|        |                                                            |
+| -----: | :--------------------------------------------------------- |
 | 类型： | `(code: string, options?: ParseOptions) => ESTree.Program` |
 
 ```typescript
@@ -2109,7 +2109,7 @@ function dependentPlugin() {
 			if (!parentPlugin) {
 				// 或者如果是可选的，可以静默处理
 				throw new Error(
-					`此插件依赖于 “${parentName}” 插件。`
+					`This plugin depends on the "${parentName}" plugin.`
 				);
 			}
 			// 现在你可以在后续钩子中访问 API 方法

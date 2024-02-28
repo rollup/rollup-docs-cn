@@ -109,13 +109,13 @@ export default {
 如果你想将一组文件转换为另一种格式，并同时保持文件结构和导出签名，推荐的方法是将每个文件变成一个入口文件，而不是使用 [`output.preserveModules`](#output-preservemodules)，后者可能会导出被除屑优化，并产生由插件创建的虚拟文件。你可以动态地处理，例如通过 `glob` 包。
 
 ```js
-import glob from 'glob';
+import { globSync } from 'glob';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export default {
 	input: Object.fromEntries(
-		glob.sync('src/**/*.js').map(file => [
+		globSync('src/**/*.js').map(file => [
 			// 这里将删除 `src/` 以及每个文件的扩展名。
 			// 因此，例如 src/nested/foo.js 会变成 nested/foo
 			path.relative(
@@ -394,11 +394,11 @@ buildWithCache()
 
 ### logLevel {#loglevel}
 
-|          |                        |
-| -------: | :--------------------- |
-|    类型：| `LogLevel \| "silent"` |
-|     CLI: | `--logLevel <level>`   |
-|    默认：| `"info"`               |
+|        |                        |
+| -----: | :--------------------- |
+| 类型： | `LogLevel \| "silent"` |
+|   CLI: | `--logLevel <level>`   |
+| 默认： | `"info"`               |
 
 该选项决定哪些日志将被处理。查看 [`onLog`](#onlog) 以了解可用的日志级别。默认的 `logLevel` 为 `"info"`，这意味着 info 和 warning 日志将被处理，而 debug 日志将被忽略，这意味着它们既不会传递给插件 [`onLog`](../plugin-development/index.md#onlog) 钩子，也不会传递给 `onLog` 选项或打印到控制台。
 
@@ -539,7 +539,7 @@ export default {
 
 - `[extname]`：包含点的静态资源文件扩展名，例如 `.css`。
 - `[ext]`：不包含点的文件扩展名，例如 `css`。
-- `[hash]`：基于静态资源内容的哈希。也可以通过例如 `[hash:10]` 设置一个特定的哈希值长度。
+- `[hash]`：基于静态资源内容的哈希。也可以通过例如 `[hash:10]` 设置一个特定的哈希值长度。默认情况下，它会生成一个 base-64 的哈希值。如果你需要减少字符集的大小，可以查看 [`output.hashCharacters`](#output-hashcharacters)。
 - `[name]`：静态资源的名称，不包含扩展名。
 
 正斜杠 `/` 可以用来划分文件到子目录。当值为函数时，`assetInfo` 是 [`generateBundle`](../plugin-development/index.md#generatebundle) 中没有 `fileName` 的简化版本。另见[`output.chunkFileNames`](#output-chunkfilenames)，[`output.entryFileNames`](#output-entryfilenames)。
@@ -585,7 +585,7 @@ export default {
 该选项用于对代码分割中产生的 chunk 自定义命名，其值也可以是一个函数，对每个 chunk 调用以返回匹配模式。这种模式支持以下的占位符：
 
 - `[format]`：输出（output）选项中定义的格式（format），例如 `es` 或 `cjs`。
-- `[hash]`：仅基于最终生成的 chunk 内容的哈希值，其中包括 [`renderChunk`](../plugin-development/index.md#renderchunk) 中的转换部分和其依赖文件哈希值。你也可以通过例如 `[hash:10]` 设置一个特定的哈希值长度。
+- `[hash]`：仅基于最终生成的 chunk 内容的哈希值，其中包括 [`renderChunk`](../plugin-development/index.md#renderchunk) 中的转换部分和其依赖文件哈希值。你也可以通过例如 `[hash:10]` 设置一个特定的哈希值长度。默认情况下，它会生成一个 base-64 的哈希值。如果你需要减少字符集的大小，可以查看 [`output.hashCharacters`](#output-hashcharacters)。
 - `[name]`：chunk 的名称。它可以通过 [`output.manualChunks`](#output-manualchunks) 选项显示的设置，或者通过插件调用 [`this.emitFile`](../plugin-development/index.md#this-emitfile) 设置。否则，它将会根据 chunk 的内容确定。
 
 正斜杠 `/` 可以用来划分文件到子目录。当值为函数时，`chunkInfo` 是 [`generateBundle`](../plugin-development/index.md#generatebundle) 的简化版本，其中不包含依赖于文件名的属性，且没有关于所渲染模块的信息，因为只有在文件名生成之后才会渲染。另见 [`output.assetFileNames`](#output-assetfilenames)，[`output.entryFileNames`](#output-entryfilenames)。
@@ -661,7 +661,7 @@ Promise.resolve()
 该选项用于指定 chunks 的入口文件模式，其值也可以是一个函数，对每个入口 chunk 调用以返回匹配模式。这种模式支持以下的占位符：
 
 - `[format]`：输出（output）选项中定义的格式（format），例如 `es` 或 `cjs`。
-- `[hash]`：仅基于最终生成的入口 chunk 内容的哈希值，其中包括 [`renderChunk`](../plugin-development/index.md#renderchunk) 中的转换部分和其依赖文件哈希值。你也可以通过例如 `[hash:10]` 设置一个特定的哈希值长度。
+- `[hash]`：仅基于最终生成的入口 chunk 内容的哈希值，其中包括 [`renderChunk`](../plugin-development/index.md#renderchunk) 中的转换部分和其依赖文件哈希值。你也可以通过例如 `[hash:10]` 设置一个特定的哈希值长度。默认情况下，它会生成一个 base-64 的哈希值。如果你需要减少字符集的大小，可以查看 [`output.hashCharacters`](#output-hashcharacters)。
 - `[name]`：入口文件的文件名（不包含扩展名），除非当入口文件为对象时，才用来定义不同的名称。
 
 正斜杠 `/` 可以用来划分文件到子目录。当值为函数时，`chunkInfo` 是 [`generateBundle`](../plugin-development/index.md#generatebundle) 的简化版本，其中不包含依赖于文件名的属性，且没有关于所渲染模块的信息，因为只有在文件名生成之后才会渲染。但是，你可以访问包含 `moduleIds` 的列表。另见 [`output.assetFileNames`](#output-assetfilenames)，[`output.chunkFileNames`](#output-chunkfilenames)。
@@ -680,11 +680,11 @@ Promise.resolve()
 
 ### output.externalImportAttributes {#output-externalimportattributes}
 
-|          |                                                              |
-| -------: | :----------------------------------------------------------- |
-|  类型：   | `boolean`                                                    |
-|  CLI：   | `--externalImportAttributes`/`--no-externalImportAttributes` |
-|  默认：   | `true`                                                       |
+|        |                                                              |
+| -----: | :----------------------------------------------------------- |
+| 类型： | `boolean`                                                    |
+|  CLI： | `--externalImportAttributes`/`--no-externalImportAttributes` |
+| 默认： | `true`                                                       |
 
 是否在输出中为外部引入添加导入属性，如果输出格式为 `es`。默认情况下，属性来自输入文件，但插件可以稍后添加或删除属性。例如，`import "foo" assert {type: "json"}` 将导致相同的导入出现在输出中，除非将该选项设置为 `false`。请注意，模块的所有导入都需要具有一致的属性，否则会发出警告。
 
@@ -863,7 +863,21 @@ const foo = 42;
 exports.foo = foo;
 ```
 
-### output.hoistTransitiveImports {#output-hoisttransitiveimports}
+### output.hashCharacters
+
+|        |                                 |
+| -----: | :------------------------------ |
+| 类型： | `"base64" \| "base32" \| "hex"` |
+|  CLI： | `--hashCharacters <name>`       |
+| 默认： | `"base64"`                      |
+
+这个选项决定了 Rollup 在生成文件哈希时可以使用的字符集。
+
+- 默认的 `"base64"` 选项会使用包含 `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_` 这些 url 安全的字符串 base-64 哈希。
+- `"base36"` 选项只会使用小写字母和数字 `abcdefghijklmnopqrstuvwxyz0123456789`。
+- `"hex"` 选项会生成包含 `abcdef0123456789` 这些字符的十六进制哈希。
+
+### output.hoistTransitiveImports
 
 |        |                                                          |
 | -----: | :------------------------------------------------------- |
@@ -1472,15 +1486,15 @@ export default {
 
 ### output.sourcemapFileNames
 
-|       |                                                |
-| ----: | :--------------------------------------------- |
+|        |                                                |
+| -----: | :--------------------------------------------- |
 | 类型： | `string \| ((chunkInfo: ChunkInfo) => string)` |
-|  CLI: | `--sourcemapFileNames <pattern>`               |
+|   CLI: | `--sourcemapFileNames <pattern>`               |
 
 该选项指定 sourcemap 的模式，或者是一个根据每个 sourcemap 调用以返回此类模式的函数。该模式支持以下占位符：
 
 - `[format]`：在输出选项中定义的渲染格式，例如 `es` 或 `cjs`。
-- `[hash]`：一个仅基于最终生成的 sourcemap 内容的哈希值。也可以通过例如 `[hash:10]` 设置特定的哈希长度。
+- `[hash]`：一个仅基于最终生成的 sourcemap 内容的哈希值。也可以通过例如 `[hash:10]` 设置特定的哈希长度。默认情况下，它会生成一个 base-64 的哈希值。如果你需要减少字符集的大小，可以查看 [`output.hashCharacters`](#output-hashcharacters)。
 - `[chunkhash]`：与对应生成的 chunk（如果有的话）使用的哈希值相同。
 - `[name]`：除非使用输入的对象形式定义了不同的名称，否则该文件名（不包括扩展名）就是入口起点的名称。
 
@@ -1945,7 +1959,52 @@ export default {
 
 该选项决定在 UMD bundle 中生成一个额外的 `noConflict` 导出。在 IIFE 场景中调用此方法时，该方法将返回打包的导出，同时将相应的全局变量恢复为其先前的值。
 
-### output.sanitizeFileName {#output-sanitizefilename}
+### output.reexportProtoFromExternal
+
+|        |                                                                |
+| -----: | :------------------------------------------------------------- |
+| 类型： | `boolean`                                                      |
+|  CLI： | `--reexportProtoFromExternal`/`--no-reexportProtoFromExternal` |
+| 默认： | `true`                                                         |
+
+只有当 [`output.format`](#output-format) 设置为 `['amd', 'cjs', 'iife', 'umd']` 中的一个，并且 [`output.externalLiveBindings`](#output-externallivebindings) 设置为 false 时，这个选项才会生效。
+
+为了兼容性最大化，Rollup 默认会从外部模块重新导出 `__proto__`。但是，对于常见的使用场景，我们强烈建议将这个值设置为 false，因为这样可以有效地减小输出文件的大小。
+
+```js
+// 输入文件
+export * from 'rollup';
+```
+
+```js
+// 当输出格式是 cjs 时的输出文件
+'use strict';
+
+// reexportProtoFromExternal 设置为 true 时
+var rollup = require('rollup');
+
+Object.prototype.hasOwnProperty.call(rollup, '__proto__') &&
+	!Object.prototype.hasOwnProperty.call(exports, '__proto__') &&
+	Object.defineProperty(exports, '__proto__', {
+		enumerable: true,
+		value: rollup['__proto__']
+	});
+
+Object.keys(rollup).forEach(function (k) {
+	if (k !== 'default' && !Object.prototype.hasOwnProperty.call(exports, k))
+		exports[k] = rollup[k];
+});
+
+// reexportProtoFromExternal 设置为 false 时
+var rollup = require('rollup');
+
+Object.keys(rollup).forEach(function (k) {
+	if (k !== 'default' && !Object.prototype.hasOwnProperty.call(exports, k))
+		exports[k] = rollup[k];
+});
+```
+
+### output.sanitizeFileName
 
 |        |                                            |
 | -----: | :----------------------------------------- |
@@ -2412,11 +2471,11 @@ const element = angular.element;
 
 ### output.experimentalMinChunkSize {#output-experimentalminchunksize}
 
-|          |                                     |
-| -------: | :---------------------------------- |
-|    类型: | `number`                            |
-|    CLI: | `--experimentalMinChunkSize <size>` |
-|    默认: | `1`                                 |
+|       |                                     |
+| ----: | :---------------------------------- |
+| 类型: | `number`                            |
+|  CLI: | `--experimentalMinChunkSize <size>` |
+| 默认: | `1`                                 |
 
 该选项用于为代码分割设置一个以字节为单位的最小 chunk 大小。当该值设置为默认值 `1` 时，Rollup 将尝试将不包含代码（仅包含导入和重新导出）的块合并到其他 chunk 中。仅当合并不会改变任何入口加载时执行的副作用时，才会执行合并。对于值为 `1` 的情况，仅允许执行不增加任何入口加载的代码量的合并。
 
@@ -2568,10 +2627,10 @@ export default {
 
 _使用 [`output.externalImportAttributes`](#output-externalimportattributes) 选项代替。_
 
-|          |                                                              |
-| -------: | :----------------------------------------------------------- |
-| 类型：   | `boolean`                                                    |
-|  CLI：   | `--externalImportAssertions`/`--no-externalImportAssertions` |
-| 默认：   | `true`                                                       |
+|        |                                                              |
+| -----: | :----------------------------------------------------------- |
+| 类型： | `boolean`                                                    |
+|  CLI： | `--externalImportAssertions`/`--no-externalImportAssertions` |
+| 默认： | `true`                                                       |
 
 是否在输出中为外部导入添加导入断言，如果输出格式为 `es`。默认情况下，断言来自输入文件，但是插件可以稍后添加或删除断言。例如，`import "foo" assert {type: "json"}` 将导致相同的导入出现在输出中，除非将该选项设置为 `false`。请注意，模块的所有导入都需要具有一致的断言，否则将发出警告。
