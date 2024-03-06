@@ -598,7 +598,7 @@ export default {
 |  CLI： | `--compact`/`--no-compact` |
 | 默认： | `false`                    |
 
-该选项用于压缩 Rollup 产生的额外代码。请注意，这个选项不会影响用户的代码。这个选择在构建已经压缩好的代码时是很有用的。
+该选项用于压缩 Rollup 产生的额外代码。请注意，这个选项不会影响用户的代码。这个选项在构建已经压缩好的代码时是很有用的。
 
 ### output.dynamicImportInCjs {#output-dynamicimportincjs}
 
