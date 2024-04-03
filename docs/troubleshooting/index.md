@@ -78,8 +78,11 @@ import moment from 'moment';
 
 不会导致 `moment` 被打包到你的包中——相反，它将是运行时需要的外部依赖项。如果这就是你想要的，你可以用 `external` 选项消除这个警告，这会让你的意图更加明确:
 
-```js
+```js twoslash
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
 	entry: 'src/index.js',
 	dest: 'bundle.js',
@@ -96,15 +99,18 @@ export default {
 
 对于大型项目，在 macOS 上以监视模式运行 Rollup 时可能会遇到 EMFILE 错误。如果你遇到这种情况，禁用 FSEvents 可能会消除问题：
 
-```js
+```js twoslash
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
-  ...,
-  watch: {
-    chokidar: {
-      useFsEvents: false
-    }
-  }
+	/* ..., */
+	watch: {
+		chokidar: {
+			useFsEvents: false
+		}
+	}
 };
 ```
 
