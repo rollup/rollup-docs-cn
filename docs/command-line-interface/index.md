@@ -12,7 +12,9 @@ Rollup 通常应该从命令行使用。你可以提供一个可选的 Rollup �
 
 Rollup 配置文件是可选的，但它们非常强大和方便，因此**推荐**使用。配置文件是一个 ES 模块，它导出一个默认对象，其中包含所需的选项：
 
-```javascript
+```javascript twoslash
+/** @type {import('rollup').RollupOptions} */
+// ---cut---
 export default {
 	input: 'src/main.js',
 	output: {
@@ -36,10 +38,17 @@ rollup --config rollup.config.ts --configPlugin typescript
 
 配置文件支持下面列出的选项。有关每个选项的详细信息，请参阅[选项大全](../configuration-options/index.md)：
 
-```javascript
+```javascript twoslash
 // rollup.config.js
 
+<<<<<<< HEAD
 // 可以是数组（即多个输入源）
+=======
+// can be an array (for multiple inputs)
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
+>>>>>>> 1b85663fde96d84fceaa2360dba246d3cb92789b
 export default {
 	// 核心输入选项
 	external,
@@ -139,9 +148,12 @@ export default {
 
 你可以从配置文件中导出一个**数组**，以便一次从多个不相关的输入进行打包，即使在监视模式下也可以。要使用相同的输入打出不同的包，你需要为每个输入提供一个输出选项数组：
 
-```javascript
+```javascript twoslash
 // rollup.config.js (building more than one bundle)
 
+// ---cut-start---
+/** @type {import('rollup').RollupOptions[]} */
+// ---cut-end---
 export default [
 	{
 		input: 'main-a.js',
@@ -196,11 +208,14 @@ rollup --config
 
 你还可以导出一个返回任何上述配置格式的函数。该函数将传递当前的命令行参数，以便你可以动态地调整你的配置以遵循例如 [`--silent`](#silent)。如果你使用 `config` 作为前缀定义自己的命令行选项，你甚至可以自定义它们：
 
-```javascript
+```javascript twoslash
 // rollup.config.js
 import defaultConfig from './rollup.default.config.js';
 import debugConfig from './rollup.debug.config.js';
 
+// ---cut-start---
+/** @type {import('rollup').RollupOptionsFunction} */
+// ---cut-end---
 export default commandLineArgs => {
 	if (commandLineArgs.configDebug === true) {
 		return debugConfig;
@@ -213,11 +228,15 @@ export default commandLineArgs => {
 
 默认情况下，命令行参数将始终覆盖从配置文件中导出的相应值。如果你想更改这种行为，可以通过从 `commandLineArgs` 对象中删除它们来让 Rollup 忽略命令行参数：
 
-```javascript
+```javascript twoslash
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptionsFunction} */
+// ---cut-end---
 export default commandLineArgs => {
-  const inputBase = commandLineArgs.input || 'main.js';
+	const inputBase = commandLineArgs.input || 'main.js';
 
+<<<<<<< HEAD
   // 这会使 Rollup 忽略 CLI 参数
   delete commandLineArgs.input;
   return {
@@ -225,13 +244,24 @@ export default commandLineArgs => {
     output: { ... }
   }
 }
+=======
+	// this will make Rollup ignore the CLI argument
+	delete commandLineArgs.input;
+	return {
+		input: 'src/entries/' + inputBase,
+		output: {
+			/* ... */
+		}
+	};
+};
+>>>>>>> 1b85663fde96d84fceaa2360dba246d3cb92789b
 ```
 
 ### 填写配置时的智能提示 {#config-intellisense}
 
 由于 Rollup 随附了 TypeScript 类型定义，因此你可以使用 JSDoc 类型提示来利用你的 IDE 的智能感知功能：
 
-```javascript
+```javascript twoslash
 // rollup.config.js
 /**
  * @type {import('rollup').RollupOptions}
@@ -244,7 +274,7 @@ export default config;
 
 或者，你可以使用 `defineConfig` 辅助函数，它应该提供无需 JSDoc 注释即可使用智能感知的功能：
 
-```javascript
+```javascript twoslash
 // rollup.config.js
 import { defineConfig } from 'rollup';
 
@@ -261,7 +291,7 @@ export default defineConfig({
 
 你还可以通过 [`--configPlugin`](#configplugin-plugin) 选项直接使用 TypeScript 编写配置文件。使用 TypeScript，你可以直接导入 `RollupOptions` 类型：
 
-```typescript
+```typescript twoslash
 import type { RollupOptions } from 'rollup';
 
 const config: RollupOptions = {
@@ -298,14 +328,20 @@ rollup --config node:my-special-config
 
 对于 CommonJS 文件，人们经常使用 `__dirname` 访问当前目录并将相对路径解析为绝对路径。这在原生 ES 模块中不被支持。相反，我们建议使用以下方法 (例如生成外部模块的绝对 id)：
 
-```js
+```js twoslash
 // rollup.config.js
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath } from 'node:url';
 
 export default {
+<<<<<<< HEAD
   ...,
   // 为 <currentdir>/src/some-file.js 生成绝对路径
   external: [fileURLToPath(new URL('src/some-file.js', import.meta.url))]
+=======
+	/* ..., */
+	// generates an absolute path for <currentdir>/src/some-file.js
+	external: [fileURLToPath(new URL('src/some-file.js', import.meta.url))]
+>>>>>>> 1b85663fde96d84fceaa2360dba246d3cb92789b
 };
 ```
 
@@ -315,7 +351,7 @@ export default {
 
 - 对于 Node 17.5+，你可以使用导入断言
 
-  ```js
+  ```js twoslash
   import pkg from './package.json' assert { type: 'json' };
 
   export default {
@@ -327,7 +363,7 @@ export default {
 
 - 对于旧一些的 Node 版本，你可以使用 `createRequire`
 
-  ```js
+  ```js twoslash
   import { createRequire } from 'node:module';
   const require = createRequire(import.meta.url);
   const pkg = require('./package.json');
@@ -337,7 +373,7 @@ export default {
 
 - 或者直接从磁盘读取并解析其内容
 
-  ```js
+  ```js twoslash
   // rollup.config.mjs
   import { readFileSync } from 'node:fs';
 

@@ -20,10 +20,13 @@ title: 配置选项
 1. 外部依赖的名称，需要和引入语句中写法完全一致。例如，如果想标记 `import "dependency.js"` 为外部依赖，就需要使用 `"dependency.js"` 作为模块 ID；而如果要标记 `import "dependency"` 为外部依赖，则使用 `"dependency"`。
 2. 解析过的模块 ID（如文件的绝对路径）。
 
-```js
+```js twoslash
 // rollup.config.js
 import { fileURLToPath } from 'node:url';
 
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
 	//...,
 	external: [
@@ -91,24 +94,34 @@ console.log(x);
 
 请注意，当选项的值使用对象形式时，可以通过在名称中添加 `/` 来将入口文件放入不同的子文件夹。以下例子将根据 `entry-a.js` 和 `entry-b/index.js`，产生至少两个入口 chunks，即 `index.js`文件将输出在 `entry-b` 文件夹中：
 
-```js
+```js twoslash
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
-  ...,
-  input: {
-    a: 'src/main-a.js',
-    'b/index': 'src/main-b.js'
-  },
-  output: {
-    ...,
-    entryFileNames: 'entry-[name].js'
-  }
+	// ...
+	input: {
+		a: 'src/main-a.js',
+		'b/index': 'src/main-b.js'
+	},
+	output: {
+		// ...
+		entryFileNames: 'entry-[name].js'
+	}
 };
 ```
 
 如果你想将一组文件转换为另一种格式，并同时保持文件结构和导出签名，推荐的方法是将每个文件变成一个入口文件，而不是使用 [`output.preserveModules`](#output-preservemodules)，后者可能会导出被除屑优化，并产生由插件创建的虚拟文件。你可以动态地处理，例如通过 `glob` 包。
 
-```js
+```ts twoslash
+// @filename: glob.d.ts
+declare module 'glob' {
+	export function globSync(pattern: string): string[];
+}
+
+// @filename: index.js
+// ---cut---
 import { globSync } from 'glob';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -206,18 +219,21 @@ import $ from 'jquery';
 
 我们需要告诉 Rollup `jquery` 是外部依赖，`jquery` 模块的 ID 为全局变量 `$`：
 
-```js
+```js twoslash
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
-  ...,
-  external: ['jquery'],
-  output: {
-    format: 'iife',
-    name: 'MyBundle',
-    globals: {
-      jquery: '$'
-    }
-  }
+	// ...
+	external: ['jquery'],
+	output: {
+		format: 'iife',
+		name: 'MyBundle',
+		globals: {
+			jquery: '$'
+		}
+	}
 };
 
 /*
@@ -237,7 +253,7 @@ rollup -i src/main.js ... -g jquery:$,underscore:_
 
 要告诉 Rollup 用全局变量替换本地文件时，请使用一个绝对路径的 ID。
 
-```js
+```js twoslash
 // rollup.config.js
 import { fileURLToPath } from 'node:url';
 const externalId = fileURLToPath(
@@ -247,6 +263,9 @@ const externalId = fileURLToPath(
 	)
 );
 
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
 	//...,
 	external: [externalId],
@@ -269,15 +288,18 @@ export default {
 
 对于输出格式为 `iife` / `umd` 的 bundle 来说，若想要使用全局变量名来表示你的 bundle 时，该选项是必要的。同一页面上的其他脚本可以使用这个变量名来访问你的 bundle 输出。
 
-```js
+```js twoslash
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
-  ...,
-  output: {
-    file: 'bundle.js',
-    format: 'iife',
-    name: 'MyBundle'
-  }
+	// ...
+	output: {
+		file: 'bundle.js',
+		format: 'iife',
+		name: 'MyBundle'
+	}
 };
 
 // var MyBundle = (function () {...
@@ -307,10 +329,13 @@ this.a.b.c = ...
 
 以下是一个使用压缩插件作用于其中一个输出的例子：
 
-```js
+```js twoslash
 // rollup.config.js
 import terser from '@rollup/plugin-terser';
 
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
 	input: 'main.js',
 	output: [
@@ -335,13 +360,16 @@ export default {
 
 关于如何使用插件的更多信息，请查看 [使用插件](../tutorial/index.md#using-plugins)章节，关于如何编写你自己的插件，请查看 [插件](../plugin-development/index.md)章节（试试看吧，它并不像听起来那么困难，你可以通过 Rollup 插件做很多拓展）。对于从包中引入的插件，记住要调用引入的插件函数（即调用 `commonjs()`，而不仅仅是 `commonjs`）。返回值为假的插件将被忽略，这样可以用来灵活启用或禁用插件。嵌套的插件将扁平化。异步插件将等待和被解决。
 
-```js
+```js twoslash
 // rollup.config.js
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
+// ---cut-start---
+/** @type {Promise<import('rollup').RollupOptions>} */
+// ---cut-end---
 export default (async () => ({
 	input: 'main.js',
 	plugins: [
@@ -369,8 +397,11 @@ export default (async () => ({
 
 该选项用于指定之前 bundle 的 `cache` 属性。使用该设置，Rollup 将只会对改变的模块重新分析，从而加速观察模式中后续的构建。将此选项明确设置为 `false` 将阻止 bundle 生成 `cache` 属性，也将导致插件的缓存失效。
 
-```js
+```js twoslash
 const rollup = require('rollup');
+// ---cut-start---
+/** @type {import('rollup').RollupCache | undefined} */
+// ---cut-end---
 let cache;
 
 async function buildWithCache() {
@@ -481,8 +512,11 @@ interface RollupLog {
 
 如果不调用默认处理程序，日志将不会打印到控制台。此外，您可以通过调用不同级别的默认处理程序来改变日志级别。使用附加级别 `"error"` 将把日志转换为一个抛出的错误，该错误具有附加的所有日志属性。
 
-```js
+```js twoslash
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
 	//...
 	onLog(level, log, handler) {
@@ -502,8 +536,11 @@ export default {
 
 一些日志也有 `loc` 和 `frame` 属性，允许你定位日志的源：
 
-```js
+```js twoslash
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
 	//...
 	onLog(level, { loc, frame, message }) {
@@ -560,15 +597,18 @@ export default {
 
 `chunk` 是可变的，在这个钩子中应用的变化将传递到其他插件和生成的 bundle 中。这意味着如果你在这个钩子中增加或删除引入或导出，你应该更新 `imports`、`importedBindings` 以及 `exports`。
 
-```js
+```js twoslash
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
-  ...,
-  output: {
-    ...,
-    banner: '/* my-library version ' + version + ' */',
-    footer: '/* follow me on Twitter! @rich_harris */'
-  }
+	// ...
+	output: {
+		// ...
+		banner: '/* my-library version ' + version + ' */',
+		footer: '/* follow me on Twitter! @rich_harris */'
+	}
 };
 ```
 
@@ -610,8 +650,13 @@ export default {
 
 虽然 CommonJS 输出最初只支持 `require(…)` 语法来引入依赖，但最近的 Node 版本也开始支持 `import(…)` 语法，这是从 CommonJS 文件中引入 ES 模块的唯一方法。如果这个选项默认值为 `true`，表示 Rollup 会在 CommonJS 输出中保持外部依赖以 `import(…)` 表达式动态引入。将值设置为 `false`，以使用 `require(…)` 语法重写动态引入。
 
+<<<<<<< HEAD
 ```js
 // 输入
+=======
+```js twoslash
+// input
+>>>>>>> 1b85663fde96d84fceaa2360dba246d3cb92789b
 import('external').then(console.log);
 
 // 设置 dynamicImportInCjs 为 true 或不设置的 cjs 输出
@@ -721,8 +766,13 @@ Promise.resolve()
 
 该选项表示在某些地方和辅助函数中使用 `const` 而不是 `var`。由于代码块的作用域，会使 Rollup 产生更有效的辅助函数。
 
+<<<<<<< HEAD
 ```js
 // 输入
+=======
+```js twoslash
+// input
+>>>>>>> 1b85663fde96d84fceaa2360dba246d3cb92789b
 export * from 'external';
 
 // 设置 constBindings 为 false 的 cjs 输出
@@ -760,7 +810,7 @@ for (const k in external) {
 
 该选项表示当属性名称与值匹配时，是否允许在对象中使用别名。
 
-```javascript
+```javascript twoslash
 // input
 const foo = 1;
 export { foo, foo as bar };
@@ -797,7 +847,10 @@ System.register('bundle', [], function (exports) {
 
 该选项可以选择上面列出的预设之一，同时覆盖一些选项。
 
-```js
+```js twoslash
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
 	// ...
 	output: {
@@ -919,7 +972,7 @@ import('external2').then(console.log);
 
 - `"default"` 意为所需的值应该被视为引入模块的默认出口，就像在 NodeJS 中从 ES 模块上下文引入 CommonJS 一样。其也支持命名的引入，它们被视为默认引入的属性。为了创建命名空间对象，Rollup 注入了这些辅助函数：
 
-  ```js
+  ```js twoslash
   var external = require('external1');
 
   function _interopNamespaceDefault(e) {
@@ -973,7 +1026,7 @@ import('external2').then(console.log);
 
 - `"auto"` 结合了 `"esModule"` 和 `"default"`，通过注入辅助函数，其包含在运行时检测所需的值是否包含 [`__esModule` 属性](#output-esmodule) 的代码。添加这个属性是 TypeScript `esModuleInterop`、Babel 和其他工具实现的一种解决方式，标志着所需值是 ES 模块编译后的命名空间：
 
-  ```js
+  ```js twoslash
   var external = require('external1');
 
   function _interopNamespace(e) {
@@ -1035,7 +1088,7 @@ import('external2').then(console.log);
 
 - `compat` 等同于 `"auto"`，只是它对默认导出使用了一个稍微不同的辅助函数，其检查是否存在一个 `default` 属性而不是 `__esModule` 属性。除了 CommonJS 模块导出的属性 `"default"` 不应该是默认导出的这种罕见情况，该值通常有助于使互操作“正常工作”，因为它不依赖于特异的实现，而是使用鸭子类型（duck-typing）：
 
-  ```js
+  ```js twoslash
   var external = require('external1');
 
   function _interopNamespaceCompat(e) {
@@ -1131,11 +1184,14 @@ import('external2').then(console.log);
 
   例如，如果所有的依赖都是 CommonJs，下面的配置将确保只允许从 Node 内置的命名引入：
 
-  ```js
+  ```js twoslash
   // rollup.config.js
   import builtins from 'builtins';
   const nodeBuiltins = new Set(builtins());
 
+  // ---cut-start---
+  /** @type {import('rollup').RollupOptions} */
+  // ---cut-end---
   export default {
   	// ...
   	output: {
@@ -1164,7 +1220,10 @@ import('external2').then(console.log);
 
 除了在特定格式中代码不同外，该选项功能和 [`output.banner/output.footer`](#output-banner-output-footer) 类似。
 
-```js
+```js twoslash
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
 	//...,
 	output: {
@@ -1196,7 +1255,10 @@ export default {
 
 当该选项值为函数形式时，每个被解析的模块都会经过该函数处理。如果函数返回字符串，那么该模块及其所有依赖将被添加到以返回字符串命名的自定义 chunk 中。例如，以下例子会创建一个命名为 `vendor` 的 chunk，它包含所有在 `node_modules` 中的依赖：
 
-```javascript
+```javascript twoslash
+// ---cut-start---
+/** @type {import('rollup').GetManualChunk} */
+// ---cut-end---
 function manualChunks(id) {
 	if (id.includes('node_modules')) {
 		return 'vendor';
@@ -1228,11 +1290,22 @@ function getTranslatedStrings(currentLanguage) {
 
 下面代码将会合并所有仅由单个入口使用的相一语言文件：
 
-```js
+<!-- prettier-ignore-start -->
+```js twoslash
+// ---cut-start---
+/** @type {import('rollup').GetManualChunk} */
+// ---cut-end---
 function manualChunks(id, { getModuleInfo }) {
 	const match = /.*\.strings\.(\w+)\.js/.exec(id);
 	if (match) {
+<<<<<<< HEAD
 		const language = match[1]; // 例如 “en”
+=======
+		const language = match[1]; // e.g. "en"
+// ---cut-start---
+		/** @type {string[]} */
+// ---cut-end---
+>>>>>>> 1b85663fde96d84fceaa2360dba246d3cb92789b
 		const dependentEntryPoints = [];
 
 		// 在这里，我们使用 Set 一次性处理每个依赖模块
@@ -1240,6 +1313,9 @@ function manualChunks(id, { getModuleInfo }) {
 		const idsToHandle = new Set(getModuleInfo(id).dynamicImporters);
 
 		for (const moduleId of idsToHandle) {
+// ---cut-start---
+			/** @type {import('rollup').ModuleInfo} */
+// ---cut-end---
 			const { isEntry, dynamicImporters, importers } =
 				getModuleInfo(moduleId);
 			if (isEntry || dynamicImporters.length > 0)
@@ -1264,6 +1340,7 @@ function manualChunks(id, { getModuleInfo }) {
 	}
 }
 ```
+<!-- prettier-ignore-end -->
 
 ### output.minifyInternalExports {#output-minifyinternalexports}
 
@@ -1336,13 +1413,16 @@ console.log(importantValue);
 
 该选项用于将外部依赖 ID 映射为路径。其中，外部依赖 ID 是指该选项 [无法解析](../troubleshooting/index.md#warning-treating-module-as-external-dependency) 的模块或者通过 [`external`](#external) 选项明确指定的模块。`output.paths` 提供的路径会取代模块 ID，在生成的 bundle 中使用，比如你可以从 CDN 中加载依赖：
 
-```js
+```js twoslash
 // app.js
 import { selectAll } from 'd3';
 selectAll('p').style('color', 'purple');
 // ...
 
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
 	input: 'app.js',
 	external: ['d3'],
@@ -1426,7 +1506,10 @@ console.log(main.default); // 42
 
 例如，给定以下配置：
 
-```javascript
+```javascript twoslash
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
 	input: ['src/module.js', `src/another/module.js`],
 	output: [
@@ -1508,8 +1591,11 @@ export default {
 
 该选项决定是否忽略 sourcemap 中列出的源文件，用于填充 [`x_google_ignoreList` source map 扩展](https://developer.chrome.com/articles/x-google-ignore-list/)。`relativeSourcePath` 是生成的 `.map` 文件到相应源文件的相对路径，而 `sourcemapPath` 是生成的 sourcemap 文件的绝对路径。
 
-```js
+```js twoslash
 import path from 'node:path';
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
 	input: 'src/main',
 	output: [
@@ -1536,8 +1622,11 @@ export default {
 
 该选项用于 sourcemap 的路径转换。其中，`relativeSourcePath` 是指从生成的 `.map` 文件到相对应的源文件的相对路径，而 `sourcemapPath` 是指生成 sourcemap 文件的绝对路径。
 
-```js
+```js twoslash
 import path from 'node:path';
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
 	input: 'src/main',
 	output: [
@@ -1702,14 +1791,19 @@ console.log(shared);
 
 该选项用于设置 AMD/UMD bundle 的 ID：
 
-```js
+```js twoslash
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
-  ...,
-  format: 'amd',
-  amd: {
-    id: 'my-bundle'
-  }
+	// ...
+	output: {
+		format: 'amd',
+		amd: {
+			id: 'my-bundle'
+		}
+	}
 };
 
 // -> define('my-bundle', ['dependency'], ...
@@ -1724,14 +1818,19 @@ export default {
 
 该选项用于设置 chunk ID 的 ID（去除“.js”扩展名后）。
 
-```js
+```js twoslash
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
-  ...,
-  format: 'amd',
-  amd: {
-    autoId: true
-  }
+	// ...
+	output: {
+		format: 'amd',
+		amd: {
+			autoId: true
+		}
+	}
 };
 
 // -> define('main', ['dependency'], ...
@@ -1749,15 +1848,20 @@ export default {
 
 只在 [`output.amd.autoId`](#output-amd-autoid) 下生效。
 
-```js
+```js twoslash
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
-  ...,
-  format: 'amd',
-  amd: {
-    autoId: true,
-    basePath: 'some/where'
-  }
+	// ...
+	output: {
+		format: 'amd',
+		amd: {
+			autoId: true,
+			basePath: 'some/where'
+		}
+	}
 };
 
 // -> define('some/where/main', ['dependency'], ...
@@ -1773,14 +1877,19 @@ export default {
 
 该选项用于指定代替 `define` 的函数名称：
 
-```js
+```js twoslash
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
-  ...,
-  format: 'amd',
-  amd: {
-    define: 'def'
-  }
+	// ...
+	output: {
+		format: 'amd',
+		amd: {
+			define: 'def'
+		}
+	}
 };
 
 // -> def(['dependency'],...
@@ -1796,14 +1905,19 @@ export default {
 
 该选项决定为生成的 chunk 和本地 AMD 模块的引入添加 `.js` 扩展名：
 
-```js
+```js twoslash
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
-  ...,
-  format: 'amd',
-  amd: {
-    forceJsExtensionForImports: true
-  }
+	// ...
+	output: {
+		format: 'amd',
+		amd: {
+			forceJsExtensionForImports: true
+		}
+	}
 };
 
 // -> define(['./chunk-or-local-file.js', 'dependency', 'third/dependency'],...
@@ -1938,14 +2052,17 @@ exports.x = external.x;
 
 该选项用于指定代码缩进的缩进字符串（在 `amd`，`iife`，`umd` 和 `system` 格式中）。它的值可以是 `false` （没有缩进）或 `true` （默认值——自动缩进）。
 
-```js
+```js twoslash
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
-  ...,
-  output: {
-    ...,
-    indent: false
-  }
+	// ...
+	output: {
+		// ...
+		indent: false
+	}
 };
 ```
 
@@ -2217,8 +2334,11 @@ logIfEnabled(); // 需要保留，因为它展示日志
 
 除了任何与该名称相匹配的函数，纯函数上的任何属性以及从纯函数返回的任何函数也将被视为纯函数，访问任何属性都不会被检查出副作用。
 
-```js
+```js twoslash
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
 	treeshake: {
 		preset: 'smallest',
@@ -2339,7 +2459,10 @@ console.log(foo);
 
 该选项可以选择上面列出的预设之一，同时覆盖一些选项。
 
-```js
+```js twoslash
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
 	treeshake: {
 		preset: 'smallest',
@@ -2526,8 +2649,11 @@ interface WatcherOptions {
 
 该选项用于指定观察模式（watch mode）的选项，或防止 Rollup 配置被观察。指定该选项为 `false`，将仅对 Rollup 使用数组配置时有效。在这种情况下，Rollup 配置将不会根据观察模式中的变更构建或重新构建，而是在 Rollup 运行时定期构建：
 
-```js
+```js twoslash
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptions[]} */
+// ---cut-end---
 export default [
 	{
 		input: 'main.js',
@@ -2580,13 +2706,16 @@ export default [
 
 该选项用于指定不需要被 watch 的文件：
 
-```js
+```js twoslash
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
-  ...,
-  watch: {
-    exclude: 'node_modules/**'
-  }
+	// ...
+	watch: {
+		exclude: 'node_modules/**'
+	}
 };
 ```
 
@@ -2599,13 +2728,16 @@ export default {
 
 该选项用于限制只能对指定文件进行观察。请注意，该选项只过滤模块图中的文件，不允许添加额外的观察文件：
 
-```js
+```js twoslash
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
 // rollup.config.js
 export default {
-  ...,
-  watch: {
-    include: 'src/**'
-  }
+	// ...
+	watch: {
+		include: 'src/**'
+	}
 };
 ```
 
