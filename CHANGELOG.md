@@ -1,5 +1,38 @@
 # rollup changelog
 
+## 4.14.1
+
+_2024-04-07_
+
+### Bug Fixes
+
+- Show better error when running on musl Linux where the musl build is not supported (#5454)
+
+### Pull Requests
+
+- [#5451](https://github.com/rollup/rollup/pull/5451): chore: generate string constants from config (@TrickyPi)
+- [#5452](https://github.com/rollup/rollup/pull/5452): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5453](https://github.com/rollup/rollup/pull/5453): chore(deps): lock file maintenance (@renovate[bot])
+- [#5454](https://github.com/rollup/rollup/pull/5454): Improve error message when running on unsupported MUSL Linux (@lukastaegert)
+- [#5455](https://github.com/rollup/rollup/pull/5455): Remove inlining logic in AST (de-)serializer (@lukastaegert)
+
+## 4.14.0
+
+_2024-04-03_
+
+### Features
+
+- Display error causes in Rollup CLI (#5422)
+- Add basic support for explicit resource management via "using" and "await using" (#5423)
+
+### Pull Requests
+
+- [#5422](https://github.com/rollup/rollup/pull/5422): feat: show all cause in Error (@devohda, @lukastaegert)
+- [#5444](https://github.com/rollup/rollup/pull/5444): feat: support explicit-resource-management (@TrickyPi)
+- [#5445](https://github.com/rollup/rollup/pull/5445): docs: add `@shikiji/vitepress-twoslash` (@sapphi-red)
+- [#5447](https://github.com/rollup/rollup/pull/5447): chore(deps): lock file maintenance minor/patch updates ( @renovate[bot])
+- [#5448](https://github.com/rollup/rollup/pull/5448): chore(deps): lock file maintenance (@renovate[bot])
+
 ## 4.13.2
 
 _2024-03-28_
