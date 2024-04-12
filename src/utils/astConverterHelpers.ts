@@ -1,4 +1,5 @@
-import { FIXED_STRINGS } from './convert-ast-strings';
+import { EMPTY_ARRAY } from './blank';
+import FIXED_STRINGS from './convert-ast-strings';
 import type { ReadString } from './getReadStringFunction';
 
 export const ANNOTATION_KEY = '_rollupAnnotations';
@@ -12,7 +13,11 @@ export interface RollupAnnotation {
 	type: AnnotationType;
 }
 
-export const convertAnnotations = (position: number, buffer: Uint32Array): RollupAnnotation[] => {
+export const convertAnnotations = (
+	position: number,
+	buffer: Uint32Array
+): readonly RollupAnnotation[] => {
+	if (position === 0) return EMPTY_ARRAY;
 	const length = buffer[position++];
 	const list: any[] = [];
 	for (let index = 0; index < length; index++) {
