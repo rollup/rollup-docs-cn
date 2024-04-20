@@ -18,19 +18,45 @@ Rollup 提供了一个可从 Node.js 使用的 JavaScript API。你很少需要�
 
 如果任一阶段发生错误，它将返回一个 Promise，该 Promise 被 reject 得到一个 Error，你可以通过它们的 `code` 属性来识别。除了 `code` 和 `message`，许多错误还有其他属性，你可以用于自定义报告，见 [`utils/logs.ts`](https://github.com/rollup/rollup/blob/master/src/utils/logs.ts) 以获取完整的错误和日志列表，以及它们的代码和属性。
 
-```javascript
+<!-- prettier-ignore-start -->
+```javascript twoslash
 import { rollup } from 'rollup';
 
+<<<<<<< HEAD
 // 请继续浏览下面的内容获取更多关于这个选项的细节
 const inputOptions = {...};
 
 // 你可以从相同的输入创建多个输出，
 // 以生成例如 CommonJS 和 ESM 这样的不同格式
 const outputOptionsList = [{...}, {...}];
+=======
+// see below for details on these options
+// ---cut-start---
+/** @type {import('rollup').InputOptions} */
+// ---cut-end---
+const inputOptions = {
+	/* ... */
+};
+
+// you can create multiple outputs from the same input to generate e.g.
+// different formats like CommonJS and ESM
+// ---cut-start---
+/** @type {import('rollup').OutputOptions[]} */
+// ---cut-end---
+const outputOptionsList = [
+	{
+		/* ... */
+	},
+	{
+		/* ... */
+	}
+];
+>>>>>>> e6e05cde31fc144228bb825c9d4ebba2f377075c
 
 build();
 
 async function build() {
+<<<<<<< HEAD
   let bundle;
   let buildFailed = false;
   try {
@@ -51,9 +77,38 @@ async function build() {
     await bundle.close();
   }
   process.exit(buildFailed ? 1 : 0);
+=======
+// ---cut-start---
+	/** @type {import('rollup').RollupBuild} */
+// ---cut-end---
+	let bundle;
+	let buildFailed = false;
+	try {
+		// create a bundle
+		bundle = await rollup(inputOptions);
+
+		// an array of file names this bundle depends on
+		console.log(bundle.watchFiles);
+
+		await generateOutputs(bundle);
+	} catch (error) {
+		buildFailed = true;
+		// do some error reporting
+		console.error(error);
+	}
+	if (bundle) {
+		// closes the bundle
+		await bundle.close();
+	}
+	process.exit(buildFailed ? 1 : 0);
+>>>>>>> e6e05cde31fc144228bb825c9d4ebba2f377075c
 }
 
+// ---cut-start---
+/** @param {import('rollup').RollupBuild} [bundle] */
+// ---cut-end---
 async function generateOutputs(bundle) {
+<<<<<<< HEAD
   for (const outputOptions of outputOptionsList) {
     // 生成特定于输出的内存中代码
     // 你可以在同一个 bundle 对象上多次调用此函数
@@ -102,14 +157,68 @@ async function generateOutputs(bundle) {
       }
     }
   }
+=======
+	for (const outputOptions of outputOptionsList) {
+		// generate output specific code in-memory
+		// you can call this function multiple times on the same bundle object
+		// replace bundle.generate with bundle.write to directly write to disk
+		const { output } = await bundle.generate(outputOptions);
+
+		for (const chunkOrAsset of output) {
+			if (chunkOrAsset.type === 'asset') {
+				// For assets, this contains
+				// {
+				//   fileName: string,              // the asset file name
+				//   source: string | Uint8Array    // the asset source
+				//   type: 'asset'                  // signifies that this is an asset
+				// }
+				console.log('Asset', chunkOrAsset);
+			} else {
+				// For chunks, this contains
+				// {
+				//   code: string,                  // the generated JS code
+				//   dynamicImports: string[],      // external modules imported dynamically by the chunk
+				//   exports: string[],             // exported variable names
+				//   facadeModuleId: string | null, // the id of a module that this chunk corresponds to
+				//   fileName: string,              // the chunk file name
+				//   implicitlyLoadedBefore: string[]; // entries that should only be loaded after this chunk
+				//   imports: string[],             // external modules imported statically by the chunk
+				//   importedBindings: {[imported: string]: string[]} // imported bindings per dependency
+				//   isDynamicEntry: boolean,       // is this chunk a dynamic entry point
+				//   isEntry: boolean,              // is this chunk a static entry point
+				//   isImplicitEntry: boolean,      // should this chunk only be loaded after other chunks
+				//   map: string | null,            // sourcemaps if present
+				//   modules: {                     // information about the modules in this chunk
+				//     [id: string]: {
+				//       renderedExports: string[]; // exported variable names that were included
+				//       removedExports: string[];  // exported variable names that were removed
+				//       renderedLength: number;    // the length of the remaining code in this module
+				//       originalLength: number;    // the original length of the code in this module
+				//       code: string | null;       // remaining code in this module
+				//     };
+				//   },
+				//   name: string                   // the name of this chunk as used in naming patterns
+				//   preliminaryFileName: string    // the preliminary file name of this chunk with hash placeholders
+				//   referencedFiles: string[]      // files referenced via import.meta.ROLLUP_FILE_URL_<id>
+				//   type: 'chunk',                 // signifies that this is a chunk
+				// }
+				console.log('Chunk', chunkOrAsset.modules);
+			}
+		}
+	}
+>>>>>>> e6e05cde31fc144228bb825c9d4ebba2f377075c
 }
 ```
+<!-- prettier-ignore-end -->
 
 ### inputOptions 对象 {#inputoptions-object}
 
 `inputOptions` 对象可以包含以下属性（有关详细信息，请参见 [选项大全](../configuration-options/index.md)）：
 
-```js
+```js twoslash
+// ---cut-start---
+/** @type {import('rollup').InputOptions} */
+// ---cut-end---
 const inputOptions = {
 	// 核心输入选项
 	external,
@@ -144,7 +253,10 @@ const inputOptions = {
 
 `outputOptions` 对象可以包含以下属性（有关详细信息，请参见 [选项大全](../configuration-options/index.md)）：
 
-```js
+```js twoslash
+// ---cut-start---
+/** @type {import('rollup').OutputOptions} */
+// ---cut-end---
 const outputOptions = {
 	// 核心输出选项
 	dir,
@@ -167,6 +279,7 @@ const outputOptions = {
 	generatedCode,
 	hashCharacters,
 	hoistTransitiveImports,
+	importAttributesKey,
 	inlineDynamicImports,
 	interop,
 	intro,
@@ -207,13 +320,19 @@ const outputOptions = {
 
 Rollup 还提供了一个 `rollup.watch` 函数，当检测到磁盘上的某个模块已更改时，它将重新打包。当你在命令行中使用 `--watch` 标志运行 Rollup 时，它会在内部使用。请注意，当通过 JavaScript API 使用观察模式时，你需要在响应 `BUNDLE_END` 事件时调用 `event.result.close()`，以允许插件在 [`closeBundle`](../plugin-development/index.md#closebundle) 钩子中清理资源，见下文。
 
-```js
+```js twoslash
 const rollup = require('rollup');
 
-const watchOptions = {...};
+// ---cut-start---
+/** @type {import('rollup').RollupWatchOptions} */
+// ---cut-end---
+const watchOptions = {
+	/*...*/
+};
 const watcher = rollup.watch(watchOptions);
 
 watcher.on('event', event => {
+<<<<<<< HEAD
   // event.code 可以是以下之一：
   //   START        - 监视器正在（重新）启动
   //   BUNDLE_START - 单次打包
@@ -242,20 +361,64 @@ watcher.on('event', event => {
   //                      你应该在完成后调用 "event.result.close()"。
   // 如果从事件处理程序返回一个 Promise，则 Rollup
   // 将等待 Promise 解析后再继续。
+=======
+	// event.code can be one of:
+	//   START        — the watcher is (re)starting
+	//   BUNDLE_START — building an individual bundle
+	//                  * event.input will be the input options object if present
+	//                  * event.output contains an array of the "file" or
+	//                    "dir" option values of the generated outputs
+	//   BUNDLE_END   — finished building a bundle
+	//                  * event.input will be the input options object if present
+	//                  * event.output contains an array of the "file" or
+	//                    "dir" option values of the generated outputs
+	//                  * event.duration is the build duration in milliseconds
+	//                  * event.result contains the bundle object that can be
+	//                    used to generate additional outputs by calling
+	//                    bundle.generate or bundle.write. This is especially
+	//                    important when the watch.skipWrite option is used.
+	//                  You should call "event.result.close()" once you are done
+	//                  generating outputs, or if you do not generate outputs.
+	//                  This will allow plugins to clean up resources via the
+	//                  "closeBundle" hook.
+	//   END          — finished building all bundles
+	//   ERROR        — encountered an error while bundling
+	//                  * event.error contains the error that was thrown
+	//                  * event.result is null for build errors and contains the
+	//                    bundle object for output generation errors. As with
+	//                    "BUNDLE_END", you should call "event.result.close()" if
+	//                    present once you are done.
+	// If you return a Promise from your event handler, Rollup will wait until the
+	// Promise is resolved before continuing.
+>>>>>>> e6e05cde31fc144228bb825c9d4ebba2f377075c
 });
 
 // 这将确保在每次运行后正确关闭打包
 watcher.on('event', ({ result }) => {
-  if (result) {
-  	result.close();
-  }
+	if (result) {
+		result.close();
+	}
 });
 
+<<<<<<< HEAD
 // 此外，你可以挂钩以下内容。
 // 同样，返回 Promise 以使 Rollup 在该阶段等待：
 watcher.on('change', (id, { event }) => { /* 更改了一个文件 */ })
 watcher.on('restart', () => { /* 新触发了一次运行 */ })
 watcher.on('close', () => { /* 监视器被关闭了，请看下面的代码 */ })
+=======
+// Additionally, you can hook into the following. Again, return a Promise to
+// make Rollup wait at that stage:
+watcher.on('change', (id, { event }) => {
+	/* a file was modified */
+});
+watcher.on('restart', () => {
+	/* a new run was triggered */
+});
+watcher.on('close', () => {
+	/* the watcher was closed, see below */
+});
+>>>>>>> e6e05cde31fc144228bb825c9d4ebba2f377075c
 
 // 停止监听
 watcher.close();
@@ -265,7 +428,10 @@ watcher.close();
 
 `watchOptions` 参数是一个配置（或配置数组），你可以从配置文件中导出它。
 
-```js
+```js twoslash
+// ---cut-start---
+/** @type {import('rollup').RollupWatchOptions} */
+// ---cut-end---
 const watchOptions = {
 	...inputOptions,
 	output: [outputOptions],
@@ -286,7 +452,7 @@ const watchOptions = {
 
 rollup 通过一个单独的入口点公开了它用来在命令行界面中加载配置文件的工具函数，为加载配置提供帮助，此工具函数接收一个解析过的 `fileName` （文件路径）和可选的包含命令行参数的对象：
 
-```js
+```js twoslash
 const { loadConfigFile } = require('rollup/loadConfigFile');
 const path = require('node:path');
 const rollup = require('rollup');
@@ -322,7 +488,7 @@ loadConfigFile(path.resolve(__dirname, 'rollup.config.js'), {
 
 虽然命令行界面提供了通过 [`--filterLogs`](../command-line-interface/index.md#filterlogs-filter) 标志对日志进行强大过滤的方式，但在使用 JavaScript API 时，直接使用此功能是不可用的。然而，Rollup 提供了一个辅助函数 `getLogFilter`，可以使用与 CLI 相同的语法生成过滤器。这在指定自定义的 `onLog` 处理方法以及希望为第三方系统提供与 Rollup CLI 类似的过滤功能体验时非常有用。该函数接受一个字符串数组作为参数。需要注意的是，它不会像 CLI 那样拆分以逗号分隔的过滤器列表。
 
-```js
+```js twoslash
 // rollup.config.mjs
 import { getLogFilter } from 'rollup/getLogFilter';
 
@@ -343,7 +509,7 @@ export default {
 
 为了使用 Rollup 的解析器解析任意代码，插件可以使用 [`this.parse`](../plugin-development/index.md#this-parse) 。为了在 Rollup 构建的上下文之外使用这个功能，解析器也作为一个单独的导出项暴露出来。它的签名与 `this.parse` 相同：
 
-```js
+```js twoslash
 import { parseAst } from 'rollup/parseAst';
 import assert from 'node:assert';
 
@@ -374,7 +540,7 @@ assert.deepEqual(
 
 在 Rollup 的非 wasm 版本中，还有一个异步版本在不同的线程中进行解析：
 
-```js
+```js twoslash
 import { parseAstAsync } from 'rollup/parseAst';
 import assert from 'node:assert';
 

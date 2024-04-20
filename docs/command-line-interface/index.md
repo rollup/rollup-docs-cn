@@ -12,7 +12,9 @@ Rollup 通常应该从命令行使用。你可以提供一个可选的 Rollup �
 
 Rollup 配置文件是可选的，但它们非常强大和方便，因此**推荐**使用。配置文件是一个 ES 模块，它导出一个默认对象，其中包含所需的选项：
 
-```javascript
+```javascript twoslash
+/** @type {import('rollup').RollupOptions} */
+// ---cut---
 export default {
 	input: 'src/main.js',
 	output: {
@@ -36,10 +38,17 @@ rollup --config rollup.config.ts --configPlugin typescript
 
 配置文件支持下面列出的选项。有关每个选项的详细信息，请参阅[选项大全](../configuration-options/index.md)：
 
-```javascript
+```javascript twoslash
 // rollup.config.js
 
+<<<<<<< HEAD
 // 可以是数组（即多个输入源）
+=======
+// can be an array (for multiple inputs)
+// ---cut-start---
+/** @type {import('rollup').RollupOptions} */
+// ---cut-end---
+>>>>>>> e6e05cde31fc144228bb825c9d4ebba2f377075c
 export default {
 	// 核心输入选项
 	external,
@@ -92,6 +101,7 @@ export default {
 		generatedCode,
 		hashCharacters,
 		hoistTransitiveImports,
+		importAttributesKey,
 		inlineDynamicImports,
 		interop,
 		intro,
@@ -139,9 +149,12 @@ export default {
 
 你可以从配置文件中导出一个**数组**，以便一次从多个不相关的输入进行打包，即使在监视模式下也可以。要使用相同的输入打出不同的包，你需要为每个输入提供一个输出选项数组：
 
-```javascript
+```javascript twoslash
 // rollup.config.js (building more than one bundle)
 
+// ---cut-start---
+/** @type {import('rollup').RollupOptions[]} */
+// ---cut-end---
 export default [
 	{
 		input: 'main-a.js',
@@ -196,11 +209,14 @@ rollup --config
 
 你还可以导出一个返回任何上述配置格式的函数。该函数将传递当前的命令行参数，以便你可以动态地调整你的配置以遵循例如 [`--silent`](#silent)。如果你使用 `config` 作为前缀定义自己的命令行选项，你甚至可以自定义它们：
 
-```javascript
+```javascript twoslash
 // rollup.config.js
 import defaultConfig from './rollup.default.config.js';
 import debugConfig from './rollup.debug.config.js';
 
+// ---cut-start---
+/** @type {import('rollup').RollupOptionsFunction} */
+// ---cut-end---
 export default commandLineArgs => {
 	if (commandLineArgs.configDebug === true) {
 		return debugConfig;
@@ -213,11 +229,15 @@ export default commandLineArgs => {
 
 默认情况下，命令行参数将始终覆盖从配置文件中导出的相应值。如果你想更改这种行为，可以通过从 `commandLineArgs` 对象中删除它们来让 Rollup 忽略命令行参数：
 
-```javascript
+```javascript twoslash
 // rollup.config.js
+// ---cut-start---
+/** @type {import('rollup').RollupOptionsFunction} */
+// ---cut-end---
 export default commandLineArgs => {
-  const inputBase = commandLineArgs.input || 'main.js';
+	const inputBase = commandLineArgs.input || 'main.js';
 
+<<<<<<< HEAD
   // 这会使 Rollup 忽略 CLI 参数
   delete commandLineArgs.input;
   return {
@@ -225,13 +245,24 @@ export default commandLineArgs => {
     output: { ... }
   }
 }
+=======
+	// this will make Rollup ignore the CLI argument
+	delete commandLineArgs.input;
+	return {
+		input: 'src/entries/' + inputBase,
+		output: {
+			/* ... */
+		}
+	};
+};
+>>>>>>> e6e05cde31fc144228bb825c9d4ebba2f377075c
 ```
 
 ### 填写配置时的智能提示 {#config-intellisense}
 
 由于 Rollup 随附了 TypeScript 类型定义，因此你可以使用 JSDoc 类型提示来利用你的 IDE 的智能感知功能：
 
-```javascript
+```javascript twoslash
 // rollup.config.js
 /**
  * @type {import('rollup').RollupOptions}
@@ -244,7 +275,7 @@ export default config;
 
 或者，你可以使用 `defineConfig` 辅助函数，它应该提供无需 JSDoc 注释即可使用智能感知的功能：
 
-```javascript
+```javascript twoslash
 // rollup.config.js
 import { defineConfig } from 'rollup';
 
@@ -261,7 +292,7 @@ export default defineConfig({
 
 你还可以通过 [`--configPlugin`](#configplugin-plugin) 选项直接使用 TypeScript 编写配置文件。使用 TypeScript，你可以直接导入 `RollupOptions` 类型：
 
-```typescript
+```typescript twoslash
 import type { RollupOptions } from 'rollup';
 
 const config: RollupOptions = {
@@ -298,14 +329,20 @@ rollup --config node:my-special-config
 
 对于 CommonJS 文件，人们经常使用 `__dirname` 访问当前目录并将相对路径解析为绝对路径。这在原生 ES 模块中不被支持。相反，我们建议使用以下方法 (例如生成外部模块的绝对 id)：
 
-```js
+```js twoslash
 // rollup.config.js
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath } from 'node:url';
 
 export default {
+<<<<<<< HEAD
   ...,
   // 为 <currentdir>/src/some-file.js 生成绝对路径
   external: [fileURLToPath(new URL('src/some-file.js', import.meta.url))]
+=======
+	/* ..., */
+	// generates an absolute path for <currentdir>/src/some-file.js
+	external: [fileURLToPath(new URL('src/some-file.js', import.meta.url))]
+>>>>>>> e6e05cde31fc144228bb825c9d4ebba2f377075c
 };
 ```
 
@@ -315,7 +352,7 @@ export default {
 
 - 对于 Node 17.5+，你可以使用导入断言
 
-  ```js
+  ```js twoslash
   import pkg from './package.json' assert { type: 'json' };
 
   export default {
@@ -327,7 +364,7 @@ export default {
 
 - 对于旧一些的 Node 版本，你可以使用 `createRequire`
 
-  ```js
+  ```js twoslash
   import { createRequire } from 'node:module';
   const require = createRequire(import.meta.url);
   const pkg = require('./package.json');
@@ -337,7 +374,7 @@ export default {
 
 - 或者直接从磁盘读取并解析其内容
 
-  ```js
+  ```js twoslash
   // rollup.config.mjs
   import { readFileSync } from 'node:fs';
 
@@ -356,6 +393,7 @@ export default {
 许多选项都有等效的命令行标志。在这些情况下，如果你正在使用配置文件，则此处传递的任何参数都将覆盖配置文件。以下是所有支持的选项列表：
 
 ```
+<<<<<<< HEAD
 -c, --config <filename>     使用此配置文件
 														（如果使用参数但未指定值，则默认为 rollup.config.js）
 -d, --dir <dirname>         用于块的目录（如果不存在，则打印到 stdout）
@@ -449,6 +487,102 @@ export default {
 --watch.onError <cmd>       在 "ERROR" 事件上运行的 Shell 命令
 --watch.onStart <cmd>       在 "START" 事件上运行的 Shell 命令
 --watch.skipWrite           在监视时不要将文件写入磁盘
+=======
+-c, --config <filename>     Use this config file (if argument is used but value
+                              is unspecified, defaults to rollup.config.js)
+-d, --dir <dirname>         Directory for chunks (if absent, prints to stdout)
+-e, --external <ids>        Comma-separate list of module IDs to exclude
+-f, --format <format>       Type of output (amd, cjs, es, iife, umd, system)
+-g, --globals <pairs>       Comma-separate list of `moduleID:Global` pairs
+-h, --help                  Show this help message
+-i, --input <filename>      Input (alternative to <entry file>)
+-m, --sourcemap             Generate sourcemap (`-m inline` for inline map)
+-n, --name <name>           Name for UMD export
+-o, --file <output>         Single output file (if absent, prints to stdout)
+-p, --plugin <plugin>       Use the plugin specified (may be repeated)
+-v, --version               Show version number
+-w, --watch                 Watch files in bundle and rebuild on changes
+--amd.autoId                Generate the AMD ID based off the chunk name
+--amd.basePath <prefix>     Path to prepend to auto generated AMD ID
+--amd.define <name>         Function to use in place of `define`
+--amd.forceJsExtensionForImports Use `.js` extension in AMD imports
+--amd.id <id>               ID for AMD module (default is anonymous)
+--assetFileNames <pattern>  Name pattern for emitted assets
+--banner <text>             Code to insert at top of bundle (outside wrapper)
+--chunkFileNames <pattern>  Name pattern for emitted secondary chunks
+--compact                   Minify wrapper code
+--context <variable>        Specify top-level `this` value
+--no-dynamicImportInCjs     Write external dynamic CommonJS imports as require
+--entryFileNames <pattern>  Name pattern for emitted entry chunks
+--environment <values>      Settings passed to config file (see example)
+--no-esModule               Do not add __esModule property
+--exports <mode>            Specify export mode (auto, default, named, none)
+--extend                    Extend global variable defined by --name
+--no-externalImportAttributes Omit import attributes in "es" output
+--no-externalLiveBindings   Do not generate code to support live bindings
+--failAfterWarnings         Exit with an error if the build produced warnings
+--filterLogs <filter>       Filter log messages
+--footer <text>             Code to insert at end of bundle (outside wrapper)
+--forceExit                 Force exit the process when done
+--no-freeze                 Do not freeze namespace objects
+--generatedCode <preset>    Which code features to use (es5/es2015)
+--generatedCode.arrowFunctions Use arrow functions in generated code
+--generatedCode.constBindings Use "const" in generated code
+--generatedCode.objectShorthand Use shorthand properties in generated code
+--no-generatedCode.reservedNamesAsProps Always quote reserved names as props
+--generatedCode.symbols     Use symbols in generated code
+--hashCharacters <name>     Use the specified character set for file hashes
+--no-hoistTransitiveImports Do not hoist transitive imports into entry chunks
+--importAttributesKey <name> Use the specified keyword for import attributes
+--no-indent                 Don't indent result
+--inlineDynamicImports      Create single bundle when using dynamic imports
+--no-interop                Do not include interop block
+--intro <text>              Code to insert at top of bundle (inside wrapper)
+--logLevel <level>          Which kind of logs to display
+--no-makeAbsoluteExternalsRelative Prevent normalization of external imports
+--maxParallelFileOps <value> How many files to read in parallel
+--minifyInternalExports     Force or disable minification of internal exports
+--noConflict                Generate a noConflict method for UMD globals
+--outro <text>              Code to insert at end of bundle (inside wrapper)
+--perf                      Display performance timings
+--no-preserveEntrySignatures Avoid facade chunks for entry points
+--preserveModules           Preserve module structure
+--preserveModulesRoot       Put preserved modules under this path at root level
+--preserveSymlinks          Do not follow symlinks when resolving files
+--no-reexportProtoFromExternal Ignore `__proto__` in star re-exports
+--no-sanitizeFileName       Do not replace invalid characters in file names
+--shimMissingExports        Create shim variables for missing exports
+--silent                    Don't print warnings
+--sourcemapBaseUrl <url>    Emit absolute sourcemap URLs with given base
+--sourcemapExcludeSources   Do not include source code in source maps
+--sourcemapFile <file>      Specify bundle position for source maps
+--sourcemapFileNames <pattern> Name pattern for emitted sourcemaps
+--stdin=ext                 Specify file extension used for stdin input
+--no-stdin                  Do not read "-" from stdin
+--no-strict                 Don't emit `"use strict";` in the generated modules
+--strictDeprecations        Throw errors for deprecated features
+--no-systemNullSetters      Do not replace empty SystemJS setters with `null`
+--no-treeshake              Disable tree-shaking optimisations
+--no-treeshake.annotations  Ignore pure call annotations
+--treeshake.correctVarValueBeforeDeclaration Deoptimize variables until declared
+--treeshake.manualPureFunctions <names> Manually declare functions as pure
+--no-treeshake.moduleSideEffects Assume modules have no side effects
+--no-treeshake.propertyReadSideEffects Ignore property access side effects
+--no-treeshake.tryCatchDeoptimization Do not turn off try-catch-tree-shaking
+--no-treeshake.unknownGlobalSideEffects Assume unknown globals do not throw
+--validate                  Validate output
+--waitForBundleInput        Wait for bundle input files
+--watch.buildDelay <number> Throttle watch rebuilds
+--no-watch.clearScreen      Do not clear the screen when rebuilding
+--watch.exclude <files>     Exclude files from being watched
+--watch.include <files>     Limit watching to specified files
+--watch.onBundleEnd <cmd>   Shell command to run on `"BUNDLE_END"` event
+--watch.onBundleStart <cmd> Shell command to run on `"BUNDLE_START"` event
+--watch.onEnd <cmd>         Shell command to run on `"END"` event
+--watch.onError <cmd>       Shell command to run on `"ERROR"` event
+--watch.onStart <cmd>       Shell command to run on `"START"` event
+--watch.skipWrite           Do not write files to disk when watching
+>>>>>>> e6e05cde31fc144228bb825c9d4ebba2f377075c
 ```
 
 以下标志仅通过命令行界面可用。所有其他标志都对应并覆盖其配置文件等效项，请参阅[选项大列表](../configuration-options/index.md)获取详细信息。
