@@ -48,9 +48,79 @@
   </a>
 </p>
 
+<<<<<<< HEAD
 ## Rollup 贡献者
+=======
+These commands assume the entry point to your application is named main.js, and that you'd like all imports compiled into a single file named bundle.js.
 
-This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)]. <a href="https://github.com/rollup/rollup/graphs/contributors"><img src="https://opencollective.com/rollup/contributors.svg?width=890" /></a>
+For browsers:
+
+```bash
+# compile to a <script> containing a self-executing function
+rollup main.js --format iife --name "myBundle" --file bundle.js
+```
+
+For Node.js:
+
+```bash
+# compile to a CommonJS module
+rollup main.js --format cjs --file bundle.js
+```
+
+For both browsers and Node.js:
+
+```bash
+# UMD format requires a bundle name
+rollup main.js --format umd --name "myBundle" --file bundle.js
+```
+
+## Why
+
+Developing software is usually easier if you break your project into smaller separate pieces, since that often removes unexpected interactions and dramatically reduces the complexity of the problems you'll need to solve, and simply writing smaller projects in the first place [isn't necessarily the answer](https://medium.com/@Rich_Harris/small-modules-it-s-not-quite-that-simple-3ca532d65de4). Unfortunately, JavaScript has not historically included this capability as a core feature in the language.
+
+This finally changed with ES modules support in JavaScript, which provides a syntax for importing and exporting functions and data so they can be shared between separate scripts. Most browsers and Node.js support ES modules. However, Node.js releases before 12.17 support ES modules only behind the `--experimental-modules` flag, and older browsers like Internet Explorer do not support ES modules at all. Rollup allows you to write your code using ES modules, and run your application even in environments that do not support ES modules natively. For environments that support them, Rollup can output optimized ES modules; for environments that don't, Rollup can compile your code to other formats such as CommonJS modules, AMD modules, and IIFE-style scripts. This means that you get to _write future-proof code_, and you also get the tremendous benefits of...
+
+## Tree Shaking
+
+In addition to enabling the use of ES modules, Rollup also statically analyzes and optimizes the code you are importing, and will exclude anything that isn't actually used. This allows you to build on top of existing tools and modules without adding extra dependencies or bloating the size of your project.
+
+For example, with CommonJS, the _entire tool or library must be imported_.
+
+```js
+// import the entire utils object with CommonJS
+var utils = require('node:utils');
+var query = 'Rollup';
+// use the ajax method of the utils object
+utils.ajax('https://api.example.com?search=' + query).then(handleResponse);
+```
+
+But with ES modules, instead of importing the whole `utils` object, we can just import the one `ajax` function we need:
+
+```js
+// import the ajax function with an ES import statement
+import { ajax } from 'node:utils';
+
+var query = 'Rollup';
+// call the ajax function
+ajax('https://api.example.com?search=' + query).then(handleResponse);
+```
+
+Because Rollup includes the bare minimum, it results in lighter, faster, and less complicated libraries and applications. Since this approach is based on explicit `import` and `export` statements, it is vastly more effective than simply running an automated minifier to detect unused variables in the compiled output code.
+
+## Compatibility
+
+### Importing CommonJS
+
+Rollup can import existing CommonJS modules [through a plugin](https://github.com/rollup/plugins/tree/master/packages/commonjs).
+
+### Publishing ES Modules
+
+To make sure your ES modules are immediately usable by tools that work with CommonJS such as Node.js and webpack, you can use Rollup to compile to UMD or CommonJS format, and then point to that compiled version with the `main` property in your `package.json` file. If your `package.json` file also has a `module` field, ES-module-aware tools like Rollup and [webpack](https://webpack.js.org/) will [import the ES module version](https://github.com/rollup/rollup/wiki/pkg.module) directly.
+
+## Contributors
+>>>>>>> 5d8019b901e98cc8895751a23e5edfc9135b1a35
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)]. <a href="https://github.com/rollup/rollup/graphs/contributors"><img src="https://opencollective.com/rollup/contributors.svg?width=890" /></a>. If you want to contribute yourself, head over to the [contribution guidelines](CONTRIBUTING.md).
 
 ## Rollup 赞助者
 
