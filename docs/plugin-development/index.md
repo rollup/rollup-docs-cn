@@ -18,8 +18,11 @@ Rollup 插件是一个对象，具有 [属性](#properties)、[构建钩子](#bu
 
 以下插件将拦截任何不通过访问文件系统的 `virtual-module` 导入。例如，如果你想在浏览器中使用 Rollup，则需要这样做。它甚至可以用来替换入口点，如示例所示。
 
-```js
-// rollup-plugin-my-example.js
+```js twoslash
+// @filename: rollup-plugin-my-example.js
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 export default function myExample () {
   return {
     name: 'my-example', // 此名称将出现在警告和错误中
@@ -41,7 +44,7 @@ export default function myExample () {
   };
 }
 
-// rollup.config.js
+// @filename: rollup.config.js
 import myExample from './rollup-plugin-my-example.js';
 export default ({
   input: 'virtual-module', // 由我们的插件解析
@@ -94,7 +97,10 @@ export default ({
 
 - `order: "pre" | "post" | null`<br> 如果有多个插件实现此钩子，则可以先运行此插件（`"pre"`），最后运行此插件（`"post"`），或在用户指定的位置运行（没有值或 `null`）。
 
-  ```js
+  ```js twoslash
+  // ---cut-start---
+  /** @returns {import('rollup').Plugin} */
+  // ---cut-end---
   export default function resolveFirst() {
   	return {
   		name: 'resolve-first',
@@ -117,10 +123,13 @@ export default ({
 
   当你需要在不同的 [`writeBundle`](#writebundle) 钩子中运行多个命令行工具并相互依赖时，这可能很有用（请注意，如果可能，建议在顺序 [`generateBundle`](#generatebundle) 钩子中添加/删除文件，这样更快，适用于纯内存构建，并允许其他内存构建插件查看文件）。你可以将此选项与 `order` 结合使用进行排序。
 
-  ```js
-  import { resolve } from 'node:path';
+  ```js twoslash
+  import path from 'node:path';
   import { readdir } from 'node:fs/promises';
 
+  // ---cut-start---
+  /** @returns {import('rollup').Plugin} */
+  // ---cut-end---
   export default function getFilesOnDisk() {
   	return {
   		name: 'getFilesOnDisk',
@@ -128,7 +137,7 @@ export default ({
   			sequential: true,
   			order: 'post',
   			async handler({ dir }) {
-  				const topLevelFiles = await readdir(resolve(dir));
+  				const topLevelFiles = await readdir(path.resolve(dir));
   				console.log(topLevelFiles);
   			}
   		}
@@ -352,7 +361,10 @@ interface SourceDescription {
 
 如果此钩子返回 `false`，日志将会被过滤。否则，日志将会传递给下一个插件的 `onLog` 钩子、`onLog` 选项或打印到控制台。插件还可以通过将日志传递给 [`this.error`](#this-error)、[`this.warn`](#this-warn)、[`this.info`](#this-info) 或 [`this.debug`](#this-debug) 并返回 `false` 来改变日志的级别或将日志转换为报错。请注意，与其他插件钩子不同，这些函数不会添加或更改日志的属性，例如插件名称。另外，由 `onLog` 钩子生成的日志不会再次传递给同一个插件的 `onLog` 钩子。如果另一个插件在其自己的 `onLog` 钩子中对这样的日志做出响应并生成了另一个日志，那么这个日志也不会传递给原始的 `onLog` 钩子。
 
-```js
+```js twoslash
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function plugin1() {
 	return {
 		name: 'plugin1',
@@ -371,6 +383,9 @@ function plugin1() {
 	};
 }
 
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function plugin2() {
 	return {
 		name: 'plugin2',
@@ -490,12 +505,21 @@ import { foo } from '../bar.js';
 
 例如，你可以将其用作为入口点定义自定义代理模块的机制。以下插件将所有入口点代理到注入 polyfill 导入的模块中。
 
+<<<<<<< HEAD
 ```js
 // 我们在 polyfill id 前面加上 \0，
 // 以告诉其他插件不要尝试加载或转换它
+=======
+```js twoslash
+// We prefix the polyfill id with \0 to tell other plugins not to try to load or
+// transform it
+>>>>>>> b9051a223aad3349546772e891b89c4e40fe5618
 const POLYFILL_ID = '\0polyfill';
 const PROXY_SUFFIX = '?inject-polyfill-proxy';
 
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function injectPolyfillPlugin() {
 	return {
 		name: 'inject-polyfill',
@@ -566,7 +590,10 @@ function injectPolyfillPlugin() {
 
 如果返回一个对象，则可以将导入解析为不同的 id，同时将其从产物中排除。这使你可以将依赖项替换为外部依赖项，而无需用户手动通过 `external` 选项将它们挪到产物“之外” ：
 
-```js
+```js twoslash
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function externalizeDependencyPlugin() {
 	return {
 		name: 'externalize-dependency',
@@ -823,7 +850,10 @@ flowchart TB
 
 以下插件将使用当前时间戳使块 `foo` 的哈希无效：
 
-```js
+```js twoslash
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function augmentWithDatePlugin() {
 	return {
 		name: 'augment-with-date',
@@ -1017,7 +1047,10 @@ type renderDynamicImportHook = (options: {
 
 以下代码将使用自定义处理程序替换所有动态导入，添加 `import.meta.url` 作为第二个参数，以允许处理程序正确解析相对导入：
 
-```js
+```js twoslash
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function dynamicImportPolyfillPlugin() {
 	return {
 		name: 'dynamic-import-polyfill',
@@ -1039,7 +1072,10 @@ dynamicImportPolyfill('./lib.js', import.meta.url);
 
 下一个插件将确保所有 `esm-lib` 的动态导入都被标记为外部模块，并保留为导入表达式，以便允许 CommonJS 构建在 Node 13+中导入 ES 模块，参见 Node 文档中的 [从 CommonJS 导入 ES 模块](https://nodejs.org/api/esm.html#esm_import_expressions)。
 
-```js
+```js twoslash
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function retainImportExpressionPlugin() {
 	return {
 		name: 'retain-import-expression',
@@ -1116,7 +1152,10 @@ type ResolveFileUrlHook = (options: {
 
 以下插件将始终相对于当前文档解析所有文件：
 
-```js
+```js twoslash
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function resolveToDocumentPlugin() {
 	return {
 		name: 'resolve-to-document',
@@ -1142,7 +1181,10 @@ function resolveToDocumentPlugin() {
 
 这种行为可以通过这个钩子进行更改，包括 ES 模块。对于每个 `import.meta<.someProperty>` 的出现，都会调用这个钩子，并传入属性的名称或者如果直接访问 `import.meta` 则为 `null`。例如，以下代码将使用原始模块相对路径到当前工作目录的解析 `import.meta.url`，并在运行时再次将此路径解析为当前文档的基本 URL：
 
-```js
+```js twoslash
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function importMetaUrlCurrentModulePlugin() {
 	return {
 		name: 'import-meta-url-current-module',
@@ -1198,7 +1240,10 @@ function importMetaUrlCurrentModulePlugin() {
 
 只有当 [`logLevel`](../configuration-options/index.md#loglevel) 选项被显式设置为 `"debug"` 时，这些日志才会被处理，否则不会有任何操作。因此，鼓励在插件中添加有用的调试日志，以帮助发现问题，但默认情况下它们将不被展示。如果需要进行大量计算来生成日志，请确保使用函数形式，以便只在实际处理日志时再执行这些计算。
 
-```js
+```js twoslash
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function plugin() {
 	return {
 		name: 'test',
@@ -1265,10 +1310,25 @@ interface EmittedAsset {
 
 默认情况下，Rollup 假定生成的代码块独立于其他入口点执行，甚至可能在任何其他代码执行之前执行。这意味着如果生成的代码块与现有入口点共享依赖关系，Rollup 将为这些入口点之间共享的依赖项创建一个额外的代码块。提供一个非空的模块 id 数组作为 `implicitlyLoadedAfterOneOf` 的值将改变这种行为，通过为 Rollup 提供额外的信息，在某些情况下防止这种情况发生。这些 id 将像 `id` 属性一样被解析，如果提供了 `importer` 属性，则会尊重它。现在，Rollup 将假定生成的代码块仅在已经执行了至少一个导致 `implicitlyLoadedAfterOneOf` 中的一个 id 被加载的入口点时才会执行，创建与通过动态导入从 `implicitlyLoadedAfterOneOf` 中的模块到达新生成的代码块时相同的代码块。下面是一个使用此功能创建简单 HTML 文件的示例，其中包含多个脚本，创建优化的代码块以遵守它们的执行顺序：
 
-```js
+<!-- prettier-ignore-start -->
+```js twoslash
 // rollup.config.js
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function generateHtmlPlugin() {
-	let ref1, ref2, ref3;
+// ---cut-start---
+	/** @type {string} */
+// ---cut-end---
+	let ref1;
+// ---cut-start---
+	/** @type {string} */
+// ---cut-end---
+	let ref2;
+// ---cut-start---
+	/** @type {string} */
+// ---cut-end---
+	let ref3;
 	return {
 		name: 'generate-html',
 		buildStart() {
@@ -1309,6 +1369,9 @@ function generateHtmlPlugin() {
 	};
 }
 
+// ---cut-start---
+/** @returns {import('rollup').RollupOptions} */
+// ---cut-end---
 export default {
 	input: [],
 	preserveEntrySignatures: false,
@@ -1319,6 +1382,7 @@ export default {
 	}
 };
 ```
+<!-- prettier-ignore-end -->
 
 如果没有动态导入，这将创建三个块，其中第一个块包含 `src/entry1` 的所有依赖项，第二个块仅包含 `src/entry2` 的依赖项，这些依赖项不包含在第一个块中，并从第一个块中导入它们，第三个块也是同样的情况。
 
@@ -1328,7 +1392,10 @@ export default {
 
 要在导入中引用预构建的块，我们需要在 [`resolveId`](#resolveid) 钩子中将 "module" 标记为外部，因为预构建的块不是模块图的一部分。相反，它们的行为类似于具有块元数据的资源：
 
-```js
+```js twoslash
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function emitPrebuiltChunkPlugin() {
 	return {
 		name: 'emit-prebuilt-chunk',
@@ -1376,7 +1443,10 @@ import { foo } from './my-prebuilt-chunk.js';
 
 在 [`onLog`](#onlog) 钩子中，这个函数是将警告转换为错误的简单方法，同时保留警告的所有附加属性：
 
-```js
+```js twoslash
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function myPlugin() {
 	return {
 		name: 'my-plugin',
@@ -1523,7 +1593,10 @@ type Load = (options: {
 
 请注意，关于 `assertions`、`meta`、`moduleSideEffects` 和 `syntheticNamedExports` 选项，与 `resolveId` 钩子相同的限制适用：仅当模块尚未加载时，它们的值才会生效。因此，非常重要的是首先使用 `this.resolve` 查找任何插件是否想要在其 `resolveId` 钩子中设置这些选项的特殊值，并在适当时将这些选项传递给 `this.load`。下面的示例展示了如何处理包含特殊代码注释的模块以添加代理模块。请注意重新导出默认导出的特殊处理：
 
-```js
+```js twoslash
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 export default function addProxyPlugin() {
 	return {
 		async resolveId(source, importer, options) {
@@ -1574,11 +1647,20 @@ export default function addProxyPlugin() {
 
 这里是另一个更详细的示例，其中我们通过 `resolveDependencies` 选项和对 `this.load` 的重复调用来扫描整个依赖子图。我们使用已处理模块 ID 的 `Set` 来处理循环依赖关系。插件的目标是向每个动态导入的块添加日志，该日志仅列出块中的所有模块。虽然这只是一个玩具示例，但该技术可以用于例如为子图中导入的所有 CSS 创建单个样式标记。
 
+<<<<<<< HEAD
 ```js
 // 前导的 \0 指示其他插件不要尝试解析、加载
 // 或转换我们的代理模块
+=======
+```js twoslash
+// The leading \0 instructs other plugins not to try to resolve, load or
+// transform our proxy modules
+>>>>>>> b9051a223aad3349546772e891b89c4e40fe5618
 const DYNAMIC_IMPORT_PROXY_PREFIX = '\0dynamic-import:';
 
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 export default function dynamicChunkLogsPlugin() {
 	return {
 		name: 'dynamic-chunk-logs',
@@ -1762,7 +1844,10 @@ this.debug(() => generateExpensiveDebugLog());
 
 以下示例将检测 `.svg` 文件的导入，将导入的文件作为资源产出，并返回它们的 URL，例如用作 `img` 标签的 `src` 属性：
 
-```js
+```js twoslash
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function svgResolverPlugin() {
 	return {
 		name: 'svg-resolver',
@@ -1807,7 +1892,10 @@ if (COMPILER_FLAG) {
 
 如果插件将 `COMPLIER_FLAG` 替换为 `false`，那么我们将得到一个意外的结果：未引用的静态资源仍然会被产出但未使用。我们可以通过在调用 [`this.emitFile`](#this-emitfile) 时将 `needsCodeReference` 设置为 `true` 来解决这个问题，如下面的代码所示：
 
-```js
+```js twoslash
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function svgResolverPlugin() {
 	return {
 		/* ... */
@@ -1832,9 +1920,12 @@ function svgResolverPlugin() {
 
 以下示例将检测以 `register-paint-worklet:` 为前缀的导入，并生成必要的代码和单独的块以生成 CSS 绘制工作流。请注意，这仅适用于现代浏览器，并且仅在输出格式设置为 `es` 时才有效。
 
-```js
+```js twoslash
 const REGISTER_WORKLET = 'register-paint-worklet:';
 
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function registerPaintWorkletPlugin() {
 	return {
 		name: 'register-paint-worklet',
@@ -1905,9 +1996,12 @@ export const size = 6;
 
 （使用 [@rollup/pluginutils](https://github.com/rollup/plugins/tree/master/packages/pluginutils) 获取常用函数，并按推荐方式实现转换器。）
 
-```js
+```js twoslash
 import { createFilter } from '@rollup/pluginutils';
 
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function transformCodePlugin(options = {}) {
 	const filter = createFilter(options.include, options.exclude);
 
@@ -1996,7 +2090,10 @@ console.log(__synthetic);
 
 自定义解析器选项提供了一种解决方案，允许在通过 `this resolve` 手动解析模块时为插件传递附加选项。这发生在不更改 ID 的情况下，因此如果目标插件不存在，则不会影响其他插件正确解析模块的能力。
 
-```js
+```js twoslash
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function requestingPlugin() {
 	return {
 		name: 'requesting',
@@ -2009,6 +2106,9 @@ function requestingPlugin() {
 	};
 }
 
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function resolvingPlugin() {
 	return {
 		name: 'resolving',
@@ -2028,7 +2128,10 @@ function resolvingPlugin() {
 
 插件可以使用 [`resolveId`](#resolveid)、[`load`](#load) 和 [`transform`](#transform) 钩子通过自己和其他插件为模块添加自定义元数据，并通过 [`this.getModuleInfo`](#this-getmoduleinfo)、[`this.load`](#this-load) 和 [`moduleParsed`](#moduleparsed) 钩子访问该元数据。此元数据应始终是可 JSON.stringify 的，并将在缓存中持久化，例如在监视模式下。
 
-```js
+```js twoslash
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function annotatingPlugin() {
 	return {
 		name: 'annotating',
@@ -2040,6 +2143,9 @@ function annotatingPlugin() {
 	};
 }
 
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function readingPlugin() {
 	let parentApi;
 	return {
@@ -2060,7 +2166,10 @@ function readingPlugin() {
 
 模块的 `meta` 对象在 Rollup 开始加载模块时创建，并在模块的每个生命周期钩子中更新。如果你存储对此对象的引用，则还可以手动更新它。要访问尚未加载的模块的元数据对象，可以通过 [`this.load`](#this-load) 触发其创建和加载该模块：
 
-```js
+```js twoslash
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function plugin() {
 	return {
 		name: 'test',
@@ -2083,7 +2192,12 @@ function plugin() {
 
 对于任何其他类型的插件间通信，我们推荐以下模式。请注意，`api` 永远不会与任何即将推出的插件钩子冲突。
 
-```js
+<!-- prettier-ignore-start -->
+```js twoslash
+/** @typedef {{ doSomething(...args: any[]): void }} ParentPluginApi */
+
+/** @returns {import('rollup').Plugin<ParentPluginApi>} */
+// ---cut---
 function parentPlugin() {
 	return {
 		name: 'parent',
@@ -2097,12 +2211,21 @@ function parentPlugin() {
 	};
 }
 
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
 function dependentPlugin() {
+// ---cut-start---
+	/** @type {ParentPluginApi} */
+// ---cut-end---
 	let parentApi;
 	return {
 		name: 'dependent',
 		buildStart({ plugins }) {
 			const parentName = 'parent';
+// ---cut-start---
+			/** @type {import('rollup').Plugin<ParentPluginApi> | undefined} */
+// ---cut-end---
 			const parentPlugin = plugins.find(
 				plugin => plugin.name === parentName
 			);
@@ -2123,3 +2246,4 @@ function dependentPlugin() {
 	};
 }
 ```
+<!-- prettier-ignore-end -->
