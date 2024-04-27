@@ -1,5 +1,166 @@
 # rollup changelog
 
+## 4.17.0
+
+_2024-04-27_
+
+### Features
+
+- Track function call arguments to optimize functions only called once or with the same literal values (re-release from 4.16.0) (#5483)
+
+### Bug Fixes
+
+- Reduce browser WASM size to a fraction by changing optimization settings (#5494)
+
+### Pull Requests
+
+- [#5483](https://github.com/rollup/rollup/pull/5483): feature(fix): function parameter tracking (@liuly0322)
+- [#5488](https://github.com/rollup/rollup/pull/5488): Report performance in CI (@TrickyPi)
+- [#5489](https://github.com/rollup/rollup/pull/5489): Create FUNDING.json (@BenJam)
+- [#5492](https://github.com/rollup/rollup/pull/5492): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5493](https://github.com/rollup/rollup/pull/5493): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5494](https://github.com/rollup/rollup/pull/5494): Use opt-level=z for browser wasm (@sapphi-red)
+
+## 4.16.4
+
+_2024-04-23_
+
+### Bug Fixes
+
+- Revert function parameter tracking logic introduced in 4.16.0 to work on some remaining issues (#5487)
+
+### Pull Requests
+
+- [#5487](https://github.com/rollup/rollup/pull/5487): Revert function parameter tracking logic for now (@lukastaegert)
+
+## 4.16.3
+
+_2024-04-23_
+
+### Bug Fixes
+
+- Do not optimize IIFEs that have a name and are again referenced inside their definition (#5486)
+
+### Pull Requests
+
+- [#5486](https://github.com/rollup/rollup/pull/5486): fix: only optimize annoymous iife (@liuly0322)
+
+## 4.16.2
+
+_2024-04-22_
+
+### Bug Fixes
+
+- Resolve a situation condition where reassignments of function parameters were not tracked properly (#5482)
+- Make sure that for armv7 packages, only one package is downloaded for the user (musl or gnu) (#5479)
+
+### Pull Requests
+
+- [#5479](https://github.com/rollup/rollup/pull/5479): Add libc field to armv7 packages (@sapphi-red)
+- [#5482](https://github.com/rollup/rollup/pull/5482): fix: function parameter reassigned update (@liuly0322)
+
+## 4.16.1
+
+_2024-04-21_
+
+### Bug Fixes
+
+- Fix crash when rendering logical or conditional expressions (#5481)
+
+### Pull Requests
+
+- [#5481](https://github.com/rollup/rollup/pull/5481): fix: conditional/logical expression should request a new tree-shaking (@liuly0322)
+
+## 4.16.0
+
+_2024-04-21_
+
+### Features
+
+- Track function call arguments to optimize functions only called once or with the same literal values (#5443)
+
+### Pull Requests
+
+- [#5443](https://github.com/rollup/rollup/pull/5443): feat: improve tree-shaking by propagate const parameter (@liuly0322, @lukastaegert)
+
+## 4.15.0
+
+_2024-04-20_
+
+### Features
+
+- Add output.importAttributesKey option to select whether to use "with" or "assert" for import attributes (#5474)
+
+### Pull Requests
+
+- [#5474](https://github.com/rollup/rollup/pull/5474): Add ImportAttributesKey to choose keyword ("with" | "assert") (@doubleaa93, @lukastaegert)
+- [#5475](https://github.com/rollup/rollup/pull/5475): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5477](https://github.com/rollup/rollup/pull/5477): Try to run emulated smoke tests for Linux environments (@lukastaegert)
+
+## 4.14.3
+
+_2024-04-15_
+
+### Bug Fixes
+
+- Support Alpine Linux and other MUSL builds on ARM (#5471)
+
+### Pull Requests
+
+- [#5471](https://github.com/rollup/rollup/pull/5471): Add linux arm musl build (@sapphi-red)
+
+## 4.14.2
+
+_2024-04-12_
+
+### Bug Fixes
+
+- Do not create invalid code when reexporting both a namespace and the default export from that namespace (#5466)
+- Ensure ppc64 platform is properly detected (#5460)
+
+### Pull Requests
+
+- [#5456](https://github.com/rollup/rollup/pull/5456): Add high-level architecture documentation (@lukastaegert)
+- [#5460](https://github.com/rollup/rollup/pull/5460): Fix ppc64le target (@lukastaegert)
+- [#5463](https://github.com/rollup/rollup/pull/5463): chore: tweak the comment about files should not be edited (@TrickyPi)
+- [#5466](https://github.com/rollup/rollup/pull/5466): Ensure reexported namespaces do not prevent creation of default export helpers (@lukastaegert)
+- [#5468](https://github.com/rollup/rollup/pull/5468): chore(deps): update dependency eslint-plugin-unicorn to v52 (@renovate[bot], @lukastaegert)
+- [#5469](https://github.com/rollup/rollup/pull/5469): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5470](https://github.com/rollup/rollup/pull/5470): chore(deps): lock file maintenance (@renovate[bot])
+
+## 4.14.1
+
+_2024-04-07_
+
+### Bug Fixes
+
+- Show better error when running on musl Linux where the musl build is not supported (#5454)
+
+### Pull Requests
+
+- [#5451](https://github.com/rollup/rollup/pull/5451): chore: generate string constants from config (@TrickyPi)
+- [#5452](https://github.com/rollup/rollup/pull/5452): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5453](https://github.com/rollup/rollup/pull/5453): chore(deps): lock file maintenance (@renovate[bot])
+- [#5454](https://github.com/rollup/rollup/pull/5454): Improve error message when running on unsupported MUSL Linux (@lukastaegert)
+- [#5455](https://github.com/rollup/rollup/pull/5455): Remove inlining logic in AST (de-)serializer (@lukastaegert)
+
+## 4.14.0
+
+_2024-04-03_
+
+### Features
+
+- Display error causes in Rollup CLI (#5422)
+- Add basic support for explicit resource management via "using" and "await using" (#5423)
+
+### Pull Requests
+
+- [#5422](https://github.com/rollup/rollup/pull/5422): feat: show all cause in Error (@devohda, @lukastaegert)
+- [#5444](https://github.com/rollup/rollup/pull/5444): feat: support explicit-resource-management (@TrickyPi)
+- [#5445](https://github.com/rollup/rollup/pull/5445): docs: add `@shikiji/vitepress-twoslash` (@sapphi-red)
+- [#5447](https://github.com/rollup/rollup/pull/5447): chore(deps): lock file maintenance minor/patch updates ( @renovate[bot])
+- [#5448](https://github.com/rollup/rollup/pull/5448): chore(deps): lock file maintenance (@renovate[bot])
+
 ## 4.13.2
 
 _2024-03-28_
