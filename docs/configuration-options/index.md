@@ -2569,7 +2569,7 @@ export default [
 |  CLI： | `--watch.clearScreen`/`--no-watch.clearScreen` |
 | 默认： | `true`                                         |
 
-该选项用于决定在触发重建时是否清除屏幕。
+该选项用于决定是否在触发重新构建时清空屏幕。
 
 ### watch.exclude {#watch-exclude}
 
