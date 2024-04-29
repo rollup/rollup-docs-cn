@@ -134,7 +134,10 @@ import * as rollup from 'https://unpkg.com/@rollup/browser/dist/es/rollup.browse
 
 这将创建一个全局变量 `window.rollup`。由于浏览器构建无法访问文件系统，因此你需要提供解析和加载要捆绑的所有模块的插件。以下是一个虚构的示例：
 
-```js
+```js twoslash
+/** @type {import('rollup')} */
+var rollup;
+// ---cut---
 const modules = {
 	'main.js': "import foo from 'foo.js'; console.log(foo);",
 	'foo.js': 'export default 42;'
@@ -165,7 +168,10 @@ rollup
 
 此示例仅支持两个导入，`"main.js"` 和 `"foo.js"`，不支持相对导入。以下是另一个示例，它使用绝对 URL 作为入口点，并支持相对导入。在这种情况下，我们只是重新打包 Rollup 本身，但它可以用于任何其他公开 ES 模块的 URL：
 
-```js
+```js twoslash
+/** @type {import('rollup')} */
+var rollup;
+// ---cut---
 rollup
 	.rollup({
 		input: 'https://unpkg.com/rollup/dist/es/rollup.js',
