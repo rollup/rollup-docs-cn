@@ -505,15 +505,9 @@ import { foo } from '../bar.js';
 
 例如，你可以将其用作为入口点定义自定义代理模块的机制。以下插件将所有入口点代理到注入 polyfill 导入的模块中。
 
-<<<<<<< HEAD
-```js
+```js twoslash
 // 我们在 polyfill id 前面加上 \0，
 // 以告诉其他插件不要尝试加载或转换它
-=======
-```js twoslash
-// We prefix the polyfill id with \0 to tell other plugins not to try to load or
-// transform it
->>>>>>> 91352494fc722bcd5e8e922cd1497b34aec57a67
 const POLYFILL_ID = '\0polyfill';
 const PROXY_SUFFIX = '?inject-polyfill-proxy';
 
@@ -1647,15 +1641,9 @@ export default function addProxyPlugin() {
 
 这里是另一个更详细的示例，其中我们通过 `resolveDependencies` 选项和对 `this.load` 的重复调用来扫描整个依赖子图。我们使用已处理模块 ID 的 `Set` 来处理循环依赖关系。插件的目标是向每个动态导入的块添加日志，该日志仅列出块中的所有模块。虽然这只是一个玩具示例，但该技术可以用于例如为子图中导入的所有 CSS 创建单个样式标记。
 
-<<<<<<< HEAD
-```js
+```js twoslash
 // 前导的 \0 指示其他插件不要尝试解析、加载
 // 或转换我们的代理模块
-=======
-```js twoslash
-// The leading \0 instructs other plugins not to try to resolve, load or
-// transform our proxy modules
->>>>>>> 91352494fc722bcd5e8e922cd1497b34aec57a67
 const DYNAMIC_IMPORT_PROXY_PREFIX = '\0dynamic-import:';
 
 // ---cut-start---

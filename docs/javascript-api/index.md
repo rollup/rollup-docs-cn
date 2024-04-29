@@ -22,15 +22,7 @@ Rollup 提供了一个可从 Node.js 使用的 JavaScript API。你很少需要�
 ```javascript twoslash
 import { rollup } from 'rollup';
 
-<<<<<<< HEAD
 // 请继续浏览下面的内容获取更多关于这个选项的细节
-const inputOptions = {...};
-
-// 你可以从相同的输入创建多个输出，
-// 以生成例如 CommonJS 和 ESM 这样的不同格式
-const outputOptionsList = [{...}, {...}];
-=======
-// see below for details on these options
 // ---cut-start---
 /** @type {import('rollup').InputOptions} */
 // ---cut-end---
@@ -38,8 +30,8 @@ const inputOptions = {
 	/* ... */
 };
 
-// you can create multiple outputs from the same input to generate e.g.
-// different formats like CommonJS and ESM
+// 你可以从相同的输入创建多个输出，
+// 以生成例如 CommonJS 和 ESM 这样的不同格式
 // ---cut-start---
 /** @type {import('rollup').OutputOptions[]} */
 // ---cut-end---
@@ -51,64 +43,39 @@ const outputOptionsList = [
 		/* ... */
 	}
 ];
->>>>>>> 91352494fc722bcd5e8e922cd1497b34aec57a67
 
 build();
 
 async function build() {
-<<<<<<< HEAD
-  let bundle;
-  let buildFailed = false;
-  try {
-    // 启动一次打包
-    bundle = await rollup(inputOptions);
-
-    // 一个文件名数组，表示此产物所依赖的文件
-    console.log(bundle.watchFiles);
-
-    await generateOutputs(bundle);
-  } catch (error) {
-    buildFailed = true;
-    // 进行一些错误报告
-    console.error(error);
-  }
-  if (bundle) {
-    // 关闭打包过程
-    await bundle.close();
-  }
-  process.exit(buildFailed ? 1 : 0);
-=======
 // ---cut-start---
 	/** @type {import('rollup').RollupBuild} */
 // ---cut-end---
 	let bundle;
 	let buildFailed = false;
 	try {
-		// create a bundle
+		// 启动一次打包
 		bundle = await rollup(inputOptions);
 
-		// an array of file names this bundle depends on
+		// 一个文件名数组，表示此产物所依赖的文件
 		console.log(bundle.watchFiles);
 
 		await generateOutputs(bundle);
 	} catch (error) {
 		buildFailed = true;
-		// do some error reporting
+		// 进行一些错误报告
 		console.error(error);
 	}
 	if (bundle) {
-		// closes the bundle
+		// 关闭打包过程
 		await bundle.close();
 	}
 	process.exit(buildFailed ? 1 : 0);
->>>>>>> 91352494fc722bcd5e8e922cd1497b34aec57a67
 }
 
 // ---cut-start---
 /** @param {import('rollup').RollupBuild} [bundle] */
 // ---cut-end---
 async function generateOutputs(bundle) {
-<<<<<<< HEAD
   for (const outputOptions of outputOptionsList) {
     // 生成特定于输出的内存中代码
     // 你可以在同一个 bundle 对象上多次调用此函数
@@ -157,56 +124,6 @@ async function generateOutputs(bundle) {
       }
     }
   }
-=======
-	for (const outputOptions of outputOptionsList) {
-		// generate output specific code in-memory
-		// you can call this function multiple times on the same bundle object
-		// replace bundle.generate with bundle.write to directly write to disk
-		const { output } = await bundle.generate(outputOptions);
-
-		for (const chunkOrAsset of output) {
-			if (chunkOrAsset.type === 'asset') {
-				// For assets, this contains
-				// {
-				//   fileName: string,              // the asset file name
-				//   source: string | Uint8Array    // the asset source
-				//   type: 'asset'                  // signifies that this is an asset
-				// }
-				console.log('Asset', chunkOrAsset);
-			} else {
-				// For chunks, this contains
-				// {
-				//   code: string,                  // the generated JS code
-				//   dynamicImports: string[],      // external modules imported dynamically by the chunk
-				//   exports: string[],             // exported variable names
-				//   facadeModuleId: string | null, // the id of a module that this chunk corresponds to
-				//   fileName: string,              // the chunk file name
-				//   implicitlyLoadedBefore: string[]; // entries that should only be loaded after this chunk
-				//   imports: string[],             // external modules imported statically by the chunk
-				//   importedBindings: {[imported: string]: string[]} // imported bindings per dependency
-				//   isDynamicEntry: boolean,       // is this chunk a dynamic entry point
-				//   isEntry: boolean,              // is this chunk a static entry point
-				//   isImplicitEntry: boolean,      // should this chunk only be loaded after other chunks
-				//   map: string | null,            // sourcemaps if present
-				//   modules: {                     // information about the modules in this chunk
-				//     [id: string]: {
-				//       renderedExports: string[]; // exported variable names that were included
-				//       removedExports: string[];  // exported variable names that were removed
-				//       renderedLength: number;    // the length of the remaining code in this module
-				//       originalLength: number;    // the original length of the code in this module
-				//       code: string | null;       // remaining code in this module
-				//     };
-				//   },
-				//   name: string                   // the name of this chunk as used in naming patterns
-				//   preliminaryFileName: string    // the preliminary file name of this chunk with hash placeholders
-				//   referencedFiles: string[]      // files referenced via import.meta.ROLLUP_FILE_URL_<id>
-				//   type: 'chunk',                 // signifies that this is a chunk
-				// }
-				console.log('Chunk', chunkOrAsset.modules);
-			}
-		}
-	}
->>>>>>> 91352494fc722bcd5e8e922cd1497b34aec57a67
 }
 ```
 <!-- prettier-ignore-end -->
@@ -332,7 +249,6 @@ const watchOptions = {
 const watcher = rollup.watch(watchOptions);
 
 watcher.on('event', event => {
-<<<<<<< HEAD
   // event.code 可以是以下之一：
   //   START        - 监视器正在（重新）启动
   //   BUNDLE_START - 单次打包
@@ -361,36 +277,6 @@ watcher.on('event', event => {
   //                      你应该在完成后调用 "event.result.close()"。
   // 如果从事件处理程序返回一个 Promise，则 Rollup
   // 将等待 Promise 解析后再继续。
-=======
-	// event.code can be one of:
-	//   START        — the watcher is (re)starting
-	//   BUNDLE_START — building an individual bundle
-	//                  * event.input will be the input options object if present
-	//                  * event.output contains an array of the "file" or
-	//                    "dir" option values of the generated outputs
-	//   BUNDLE_END   — finished building a bundle
-	//                  * event.input will be the input options object if present
-	//                  * event.output contains an array of the "file" or
-	//                    "dir" option values of the generated outputs
-	//                  * event.duration is the build duration in milliseconds
-	//                  * event.result contains the bundle object that can be
-	//                    used to generate additional outputs by calling
-	//                    bundle.generate or bundle.write. This is especially
-	//                    important when the watch.skipWrite option is used.
-	//                  You should call "event.result.close()" once you are done
-	//                  generating outputs, or if you do not generate outputs.
-	//                  This will allow plugins to clean up resources via the
-	//                  "closeBundle" hook.
-	//   END          — finished building all bundles
-	//   ERROR        — encountered an error while bundling
-	//                  * event.error contains the error that was thrown
-	//                  * event.result is null for build errors and contains the
-	//                    bundle object for output generation errors. As with
-	//                    "BUNDLE_END", you should call "event.result.close()" if
-	//                    present once you are done.
-	// If you return a Promise from your event handler, Rollup will wait until the
-	// Promise is resolved before continuing.
->>>>>>> 91352494fc722bcd5e8e922cd1497b34aec57a67
 });
 
 // 这将确保在每次运行后正确关闭打包
@@ -400,25 +286,17 @@ watcher.on('event', ({ result }) => {
 	}
 });
 
-<<<<<<< HEAD
 // 此外，你可以挂钩以下内容。
 // 同样，返回 Promise 以使 Rollup 在该阶段等待：
-watcher.on('change', (id, { event }) => { /* 更改了一个文件 */ })
-watcher.on('restart', () => { /* 新触发了一次运行 */ })
-watcher.on('close', () => { /* 监视器被关闭了，请看下面的代码 */ })
-=======
-// Additionally, you can hook into the following. Again, return a Promise to
-// make Rollup wait at that stage:
 watcher.on('change', (id, { event }) => {
-	/* a file was modified */
+	/* /* 更改了一个文件 */ */
 });
 watcher.on('restart', () => {
-	/* a new run was triggered */
+	/* 新触发了一次运行 */
 });
 watcher.on('close', () => {
-	/* the watcher was closed, see below */
+	/* 监视器被关闭了，请看下面的代码 */
 });
->>>>>>> 91352494fc722bcd5e8e922cd1497b34aec57a67
 
 // 停止监听
 watcher.close();

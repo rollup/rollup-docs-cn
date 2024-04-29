@@ -650,13 +650,8 @@ export default {
 
 虽然 CommonJS 输出最初只支持 `require(…)` 语法来引入依赖，但最近的 Node 版本也开始支持 `import(…)` 语法，这是从 CommonJS 文件中引入 ES 模块的唯一方法。如果这个选项默认值为 `true`，表示 Rollup 会在 CommonJS 输出中保持外部依赖以 `import(…)` 表达式动态引入。将值设置为 `false`，以使用 `require(…)` 语法重写动态引入。
 
-<<<<<<< HEAD
-```js
-// 输入
-=======
 ```js twoslash
-// input
->>>>>>> 91352494fc722bcd5e8e922cd1497b34aec57a67
+// 输入
 import('external').then(console.log);
 
 // 设置 dynamicImportInCjs 为 true 或不设置的 cjs 输出
@@ -766,13 +761,8 @@ Promise.resolve()
 
 该选项表示在某些地方和辅助函数中使用 `const` 而不是 `var`。由于代码块的作用域，会使 Rollup 产生更有效的辅助函数。
 
-<<<<<<< HEAD
-```js
-// 输入
-=======
 ```js twoslash
-// input
->>>>>>> 91352494fc722bcd5e8e922cd1497b34aec57a67
+// 输入
 export * from 'external';
 
 // 设置 constBindings 为 false 的 cjs 输出
@@ -940,21 +930,17 @@ exports.foo = foo;
 
 默认情况下，创建多个 chunk 时，入口 chunk 的可传递引入将以空引入的形式被打包。详细信息和背景请查看 ["Why do additional imports turn up in my entry chunks when code-splitting?"](../faqs/index.md#why-do-additional-imports-turn-up-in-my-entry-chunks-when-code-splitting)。该选项的值为 `false` 将禁用此行为。当使用 [`output.preserveModules`](#output-preservemodules) 选项时，该选项会被忽略，使得永远不会取消引入。
 
-<<<<<<< HEAD
-### output.inlineDynamicImports {#output-inlinedynamicimports}
-=======
 ### output.importAttributesKey
 
-|          |                                |
-| -------: | :----------------------------- |
-|    Type: | `"with" \| "assert"`           |
-|     CLI: | `--importAttributesKey <name>` |
-| Default: | `"assert"`                     |
+|        |                                |
+| -----: | :----------------------------- |
+| 类型： | `"with" \| "assert"`           |
+|  CLI： | `--importAttributesKey <name>` |
+| 默认： | `"assert"`                     |
 
-This determines the keyword set that Rollup will use for import attributes.
+该选项决定 Rollup 用于导入属性的关键词集合。
 
-### output.inlineDynamicImports
->>>>>>> 91352494fc722bcd5e8e922cd1497b34aec57a67
+### output.inlineDynamicImports {#output-inlinedynamicimports}
 
 |        |                                                      |
 | -----: | :--------------------------------------------------- |
@@ -1312,14 +1298,10 @@ function getTranslatedStrings(currentLanguage) {
 function manualChunks(id, { getModuleInfo }) {
 	const match = /.*\.strings\.(\w+)\.js/.exec(id);
 	if (match) {
-<<<<<<< HEAD
 		const language = match[1]; // 例如 “en”
-=======
-		const language = match[1]; // e.g. "en"
 // ---cut-start---
 		/** @type {string[]} */
 // ---cut-end---
->>>>>>> 91352494fc722bcd5e8e922cd1497b34aec57a67
 		const dependentEntryPoints = [];
 
 		// 在这里，我们使用 Set 一次性处理每个依赖模块
