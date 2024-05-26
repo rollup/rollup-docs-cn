@@ -908,11 +908,19 @@ exports.foo = foo;
 
 ### output.hashCharacters
 
+<<<<<<< HEAD
 |        |                                 |
 | -----: | :------------------------------ |
 | 类型： | `"base64" \| "base32" \| "hex"` |
 |  CLI： | `--hashCharacters <name>`       |
 | 默认： | `"base64"`                      |
+=======
+|          |                                 |
+| -------: | :------------------------------ |
+|    Type: | `"base64" \| "base36" \| "hex"` |
+|     CLI: | `--hashCharacters <name>`       |
+| Default: | `"base64"`                      |
+>>>>>>> 38114c4040efa65f6bb9457617eb21a87dfb2eb2
 
 这个选项决定了 Rollup 在生成文件哈希时可以使用的字符集。
 
