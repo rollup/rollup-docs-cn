@@ -910,7 +910,7 @@ exports.foo = foo;
 
 |        |                                 |
 | -----: | :------------------------------ |
-| 类型： | `"base64" \| "base32" \| "hex"` |
+| 类型： | `"base64" \| "base36" \| "hex"` |
 |  CLI： | `--hashCharacters <name>`       |
 | 默认： | `"base64"`                      |
 
