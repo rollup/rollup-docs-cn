@@ -87,4 +87,4 @@ Rollup 可以通过插件 [导入现有的 CommonJS 模块](https://github.com/r
 
 ### 发布 ES 模块 {#publishing-es-modules}
 
-为了确保你的 ES 模块可以立即被处理 CommonJS 的工具，例如 Node.js 和 webpack 使用，你可以使用 Rollup 编译成 UMD 或 CommonJS 格式，然后在 `package.json` 文件中使用 `main` 属性指向编译后的版本。如果你的 `package.json` 文件还有一个 `module` 字段，那么像 Rollup 和 [webpack 2+](https://webpack.js.org/) 这样的可感知 ES 模块的工具将直接 [导入 ES 模块版本](https://github.com/rollup/rollup/wiki/pkg.module)。
+为了确保你的 ES 模块可以立即被处理 CommonJS 的工具使用，例如 Node.js 和 webpack，你可以使用 Rollup 编译成 UMD 或 CommonJS 格式，然后在 `package.json` 文件中使用 `main` 属性指向编译后的版本。如果你的 `package.json` 文件还有一个 `module` 字段，那么像 Rollup 和 [webpack 2+](https://webpack.js.org/) 这样的可感知 ES 模块的工具将直接 [导入 ES 模块版本](https://github.com/rollup/rollup/wiki/pkg.module)。
