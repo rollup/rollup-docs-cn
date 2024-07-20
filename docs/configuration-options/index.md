@@ -566,11 +566,27 @@ export default {
 
 ### output.assetFileNames {#output-assetfilenames}
 
+<<<<<<< HEAD
 |        |                                               |
 | -----: | :-------------------------------------------- |
 | 类型： | `string\| ((assetInfo: AssetInfo) => string)` |
 |  CLI： | `--assetFileNames <pattern>`                  |
 | 默认： | `"assets/[name]-[hash][extname]"`             |
+=======
+|          |                                                      |
+| -------: | :--------------------------------------------------- |
+|    Type: | `string\| ((assetInfo: PreRenderedAsset) => string)` |
+|     CLI: | `--assetFileNames <pattern>`                         |
+| Default: | `"assets/[name]-[hash][extname]"`                    |
+
+```typescript
+interface PreRenderedAsset {
+	name?: string;
+	source: string | Uint8Array;
+	type: 'asset';
+}
+```
+>>>>>>> 28546b5821efcb72c2eb05f422d986524647a0e3
 
 该选项的值是一个匹配模式，用于自定义构建结果中的静态资源名称，或者值为一个函数，对每个资源调用以返回匹配模式。这种模式支持以下的占位符：
 
@@ -579,18 +595,35 @@ export default {
 - `[hash]`：基于静态资源内容的哈希。也可以通过例如 `[hash:10]` 设置一个特定的哈希值长度。默认情况下，它会生成一个 base-64 的哈希值。如果你需要减少字符集的大小，可以查看 [`output.hashCharacters`](#output-hashcharacters)。
 - `[name]`：静态资源的名称，不包含扩展名。
 
+<<<<<<< HEAD
 正斜杠 `/` 可以用来划分文件到子目录。当值为函数时，`assetInfo` 是 [`generateBundle`](../plugin-development/index.md#generatebundle) 中没有 `fileName` 的简化版本。另见[`output.chunkFileNames`](#output-chunkfilenames)，[`output.entryFileNames`](#output-entryfilenames)。
+=======
+Forward slashes `/` can be used to place files in sub-directories. When using a function, `PreRenderedAsset` is a reduced version of the `OutputAsset` type in [`generateBundle`](../plugin-development/index.md#generatebundle) without the `fileName`. See also [`output.chunkFileNames`](#output-chunkfilenames), [`output.entryFileNames`](#output-entryfilenames).
+>>>>>>> 28546b5821efcb72c2eb05f422d986524647a0e3
 
 ### output.banner/output.footer {#output-banner-output-footer}
 
+<<<<<<< HEAD
 |        |                                                              |
 | -----: | :----------------------------------------------------------- |
 | 类型： | `string \| ((chunk: ChunkInfo) => string\| Promise<string>)` |
 |  CLI： | `--banner`/`--footer <text>`                                 |
+=======
+|       |                                                                  |
+| ----: | :--------------------------------------------------------------- |
+| Type: | `string \| ((chunk: RenderedChunk) => string\| Promise<string>)` |
+|  CLI: | `--banner`/`--footer <text>`                                     |
+
+See the [`renderChunk`](../plugin-development/index.md#renderchunk) hook for the `RenderedChunk` type.
+>>>>>>> 28546b5821efcb72c2eb05f422d986524647a0e3
 
 该选项用于在 bundle 前或后添加一个字符串。其值也可以是一个返回 `string` 的 `Promise` 异步函数（注意：`banner` 和 `footer` 选项不会破坏 sourcemaps）。
 
+<<<<<<< HEAD
 如果该选项值为函数，参数 `chunk` 包含了额外信息，使用了与 [`generateBundle`](../plugin-development/index.md#generatebundle) 钩子相同的 `ChunkInfo` 类型，但有以下区别：
+=======
+If you supply a function, `chunk` contains additional information about the chunk using a `RenderedChunk` type that is a reduced version of the `OutputChunk` type used in [`generateBundle`](../plugin-development/index.md#generatebundle) hook with the following differences:
+>>>>>>> 28546b5821efcb72c2eb05f422d986524647a0e3
 
 - `code` 和 `map` 没有设置，因为该 chunk 还没有被渲染。
 - 所有包含哈希值的引用 chunk 文件名将包含哈希占位符。包括 `fileName`、`imports`、`importedBindings`、`dynamicImports` 和 `implicitlyLoadedBefore`。当你在该选项返回的代码中使用这样的占位符文件名或部分文件名时，Rollup 将在 `generateBundle` 之前用实际的哈希值替换掉占位符，确保哈希值反映的是最终生成的 chunk 中的实际内容，包括所有引用的文件哈希值。
@@ -616,11 +649,32 @@ export default {
 
 ### output.chunkFileNames {#output-chunkfilenames}
 
+<<<<<<< HEAD
 |        |                                                |
 | -----: | :--------------------------------------------- |
 | 类型： | `string \| ((chunkInfo: ChunkInfo) => string)` |
 |  CLI： | `--chunkFileNames <pattern>`                   |
 | 默认： | `"[name]-[hash].js"`                           |
+=======
+|          |                                                       |
+| -------: | :---------------------------------------------------- |
+|    Type: | `string \| ((chunkInfo: PreRenderedChunk) => string)` |
+|     CLI: | `--chunkFileNames <pattern>`                          |
+| Default: | `"[name]-[hash].js"`                                  |
+
+```typescript
+interface PreRenderedChunk {
+	exports: string[];
+	facadeModuleId: string | null;
+	isDynamicEntry: boolean;
+	isEntry: boolean;
+	isImplicitEntry: boolean;
+	moduleIds: string[];
+	name: string;
+	type: 'chunk';
+}
+```
+>>>>>>> 28546b5821efcb72c2eb05f422d986524647a0e3
 
 该选项用于对代码分割中产生的 chunk 自定义命名，其值也可以是一个函数，对每个 chunk 调用以返回匹配模式。这种模式支持以下的占位符：
 
@@ -628,7 +682,11 @@ export default {
 - `[hash]`：仅基于最终生成的 chunk 内容的哈希值，其中包括 [`renderChunk`](../plugin-development/index.md#renderchunk) 中的转换部分和其依赖文件哈希值。你也可以通过例如 `[hash:10]` 设置一个特定的哈希值长度。默认情况下，它会生成一个 base-64 的哈希值。如果你需要减少字符集的大小，可以查看 [`output.hashCharacters`](#output-hashcharacters)。
 - `[name]`：chunk 的名称。它可以通过 [`output.manualChunks`](#output-manualchunks) 选项显示的设置，或者通过插件调用 [`this.emitFile`](../plugin-development/index.md#this-emitfile) 设置。否则，它将会根据 chunk 的内容确定。
 
+<<<<<<< HEAD
 正斜杠 `/` 可以用来划分文件到子目录。当值为函数时，`chunkInfo` 是 [`generateBundle`](../plugin-development/index.md#generatebundle) 的简化版本，其中不包含依赖于文件名的属性，且没有关于所渲染模块的信息，因为只有在文件名生成之后才会渲染。另见 [`output.assetFileNames`](#output-assetfilenames)，[`output.entryFileNames`](#output-entryfilenames)。
+=======
+Forward slashes `/` can be used to place files in sub-directories. When using a function, `PreRenderedChunk` is a reduced version of the `OutputChunk` type in [`generateBundle`](../plugin-development/index.md#generatebundle) without properties that depend on file names and no information about the rendered modules as rendering only happens after file names have been generated. You can however access a list of included `moduleIds`. See also [`output.assetFileNames`](#output-assetfilenames), [`output.entryFileNames`](#output-entryfilenames).
+>>>>>>> 28546b5821efcb72c2eb05f422d986524647a0e3
 
 ### output.compact {#output-compact}
 
@@ -692,11 +750,21 @@ Promise.resolve()
 
 ### output.entryFileNames {#output-entryfilenames}
 
+<<<<<<< HEAD
 |        |                                                |
 | -----: | :--------------------------------------------- |
 | 类型： | `string \| ((chunkInfo: ChunkInfo) => string)` |
 |  CLI： | `--entryFileNames <pattern>`                   |
 | 默认： | `"[name].js"`                                  |
+=======
+|          |                                                       |
+| -------: | :---------------------------------------------------- |
+|    Type: | `string \| ((chunkInfo: PreRenderedChunk) => string)` |
+|     CLI: | `--entryFileNames <pattern>`                          |
+| Default: | `"[name].js"`                                         |
+
+See [`output.chunkFileNames`](#output-chunkfilenames) for the `PreRenderedChunk` type.
+>>>>>>> 28546b5821efcb72c2eb05f422d986524647a0e3
 
 该选项用于指定 chunks 的入口文件模式，其值也可以是一个函数，对每个入口 chunk 调用以返回匹配模式。这种模式支持以下的占位符：
 
@@ -704,7 +772,11 @@ Promise.resolve()
 - `[hash]`：仅基于最终生成的入口 chunk 内容的哈希值，其中包括 [`renderChunk`](../plugin-development/index.md#renderchunk) 中的转换部分和其依赖文件哈希值。你也可以通过例如 `[hash:10]` 设置一个特定的哈希值长度。默认情况下，它会生成一个 base-64 的哈希值。如果你需要减少字符集的大小，可以查看 [`output.hashCharacters`](#output-hashcharacters)。
 - `[name]`：入口文件的文件名（不包含扩展名），除非当入口文件为对象时，才用来定义不同的名称。
 
+<<<<<<< HEAD
 正斜杠 `/` 可以用来划分文件到子目录。当值为函数时，`chunkInfo` 是 [`generateBundle`](../plugin-development/index.md#generatebundle) 的简化版本，其中不包含依赖于文件名的属性，且没有关于所渲染模块的信息，因为只有在文件名生成之后才会渲染。但是，你可以访问包含 `moduleIds` 的列表。另见 [`output.assetFileNames`](#output-assetfilenames)，[`output.chunkFileNames`](#output-chunkfilenames)。
+=======
+Forward slashes `/` can be used to place files in sub-directories. When using a function, `PreRenderedChunk` is a reduced version of the `OutputChunk` type in [`generateBundle`](../plugin-development/index.md#generatebundle) without properties that depend on file names and no information about the rendered modules as rendering only happens after file names have been generated. You can however access a list of included `moduleIds`. See also [`output.assetFileNames`](#output-assetfilenames), [`output.chunkFileNames`](#output-chunkfilenames).
+>>>>>>> 28546b5821efcb72c2eb05f422d986524647a0e3
 
 在设置 [`output.preserveModules`](#output-preservemodules) 选项时，该模式也会生效。需要注意在这种情况下，`[name]` 将包括来自输出根路径的相对路径以及可能有原始文件的扩展名，如果它不是 `.js`、`.jsx`、`.mjs`、`.cjs`、`.ts`、`.tsx`、`.mts` 或 `.cts` 的其中之一。
 
@@ -1213,10 +1285,17 @@ import('external2').then(console.log);
 
 ### output.intro/output.outro {#output-intro-output-outro}
 
+<<<<<<< HEAD
 |        |                                                              |
 | -----: | :----------------------------------------------------------- |
 | 类型： | `string \| ((chunk: ChunkInfo) => string\| Promise<string>)` |
 |  CLI： | `--intro`/`--outro <text>`                                   |
+=======
+|       |                                                                  |
+| ----: | :--------------------------------------------------------------- |
+| Type: | `string \| ((chunk: RenderedChunk) => string\| Promise<string>)` |
+|  CLI: | `--intro`/`--outro <text>`                                       |
+>>>>>>> 28546b5821efcb72c2eb05f422d986524647a0e3
 
 除了在特定格式中代码不同外，该选项功能和 [`output.banner/output.footer`](#output-banner-output-footer) 类似。
 
@@ -1565,10 +1644,19 @@ export default {
 
 ### output.sourcemapFileNames
 
+<<<<<<< HEAD
 |        |                                                |
 | -----: | :--------------------------------------------- |
 | 类型： | `string \| ((chunkInfo: ChunkInfo) => string)` |
 |   CLI: | `--sourcemapFileNames <pattern>`               |
+=======
+|       |                                                       |
+| ----: | :---------------------------------------------------- |
+| Type: | `string \| ((chunkInfo: PreRenderedChunk) => string)` |
+|  CLI: | `--sourcemapFileNames <pattern>`                      |
+
+See [`output.chunkFileNames`](#output-chunkfilenames) for the `PreRenderedChunk` type.
+>>>>>>> 28546b5821efcb72c2eb05f422d986524647a0e3
 
 该选项指定 sourcemap 的模式，或者是一个根据每个 sourcemap 调用以返回此类模式的函数。该模式支持以下占位符：
 

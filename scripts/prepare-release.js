@@ -95,7 +95,8 @@ async function getNewVersion(mainPackage, isMainBranch) {
 			? ['prerelease']
 			: ['premajor', 'preminor', 'prepatch'];
 
-	const { newVersion } = await inquirer.prompt([
+	/** @type {any} The inquirer types appear to be seriously broken */
+	const questions = [
 		{
 			choices: availableIncrements.map(increment => {
 				const value = semverInc(version, increment);
@@ -109,7 +110,8 @@ async function getNewVersion(mainPackage, isMainBranch) {
 			name: 'newVersion',
 			type: 'list'
 		}
-	]);
+	];
+	const { newVersion } = await inquirer.prompt(questions);
 	return newVersion;
 }
 
@@ -220,14 +222,17 @@ async function waitForChangelogUpdate(version) {
 		}
 		changelogEntry = newEntry;
 		console.log(cyan('You generated the following changelog entry:\n') + changelogEntry);
-		await inquirer.prompt([
+		/** @type {any} The inquirer types appear to be seriously broken */
+		const questions = [
 			{
+				/** @type {any[]} */
 				choices: ['ok'],
 				message: `Please edit the changelog or confirm the changelog is acceptable to continue to release "${version}".`,
 				name: 'ok',
 				type: 'list'
 			}
-		]);
+		];
+		await inquirer.prompt(questions);
 	}
 }
 
