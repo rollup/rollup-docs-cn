@@ -835,12 +835,14 @@ flowchart TB
 
 |  |  |
 | --: | :-- |
-| 类型: | `(chunkInfo: ChunkInfo) => string` |
+| 类型: | `(chunkInfo: RenderedChunk) => string` |
 | 类别: | sync, sequential |
 | 上一个钩子: | [`renderChunk`](#renderchunk) |
 | 下一个钩子: | 如果还有其他需要处理的块，则为 [`renderChunk`](#renderchunk)，否则为 [`generateBundle`](#generatebundle) |
 
-可用于增加单个块的哈希值。为每个 Rollup 输出块调用。返回 falsy 值不会修改哈希值。Truthy 值将传递给 [`hash.update`](https://nodejs.org/dist/latest-v12.x/docs/api/crypto.html#crypto_hash_update_data_inputencoding)。`chunkInfo` 是 [`generateBundle`](#generatebundle) 中的版本的简化版本，不包括 `code` 和 `map`，并在文件名中使用哈希的占位符。
+查看 [`renderChunk`](../plugin-development/index.md#renderchunk) 钩子以了解 `RenderedChunk` 类型。
+
+可用于增加单个块的哈希值。为每个 Rollup 输出块调用。返回假值不会修改哈希值。如果返回真值，就会被传递给 [`hash.update`](https://nodejs.org/dist/latest-v12.x/docs/api/crypto.html#crypto_hash_update_data_inputencoding)。`RenderedChunk` 类型是 [`generateBundle`](#generatebundle) 中 `OutputChunk` 类型的简化版本，它不包括 `code` 和 `map`，并在文件名中使用哈希的占位符。
 
 以下插件将使用当前时间戳使块 `foo` 的哈希无效：
 
@@ -864,7 +866,7 @@ function augmentWithDatePlugin() {
 
 |  |  |
 | --: | :-- |
-| 类型: | `string \| ((chunk: ChunkInfo) => string)` |
+| 类型: | `string \| ((chunk: RenderedChunk) => string)` |
 | 类别: | async, sequential |
 | 上一个钩子: | [`resolveFileUrl`](#resolvefileurl) 用于每个 `import.meta.ROLLUP_FILE_URL_referenceId` 的使用和 [`resolveImportMeta`](#resolveimportmeta) 用于当前块中所有其他 `import.meta` 访问 |
 | 下一个钩子: | 如果有下一个块中的动态导入表达式，则为 [`renderDynamicImport`](#renderdynamicimport)，否则为第一个块的 [`renderChunk`](#renderchunk) |
@@ -887,7 +889,7 @@ function augmentWithDatePlugin() {
 
 |  |  |
 | --: | :-- |
-| 类型: | `string \| ((chunk: ChunkInfo) => string)` |
+| 类型: | `string \| ((chunk: RenderedChunk) => string)` |
 | 类别: | async, sequential |
 | 上一个钩子: | [`resolveFileUrl`](#resolvefileurl) 用于每个 `import.meta.ROLLUP_FILE_URL_referenceId` 的使用和 [`resolveImportMeta`](#resolveimportmeta) 用于当前块中所有其他 `import.meta` 访问 |
 | 下一个钩子: | 如果有下一个块中的动态导入表达式，则为 [`renderDynamicImport`](#renderdynamicimport)，否则为第一个块的 [`renderChunk`](#renderchunk) |
@@ -959,7 +961,7 @@ interface OutputChunk {
 
 |  |  |
 | --: | :-- |
-| 类型: | `string \| ((chunk: ChunkInfo) => string)` |
+| 类型: | `string \| ((chunk: RenderedChunk) => string)` |
 | 类别: | async, sequential |
 | 上一个钩子: | [`resolveFileUrl`](#resolvefileurl) 用于每个 `import.meta.ROLLUP_FILE_URL_referenceId` 的使用和 [`resolveImportMeta`](#resolveimportmeta) 用于当前块中所有其他 `import.meta` 访问 |
 | 下一个钩子: | 如果有下一个块中的动态导入表达式，则为 [`renderDynamicImport`](#renderdynamicimport)，否则为第一个块的 [`renderChunk`](#renderchunk) |
@@ -981,7 +983,7 @@ interface OutputChunk {
 
 |  |  |
 | --: | :-- |
-| 类型: | `string \| ((chunk: ChunkInfo) => string)` |
+| 类型: | `string \| ((chunk: RenderedChunk) => string)` |
 | 类别: | async, sequential |
 | 上一个钩子: | [`resolveFileUrl`](#resolvefileurl) 用于每个 `import.meta.ROLLUP_FILE_URL_referenceId` 的使用和 [`resolveImportMeta`](#resolveimportmeta) 用于当前块中所有其他 `import.meta` 访问 |
 | 下一个钩子: | 如果有下一个块中的动态导入表达式，则为 [`renderDynamicImport`](#renderdynamicimport)，否则为第一个块的 [`renderChunk`](#renderchunk) |
@@ -1004,18 +1006,40 @@ type RenderChunkHook = (
 	options: NormalizedOutputOptions,
 	meta: { chunks: Record<string, RenderedChunk> }
 ) => { code: string; map?: SourceMapInput } | string | null;
+
+interface RenderedChunk {
+	dynamicImports: string[];
+	exports: string[];
+	facadeModuleId: string | null;
+	fileName: string;
+	implicitlyLoadedBefore: string[];
+	importedBindings: {
+		[imported: string]: string[];
+	};
+	imports: string[];
+	isDynamicEntry: boolean;
+	isEntry: boolean;
+	isImplicitEntry: boolean;
+	moduleIds: string[];
+	modules: {
+		[id: string]: RenderedModule;
+	};
+	name: string;
+	referencedFiles: string[];
+	type: 'chunk';
+}
 ```
 
 可以用于转换单个块。对于每个 Rollup 输出块文件都会调用此函数。返回 `null` 将不应用任何转换。如果你在此钩子中更改了代码并希望支持源映射，则需要返回一个描述更改的`map`，请参见 [源代码转换](#source-code-transformations) 部分。
 
-`chunk` 包含有关块的其他信息，使用与 [`generateBundle`](#generatebundle) 钩子相同的 `ChunkInfo` 类型，但有以下区别：
+`chunk` 包含有关块的其他信息，使用与 [`generateBundle`](#generatebundle) 钩子相同的 `OutputChunk` 类型，但有以下区别：
 
 - `code` 和 `map` 未设置。而是使用此钩子的 `code` 参数。
-- 所有引用的块文件名将包含哈希占位符，而不是哈希。这包括 `fileName`，`imports`，`importedBindings`，`dynamicImports`和`implicitlyLoadedBefore` 。当你在此钩子返回的代码中使用此类占位符文件名或其一部分时，Rollup 将在`generateBundle`之前将占位符替换为实际哈希，确保哈希反映了最终生成的块的实际内容，包括所有引用的文件哈希。
+- 所有引用的块文件名将包含哈希占位符，而不是哈希。这包括 `fileName`，`imports`，`importedBindings`，`dynamicImports` 和 `implicitlyLoadedBefore`。当你在此钩子返回的代码中使用此类占位符文件名或其一部分时，Rollup 将在 `generateBundle` 之前将占位符替换为实际哈希，确保哈希反映了最终生成的块的实际内容，包括所有引用的文件哈希。
 
-`chunk` 是可变的，此钩子中应用的更改将传播到其他插件和生成的产物中。这意味着如果你在此钩子中添加或删除导入或导出，则应更新`imports`，`importedBindings`和/或`exports`。
+`chunk` 是可变的，此钩子中应用的更改将传播到其他插件和生成的产物中。这意味着如果你在此钩子中添加或删除导入或导出，则应更新 `imports`，`importedBindings` 和/或 `exports`。
 
-`meta.chunks` 包含有关 Rollup 正在生成的所有块的信息，并为哈希使用占位符。这意味着你可以在此钩子中探索整个块图。
+`meta.chunks` 包含有关 Rollup 正在生成的所有块的信息，并允许你访问它们的 `RenderedChunk` 信息，这里同样用占位符替代了哈希值。这意味着你可以在此钩子中查看整个块图。
 
 ### renderDynamicImport
 
@@ -1201,7 +1225,7 @@ function importMetaUrlCurrentModulePlugin() {
 
 |  |  |
 | --: | :-- |
-| 类型: | `(options: OutputOptions, bundle: { [fileName: string]: AssetInfo \| ChunkInfo }) => void` |
+| 类型: | `(options: OutputOptions, bundle: { [fileName: string]: OutputAsset \| OutputChunk }) => void` |
 | 类别: | async, parallel |
 | 上一个钩子: | [`generateBundle`](#generatebundle) |
 | 下一个钩子: | 如果调用了它，则是输出生成阶段的最后一个钩子，并且如果生成了另一个输出，则可能再次跟随 [`outputOptions`](#outputoptions) |
