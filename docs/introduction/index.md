@@ -28,17 +28,17 @@ npm install --global rollup
 
 ::: code-group
 
-```shell [浏览器：]
+```shell [浏览器]
 # 编译为包含自执行函数（'iife'）的 <script>。
 $ rollup main.js --file bundle.js --format iife
 ```
 
-```shell [Node.js：]
+```shell [Node.js]
 # 编译为一个 CommonJS 模块 ('cjs')
 $ rollup main.js --file bundle.js --format cjs
 ```
 
-```shell [浏览器和 Node.js：]
+```shell [浏览器和 Node.js]
 # UMD 格式需要一个包名
 $ rollup main.js --file bundle.js --format umd --name "myBundle"
 ```
