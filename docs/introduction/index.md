@@ -26,26 +26,24 @@ npm install --global rollup
 
 这些命令假定你的应用程序入口点命名为 `main.js`，并且希望将所有导入编译到一个名为 `bundle.js` 的单个文件中。
 
-对于浏览器：
+::: code-group
 
-```shell
+```shell [浏览器]
 # 编译为包含自执行函数（'iife'）的 <script>。
-rollup main.js --file bundle.js --format iife
+$ rollup main.js --file bundle.js --format iife
 ```
 
-对于 Node.js:
-
-```shell
+```shell [Node.js]
 # 编译为一个 CommonJS 模块 ('cjs')
-rollup main.js --file bundle.js --format cjs
+$ rollup main.js --file bundle.js --format cjs
 ```
 
-对于浏览器和 Node.js：
-
-```shell
+```shell [浏览器和 Node.js]
 # UMD 格式需要一个包名
-rollup main.js --file bundle.js --format umd --name "myBundle"
+$ rollup main.js --file bundle.js --format umd --name "myBundle"
 ```
+
+:::
 
 ## 背景 {#the-why}
 
