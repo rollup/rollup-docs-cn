@@ -26,51 +26,26 @@ npm install --global rollup
 
 这些命令假定你的应用程序入口点命名为 `main.js`，并且希望将所有导入编译到一个名为 `bundle.js` 的单个文件中。
 
-<<<<<<< HEAD
-对于浏览器：
-
-```shell
-# 编译为包含自执行函数（'iife'）的 <script>。
-rollup main.js --file bundle.js --format iife
-```
-
-对于 Node.js:
-
-```shell
-# 编译为一个 CommonJS 模块 ('cjs')
-rollup main.js --file bundle.js --format cjs
-```
-
-对于浏览器和 Node.js：
-
-```shell
-# UMD 格式需要一个包名
-rollup main.js --file bundle.js --format umd --name "myBundle"
-```
-
-## 背景 {#the-why}
-=======
 ::: code-group
 
-```shell [For browsers:]
-# compile to a <script> containing a self-executing function ('iife')
+```shell [浏览器：]
+# 编译为包含自执行函数（'iife'）的 <script>。
 $ rollup main.js --file bundle.js --format iife
 ```
 
-```shell [For Node.js:]
-# compile to a CommonJS module ('cjs')
+```shell [Node.js：]
+# 编译为一个 CommonJS 模块 ('cjs')
 $ rollup main.js --file bundle.js --format cjs
 ```
 
-```shell [For both browsers and Node.js:]
-# UMD format requires a bundle name
+```shell [浏览器和 Node.js：]
+# UMD 格式需要一个包名
 $ rollup main.js --file bundle.js --format umd --name "myBundle"
 ```
 
 :::
 
-## The Why
->>>>>>> 8b967917c2923dc6a02ca1238261387aefa2cb2f
+## 背景 {#the-why}
 
 将项目分解为较小的独立部分通常可以使软件开发更加容易，因为这通常可以消除意外的交互，并大大减少你需要解决的问题的复杂性，而仅仅是首先编写较小的项目 [并不一定是最好的方式](https://medium.com/@Rich_Harris/small-modules-it-s-not-quite-that-simple-3ca532d65de4)。不幸的是，JavaScript 在历史上并没有将这种能力作为语言的核心特性之一。这在 ES6 版本的 JavaScript 中得到了改变，该版本包括一种语法，用于导入和导出函数和数据，以便它们可以在单独的脚本之间共享。
 
