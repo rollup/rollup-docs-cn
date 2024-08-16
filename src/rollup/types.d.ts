@@ -161,6 +161,7 @@ export interface EmittedAsset {
 	fileName?: string;
 	name?: string;
 	needsCodeReference?: boolean;
+	originalFileName?: string | null;
 	source?: string | Uint8Array;
 	type: 'asset';
 }
@@ -755,6 +756,7 @@ export interface OutputOptions {
 	strict?: boolean;
 	systemNullSetters?: boolean;
 	validate?: boolean;
+	virtualDirname?: string;
 }
 
 export interface NormalizedOutputOptions {
@@ -808,6 +810,7 @@ export interface NormalizedOutputOptions {
 	strict: boolean;
 	systemNullSetters: boolean;
 	validate: boolean;
+	virtualDirname: string;
 }
 
 export type WarningHandlerWithDefault = (
@@ -821,6 +824,7 @@ export interface SerializedTimings {
 
 export interface PreRenderedAsset {
 	name: string | undefined;
+	originalFileName: string | null;
 	source: string | Uint8Array;
 	type: 'asset';
 }
