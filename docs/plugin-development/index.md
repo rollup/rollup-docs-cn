@@ -670,7 +670,11 @@ interface SourceDescription {
 
 可以被用来转换单个模块。为了防止额外的解析开销，例如，这个钩子已经使用 [`this.parse`](#this-parse) 生成了一个 AST，这个钩子可以选择返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个标准的 ESTree AST，每个节点都有 `start` 和 `end` 属性。如果转换不移动代码，你可以通过将 `map` 设置为 `null` 来保留现有的 sourcemaps。否则，你可能需要生成源映射。请参阅 [源代码转换](#source-code-transformations) 部分。
 
+<<<<<<< HEAD
 请注意，在观察模式下或明确使用缓存时，当重新构建时，此钩子的结果会被缓存，仅当模块的 `code` 发生更改或上次触发此钩子时添加了通过 `this.addWatchFile` 添加的文件时，才会再次触发该模块的钩子。
+=======
+Note that in watch mode or when using the cache explicitly, the result of this hook is cached when rebuilding and the hook is only triggered again for a module `id` if either the `code` of the module has changed or a file has changed that was added via `this.addWatchFile` or `this.emitFile` the last time the hook was triggered for this module.
+>>>>>>> 916bd62dd1bee3cc40186d10742652be573ca611
 
 在所有其他情况下，将触发 [`shouldTransformCachedModule`](#shouldtransformcachedmodule) 钩子，该钩子可以访问缓存的模块。从 `shouldTransformCachedModule` 返回 `true` 将从缓存中删除该模块，并再次调用 `transform`。
 
@@ -908,8 +912,9 @@ function augmentWithDatePlugin() {
 ```typescript
 interface OutputAsset {
 	fileName: string;
-	name?: string;
+	name: string | undefined;
 	needsCodeReference: boolean;
+	originalFileName: string | null;
 	source: string | Uint8Array;
 	type: 'asset';
 }
@@ -1244,7 +1249,13 @@ function importMetaUrlCurrentModulePlugin() {
 
 添加额外的文件以在监视模式下监视，以便更改这些文件将触发重建。`id` 可以是文件或目录的绝对路径，也可以是相对于当前工作目录的路径。此上下文函数可以在所有插件钩子中使用，除了 `closeBundle`。但是，如果 [`watch.skipWrite`](../configuration-options/index.md#watch-skipwrite) 设置为 `true`，则在 [输出生成钩子](#output-generation-hooks) 中使用它将不起作用。
 
+<<<<<<< HEAD
 **注意**：通常在监视模式下，为了提高重建速度，`transform` 钩子只会在给定模块的内容实际更改时触发。从 `transform` 钩子中使用 `this.addWatchFile` 将确保如果监视的文件更改，则也将重新评估此模块的 `transform` 钩子。
+=======
+Note that when emitting assets that correspond to an existing file, it is recommended to set the `originalFileName` property in the [`this.emitFile`](#this-emitfile) call instead as that will not only watch the file but also make the connection transparent to other plugins.
+
+**Note:** Usually in watch mode to improve rebuild speed, the `transform` hook will only be triggered for a given module if its contents actually changed. Using `this.addWatchFile` from within the `transform` hook will make sure the `transform` hook is also reevaluated for this module if the watched file changes.
+>>>>>>> 916bd62dd1bee3cc40186d10742652be573ca611
 
 通常建议从依赖于监视文件的钩子中使用 `this.addWatchFile`。
 
@@ -1305,6 +1316,7 @@ interface EmittedAsset {
 	type: 'asset';
 	name?: string;
 	needsCodeReference?: boolean;
+	originalFileName?: string;
 	fileName?: string;
 	source?: string | Uint8Array;
 }
@@ -1445,7 +1457,15 @@ import { foo } from './my-prebuilt-chunk.js';
 
 目前，产出预构建的块是一个基本功能。期待你的反馈。
 
+<<<<<<< HEAD
 如果 `type` 是 _`asset`_，则它会产出一个具有给定 `source` 作为内容的任意新文件。可以通过 [`this.setAssetSource(referenceId, source)`](#this-setassetsource) 推迟设置 `source` 到稍后的时间，以便在构建阶段引用文件，同时在生成阶段为每个输出单独设置源。具有指定 `fileName` 的资产将始终生成单独的文件，而其他产出的资产可能会与现有资产进行去重，即使 `name` 不匹配。如果这样的资产没有被去重，则会使用 [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) 名称模式。如果 `needsCodeReference` 设置为 `true`，并且此资产在输出中没有任何代码通过 `import.meta.ROLLUP_FILE_URL_referenceId` 引用，则 Rollup 将不会产出它。同时这也遵从通过除屑优化删除的引用，即如果相应的 `import.meta.ROLLUP_FILE_URL_referenceId` 是源代码的一部分，但实际上没有使用，引用被除屑优化给删除掉，也不会打包出相关的资源文件。
+=======
+If the `type` is _`asset`_, then this emits an arbitrary new file with the given `source` as content. It is possible to defer setting the `source` via [`this.setAssetSource(referenceId, source)`](#this-setassetsource) to a later time to be able to reference a file during the build phase while setting the source separately for each output during the generate phase. Assets with a specified `fileName` will always generate separate files while other emitted assets may be deduplicated with existing assets if they have the same source even if the `name` does not match. If an asset without a `fileName` is not deduplicated, the [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) name pattern will be used.
+
+If this asset corresponds to an actual file on disk, then `originalFileName` should be set to the absolute path of the file. In that case, this property will be passed on to subsequent plugin hooks that receive a `PreRenderedAsset` or an `OutputAsset` like [`generateBundle`](#generatebundle). In watch mode, Rollup will also automatically watch this file for changes and trigger a rebuild if it changes. Therefore, it is not necessary to call `this.addWatchFile` for this file.
+
+If `needsCodeReference` is set to `true` and this asset is not referenced by any code in the output via `import.meta.ROLLUP_FILE_URL_referenceId`, then Rollup will not emit it. This also respects references removed via tree-shaking, i.e. if the corresponding `import.meta.ROLLUP_FILE_URL_referenceId` is part of the source code but is not actually used and the reference is removed by tree-shaking, then the asset is not emitted.
+>>>>>>> 916bd62dd1bee3cc40186d10742652be573ca611
 
 ### this.error
 

@@ -53,7 +53,9 @@ async function loadRollup(rollupRequest: RollupRequest): Promise<typeof Rollup> 
 		const script = document.createElement('script');
 		script.src = url;
 		script.addEventListener('load', async () => {
-			preloadRollupWasmFile && (await preloadRollupWasmFile);
+			if (preloadRollupWasmFile) {
+				await preloadRollupWasmFile;
+			}
 			fulfil((window as any).rollup);
 		});
 		script.addEventListener('error', () => {

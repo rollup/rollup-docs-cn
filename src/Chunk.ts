@@ -705,7 +705,9 @@ export default class Chunk {
 		if (banner) magicString.prepend(banner);
 		if (format === 'es' || format === 'cjs') {
 			const shebang = facadeModule !== null && facadeModule.info.isEntry && facadeModule.shebang;
-			shebang && magicString.prepend(`#!${shebang}\n`);
+			if (shebang) {
+				magicString.prepend(`#!${shebang}\n`);
+			}
 		}
 		if (footer) magicString.append(footer);
 
@@ -1075,7 +1077,9 @@ export default class Chunk {
 				? idWithoutExtension.slice(preserveModulesRoot.length).replace(/^[/\\]/, '')
 				: relative(this.inputBase, idWithoutExtension);
 		} else {
-			return `_virtual/${basename(idWithoutExtension)}`;
+			return (
+				this.outputOptions.virtualDirname.replace(/\/$/, '') + '/' + basename(idWithoutExtension)
+			);
 		}
 	}
 
