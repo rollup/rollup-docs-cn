@@ -1,5 +1,36 @@
 # rollup changelog
 
+## 4.21.0
+
+_2024-08-18_
+
+### Features
+
+- Add option to configure directory for virtual modules when preserving modules (#5602)
+
+### Pull Requests
+
+- [#5602](https://github.com/rollup/rollup/pull/5602): feat: introduce the virtualDirname option to customize the virtual directory name (@TrickyPi)
+- [#5607](https://github.com/rollup/rollup/pull/5607): chore(deps): update typescript-eslint monorepo to v8 (major) (@renovate[bot], @lukastaegert)
+- [#5608](https://github.com/rollup/rollup/pull/5608): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5611](https://github.com/rollup/rollup/pull/5611): chore: fix the `noConflict` option in REPL. (@7086cmd)
+- [#5613](https://github.com/rollup/rollup/pull/5613): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5614](https://github.com/rollup/rollup/pull/5614): chore(deps): lock file maintenance (@renovate[bot])
+
+## 4.20.0
+
+_2024-08-03_
+
+### Features
+
+- Allow plugins to specify the original file name when emitting assets (#5596)
+
+### Pull Requests
+
+- [#5596](https://github.com/rollup/rollup/pull/5596): Add originalFIleName property to emitted assets (@lukastaegert)
+- [#5599](https://github.com/rollup/rollup/pull/5599): chore(deps): update dependency eslint-plugin-unicorn to v55 (@renovate[bot], @lukastaegert)
+- [#5600](https://github.com/rollup/rollup/pull/5600): chore(deps): lock file maintenance minor/patch updates (@renovate[bot], @lukastaegert)
+
 ## 4.19.2
 
 _2024-08-01_

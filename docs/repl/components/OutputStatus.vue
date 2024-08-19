@@ -17,7 +17,7 @@
 			<span class="repl-icon-attention"></span>
 			加载 Rollup...
 		</span>
-		<StatusMessage v-else-if="error" :message="error" isError />
+		<StatusMessage v-else-if="error" :message="error" is-error />
 		<span v-else-if="hasWarnings">
 			<span class="repl-icon-attention" />
 			Rollup completed with warnings:

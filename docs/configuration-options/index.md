@@ -574,7 +574,8 @@ export default {
 
 ```typescript
 interface PreRenderedAsset {
-	name?: string;
+	name: string | undefined;
+	originalFileName: string | null;
 	source: string | Uint8Array;
 	type: 'asset';
 }
@@ -1471,7 +1472,11 @@ define(['https://d3js.org/d3.v4.min'], function (d3) {
 |  CLI： | `--preserveModules`/`--no-preserveModules` |
 | 默认： | `false`                                    |
 
+<<<<<<< HEAD
 该选项将使用原始模块名作为文件名，为所有模块创建单独的 chunk，而不是创建尽可能少的 chunk。它需要配合 [`output.dir`](#output-dir) 选项一起使用。除屑优化（Tree-shaking）仍会对没有被入口使用或者执行阶段没有副作用的文件生效，并删除不属于入口起点的未使用文件的导出。另一方面，如果插件（如 `@rollup/plugin-commonjs`）为实现某些结果而产生了额外的“虚拟”文件，这些文件将作为实际文件使用 `_virtual/fileName.js` 模式产生。
+=======
+Instead of creating as few chunks as possible, this mode will create separate chunks for all modules using the original module names as file names. Requires the [`output.dir`](#output-dir) option. Tree-shaking will still be applied, suppressing files that are not used by the provided entry points or do not have side effects when executed and removing unused exports of files that are not entry points. On the other hand, if plugins (like `@rollup/plugin-commonjs`) emit additional "virtual" files to achieve certain results, those files will be emitted as actual files using a pattern [`${output.virtualDirname}/fileName.js`](#output-virtualdirname).
+>>>>>>> 262a38850870a0ef585aaa093883025dcd389d65
 
 因此，如果你直接想从这些文件中引入，不建议盲目地使用这个选项将整个文件结构转换为另一种格式，因为预期的输出可能会丢失。在这种情况下，你应该把所有文件明确指定为入口，把它们添加到 [`input` 选项对象](#input) 中，可以查看那里的例子。
 
@@ -1681,7 +1686,21 @@ export default {
 
 如果代码是无效的，将抛出警告。请注意，如果没有错误被抛出，你就可以检查输出代码。要把这个警告提升为错误，你可以在 [`onwarn`](#onwarn) 中查询。
 
+<<<<<<< HEAD
 ### preserveEntrySignatures {#preserveentrysignatures}
+=======
+### output.virtualDirname
+
+|          |                              |
+| -------: | :--------------------------- |
+|    Type: | `string`                     |
+|     CLI: | `--virtualDirname <dirname>` |
+| Default: | `_virtual`                   |
+
+This option specifies the directory name for "virtual" files that might be emitted by plugins (like `@rollup/plugin-commonjs`). It is only validated when [`output.preserveModules`](#output-preservemodules) is enabled.
+
+### preserveEntrySignatures
+>>>>>>> 262a38850870a0ef585aaa093883025dcd389d65
 
 |  |  |
 | --: | :-- |
