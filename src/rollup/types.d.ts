@@ -161,6 +161,7 @@ export interface EmittedAsset {
 	fileName?: string;
 	name?: string;
 	needsCodeReference?: boolean;
+	originalFileName?: string | null;
 	source?: string | Uint8Array;
 	type: 'asset';
 }
@@ -210,9 +211,7 @@ interface ModuleInfo extends ModuleOptions {
 
 export type GetModuleInfo = (moduleId: string) => ModuleInfo | null;
 
-export interface CustomPluginOptions {
-	[plugin: string]: any;
-}
+export type CustomPluginOptions = Record<string, any>;
 
 type LoggingFunctionWithPosition = (
 	log: RollupLog | string | (() => RollupLog | string),
@@ -226,6 +225,7 @@ export type ParseAst = (
 
 // declare AbortSignal here for environments without DOM lib or @types/node
 declare global {
+	// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 	interface AbortSignal {}
 }
 
@@ -274,9 +274,7 @@ export interface ResolvedId extends ModuleOptions {
 	resolvedBy: string;
 }
 
-export interface ResolvedIdMap {
-	[key: string]: ResolvedId;
-}
+export type ResolvedIdMap = Record<string, ResolvedId>;
 
 interface PartialResolvedId extends Partial<PartialNull<ModuleOptions>> {
 	external?: boolean | 'absolute' | 'relative';
@@ -394,12 +392,9 @@ export type WatchChangeHook = (
  * const myPlugin: PluginImpl<Options> = (options = {}) => { ... }
  * ```
  */
-// eslint-disable-next-line @typescript-eslint/ban-types
 export type PluginImpl<O extends object = object, A = any> = (options?: O) => Plugin<A>;
 
-export interface OutputBundle {
-	[fileName: string]: OutputAsset | OutputChunk;
-}
+export type OutputBundle = Record<string, OutputAsset | OutputChunk>;
 
 export interface FunctionPluginHooks {
 	augmentChunkHash: (this: PluginContext, chunk: RenderedChunk) => string | void;
@@ -504,13 +499,13 @@ type MakeAsync<Function_> = Function_ extends (
 	? (this: This, ...parameters: Arguments) => Return | Promise<Return>
 	: never;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type ObjectHook<T, O = {}> = T | ({ handler: T; order?: 'pre' | 'post' | null } & O);
 
 export type PluginHooks = {
 	[K in keyof FunctionPluginHooks]: ObjectHook<
 		K extends AsyncPluginHooks ? MakeAsync<FunctionPluginHooks[K]> : FunctionPluginHooks[K],
-		// eslint-disable-next-line @typescript-eslint/ban-types
+		// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 		K extends ParallelPluginHooks ? { sequential?: boolean } : {}
 	>;
 };
@@ -558,11 +553,11 @@ export type ExternalOption =
 	| RegExp
 	| ((source: string, importer: string | undefined, isResolved: boolean) => boolean | NullValue);
 
-export type GlobalsOption = { [name: string]: string } | ((name: string) => string);
+export type GlobalsOption = Record<string, string> | ((name: string) => string);
 
-export type InputOption = string | string[] | { [entryAlias: string]: string };
+export type InputOption = string | string[] | Record<string, string>;
 
-export type ManualChunksOption = { [chunkAlias: string]: string[] } | GetManualChunk;
+export type ManualChunksOption = Record<string, string[]> | GetManualChunk;
 
 export type LogHandlerWithDefault = (
 	level: LogLevel,
@@ -600,7 +595,7 @@ export interface InputOptions {
 	logLevel?: LogLevelOption;
 	makeAbsoluteExternalsRelative?: boolean | 'ifRelativeSource';
 	maxParallelFileOps?: number;
-	moduleContext?: ((id: string) => string | NullValue) | { [id: string]: string };
+	moduleContext?: ((id: string) => string | NullValue) | Record<string, string>;
 	onLog?: LogHandlerWithDefault;
 	onwarn?: WarningHandlerWithDefault;
 	perf?: boolean;
@@ -623,7 +618,7 @@ export interface NormalizedInputOptions {
 	experimentalCacheExpiry: number;
 	experimentalLogSideEffects: boolean;
 	external: IsExternal;
-	input: string[] | { [entryAlias: string]: string };
+	input: string[] | Record<string, string>;
 	logLevel: LogLevelOption;
 	makeAbsoluteExternalsRelative: boolean | 'ifRelativeSource';
 	maxParallelFileOps: number;
@@ -755,6 +750,7 @@ export interface OutputOptions {
 	strict?: boolean;
 	systemNullSetters?: boolean;
 	validate?: boolean;
+	virtualDirname?: string;
 }
 
 export interface NormalizedOutputOptions {
@@ -808,6 +804,7 @@ export interface NormalizedOutputOptions {
 	strict: boolean;
 	systemNullSetters: boolean;
 	validate: boolean;
+	virtualDirname: string;
 }
 
 export type WarningHandlerWithDefault = (
@@ -815,12 +812,11 @@ export type WarningHandlerWithDefault = (
 	defaultHandler: LoggingFunction
 ) => void;
 
-export interface SerializedTimings {
-	[label: string]: [number, number, number];
-}
+export type SerializedTimings = Record<string, [number, number, number]>;
 
 export interface PreRenderedAsset {
 	name: string | undefined;
+	originalFileName: string | null;
 	source: string | Uint8Array;
 	type: 'asset';
 }
@@ -853,13 +849,9 @@ export interface RenderedChunk extends PreRenderedChunk {
 	dynamicImports: string[];
 	fileName: string;
 	implicitlyLoadedBefore: string[];
-	importedBindings: {
-		[imported: string]: string[];
-	};
+	importedBindings: Record<string, string[]>;
 	imports: string[];
-	modules: {
-		[id: string]: RenderedModule;
-	};
+	modules: Record<string, RenderedModule>;
 	referencedFiles: string[];
 }
 
@@ -870,9 +862,7 @@ export interface OutputChunk extends RenderedChunk {
 	preliminaryFileName: string;
 }
 
-export interface SerializablePluginCache {
-	[key: string]: [number, any];
-}
+export type SerializablePluginCache = Record<string, [number, any]>;
 
 export interface RollupCache {
 	modules: ModuleJSON[];
@@ -944,11 +934,11 @@ export interface RollupWatchOptions extends InputOptions {
 }
 
 export type AwaitedEventListener<
-	T extends { [event: string]: (...parameters: any) => any },
+	T extends Record<string, (...parameters: any) => any>,
 	K extends keyof T
 > = (...parameters: Parameters<T[K]>) => void | Promise<void>;
 
-export interface AwaitingEventEmitter<T extends { [event: string]: (...parameters: any) => any }> {
+export interface AwaitingEventEmitter<T extends Record<string, (...parameters: any) => any>> {
 	close(): Promise<void>;
 	emit<K extends keyof T>(event: K, ...parameters: Parameters<T[K]>): Promise<unknown>;
 	/**
