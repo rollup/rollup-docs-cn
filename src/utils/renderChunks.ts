@@ -7,7 +7,6 @@ import type {
 	NormalizedOutputOptions,
 	RenderedChunk
 } from '../rollup/types';
-import type { PluginDriver } from './PluginDriver';
 import { collapseSourcemaps } from './collapseSourcemaps';
 import type { GetHash } from './crypto';
 import { hasherByType } from './crypto';
@@ -21,6 +20,7 @@ import { error, logFailedValidation } from './logs';
 import type { OutputBundleWithPlaceholders } from './outputBundle';
 import { FILE_PLACEHOLDER, lowercaseBundleKeys } from './outputBundle';
 import { basename, normalize, resolve } from './path';
+import type { PluginDriver } from './PluginDriver';
 import { SOURCEMAPPING_URL } from './sourceMappingURL';
 import { timeEnd, timeStart } from './timers';
 

@@ -1,5 +1,32 @@
 # rollup changelog
 
+## 4.22.2
+
+_2024-09-20_
+
+### Bug Fixes
+
+- Revert fix for side effect free modules until other issues are investigated (#5667)
+
+### Pull Requests
+
+- [#5667](https://github.com/rollup/rollup/pull/5667): Partially revert #5658 and re-apply #5644 (@lukastaegert)
+
+## 4.22.1
+
+_2024-09-20_
+
+### Bug Fixes
+
+- Revert #5644 "stable chunk hashes" while issues are being investigated
+
+### Pull Requests
+
+- [#5663](https://github.com/rollup/rollup/pull/5663): chore(deps): update dependency inquirer to v11 (@renovate[bot], @lukastaegert)
+- [#5664](https://github.com/rollup/rollup/pull/5664): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5665](https://github.com/rollup/rollup/pull/5665): fix: type in CI file (@YuHyeonWook)
+- [#5666](https://github.com/rollup/rollup/pull/5666): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+
 ## 4.22.0
 
 _2024-09-19_
