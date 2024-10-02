@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "title": "多个入口模块",
   "entryModules": ["main.js", "otherEntry.js"],
   "options": {
@@ -7,4 +8,14 @@
       "preserveModules": false
     }
   }
+=======
+	"title": "Multiple Entry Modules",
+	"entryModules": ["main.js", "otherEntry.js"],
+	"options": {
+		"output": {
+			"minifyInternalExports": false,
+			"preserveModules": false
+		}
+	}
+>>>>>>> d3c000f4fd453e39a354299f0cfaa6831f56d7d8
 }
