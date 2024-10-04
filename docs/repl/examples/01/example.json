@@ -1,9 +1,10 @@
 {
+<<<<<<< HEAD
 	"title": "具名导出（Named exports）",
+=======
+	"title": "Tree-shaking",
+>>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
 	"options": {
-		"output": {
-			"exports": "auto",
-			"esModule": "if-default-prop"
-		}
+		"treeshake": true
 	}
 }
