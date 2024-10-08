@@ -12,13 +12,8 @@ title: 配置选项
 
 |  |  |
 | --: | :-- |
-<<<<<<< HEAD
-| 类型： | `(string \| RegExp)[]\| RegExp\| string\| (id: string, parentId: string, isResolved: boolean) => boolean` |
+| 类型： | `(string \| RegExp)[] \| RegExp \| string \| (id: string, parentId: string, isResolved: boolean) => boolean` |
 | CLI： | `-e`/`--external <external-id,another-external-id,...>` |
-=======
-| Type: | `(string \| RegExp)[] \| RegExp \| string \| (id: string, parentId: string, isResolved: boolean) => boolean` |
-| CLI: | `-e`/`--external <external-id,another-external-id,...>` |
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
 
 该选项用于匹配需要排除在 bundle 外部的模块，它的值可以是一个接收模块 `id` 参数并返回 `true` （表示外部依赖）或 `false` （表示非外部依赖）的函数，也可以是一个模块 ID 数组或者正则表达式。除此之外，它还可以只是单个的模块 ID 或正则表达式。被匹配的模块 ID 应该满足以下条件之一：
 
@@ -90,17 +85,10 @@ console.log(x);
 
 ### input {#input}
 
-<<<<<<< HEAD
-|        |                                                         |
-| -----: | :------------------------------------------------------ |
-| 类型： | `string \| string []\| { [entryName: string]: string }` |
-|  CLI： | `-i`/`--input <filename>`                               |
-=======
-|       |                                                          |
-| ----: | :------------------------------------------------------- |
-| Type: | `string \| string [] \| { [entryName: string]: string }` |
-|  CLI: | `-i`/`--input <filename>`                                |
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
+|        |                                                          |
+| -----: | :------------------------------------------------------- |
+| 类型： | `string \| string [] \| { [entryName: string]: string }` |
+|  CLI： | `-i`/`--input <filename>`                                |
 
 该选项用于指定 bundle 的入口文件（例如，你的 `main.js`，`app.js` 或 `index.js` 文件）。如果值为一个入口文件的数组或一个将名称映射到入口文件的对象，那么它们将被打包到单独的输出 chunks。除非使用 [`output.file`](#output-file) 选项，否则生成的 chunk 名称将遵循 [`output.entryFileNames`](#output-entryfilenames) 选项设置。当该选项的值为对象形式时，对象的属性名将作为文件名中的 `[name]`，而对于值为数组形式，数组的值将作为入口文件名。
 
@@ -181,16 +169,13 @@ rollup main=src/entry1.js other=src/entry2.js --format es
 rollup "main entry"="src/entry 1.js" "src/other entry.js" --format es
 ```
 
-<<<<<<< HEAD
-### output.dir {#output-dir}
-=======
 ### jsx
 
-|          |                                    |
-| -------: | :--------------------------------- |
-|    Type: | `false \| JsxPreset \| JsxOptions` |
-|     CLI: | `--jsx <preset>`/`--no-jsx`        |
-| Default: | `false`                            |
+|        |                                    |
+| -----: | :--------------------------------- |
+| 类型： | `false \| JsxPreset \| JsxOptions` |
+|  CLI： | `--jsx <preset>`/`--no-jsx`        |
+| 默认： | `false`                            |
 
 ```typescript
 type JsxPreset = 'react' | 'react-jsx' | 'preserve' | 'preserve-react';
@@ -260,11 +245,11 @@ Allows Rollup to process JSX syntax to either preserve or transform it depending
 
 #### jsx.mode
 
-|          |                                          |
-| -------: | :--------------------------------------- |
-|    Type: | `"preserve" \| "classic" \| "automatic"` |
-|     CLI: | `--jsx.mode <mode>`                      |
-| Default: | `"classic"`                              |
+|        |                                          |
+| -----: | :--------------------------------------- |
+| 类型： | `"preserve" \| "classic" \| "automatic"` |
+|  CLI： | `--jsx.mode <mode>`                      |
+| 默认： | `"classic"`                              |
 
 This will determine how JSX is processed:
 
@@ -295,11 +280,11 @@ This will determine how JSX is processed:
 
 #### jsx.factory
 
-|          |                                   |
-| -------: | :-------------------------------- |
-|    Type: | `string \| null`                  |
-|     CLI: | `--jsx.factory <factory>`         |
-| Default: | `"React.createElement"` or `null` |
+|        |                                   |
+| -----: | :-------------------------------- |
+| 类型： | `string \| null`                  |
+|  CLI： | `--jsx.factory <factory>`         |
+| 默认： | `"React.createElement"` or `null` |
 
 The function Rollup uses to create JSX elements in `"classic"` mode or as a fallback in `"automatic"` mode. This is usually `React.createElement` for React or `h` for other frameworks. In `"preserve"` mode, this will ensure that the factory is in scope if [`jsx.importSource`](#jsx-importsource) is specified, or otherwise that a global variable of the same name would not be overridden by local variables. Only in `"preserve"` mode it is possible to set this value to `null`, in which case Rollup will not take care to keep any particular factory function in scope.
 
@@ -307,11 +292,11 @@ If the value contains a `"."` like `React.createElement` and an `jsx.importSourc
 
 #### jsx.fragment
 
-|          |                              |
-| -------: | :--------------------------- |
-|    Type: | `string \| null`             |
-|     CLI: | `--jsx.fragment <fragment>`  |
-| Default: | `"React.Fragment"` or `null` |
+|        |                              |
+| -----: | :--------------------------- |
+| 类型： | `string \| null`             |
+|  CLI： | `--jsx.fragment <fragment>`  |
+| 默认： | `"React.Fragment"` or `null` |
 
 The element function Rollup uses to create JSX fragments. This is usually `React.Fragment` for React or `Fragment` for other frameworks. In `"preserve"` mode, this will ensure that the fragment is in scope if [`jsx.importSource`](#jsx-importsource) is specified, or otherwise that a global variable of the same name would not be overridden by local variables. Only in `"preserve"` mode it is possible to set this value to `null`, in which case Rollup will not take care to keep any particular fragment function in scope.
 
@@ -319,30 +304,30 @@ If the value contains a `"."` like `React.Fragment` and an `jsx.importSource` is
 
 #### jsx.importSource
 
-|          |                                |
-| -------: | :----------------------------- |
-|    Type: | `string \| null`               |
-|     CLI: | `--jsx.importSource <library>` |
-| Default: | `null`                         |
+|        |                                |
+| -----: | :----------------------------- |
+| 类型： | `string \| null`               |
+|  CLI： | `--jsx.importSource <library>` |
+| 默认： | `null`                         |
 
 Where to import the element factory function and/or the fragment element from. If left to `null`, Rollup will assume that [`jsx.factory`](#jsx-factory) and [`jsx.fragment`](#jsx-fragment) refer to global variables and makes sure they are not shadowed by local variables.
 
 #### jsx.jsxImportSource
 
-|          |                                   |
-| -------: | :-------------------------------- |
-|    Type: | `string`                          |
-|     CLI: | `--jsx.jsxImportSource <library>` |
-| Default: | `"react/jsx-runtime"`             |
+|        |                                   |
+| -----: | :-------------------------------- |
+| 类型： | `string`                          |
+|  CLI： | `--jsx.jsxImportSource <library>` |
+| 默认： | `"react/jsx-runtime"`             |
 
 When using `"automatic"` mode, this will specify from where to import the `jsx`, `jsxs` and `Fragment` helpers needed for that transformation. It is not possible to get those from a global variable.
 
 #### jsx.preset
 
-|       |                        |
-| ----: | :--------------------- |
-| Type: | JsxPreset              |
-|  CLI: | `--jsx.preset <value>` |
+|        |                        |
+| -----: | :--------------------- |
+| 类型： | JsxPreset              |
+|  CLI： | `--jsx.preset <value>` |
 
 Allows choosing one of the presets listed above while overriding some options.
 
@@ -361,7 +346,6 @@ export default {
 ```
 
 ### output.dir
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
 
 |        |                        |
 | -----: | :--------------------- |
@@ -400,13 +384,8 @@ export default {
 
 |  |  |
 | --: | :-- |
-<<<<<<< HEAD
-| 类型： | `{ [id: string]: string }\| ((id: string) => string)` |
+| 类型： | `{ [id: string]: string } \| ((id: string) => string)` |
 | CLI： | `-g`/`--globals <external-id:variableName,another-external-id:anotherVariableName,...>` |
-=======
-| Type: | `{ [id: string]: string } \| ((id: string) => string)` |
-| CLI: | `-g`/`--globals <external-id:variableName,another-external-id:anotherVariableName,...>` |
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
 
 该选项用于在 `umd` / `iife` bundle 中，使用 `id: variableName` 键值对指定外部依赖。例如，在这样的情况下：
 
@@ -625,7 +604,7 @@ buildWithCache()
 |        |                        |
 | -----: | :--------------------- |
 | 类型： | `LogLevel \| "silent"` |
-|   CLI: | `--logLevel <level>`   |
+|  CLI： | `--logLevel <level>`   |
 | 默认： | `"info"`               |
 
 该选项决定哪些日志将被处理。查看 [`onLog`](#onlog) 以了解可用的日志级别。默认的 `logLevel` 为 `"info"`，这意味着 info 和 warning 日志将被处理，而 debug 日志将被忽略，这意味着它们既不会传递给插件 [`onLog`](../plugin-development/index.md#onlog) 钩子，也不会传递给 `onLog` 选项或打印到控制台。
@@ -636,15 +615,9 @@ buildWithCache()
 
 |  |  |
 | --: | :-- |
-<<<<<<< HEAD
-| 类型： | `boolean\| "ifRelativeSource"` |
+| 类型： | `boolean \| "ifRelativeSource"` |
 | CLI： | `--makeAbsoluteExternalsRelative`/`--no-makeAbsoluteExternalsRelative` |
 | 默认： | `"ifRelativeSource"` |
-=======
-| Type: | `boolean \| "ifRelativeSource"` |
-| CLI: | `--makeAbsoluteExternalsRelative`/`--no-makeAbsoluteExternalsRelative` |
-| Default: | `"ifRelativeSource"` |
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
 
 该选项决定外部依赖的绝对路径是否应该在输出中转换为相对路径。本选项不仅适用于源文件中的绝对路径，也适用于由插件或 Rollup 核心解析出的绝对路径。
 
@@ -672,7 +645,7 @@ buildWithCache()
 
 |  |  |
 | --: | :-- |
-| Type: | `(level: LogLevel, log: RollupLog, defaultHandler: LogOrStringHandler) => void;` |
+| 类型： | `(level: LogLevel, log: RollupLog, defaultHandler: LogOrStringHandler) => void;` |
 
 ```typescript
 type LogLevel = 'warn' | 'info' | 'debug';
@@ -769,26 +742,18 @@ export default {
 
 ### output.assetFileNames {#output-assetfilenames}
 
-<<<<<<< HEAD
-|        |                                                      |
-| -----: | :--------------------------------------------------- |
-| 类型： | `string\| ((assetInfo: PreRenderedAsset) => string)` |
-|  CLI： | `--assetFileNames <pattern>`                         |
-| 默认： | `"assets/[name]-[hash][extname]"`                    |
-=======
-|          |                                                       |
-| -------: | :---------------------------------------------------- |
-|    Type: | `string \| ((assetInfo: PreRenderedAsset) => string)` |
-|     CLI: | `--assetFileNames <pattern>`                          |
-| Default: | `"assets/[name]-[hash][extname]"`                     |
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
+|        |                                                       |
+| -----: | :---------------------------------------------------- |
+| 类型： | `string \| ((assetInfo: PreRenderedAsset) => string)` |
+|  CLI： | `--assetFileNames <pattern>`                          |
+| 默认： | `"assets/[name]-[hash][extname]"`                     |
 
 ```typescript
 interface PreRenderedAsset {
 	names: string[];
 	originalFileNames: string[];
 	source: string | Uint8Array;
-	type: 'asset';
+	类型： 'asset';
 }
 ```
 
@@ -805,13 +770,8 @@ interface PreRenderedAsset {
 
 |  |  |
 | --: | :-- |
-<<<<<<< HEAD
-| 类型： | `string \| ((chunk: RenderedChunk) => string\| Promise<string>)` |
+| 类型： | `string \| ((chunk: RenderedChunk) => string \| Promise<string>)` |
 | CLI： | `--banner`/`--footer <text>` |
-=======
-| Type: | `string \| ((chunk: RenderedChunk) => string \| Promise<string>)` |
-| CLI: | `--banner`/`--footer <text>` |
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
 
 查看 [`renderChunk`](../plugin-development/index.md#renderchunk) 钩子以了解 `RenderedChunk` 类型。
 
@@ -858,7 +818,7 @@ interface PreRenderedChunk {
 	isImplicitEntry: boolean;
 	moduleIds: string[];
 	name: string;
-	type: 'chunk';
+	类型： 'chunk';
 }
 ```
 
@@ -968,21 +928,15 @@ Promise.resolve()
 |  CLI： | `--externalImportAttributes`/`--no-externalImportAttributes` |
 | 默认： | `true`                                                       |
 
-是否在输出中为外部引入添加导入属性，如果输出格式为 `es`。默认情况下，属性来自输入文件，但插件可以稍后添加或删除属性。例如，`import "foo" assert {type: "json"}` 将导致相同的导入出现在输出中，除非将该选项设置为 `false`。请注意，模块的所有导入都需要具有一致的属性，否则会发出警告。
+是否在输出中为外部引入添加导入属性，如果输出格式为 `es`。默认情况下，属性来自输入文件，但插件可以稍后添加或删除属性。例如，`import "foo" assert {类型： "json"}` 将导致相同的导入出现在输出中，除非将该选项设置为 `false`。请注意，模块的所有导入都需要具有一致的属性，否则会发出警告。
 
 ### output.generatedCode {#output-generatedcode}
 
 |  |  |
 | --: | :-- |
-<<<<<<< HEAD
-| 类型： | `"es5" \| "es2015"\| { arrowFunctions?: boolean, constBindings?: boolean, objectShorthand?: boolean, preset?: "es5"\| "es2015", reservedNamesAsProps?: boolean, symbols?: boolean }` |
+| 类型： | `"es5" \| "es2015" \| { arrowFunctions?: boolean, constBindings?: boolean, objectShorthand?: boolean, preset?: "es5" \| "es2015", reservedNamesAsProps?: boolean, symbols?: boolean }` |
 | CLI： | `--generatedCode <preset>` |
 | 默认： | `"es5"` |
-=======
-| Type: | `"es5" \| "es2015" \| { arrowFunctions?: boolean, constBindings?: boolean, objectShorthand?: boolean, preset?: "es5" \| "es2015", reservedNamesAsProps?: boolean, symbols?: boolean }` |
-| CLI: | `--generatedCode <preset>` |
-| Default: | `"es5"` |
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
 
 该选项用于制定 Rollup 可以在生成的代码中安全地使用哪些语言特性。这不会转译任何用户的代码，而只改变 Rollup 在包装器和辅助函数中使用的代码。你可以从几个预设中选择一个：
 
@@ -1202,15 +1156,9 @@ exports.foo = foo;
 
 |  |  |
 | --: | :-- |
-<<<<<<< HEAD
-| 类型： | `"compat" \| "auto"\| "esModule"\| "default"\| "defaultOnly"\| ((id: string) => "compat"\| "auto"\| "esModule"\| "default"\| "defaultOnly")` |
+| 类型： | `"compat" \| "auto" \| "esModule" \| "default" \| "defaultOnly" \| ((id: string) => "compat" \| "auto" \| "esModule" \| "default" \| "defaultOnly")` |
 | CLI： | `--interop <value>` |
 | 默认： | `"default"` |
-=======
-| Type: | `"compat" \| "auto" \| "esModule" \| "default" \| "defaultOnly" \| ((id: string) => "compat" \| "auto" \| "esModule" \| "default" \| "defaultOnly")` |
-| CLI: | `--interop <value>` |
-| Default: | `"default"` |
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
 
 该选项用于控制 Rollup 如何处理默认值，命名空间和动态引入像 CommonJS 这样并不支持这些概念的外部依赖格式。请注意，"default" 的默认模式是模仿 NodeJS 的行为，与 TypeScript 的 `esModuleInterop` 不同。要获得像 TypeScript 中的行为，需要明确地设置该值为 `"auto"`。在例子中，我们将使用 CommonJS 格式，但该互操作（interop）的选择也同样适用于 AMD、IIFE 和 UMD 目标。
 
@@ -1333,7 +1281,7 @@ import('external2').then(console.log);
   var ext_default = require('external');
 
   function _interopDefault(e) {
-  	return e && e.__esModule ? e : { default: e };
+  	return e && e.__esModule ? e : { 默认： e };
   }
 
   var ext_default__default = /*#__PURE__*/ _interopDefault(ext_default);
@@ -1398,7 +1346,7 @@ import('external2').then(console.log);
   function _interopDefaultCompat(e) {
   	return e && typeof e === 'object' && 'default' in e
   		? e
-  		: { default: e };
+  		: { 默认： e };
   }
 
   var ext_default__default =
@@ -1419,7 +1367,7 @@ import('external2').then(console.log);
   var ext_default = require('external1');
 
   function _interopNamespaceDefaultOnly(e) {
-  	return Object.freeze({ __proto__: null, default: e });
+  	return Object.freeze({ __proto__: null, 默认： e });
   }
 
   var ext_default__namespace =
@@ -1469,13 +1417,8 @@ import('external2').then(console.log);
 
 |  |  |
 | --: | :-- |
-<<<<<<< HEAD
-| 类型： | `string \| ((chunk: RenderedChunk) => string\| Promise<string>)` |
+| 类型： | `string \| ((chunk: RenderedChunk) => string \| Promise<string>)` |
 | CLI： | `--intro`/`--outro <text>` |
-=======
-| Type: | `string \| ((chunk: RenderedChunk) => string \| Promise<string>)` |
-| CLI: | `--intro`/`--outro <text>` |
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
 
 除了在特定格式中代码不同外，该选项功能和 [`output.banner/output.footer`](#output-banner-output-footer) 类似。
 
@@ -1784,19 +1727,11 @@ export default {
 
 ### output.sourcemap {#output-sourcemap}
 
-<<<<<<< HEAD
 |        |                                     |
 | -----: | :---------------------------------- |
-| 类型： | `boolean \| 'inline'\| 'hidden'`    |
+| 类型： | `boolean \| 'inline' \| 'hidden'`   |
 |  CLI： | `-m`/`--sourcemap`/`--no-sourcemap` |
 | 默认： | `false`                             |
-=======
-|          |                                     |
-| -------: | :---------------------------------- |
-|    Type: | `boolean \| 'inline' \| 'hidden'`   |
-|     CLI: | `-m`/`--sourcemap`/`--no-sourcemap` |
-| Default: | `false`                             |
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
 
 如果该选项值为 `true`，那么将生成一个独立的 sourcemap 文件。如果值为 `"inline"`，那么 sourcemap 会以 data URI 的形式附加到 `output` 文件末尾。如果值为 `"hidden"`，那么它的表现和 `true` 相同，除了 bundle 文件中将没有 sourcemap 的注释。
 
@@ -1835,7 +1770,7 @@ export default {
 |        |                                                       |
 | -----: | :---------------------------------------------------- |
 | 类型： | `string \| ((chunkInfo: PreRenderedChunk) => string)` |
-|   CLI: | `--sourcemapFileNames <pattern>`                      |
+|  CLI： | `--sourcemapFileNames <pattern>`                      |
 
 查看 [`output.chunkFileNames`](#output-chunkfilenames) 以了解 `PreRenderedChunk` 类型。
 
@@ -1937,15 +1872,9 @@ export default {
 
 |  |  |
 | --: | :-- |
-<<<<<<< HEAD
-| 类型： | `"strict" \| "allow-extension" \| "exports-only"\| false` |
+| 类型： | `"strict" \| "allow-extension" \| "exports-only" \| false` |
 | CLI： | `--preserveEntrySignatures <strict \| allow-extension>`/`--no-preserveEntrySignatures` |
 | 默认： | `"exports-only"` |
-=======
-| Type: | `"strict" \| "allow-extension" \| "exports-only" \| false` |
-| CLI: | `--preserveEntrySignatures <strict \| allow-extension>`/`--no-preserveEntrySignatures` |
-| Default: | `"exports-only"` |
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
 
 该选项用于控制 Rollup 尝试确保入口 chunk 与基础入口模块具有相同的导出。
 
@@ -2222,19 +2151,11 @@ export default {
 
 ### output.exports {#output-exports}
 
-<<<<<<< HEAD
-|        |                                          |
-| -----: | :--------------------------------------- |
-| 类型： | `"auto" \| "default"\| "named"\| "none"` |
-|  CLI： | `--exports <exportMode>`                 |
-| 默认： | `'auto'`                                 |
-=======
-|          |                                            |
-| -------: | :----------------------------------------- |
-|    Type: | `"auto" \| "default" \| "named" \| "none"` |
-|     CLI: | `--exports <exportMode>`                   |
-| Default: | `'auto'`                                   |
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
+|        |                                            |
+| -----: | :----------------------------------------- |
+| 类型： | `"auto" \| "default" \| "named" \| "none"` |
+|  CLI： | `--exports <exportMode>`                   |
+| 默认： | `'auto'`                                   |
 
 该选项用于指定导出模式。默认是 `auto`，指根据 `input` 模块导出推测你的意图：
 
@@ -2276,11 +2197,11 @@ export default 'foo';
 export const bar = 'bar';
 
 // CommonJS 消费者
-/* require( "your-lib" ) 返回 {default: "foo", bar: "bar"} */
+/* require( "your-lib" ) 返回 {默认： "foo", bar: "bar"} */
 const foo = require('your-lib').default;
 const bar = require('your-lib').bar;
 /* 或使用解构 */
-const { default: foo, bar } = require('your-lib');
+const { 默认： foo, bar } = require('your-lib');
 ```
 
 请注意：一些工具，如 Babel、TypeScript、Webpack 和 `@rollup/plugin-commonjs`，它们能够解析 CommonJS 的 `require(...)` 调用，并将其转换为 ES 模块。如果你正在生成想要在与这些工具的 ESM 输出可互换的 CommonJS 输出，则应始终使用 `named` 导出模式。原因是这些工具中大多数默认情况下会在 `require` 中返回 ES 模块的命名空间，其中默认导出是 `.default` 属性。
@@ -2484,19 +2405,11 @@ export const x = 'next to original';
 
 ### treeshake {#treeshake}
 
-<<<<<<< HEAD
 |        |                                                      |
 | -----: | :--------------------------------------------------- |
 | 类型： | `boolean \| TreeshakingPreset \| TreeshakingOptions` |
-|  CLI： | `--treeshake`/`--no-treeshake`                       |
+|  CLI： | `--treeshake <preset>`/`--no-treeshake`              |
 | 默认： | `true`                                               |
-=======
-|          |                                                      |
-| -------: | :--------------------------------------------------- |
-|    Type: | `boolean \| TreeshakingPreset \| TreeshakingOptions` |
-|     CLI: | `--treeshake <preset>`/`--no-treeshake`              |
-| Default: | `true`                                               |
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
 
 ```typescript
 type TreeshakingPreset = 'smallest' | 'safest' | 'recommended';
@@ -2661,15 +2574,9 @@ styled().div(); // 去除
 
 |  |  |
 | --: | :-- |
-<<<<<<< HEAD
-| 类型： | `boolean\| "no-external"\| string[]\| (id: string, external: boolean) => boolean` |
+| 类型： | `boolean \| "no-external" \| string[] \| (id: string, external: boolean) => boolean` |
 | CLI： | `--treeshake.moduleSideEffects`/`--no-treeshake.moduleSideEffects`/`--treeshake.moduleSideEffects no-external` |
 | 默认： | `true` |
-=======
-| Type: | `boolean \| "no-external" \| string[] \| (id: string, external: boolean) => boolean` |
-| CLI: | `--treeshake.moduleSideEffects`/`--no-treeshake.moduleSideEffects`/`--treeshake.moduleSideEffects no-external` |
-| Default: | `true` |
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
 
 如果该选项的值为 `false`，则假定像改变全局变量或不执行检查就记录等行为一样，没有引入任何内容的模块和外部依赖没有其他副作用。对于外部依赖，该选项将影响未使用的引入：
 
@@ -2755,17 +2662,10 @@ console.log(foo);
 
 #### treeshake.preset {#treeshake-preset}
 
-<<<<<<< HEAD
-|        |                                          |
-| -----: | :--------------------------------------- |
-| 类型： | `"smallest" \| "safest"\| "recommended"` |
-|  CLI： | `--treeshake <value>`<br>                |
-=======
-|       |                                           |
-| ----: | :---------------------------------------- |
-| Type: | `"smallest" \| "safest" \| "recommended"` |
-|  CLI: | `--treeshake <value>`<br>                 |
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
+|        |                                           |
+| -----: | :---------------------------------------- |
+| 类型： | `"smallest" \| "safest" \| "recommended"` |
+|  CLI： | `--treeshake <value>`<br>                 |
 
 该选项可以选择上面列出的预设之一，同时覆盖一些选项。
 
@@ -2786,15 +2686,9 @@ export default {
 
 |  |  |
 | --: | :-- |
-<<<<<<< HEAD
-| 类型： | `boolean\| 'always'` |
+| 类型： | `boolean \| 'always'` |
 | CLI： | `--treeshake.propertyReadSideEffects`/`--no-treeshake.propertyReadSideEffects` |
 | 默认： | `true` |
-=======
-| Type: | `boolean \| 'always'` |
-| CLI: | `--treeshake.propertyReadSideEffects`/`--no-treeshake.propertyReadSideEffects` |
-| Default: | `true` |
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
 
 如果该选项值为 `true`，则保留未使用的属性读取，这会被 Rollup 确定为具有副作用。这包括访问 `null` 或 `undefined` 的属性，或通过属性访问触发显式 getter。请注意，这并不包括解构赋值或对象上当作函数参数传递的 getter。
 
@@ -2913,7 +2807,7 @@ const element = angular.element;
 |       |                                     |
 | ----: | :---------------------------------- |
 | 类型: | `number`                            |
-|  CLI: | `--experimentalMinChunkSize <size>` |
+| CLI： | `--experimentalMinChunkSize <size>` |
 | 默认: | `1`                                 |
 
 该选项用于为代码分割设置一个以字节为单位的最小 chunk 大小。当该值设置为默认值 `1` 时，Rollup 将尝试将不包含代码（仅包含导入和重新导出）的块合并到其他 chunk 中。仅当合并不会改变任何入口加载时执行的副作用时，才会执行合并。对于值为 `1` 的情况，仅允许执行不增加任何入口加载的代码量的合并。
@@ -3015,17 +2909,10 @@ export default [
 
 ### watch.exclude {#watch-exclude}
 
-<<<<<<< HEAD
-|        |                                          |
-| -----: | :--------------------------------------- |
-| 类型： | `string \| RegExp\| (string\| RegExp)[]` |
-|  CLI： | `--watch.exclude <files>`                |
-=======
-|       |                                            |
-| ----: | :----------------------------------------- |
-| Type: | `string \| RegExp \| (string \| RegExp)[]` |
-|  CLI: | `--watch.exclude <files>`                  |
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
+|        |                                            |
+| -----: | :----------------------------------------- |
+| 类型： | `string \| RegExp \| (string \| RegExp)[]` |
+|  CLI： | `--watch.exclude <files>`                  |
 
 该选项用于指定不需要被 watch 的文件：
 
@@ -3044,17 +2931,10 @@ export default {
 
 ### watch.include {#watch-include}
 
-<<<<<<< HEAD
-|        |                                          |
-| -----: | :--------------------------------------- |
-| 类型： | `string \| RegExp\| (string\| RegExp)[]` |
-|  CLI： | `--watch.include <files>`                |
-=======
-|       |                                            |
-| ----: | :----------------------------------------- |
-| Type: | `string \| RegExp \| (string \| RegExp)[]` |
-|  CLI: | `--watch.include <files>`                  |
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
+|        |                                            |
+| -----: | :----------------------------------------- |
+| 类型： | `string \| RegExp \| (string \| RegExp)[]` |
+|  CLI： | `--watch.include <files>`                  |
 
 该选项用于限制只能对指定文件进行观察。请注意，该选项只过滤模块图中的文件，不允许添加额外的观察文件：
 
@@ -3095,4 +2975,4 @@ _使用 [`output.externalImportAttributes`](#output-externalimportattributes) �
 |  CLI： | `--externalImportAssertions`/`--no-externalImportAssertions` |
 | 默认： | `true`                                                       |
 
-是否在输出中为外部导入添加导入断言，如果输出格式为 `es`。默认情况下，断言来自输入文件，但是插件可以稍后添加或删除断言。例如，`import "foo" assert {type: "json"}` 将导致相同的导入出现在输出中，除非将该选项设置为 `false`。请注意，模块的所有导入都需要具有一致的断言，否则将发出警告。
+是否在输出中为外部导入添加导入断言，如果输出格式为 `es`。默认情况下，断言来自输入文件，但是插件可以稍后添加或删除断言。例如，`import "foo" assert {类型： "json"}` 将导致相同的导入出现在输出中，除非将该选项设置为 `false`。请注意，模块的所有导入都需要具有一致的断言，否则将发出警告。

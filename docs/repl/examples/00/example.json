@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-	"title": "除屑优化（Tree-shaking）",
-=======
-	"title": "Named exports",
->>>>>>> 5d91210dd1dc78205f28ffbcfe17fd79eb25ee7b
+	"title": "具名导出（Named exports）",
 	"options": {
 		"output": {
 			"exports": "auto",
