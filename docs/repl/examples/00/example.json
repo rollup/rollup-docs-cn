@@ -1,6 +1,9 @@
 {
-	"title": "除屑优化（Tree-shaking）",
+	"title": "具名导出（Named exports）",
 	"options": {
-		"treeshake": true
+		"output": {
+			"exports": "auto",
+			"esModule": "if-default-prop"
+		}
 	}
 }
