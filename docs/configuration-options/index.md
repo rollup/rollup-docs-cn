@@ -753,7 +753,7 @@ interface PreRenderedAsset {
 	names: string[];
 	originalFileNames: string[];
 	source: string | Uint8Array;
-	类型： 'asset';
+	type: 'asset';
 }
 ```
 
@@ -818,7 +818,7 @@ interface PreRenderedChunk {
 	isImplicitEntry: boolean;
 	moduleIds: string[];
 	name: string;
-	类型： 'chunk';
+	type: 'chunk';
 }
 ```
 
@@ -928,7 +928,7 @@ Promise.resolve()
 |  CLI： | `--externalImportAttributes`/`--no-externalImportAttributes` |
 | 默认： | `true`                                                       |
 
-是否在输出中为外部引入添加导入属性，如果输出格式为 `es`。默认情况下，属性来自输入文件，但插件可以稍后添加或删除属性。例如，`import "foo" assert {类型： "json"}` 将导致相同的导入出现在输出中，除非将该选项设置为 `false`。请注意，模块的所有导入都需要具有一致的属性，否则会发出警告。
+是否在输出中为外部引入添加导入属性，如果输出格式为 `es`。默认情况下，属性来自输入文件，但插件可以稍后添加或删除属性。例如，`import "foo" assert {type: "json"}` 将导致相同的导入出现在输出中，除非将该选项设置为 `false`。请注意，模块的所有导入都需要具有一致的属性，否则会发出警告。
 
 ### output.generatedCode {#output-generatedcode}
 
@@ -1281,7 +1281,7 @@ import('external2').then(console.log);
   var ext_default = require('external');
 
   function _interopDefault(e) {
-  	return e && e.__esModule ? e : { 默认： e };
+  	return e && e.__esModule ? e : { default: e };
   }
 
   var ext_default__default = /*#__PURE__*/ _interopDefault(ext_default);
@@ -1346,7 +1346,7 @@ import('external2').then(console.log);
   function _interopDefaultCompat(e) {
   	return e && typeof e === 'object' && 'default' in e
   		? e
-  		: { 默认： e };
+  		: { default: e };
   }
 
   var ext_default__default =
@@ -1367,7 +1367,7 @@ import('external2').then(console.log);
   var ext_default = require('external1');
 
   function _interopNamespaceDefaultOnly(e) {
-  	return Object.freeze({ __proto__: null, 默认： e });
+  	return Object.freeze({ __proto__: null, default: e });
   }
 
   var ext_default__namespace =
@@ -2197,11 +2197,11 @@ export default 'foo';
 export const bar = 'bar';
 
 // CommonJS 消费者
-/* require( "your-lib" ) 返回 {默认： "foo", bar: "bar"} */
+/* require( "your-lib" ) 返回 {default: "foo", bar: "bar"} */
 const foo = require('your-lib').default;
 const bar = require('your-lib').bar;
 /* 或使用解构 */
-const { 默认： foo, bar } = require('your-lib');
+const { default: foo, bar } = require('your-lib');
 ```
 
 请注意：一些工具，如 Babel、TypeScript、Webpack 和 `@rollup/plugin-commonjs`，它们能够解析 CommonJS 的 `require(...)` 调用，并将其转换为 ES 模块。如果你正在生成想要在与这些工具的 ESM 输出可互换的 CommonJS 输出，则应始终使用 `named` 导出模式。原因是这些工具中大多数默认情况下会在 `require` 中返回 ES 模块的命名空间，其中默认导出是 `.default` 属性。
@@ -2975,4 +2975,4 @@ _使用 [`output.externalImportAttributes`](#output-externalimportattributes) �
 |  CLI： | `--externalImportAssertions`/`--no-externalImportAssertions` |
 | 默认： | `true`                                                       |
 
-是否在输出中为外部导入添加导入断言，如果输出格式为 `es`。默认情况下，断言来自输入文件，但是插件可以稍后添加或删除断言。例如，`import "foo" assert {类型： "json"}` 将导致相同的导入出现在输出中，除非将该选项设置为 `false`。请注意，模块的所有导入都需要具有一致的断言，否则将发出警告。
+是否在输出中为外部导入添加导入断言，如果输出格式为 `es`。默认情况下，断言来自输入文件，但是插件可以稍后添加或删除断言。例如，`import "foo" assert {type: "json"}` 将导致相同的导入出现在输出中，除非将该选项设置为 `false`。请注意，模块的所有导入都需要具有一致的断言，否则将发出警告。
