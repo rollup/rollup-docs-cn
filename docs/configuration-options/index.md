@@ -204,9 +204,9 @@ type JsxOptions =
 	  };
 ```
 
-Allows Rollup to process JSX syntax to either preserve or transform it depending on the [`jsx.mode`](#jsx-mode). If set to `false`, an error will be thrown if JSX syntax is encountered. You may also choose a preset that will set all options together:
+允许 Rollup 处理 JSX 语法，可以根据 [`jsx.mode`](#jsx-mode) 保留或转换它。如果设置为 `false`，遇到 JSX 语法时将抛出错误。你也可以选择一个预设，将所有选项一起设置：
 
-- `"react"`: For transpiling JSX to `React.createElement` calls, where `React` is the default import from `"react"`. This is similar to setting `"jsx": "react"` in TypeScript compiler options.
+- `"react"`：将 JSX 转译为 `React.createElement` 调用，其中 `React` 是从 `"react"` 默认导入的。这与在 TypeScript 编译器选项中设置 `"jsx": "react"` 类似。
   ```js
   ({
   	mode: 'classic',
@@ -215,7 +215,7 @@ Allows Rollup to process JSX syntax to either preserve or transform it depending
   	importSource: 'react'
   });
   ```
-- `"react-jsx"`: This will use the new optimized React transformation introduced with React 17 and is similar to setting `"jsx": "react-jsx"` in TypeScript compiler options.
+- `"react-jsx"`：将使用 React 17 引入的新版优化后的 React 转换，类似于在 TypeScript 编译器选项中设置 `"jsx": "react-jsx"`。
   ```js
   ({
   	mode: 'automatic',
@@ -224,7 +224,7 @@ Allows Rollup to process JSX syntax to either preserve or transform it depending
   	jsxImportSource: 'react/jsx-runtime'
   });
   ```
-- `"preserve"`: This will preserve JSX in the output. This will still tree-shake unused JSX code and may rename JSX identifiers if there are conflicts in the output.
+- `"preserve"`：将在输出中保留 JSX。这仍然会去屑优化掉未使用的 JSX 代码，并且如果在输出中存在冲突，可能会重命名 JSX 标识符。
   ```js
   ({
   	mode: 'preserve',
@@ -233,7 +233,7 @@ Allows Rollup to process JSX syntax to either preserve or transform it depending
   	importSource: null
   });
   ```
-- `"preserve-react"`: This will preserve JSX in the output but ensure that the default export of `"react"` is in scope as a variable named `React`.
+- `"preserve-react"`：将在输出中保留 JSX，但确保 `"react"` 的默认导出作为名为 `React` 的变量在作用域中。
   ```js
   ({
   	mode: 'preserve',
@@ -251,10 +251,10 @@ Allows Rollup to process JSX syntax to either preserve or transform it depending
 |  CLI： | `--jsx.mode <mode>`                      |
 | 默认： | `"classic"`                              |
 
-This will determine how JSX is processed:
+该选项将决定如何处理 JSX：
 
-- `"preserve"`: Will keep JSX syntax in the output.
-- `"classic"`: This will perform a JSX transformation as it is needed by older React versions or other frameworks like for instance [Preact](https://preactjs.com). As an example, here is how you would configure jsx for Preact:
+- `"preserve"`：将在输出中保持 JSX 语法。
+- `"classic"`：将执行 JSX 转换，因为旧版本的 React 或其他框架（例如 [Preact](https://preactjs.com)）需要它。例如，以下是你如何为 Preact 配置 jsx 的方法：
 
   ```js
   ({
@@ -265,18 +265,18 @@ This will determine how JSX is processed:
   });
   ```
 
-  This would perform the following transformation:
+  将执行以下转换：
 
   ```jsx
-  // input
+  // 输入
   console.log(<div>hello</div>);
 
-  // output
+  // 输出
   import { h } from 'preact';
   console.log(/*#__PURE__*/ h('div', null, 'hello'));
   ```
 
-- `"automatic"`: This will perform a JSX transformation using the [new JSX transform](https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html) introduced with React 17. In this mode, Rollup will try to import helpers from [`jsx.jsxImportSource`](#jsx-jsximportsource) to transform JSX. As there are certain edge cases, this mode may still fall back to using the classic transformations when [using the `key` property together with spread attributes](https://github.com/facebook/react/issues/20031#issuecomment-710346866). To this end, you can still specify `jsx.importSource`, `jsx.factory`, and `jsx.fragment` to configure classic mode.
+- `"automatic"`：将使用 React 17 引入的 [新版 JSX 转换](https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html) 执行 JSX 转换。在此模式下，Rollup 将尝试从 [`jsx.jsxImportSource`](#jsx-jsximportsource) 导入工具函数来转换 JSX。由于存在某些边界情况，当 [使用 `key` 属性和扩展属性](https://github.com/facebook/react/issues/20031#issuecomment-710346866) 时，此模式可能仍会回退到使用 `"classic"` 转换形式。为此，你仍然可以指定 `jsx.importSource`，`jsx.factory` 和 `jsx.fragment` 来配置 `"classic"` 模式。
 
 #### jsx.factory
 
@@ -286,9 +286,9 @@ This will determine how JSX is processed:
 |  CLI： | `--jsx.factory <factory>`         |
 | 默认： | `"React.createElement"` or `null` |
 
-The function Rollup uses to create JSX elements in `"classic"` mode or as a fallback in `"automatic"` mode. This is usually `React.createElement` for React or `h` for other frameworks. In `"preserve"` mode, this will ensure that the factory is in scope if [`jsx.importSource`](#jsx-importsource) is specified, or otherwise that a global variable of the same name would not be overridden by local variables. Only in `"preserve"` mode it is possible to set this value to `null`, in which case Rollup will not take care to keep any particular factory function in scope.
+该选项为 Rollup 在 `"classic"` 模式或 `"automatic"` 模式的回退中用来创建 JSX 元素的函数。对于 React，这通常是 `React.createElement`，对于其他框架，则可能为 `h`。在 `"preserve"` 模式下，如果指定了 [`jsx.importSource`](#jsx-importsource)，则将确保工厂函数在作用域中，否则同名的全局变量不会被局部变量覆盖。只有在 `"preserve"` 模式下，才可以将此值设置为 `null`，在这种情况下，Rollup 不会注意保持任何特定的工厂函数在作用域中。
 
-If the value contains a `"."` like `React.createElement` and an `jsx.importSource` is specified, Rollup will assume that the left part, e.g. `React`, refers to the default export of the `jsx.importSource`. Otherwise, Rollup assumes it is a named export.
+如果值包含 `"."`，例如 `React.createElement`，并且指定了 `jsx.importSource`，Rollup 将假定左侧部分（例如 `React`）指的是 `jsx.importSource` 的默认导出。否则，Rollup 将假定它是一个命名导出。
 
 #### jsx.fragment
 
@@ -298,9 +298,9 @@ If the value contains a `"."` like `React.createElement` and an `jsx.importSourc
 |  CLI： | `--jsx.fragment <fragment>`  |
 | 默认： | `"React.Fragment"` or `null` |
 
-The element function Rollup uses to create JSX fragments. This is usually `React.Fragment` for React or `Fragment` for other frameworks. In `"preserve"` mode, this will ensure that the fragment is in scope if [`jsx.importSource`](#jsx-importsource) is specified, or otherwise that a global variable of the same name would not be overridden by local variables. Only in `"preserve"` mode it is possible to set this value to `null`, in which case Rollup will not take care to keep any particular fragment function in scope.
+Rollup 用来创建 JSX 片段的元素函数。对于 React，这通常是 `React.Fragment`，对于其他框架，则是 `Fragment`。在 `"preserve"` 模式下，如果指定了 [`jsx.importSource`](#jsx-importsource)，则将确保片段在作用域中，否则同名的全局变量不会被局部变量覆盖。只有在 `"preserve"` 模式下，才可以将此值设置为 `null`，在这种情况下，Rollup 不会注意保持任何特定的片段函数在作用域中。
 
-If the value contains a `"."` like `React.Fragment` and an `jsx.importSource` is specified, Rollup will assume that the left part, e.g. `React`, refers to the default export of the `jsx.importSource`. Otherwise, Rollup assumes it is a named export.
+如果值包含 `"."`，例如 `React.Fragment`，并且指定了 `jsx.importSource`，Rollup 将假定左边的部分（例如 `React`）指的是 `jsx.importSource` 的默认导出。否则，Rollup 将假定它是一个命名导出。
 
 #### jsx.importSource
 
@@ -310,7 +310,7 @@ If the value contains a `"."` like `React.Fragment` and an `jsx.importSource` is
 |  CLI： | `--jsx.importSource <library>` |
 | 默认： | `null`                         |
 
-Where to import the element factory function and/or the fragment element from. If left to `null`, Rollup will assume that [`jsx.factory`](#jsx-factory) and [`jsx.fragment`](#jsx-fragment) refer to global variables and makes sure they are not shadowed by local variables.
+从哪里导入元素工厂函数及片段元素。如果设为 `null`，Rollup 将假定 [`jsx.factory`](#jsx-factory) 和 [`jsx.fragment`](#jsx-fragment) 指的是全局变量，并确保它们不会被同名的本地变量覆盖。
 
 #### jsx.jsxImportSource
 
@@ -320,7 +320,7 @@ Where to import the element factory function and/or the fragment element from. I
 |  CLI： | `--jsx.jsxImportSource <library>` |
 | 默认： | `"react/jsx-runtime"`             |
 
-When using `"automatic"` mode, this will specify from where to import the `jsx`, `jsxs` and `Fragment` helpers needed for that transformation. It is not possible to get those from a global variable.
+当使用 `"automatic"` 模式时，将指定从哪里导入进行该转换所需的 `jsx`、`jsxs` 和 `Fragment` 辅助函数。这些是无法从全局变量获取的。
 
 #### jsx.preset
 
@@ -329,7 +329,7 @@ When using `"automatic"` mode, this will specify from where to import the `jsx`,
 | 类型： | JsxPreset              |
 |  CLI： | `--jsx.preset <value>` |
 
-Allows choosing one of the presets listed above while overriding some options.
+允许选择上述预设中的一个，同时覆盖一些选项。
 
 ```js twoslash
 // ---cut-start---
