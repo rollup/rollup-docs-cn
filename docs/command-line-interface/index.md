@@ -330,10 +330,14 @@ export default {
 
 导入你的 package 文件可能很有用，例如自动将你的依赖项标记为 “external”。根据你的 Node 版本，有不同的方法来实现此目的：
 
+<<<<<<< HEAD
 - 对于 Node 17.5+，你可以使用导入断言
+=======
+- For Node 18.20+, you can use an import attribute
+>>>>>>> cdf34ab5411aac6ac3f6cd21b10d2e58427e88ec
 
   ```js twoslash
-  import pkg from './package.json' assert { type: 'json' };
+  import pkg from './package.json' with { type: 'json' };
 
   export default {
   	// Mark package dependencies as "external". Rest of configuration
