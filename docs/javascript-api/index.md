@@ -53,7 +53,16 @@ async function build() {
 	let bundle;
 	let buildFailed = false;
 	try {
+<<<<<<< HEAD
 		// 启动一次打包
+=======
+		// Create a bundle. If you are using TypeScript or a runtime that
+		// supports it, you can write
+		//
+		// await using bundle = await rollup(inputOptions);
+		//
+		// instead and do not need to close the bundle explicitly below.
+>>>>>>> ae1d14b7855ff6568a6697d37271a5eb4d8e2d3e
 		bundle = await rollup(inputOptions);
 
 		// 一个文件名数组，表示此产物所依赖的文件
@@ -208,6 +217,7 @@ const outputOptions = {
 	preserveModulesRoot,
 	sourcemap,
 	sourcemapBaseUrl,
+	sourcemapDebugIds,
 	sourcemapExcludeSources,
 	sourcemapFile,
 	sourcemapFileNames,

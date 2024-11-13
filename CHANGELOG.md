@@ -1,5 +1,36 @@
 # rollup changelog
 
+## 4.26.0
+
+_2024-11-13_
+
+### Features
+
+- Allow to avoid `await bundle.close()` via explicit resource management in TypeScript (#5721)
+
+### Pull Requests
+
+- [#5721](https://github.com/rollup/rollup/pull/5721): feat: support `using` for `RollupBuild` (@shulaoda)
+
+## 4.25.0
+
+_2024-11-09_
+
+### Features
+
+- Add `output.sourcemapDebugIds` option to add matching debug ids to sourcemaps and code for tools like Sentry or Rollbar (#5712)
+
+### Bug Fixes
+
+- Make it easier to manually reproduce base16 hashes by using a more standard base16 conversion algorithm (#5719)
+
+### Pull Requests
+
+- [#5712](https://github.com/rollup/rollup/pull/5712): feat: Add support for injecting Debug IDs (@timfish)
+- [#5717](https://github.com/rollup/rollup/pull/5717): fix(deps): update swc monorepo (major) (@renovate[bot])
+- [#5718](https://github.com/rollup/rollup/pull/5718): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+- [#5719](https://github.com/rollup/rollup/pull/5719): Use a less surprising base-16 encoding (@lukastaegert)
+
 ## 4.24.4
 
 _2024-11-04_
@@ -96,6 +127,30 @@ _2024-09-27_
 - [#5681](https://github.com/rollup/rollup/pull/5681): chore(deps): update dependency @rollup/plugin-replace to v6 (@renovate[bot])
 - [#5682](https://github.com/rollup/rollup/pull/5682): chore(deps): update dependency @rollup/plugin-typescript to v12 (@renovate[bot])
 - [#5684](https://github.com/rollup/rollup/pull/5684): chore(deps): lock file maintenance minor/patch updates (@renovate[bot])
+
+## 2.79.2
+
+_2024-09-26_
+
+### Bug Fixes
+
+- Fix a vulnerability in generated code that affects IIFE, UMD and CJS bundles when run in a browser context (#5671)
+
+### Pull Requests
+
+- [#5671](https://github.com/rollup/rollup/pull/5671): Fix DOM Clobbering CVE (@lukastaegert)
+
+## 3.29.5
+
+_2024-09-21_
+
+### Bug Fixes
+
+- Fix a vulnerability in generated code that affects IIFE, UMD and CJS bundles when run in a browser context (#5671)
+
+### Pull Requests
+
+- [#5671](https://github.com/rollup/rollup/pull/5671): Fix DOM Clobbering CVE (@lukastaegert)
 
 ## 4.22.4
 
