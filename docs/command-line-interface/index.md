@@ -109,6 +109,7 @@ export default {
 		preserveModulesRoot,
 		sourcemap,
 		sourcemapBaseUrl,
+		sourcemapDebugIds,
 		sourcemapExcludeSources,
 		sourcemapFile,
 		sourcemapFileNames,
@@ -439,6 +440,7 @@ export default {
 --shimMissingExports        为丢失的导出创建卡扣变量
 --silent                    不打印警告
 --sourcemapBaseUrl <url>    使用给定的基本 URL 发出绝对源映射 URL
+--sourcemapDebugIds         在源代码和源映射中生成唯一的 debug ID
 --sourcemapExcludeSources   在源映射中不包括源代码
 --sourcemapFile <file>      指定源映射的包位置
 --sourcemapFileNames <pattern> 编译后 sourcemap 的命名模式

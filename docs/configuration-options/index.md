@@ -1744,6 +1744,16 @@ export default {
 
 默认情况下，Rollup 生成的 sourcemap 使用相对 URL 路径来引用它们描述的文件。该选项可提供一个绝对基础 URL 路径，例如 `https://example.com`，sourcemap 将使用绝对 URL 路径来代替。
 
+### output.sourcemapDebugIds
+
+|        |                                                |
+| -----: | :--------------------------------------------- |
+| 类型： | `boolean`                                      |
+|  CLI： | `--sourcemapDebugIds`/`--no-sourcemapDebugIds` |
+| 默认： | `false`                                        |
+
+如果设为 `true`，将在源代码和 sourcemap 中生成唯一的 ID，这有助于在不同的构建中识别 sourcemap。有关详细信息，请参阅 [TC39 sourcemap debug ID 提案](https://github.com/tc39/source-map/blob/main/proposals/debug-id.md)。
+
 ### output.sourcemapExcludeSources {#output-sourcemapexcludesources}
 
 |        |                                                            |
