@@ -53,16 +53,12 @@ async function build() {
 	let bundle;
 	let buildFailed = false;
 	try {
-<<<<<<< HEAD
-		// 启动一次打包
-=======
-		// Create a bundle. If you are using TypeScript or a runtime that
-		// supports it, you can write
+		// 新建一个 bundle。如果你使用的是 TypeScript 或支持该特性的运行时，
+		// 你可以这样写：
 		//
 		// await using bundle = await rollup(inputOptions);
 		//
-		// instead and do not need to close the bundle explicitly below.
->>>>>>> ae1d14b7855ff6568a6697d37271a5eb4d8e2d3e
+		// 这样做就不需要在下面显式地关闭释放 bundle。
 		bundle = await rollup(inputOptions);
 
 		// 一个文件名数组，表示此产物所依赖的文件
