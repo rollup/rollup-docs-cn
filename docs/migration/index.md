@@ -24,7 +24,7 @@ Rollup 现在包含了自动安装（和删除）的原生代码，如果你的�
 
 面向浏览器的构建（NPM 上的 `@rollup/browser`）现在依赖于一个需要提供的 WASM 文件。如果你正在使用 Vite 的浏览器构建，你需要将 `"@rollup/browser"` 添加到 `optimizeDeps.exclude` 中，否则 `npm run dev` 将因为 `.wasm` 文件的无效路径而失败（请参阅 [vitejs #14609](https://github.com/vitejs/vite/issues/14609)）。否则，它应该可以正常工作，无需任何特定的干预。
 
-否则，一个明显的变化是 Rollup 现在在文件名中使用 url 安全的 base64 哈希，而不是旧的 base16 哈希。这提供了更多的哈希安全性，但意味着由于技术原因，哈希长度现在最多限制为 22 个字符。
+另外，一个明显的变化是，Rollup 现在在文件名中使用 URL 安全的 base64 哈希值，而不是旧的 base16 哈希值。这种方式提供了更高的哈希安全性，但由于技术原因，哈希长度现在最多限制为 21 个字符。
 
 当打包 CLI 应用程序时，如果输出 [`format`](../configuration-options/index.md#output-format) 为 `es` 或 `cjs`，Rollup 现在将自动保留入口文件中的 shebang 注释。以前，你需要通过插件添加注释。
 
