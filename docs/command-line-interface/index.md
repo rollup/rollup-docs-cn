@@ -479,7 +479,17 @@ export default {
 
 这允许你在配置中使用 CommonJS 常用的变量/方法，例如 `__dirname` 或 `require.resolve`，即使配置本身是作为 ES 模块编写的。
 
-### `--configPlugin <plugin>` {#configplugin-plugin}
+### `--configImportAttributesKey <with | assert>`
+
+控制 Rollup 在配置文件中用于导入属性的关键字。
+
+```shell
+rollup --config rollup.config.ts --configPlugin typescript --configImportAttributesKey with
+```
+
+此选项仅在使用 [`--configPlugin`](#configplugin-plugin) 或 [`--bundleConfigAsCjs`](#bundleconfigascjs) 选项时可用。
+
+### `--configPlugin <plugin>`
 
 允许指定 Rollup 插件来转译或控制解析配置文件。主要好处是可以使用非 JavaScript 的配置文件。例如，如果你安装了 `@rollup/plugin-typescript`，则以下内容将允许你使用 TypeScript 编写配置文件：
 
