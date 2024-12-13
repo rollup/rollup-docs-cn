@@ -363,7 +363,7 @@ export default {
   // 更多信息参见：
   // https://nodejs.org/docs/latest-v16.x/api/esm.html#importmetaurl
   const packageJson = JSON.parse(
-  	readFileSync(new URL('./package.json', import.meta.url))
+  	readFileSync(new URL('./package.json', import.meta.url), 'utf-8')
   );
 
   // ...
