@@ -928,11 +928,7 @@ Promise.resolve()
 |  CLI： | `--externalImportAttributes`/`--no-externalImportAttributes` |
 | 默认： | `true`                                                       |
 
-<<<<<<< HEAD
-是否在输出中为外部引入添加导入属性，如果输出格式为 `es`。默认情况下，属性来自输入文件，但插件可以稍后添加或删除属性。例如，`import "foo" assert {type: "json"}` 将导致相同的导入出现在输出中，除非将该选项设置为 `false`。请注意，模块的所有导入都需要具有一致的属性，否则会发出警告。
-=======
-Whether to add import attributes to external imports in the output if the output format is `es` or `cjs`. By default, attributes are taken from the input files, but plugins can add or remove attributes later. E.g. `import "foo" assert {type: "json"}` will cause the same import to appear in the output unless the option is set to `false`. Note that all imports of a module need to have consistent attributes, otherwise a warning is emitted.
->>>>>>> f5c349e5bb4cb40b0cc1a1b2a3fb5de415946406
+是否在输出格式为 `es` 或 `cjs` 时，在输出中为外部引入添加导入属性。默认情况下，属性是从输入文件中获取的，但插件可以在后面添加或删除属性。例如，`import "foo" assert {type: "json"}` 将导致相同的导入出现在输出中，除非该选项设置为 `false`。请注意，一个模块的所有导入需要具有一致的属性，否则会发出警告。
 
 ### output.generatedCode {#output-generatedcode}
 
