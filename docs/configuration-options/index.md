@@ -2864,6 +2864,7 @@ interface WatcherOptions {
 	exclude?: string | RegExp | (string | RegExp)[];
 	include?: string | RegExp | (string | RegExp)[];
 	skipWrite?: boolean;
+	onInvalidate?: (id: string) => void;
 }
 ```
 
@@ -2971,7 +2972,19 @@ export default {
 
 该选项用于决定是否在触发重新构建时跳过 `bundle.write()` 步骤。
 
+<<<<<<< HEAD
 ## 废弃选项 {#deprecated-options}
+=======
+### watch.onInvalidate
+
+|       |                        |
+| ----: | :--------------------- |
+| Type: | `(id: string) => void` |
+
+An optional function that will be called immediately every time a module changes that is part of the build. It receives the id of the changed module as argument. This is different from the [`watchChange`](../plugin-development/index.md#watchchange) plugin hook, which is only called once the running build has finished. This may for instance be used to prevent additional steps from being performed if we know another build will be started anyway once the current build finished. This callback may be called multiple times per build as it tracks every change.
+
+## Deprecated options
+>>>>>>> 2538304efdc05ecb7c52e6376d5777565139f075
 
 ☢️ 这些选项已经废弃，可能从未来的 Rollup 版本中移除。
 

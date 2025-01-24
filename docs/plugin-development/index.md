@@ -700,7 +700,11 @@ interface SourceDescription {
 | 类别: | async, parallel |
 | 上一个/下一个钩子: | 此钩子可以在构建和输出生成阶段的任何时候触发。如果是这种情况，则当前构建仍将继续，但会安排一个新的构建在当前构建完成后开始，从 [`options`](#options) 开始 |
 
+<<<<<<< HEAD
 在 `--watch` 模式下，每当 Rollup 检测到监视文件的更改时，就会通知插件。如果返回一个 Promise，则 Rollup 将等待 Promise 解析后再安排另一个构建。此钩子不能由输出插件使用。第二个参数包含更改事件的其他详细信息。
+=======
+Notifies a plugin whenever Rollup has detected a change to a monitored file in `--watch` mode. If a build is currently running, this hook is called once the build finished. It will be called once for every file that changed. If a Promise is returned, Rollup will wait for the Promise to resolve before scheduling another build. This hook cannot be used by output plugins. The second argument contains additional details of the change event. If you need to be notified immediately when a file changed, you can use the [`watch.onInvalidate`](../configuration-options/index.md#watch-oninvalidate) configuration option.
+>>>>>>> 2538304efdc05ecb7c52e6376d5777565139f075
 
 ## 输出生成钩子 {#output-generation-hooks}
 
