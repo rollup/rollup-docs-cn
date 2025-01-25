@@ -2864,6 +2864,7 @@ interface WatcherOptions {
 	exclude?: string | RegExp | (string | RegExp)[];
 	include?: string | RegExp | (string | RegExp)[];
 	skipWrite?: boolean;
+	onInvalidate?: (id: string) => void;
 }
 ```
 
@@ -2970,6 +2971,14 @@ export default {
 | 默认： | `false`                                    |
 
 该选项用于决定是否在触发重新构建时跳过 `bundle.write()` 步骤。
+
+### watch.onInvalidate {#watch-oninvalidate}
+
+|       |                        |
+| ----: | :--------------------- |
+| 类型： | `(id: string) => void` |
+
+一个可选功能，每当构建中包含的模块发生变化时将立即被调用。它会以变化模块的 id 作为参数接收。这与仅在运行构建完成后才被调用的 [`watchChange`](../plugin-development/index.md#watchchange) 插件挂钩不同。例如，如果知道当前构建完成后将启动另一个构建，则可以使用此回调来防止执行额外步骤。由于它会跟踪每次变化，因此该回调可能在整个构建过程中多次被调用。
 
 ## 废弃选项 {#deprecated-options}
 
