@@ -2972,19 +2972,15 @@ export default {
 
 该选项用于决定是否在触发重新构建时跳过 `bundle.write()` 步骤。
 
-<<<<<<< HEAD
-## 废弃选项 {#deprecated-options}
-=======
-### watch.onInvalidate
+### watch.onInvalidate {#watch-oninvalidate}
 
 |       |                        |
 | ----: | :--------------------- |
-| Type: | `(id: string) => void` |
+| 类型： | `(id: string) => void` |
 
-An optional function that will be called immediately every time a module changes that is part of the build. It receives the id of the changed module as argument. This is different from the [`watchChange`](../plugin-development/index.md#watchchange) plugin hook, which is only called once the running build has finished. This may for instance be used to prevent additional steps from being performed if we know another build will be started anyway once the current build finished. This callback may be called multiple times per build as it tracks every change.
+一个可选功能，每当构建中包含的模块发生变化时将立即被调用。它会以变化模块的 id 作为参数接收。这与仅在运行构建完成后才被调用的 [`watchChange`](../plugin-development/index.md#watchchange) 插件挂钩不同。例如，如果知道当前构建完成后将启动另一个构建，则可以使用此回调来防止执行额外步骤。由于它会跟踪每次变化，因此该回调可能在整个构建过程中多次被调用。
 
-## Deprecated options
->>>>>>> 2538304efdc05ecb7c52e6376d5777565139f075
+## 废弃选项 {#deprecated-options}
 
 ☢️ 这些选项已经废弃，可能从未来的 Rollup 版本中移除。
 
