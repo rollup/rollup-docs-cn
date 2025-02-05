@@ -129,8 +129,13 @@ import { fileURLToPath } from 'node:url';
 export default {
 	input: Object.fromEntries(
 		globSync('src/**/*.js').map(file => [
+<<<<<<< HEAD
 			// 这里将删除 `src/` 以及每个文件的扩展名。
 			// 因此，例如 src/nested/foo.js 会变成 nested/foo
+=======
+			// This removes `src/` as well as the file extension from each
+			// file, so e.g. src/nested/foo.js becomes nested/foo
+>>>>>>> 19312a762c3cda56a0f6dc80a0887a4499db2257
 			path.relative(
 				'src',
 				file.slice(0, file.length - path.extname(file).length)
@@ -1465,6 +1470,8 @@ function manualChunks(id) {
 	if (id.includes('node_modules')) {
 		return 'vendor';
 	}
+
+	return null;
 }
 ```
 

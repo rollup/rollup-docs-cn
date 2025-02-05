@@ -1,5 +1,100 @@
 # rollup changelog
 
+## 4.34.4
+
+_2025-02-05_
+
+### Bug Fixes
+
+- Do not tree-shake properties if a rest element is used in destructuring (#5833)
+
+### Pull Requests
+
+- [#5833](https://github.com/rollup/rollup/pull/5833): include all properties if a rest element is destructed (@TrickyPi)
+
+## 4.34.3
+
+_2025-02-05_
+
+### Bug Fixes
+
+- Ensure properties of "this" are included in getters (#5831)
+
+### Pull Requests
+
+- [#5831](https://github.com/rollup/rollup/pull/5831): include the properties that accessed by this (@TrickyPi)
+
+## 4.34.2
+
+_2025-02-04_
+
+### Bug Fixes
+
+- Fix an issue where not all usages of a function were properly detected (#5827)
+
+### Pull Requests
+
+- [#5827](https://github.com/rollup/rollup/pull/5827): Ensure that functions provided to a constructor are properly deoptimized (@lukastaegert)
+
+## 4.34.1
+
+_2025-02-03_
+
+### Bug Fixes
+
+- Ensure throwing objects includes the entire object (#5825)
+
+### Pull Requests
+
+- [#5825](https://github.com/rollup/rollup/pull/5825): Ensure that all properties of throw statements are included (@lukastaegert)
+
+## 4.34.0
+
+_2025-02-01_
+
+### Features
+
+- Tree-shake unused properties in object literals (re-implements #5420) (#5737)
+
+### Pull Requests
+
+- [#5737](https://github.com/rollup/rollup/pull/5737): Reapply object tree-shaking (@lukastaegert, @TrickyPi)
+
+## 4.33.0
+
+_2025-02-01_
+
+### Features
+
+- Correctly detect literal value of more negated expressions (#5812)
+
+### Bug Fixes
+
+- Use the correct with/assert attribute key in dynamic imports (#5818)
+- Fix an issue where logical expressions were considered to have the wrong value (#5819)
+
+### Pull Requests
+
+- [#5812](https://github.com/rollup/rollup/pull/5812): feat: optimize the literal value of unary expressions (@TrickyPi)
+- [#5816](https://github.com/rollup/rollup/pull/5816): fix(deps): update swc monorepo (major) (@renovate[bot], @lukastaegert)
+- [#5817](https://github.com/rollup/rollup/pull/5817): fix(deps): lock file maintenance minor/patch updates (@renovate[bot], @lukastaegert)
+- [#5818](https://github.com/rollup/rollup/pull/5818): support for changing the attributes key for dynamic imports (@TrickyPi)
+- [#5819](https://github.com/rollup/rollup/pull/5819): Return UnknownValue if getLiteralValueAtPath is called recursively within logical expressions (@TrickyPi)
+- [#5820](https://github.com/rollup/rollup/pull/5820): return null (@kingma-sbw)
+
+## 4.32.1
+
+_2025-01-28_
+
+### Bug Fixes
+
+- Fix possible crash when optimizing logical expressions (#5804)
+
+### Pull Requests
+
+- [#5804](https://github.com/rollup/rollup/pull/5804): fix: set hasDeoptimizedCache to true as early as possible (@TrickyPi)
+- [#5813](https://github.com/rollup/rollup/pull/5813): Fix typo (@kantuni)
+
 ## 4.32.0
 
 _2025-01-24_
