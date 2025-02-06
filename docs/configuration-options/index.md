@@ -129,13 +129,8 @@ import { fileURLToPath } from 'node:url';
 export default {
 	input: Object.fromEntries(
 		globSync('src/**/*.js').map(file => [
-<<<<<<< HEAD
 			// 这里将删除 `src/` 以及每个文件的扩展名。
 			// 因此，例如 src/nested/foo.js 会变成 nested/foo
-=======
-			// This removes `src/` as well as the file extension from each
-			// file, so e.g. src/nested/foo.js becomes nested/foo
->>>>>>> 19312a762c3cda56a0f6dc80a0887a4499db2257
 			path.relative(
 				'src',
 				file.slice(0, file.length - path.extname(file).length)
@@ -2981,8 +2976,8 @@ export default {
 
 ### watch.onInvalidate {#watch-oninvalidate}
 
-|       |                        |
-| ----: | :--------------------- |
+|        |                        |
+| -----: | :--------------------- |
 | 类型： | `(id: string) => void` |
 
 一个可选功能，每当构建中包含的模块发生变化时将立即被调用。它会以变化模块的 id 作为参数接收。这与仅在运行构建完成后才被调用的 [`watchChange`](../plugin-development/index.md#watchchange) 插件挂钩不同。例如，如果知道当前构建完成后将启动另一个构建，则可以使用此回调来防止执行额外步骤。由于它会跟踪每次变化，因此该回调可能在整个构建过程中多次被调用。
