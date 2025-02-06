@@ -339,7 +339,7 @@ jobs:
           key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
           restore-keys: node-modules-${{ runner.os }}
       - name: Build
-        uses: cross-platform-actions/action@v0.26.0
+        uses: cross-platform-actions/action@v0.27.0
         with:
           operating_system: ${{ matrix.settings.name }}
           architecture: ${{ matrix.settings.architecture }}
@@ -391,10 +391,11 @@ jobs:
 #          - arch: armv7
 #            distro: alpine_latest
 #            target: armv7-unknown-linux-musleabihf
-          - arch: ppc64le
-            distro: ubuntu_latest
-            target: powerpc64le-unknown-linux-gnu
-            use-nvm: true
+# This one has become very flaky as of late
+#          - arch: ppc64le
+#            distro: ubuntu_latest
+#            target: powerpc64le-unknown-linux-gnu
+#            use-nvm: true
           - arch: s390x
             distro: ubuntu_latest
             target: s390x-unknown-linux-gnu
