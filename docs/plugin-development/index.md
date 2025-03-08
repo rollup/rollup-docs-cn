@@ -877,13 +877,21 @@ function augmentWithDatePlugin() {
 
 |  |  |
 | --: | :-- |
+<<<<<<< HEAD
 | 类型: | `closeBundle: () => Promise<void> \| void` |
 | 类别: | async，parallel |
 | 上一个钩子: | 如果有构建错误，则为 [`buildEnd`](#buildend)，否则为调用 [`bundle.close()`](../javascript-api/index.md#rollup-rollup)，在这种情况下，这将是最后一个触发的钩子 |
+=======
+| Type: | `closeBundle: (error?: Error) => Promise<void> \| void` |
+| Kind: | async, parallel |
+| Previous: | [`buildEnd`](#buildend) if there was a build error, otherwise when [`bundle.close()`](../javascript-api/index.md#rollup-rollup) is called, in which case this would be the last hook to be triggered |
+>>>>>>> 70ef1cce7c740030cc2935b563d13950cc1511f5
 
 可用于清理可能正在运行的任何外部服务。Rollup 的 CLI 将确保在每次运行后调用此钩子，但是 JavaScript API 的用户有责任在生成产物后手动调用 `bundle.close()`。因此，任何依赖此功能的插件都应在其文档中仔细提到这一点。
 
 如果插件想要在监视模式下保留资源，则可以在此钩子中检查 [`this.meta.watchMode`](#this-meta) 并在 [`closeWatcher`](#closewatcher) 中执行必要的监视模式清理。
+
+If an error occurs during build or the `buildEnd` hook, it is passed to this hook as first argument.
 
 ### footer
 
