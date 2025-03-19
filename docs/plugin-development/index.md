@@ -1059,12 +1059,38 @@ type renderDynamicImportHook = (options: {
 	format: string;
 	moduleId: string;
 	targetModuleId: string | null;
+	chunk: PreRenderedChunkWithFileName;
+	targetChunk: PreRenderedChunkWithFileName;
+	getTargetChunkImports: () => DynamicImportTargetChunk[] | null;
 }) => { left: string; right: string } | null;
+
+type PreRenderedChunkWithFileName = PreRenderedChunk & { fileName: string };
+
+type DynamicImportTargetChunk =
+	| ImportedInternalChunk
+	| ImportedExternalChunk;
+
+interface ImportedInternalChunk {
+	type: 'internal';
+	fileName: string;
+	resolvedImportPath: string;
+	chunk: PreRenderedChunk;
+}
+
+interface ImportedExternalChunk {
+	type: 'external';
+	fileName: string;
+	resolvedImportPath: string;
+}
 ```
 
-此钩子通过提供导入表达式参数左侧（`import(`）和右侧（`)`）的代码替换，提供了对动态导入如何呈现的细粒度控制。返回`null`将推迟到此类型的其他钩子，最终呈现特定于格式的默认值。
+请参阅 [`chunkFileNames`](../configuration-options/index.md#output-chunkfilenames) 选项，以了解 `PreRenderedChunk` 类型的相关信息。
 
-`format` 是呈现的输出格式， `moduleId` 是执行动态导入的模块的 ID。如果导入可以解析为内部或外部 ID，则 `targetModuleId` 将设置为此 ID，否则将为 `null`。如果动态导入包含由 [`resolveDynamicImport`](#resolvedynamicimport) 钩子解析为替换字符串的非字符串表达式，则 `customResolution` 将包含该字符串。
+这个钩子函数提供了对动态导入渲染的精细控制，它通过替换导入表达式参数左侧（`import(`）和右（`)`）侧的代码实现这一功能。如果返回 `null`，则会降级到其他同类型的钩子函数，最终渲染出特定格式的默认值。
+
+`format` 是渲染的输出格式，`moduleId` 是进行动态导入的模块的 id。如果导入可以被解析为内部或外部 id，那么 `targetModuleId` 将被设置为这个 id，否则它将是 `null`。如果动态导入包含了一个非字符串表达式，这个表达式被 [`resolveDynamicImport`](#resolvedynamicimport) 钩子函数解析为一个替换字符串，那么 `customResolution` 将包含那个字符串。`chunk` 和 `targetChunk` 分别提供了执行导入的块和被导入的块（目标块）的额外信息。`getTargetChunkImports` 返回一个数组，包含了被目标块导入的块。如果目标块未解析或是外部的，`targetChunk` 将为 null，`getTargetChunkImports` 也将返回 null。
+
+`PreRenderedChunkWithFileName` 类型与 `PreRenderedChunk` 类型相同，只是多了一个 `fileName` 字段，这个字段包含了块的路径和文件名。如果块文件名格式包含了哈希，`fileName` 可能会包含一个占位符。
 
 以下代码将使用自定义处理程序替换所有动态导入，添加 `import.meta.url` 作为第二个参数，以允许处理程序正确解析相对导入：
 
@@ -1116,7 +1142,52 @@ function retainImportExpressionPlugin() {
 }
 ```
 
-请注意，当此钩子在非 ES 格式中重写动态导入时，不会生成任何交互代码以确保例如默认导出可用作`.default`。插件有责任确保重写的动态导入返回一个 Promise，该 Promise 解析为适当的命名空间对象。
+当进行动态导入时，浏览器会获取并解析请求的模块。如果目标模块被发现有导入，并且这些导入还未被获取，浏览器需要进行更多的网络请求才能执行该模块。这将导致额外一轮网络往返的延迟。对于静态模块，Rollup 会提升转移依赖（[`hoistTransitiveDependencies`](../configuration-options/index.md#output-hoisttransitiveimports)），以防止这种情况发生。然而，目前还没有自动为动态导入执行依赖提升的操作。
+
+以下的插件可以实现类似于动态导入预加载的功能：
+
+```js twoslash
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
+function dynamicImportDependencyPreloader() {
+	return {
+		name: 'dynamic-import-dependency-preloader',
+		renderDynamicImport({ getTargetChunkImports }) {
+			const transitiveImports = getTargetChunkImports();
+			if (transitiveImports && transitiveImports.length > 0) {
+				const preload = getTargetChunkImports()
+					.map(
+						chunk => `\t/* preload */ import(${chunk.resolvedImportPath})`
+					)
+					.join(',\n');
+				return {
+					left: `(\n${preload},\n\timport(`,
+					right: `)\n)`
+				};
+			} else {
+				return null;
+			}
+		}
+	};
+}
+```
+
+<!-- prettier-ignore-start -->
+```js
+// input
+import('./lib.js');
+
+// output
+(
+	/* preload */ import('./dependency-1.js'),
+	/* preload */ import('./dependency-2.js'),
+	import('./lib.js');
+);
+```
+<!-- prettier-ignore-end -->
+
+请注意，当此钩子在非 ES 格式中重写动态导入时，不会生成任何交互代码以确保例如默认导出可用作 `.default`。插件有责任确保重写的动态导入返回一个 Promise，该 Promise 解析为适当的命名空间对象。
 
 ### renderError
 
