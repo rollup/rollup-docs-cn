@@ -93,11 +93,7 @@ export default ({
 - `sequential`：如果有多个插件实现此钩子，则所有这些钩子将按指定的插件顺序运行。如果钩子是 `async`，则此类后续钩子将等待当前钩子解决后再运行。
 - `parallel`：如果有多个插件实现此钩子，则所有这些钩子将按指定的插件顺序运行。如果钩子是 `async`，则此类后续钩子将并行运行，而不是等待当前钩子。
 
-<<<<<<< HEAD
-除了函数之外，钩子也可以是对象。在这种情况下，实际的钩子函数（或 `banner/footer/intro/outro` 的值）必须指定为 `handler`。这允许你提供更多的可选属性，以改变钩子的执行：
-=======
-Instead of a function, hooks can also be objects. In that case, the actual hook function (or value for `banner/footer/intro/outro`) must be specified as `handler`. This allows you to provide additional optional properties that change hook execution or skip hook execution:
->>>>>>> 22b64bcc511dfc40ce463e3f662a928915908713
+除了函数之外，钩子也可以是对象。在这种情况下，实际的钩子函数（或 `banner/footer/intro/outro` 的值）必须指定为 `handler`。这允许你提供更多的可选属性，以改变或跳过钩子的执行：
 
 - `order: "pre" | "post" | null`<br> 如果有多个插件实现此钩子，则可以先运行此插件（`"pre"`），最后运行此插件（`"post"`），或在用户指定的位置运行（没有值或 `null`）。
 
@@ -149,10 +145,7 @@ Instead of a function, hooks can also be objects. In that case, the actual hook 
   }
   ```
 
-<<<<<<< HEAD
-构建钩子在构建阶段运行，该阶段由 `rollup.rollup(inputOptions)` 触发。它们主要涉及在 Rollup 处理输入文件之前定位、提供和转换输入文件。构建阶段的第一个钩子是 [`options`](#options)，最后一个钩子始终是 [`buildEnd`](#buildend)。如果有构建错误，则在此之后将调用 [`closeBundle`](#closebundle)。
-=======
-- `filter`<br> Run this plugin hook only when the specified filter returns true. This property is only available for `resolveId`, `load`, `transform`. The `code` filter is only available for `transform` hook. The `id` filter supports [picomatch patterns](https://github.com/micromatch/picomatch#globbing-features) except for `resolveId` hook.
+- `filter`<br> 仅当指定的过滤器返回真值时，才运行此插件钩子。这个属性只对 `resolveId`，`load`，`transform` 可用。`code` 过滤器只对 `transform` 钩子可用。`id` 过滤器，除了 `resolveId` 钩子，支持 [picomatch 模式](https://github.com/micromatch/picomatch#globbing-features)。
 
   ```ts
   type StringOrRegExp = string | RegExp;
@@ -188,8 +181,7 @@ Instead of a function, hooks can also be objects. In that case, the actual hook 
   }
   ```
 
-Build hooks are run during the build phase, which is triggered by `rollup.rollup(inputOptions)`. They are mainly concerned with locating, providing and transforming input files before they are processed by Rollup. The first hook of the build phase is [`options`](#options), the last one is always [`buildEnd`](#buildend). If there is a build error, [`closeBundle`](#closebundle) will be called after that.
->>>>>>> 22b64bcc511dfc40ce463e3f662a928915908713
+构建钩子在构建阶段运行，该阶段由 `rollup.rollup(inputOptions)` 触发。它们主要涉及在 Rollup 处理输入文件之前定位、提供和转换输入文件。构建阶段的第一个钩子是 [`options`](#options)，最后一个钩子始终是 [`buildEnd`](#buildend)。如果有构建错误，则在此之后将调用 [`closeBundle`](#closebundle)。
 
 <style>
 .legend-grid {
