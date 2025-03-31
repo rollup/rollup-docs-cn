@@ -93,7 +93,7 @@ export default ({
 - `sequential`：如果有多个插件实现此钩子，则所有这些钩子将按指定的插件顺序运行。如果钩子是 `async`，则此类后续钩子将等待当前钩子解决后再运行。
 - `parallel`：如果有多个插件实现此钩子，则所有这些钩子将按指定的插件顺序运行。如果钩子是 `async`，则此类后续钩子将并行运行，而不是等待当前钩子。
 
-除了函数之外，钩子也可以是对象。在这种情况下，实际的钩子函数（或 `banner/footer/intro/outro` 的值）必须指定为 `handler`。这允许你提供更多的可选属性，以改变钩子的执行：
+除了函数之外，钩子也可以是对象。在这种情况下，实际的钩子函数（或 `banner/footer/intro/outro` 的值）必须指定为 `handler`。这允许你提供更多的可选属性，以改变或跳过钩子的执行：
 
 - `order: "pre" | "post" | null`<br> 如果有多个插件实现此钩子，则可以先运行此插件（`"pre"`），最后运行此插件（`"post"`），或在用户指定的位置运行（没有值或 `null`）。
 
@@ -139,6 +139,42 @@ export default ({
   			async handler({ dir }) {
   				const topLevelFiles = await readdir(path.resolve(dir));
   				console.log(topLevelFiles);
+  			}
+  		}
+  	};
+  }
+  ```
+
+- `filter`<br> 仅当指定的过滤器返回真值时，才运行此插件钩子。这个属性只对 `resolveId`，`load`，`transform` 可用。`code` 过滤器只对 `transform` 钩子可用。`id` 过滤器，除了 `resolveId` 钩子，支持 [picomatch 模式](https://github.com/micromatch/picomatch#globbing-features)。
+
+  ```ts
+  type StringOrRegExp = string | RegExp;
+  type StringFilter<Value = StringOrRegExp> =
+  	| MaybeArray<Value>
+  	| {
+  			include?: MaybeArray<Value>;
+  			exclude?: MaybeArray<Value>;
+  	  };
+
+  interface HookFilter {
+  	id?: StringFilter;
+  	code?: StringFilter;
+  }
+  ```
+
+  ```js twoslash
+  /** @returns {import('rollup').Plugin} */
+  // ---cut---
+  export default function jsxAdditionalTransform() {
+  	return {
+  		name: 'jsxAdditionalTransform',
+  		transform: {
+  			filter: {
+  				id: '*.jsx',
+  				code: '<Custom'
+  			},
+  			handler(code) {
+  				// transform <Custom /> here
   			}
   		}
   	};
