@@ -713,6 +713,10 @@ export default class Module {
 	}
 
 	includeAllExports(includeNamespaceMembers: boolean): void {
+		if (includeNamespaceMembers) {
+			this.namespace.setMergedNamespaces(this.includeAndGetAdditionalMergedNamespaces());
+		}
+
 		if (this.allExportsIncluded) return;
 		this.allExportsIncluded = true;
 		if (!this.isExecuted) {
@@ -741,10 +745,6 @@ export default class Module {
 					variable.module.reexported = true;
 				}
 			}
-		}
-
-		if (includeNamespaceMembers) {
-			this.namespace.setMergedNamespaces(this.includeAndGetAdditionalMergedNamespaces());
 		}
 	}
 
@@ -1366,7 +1366,7 @@ export default class Module {
 		if (resolution instanceof Module) {
 			if (!resolution.includedDynamicImporters.includes(this)) {
 				resolution.includedDynamicImporters.push(this);
-				if (node.isFollowingTopLevelAwait) {
+				if (node.withinTopLevelAwait) {
 					resolution.includedDirectTopLevelAwaitingDynamicImporters.add(this);
 				}
 			}
