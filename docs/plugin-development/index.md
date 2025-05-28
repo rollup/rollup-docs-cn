@@ -1910,11 +1910,7 @@ type Resolve = (
 
 :::
 
-<<<<<<< HEAD
-使用 Rollup 使用的相同插件解析导入到模块 id（即文件名），并确定导入是否应为外部。如果 Rollup 或任何插件无法解析导入，但用户未明确将其标记为外部，则返回 `null`。如果返回绝对外部 id，则应通过 [`makeAbsoluteExternalsRelative`](../configuration-options/index.md#makeabsoluteexternalsrelative) 选项或在 [`resolveId`](#resolveid) 钩子中进行显式插件选择，将其保持为绝对输出，`external` 将是 `"absolute"` 而不是 `true`。
-=======
-Resolve imports to module ids (i.e. file names) using the same plugins that Rollup uses, and determine if an import should be external. If `Promise<null>` is returned, the import could not be resolved by Rollup or any plugin but was not explicitly marked as external by the user. If an absolute external id is returned that should remain absolute in the output either via the [`makeAbsoluteExternalsRelative`](../configuration-options/index.md#makeabsoluteexternalsrelative) option or by explicit plugin choice in the [`resolveId`](#resolveid) hook, `external` will be `"absolute"` instead of `true`.
->>>>>>> 7c469dc4eb8e1cb6def9fdc04581fdfce9975da3
+使用 Rollup 使用的相同插件解析导入到模块 id（即文件名），并确定导入是否应为外部。如果 Rollup 或任何插件无法解析导入，但用户未明确将其标记为外部，则返回 `Promise<null>`。如果返回绝对外部 id，则应通过 [`makeAbsoluteExternalsRelative`](../configuration-options/index.md#makeabsoluteexternalsrelative) 选项或在 [`resolveId`](#resolveid) 钩子中进行显式插件选择，将其保持为绝对输出，`external` 将是 `"absolute"` 而不是 `true`。
 
 `skipSelf` 的默认值是 `true`，因此在解析时将跳过调用 `this.resolve` 的插件的 `resolveId` 钩子。当其他插件在处理原始 `this.resolve` 调用时，也使用 _完全相同的 `source` 和 `importer`_ 在其 `resolveId` 钩子中调用 `this.resolve` 时，原始插件的 `resolveId` 钩子也将跳过这些调用。这里的原理是，插件已经声明它在此时点上“不知道”如何解析这个特定的 `source` 和 `importer` 组合。如果你不想要这种行为，将 `skipSelf` 设置为 `false`，并在必要时实现自己的无限循环预防机制。
 
