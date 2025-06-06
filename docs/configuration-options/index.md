@@ -2860,6 +2860,7 @@ const element = angular.element;
 
 ```typescript
 interface WatcherOptions {
+	allowInputInsideOutputPath?: boolean;
 	buildDelay?: number;
 	chokidar?: ChokidarOptions;
 	clearScreen?: boolean;
@@ -2892,7 +2893,21 @@ export default [
 
 这些选项仅在使用 `--watch` 标志或使用 `rollup.watch` 运行 Rollup 时生效。
 
+<<<<<<< HEAD
 ### watch.buildDelay {#watch-builddelay}
+=======
+### watch.allowInputInsideOutputPath
+
+|  |  |
+| --: | :-- |
+| Type: | `boolean` |
+| CLI: | `--watch.allowInputInsideOutputPath`/`--no-watch.allowInputInsideOutputPath` |
+| Default: | `false` |
+
+Whether the input path is allowed to be a subpath of the output path.
+
+### watch.buildDelay
+>>>>>>> f76339428586620ff3e4c32fce48f923e7be7b05
 
 |        |                               |
 | -----: | :---------------------------- |
