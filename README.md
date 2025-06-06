@@ -66,7 +66,7 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 
 ## 特别赞助
 
-<a href="https://www.tngtech.com/en/index.html" target="_blank"><img src="https://www.tngtech.com/fileadmin/Public/Images/Logos/TNG_Logo_medium_400x64.svg" alt="TNG Logo" width="280"/></a>
+<a href="https://www.tngtech.com/en/index.html" target="_blank"><img src="https://avatars.githubusercontent.com/u/432256?s=200&v=4" alt="TNG Logo"/></a>
 
 TNG 自 2017 年以来一直在支持 [Lukas Taegert-Atkinson](https://github.com/lukastaegert) 在 Rollup 上的工作。
 
