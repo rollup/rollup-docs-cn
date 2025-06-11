@@ -118,6 +118,10 @@ export default defineConfig({
 						text: 'ES 模块语法'
 					},
 					{
+						link: '/browser/',
+						text: 'Running Rollup in a Browser'
+					},
+					{
 						link: '/faqs/',
 						text: '常见问题'
 					},

@@ -1596,6 +1596,14 @@ function myPlugin() {
 
 当在 `transform` 钩子中使用时，当前模块的 `id` 也将被添加，并且可以提供一个 `position`。这是一个字符索引或文件位置，它将用于增强日志，包括 `pos`，`loc`（一个标准的 `{ file, line, column }` 对象）和 `frame`（显示位置的代码片段）。
 
+### this.fs
+
+|       |                  |
+| ----: | :--------------- |
+| Type: | `RollupFsModule` |
+
+Provides abstract access to the file system. For the `RollupFsModule` type, see the documentation of the [`fs` option](../configuration-options/index.md#fs). If plugins use this instead of directly importing `node:fs`, then they can be used in browser builds that provide an in-memory file system via the `fs` option.
+
 ### this.getCombinedSourcemap
 
 |       |                   |

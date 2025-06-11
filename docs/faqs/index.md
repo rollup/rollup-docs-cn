@@ -106,6 +106,7 @@ console.log('main');
 
 Rollup 已经被许多主要的 JavaScript 库使用，并且也可以用于构建绝大多数应用程序。但是，如果你想在旧版浏览器中使用代码拆分或动态导入，则需要使用额外的运行时来处理加载丢失的块。我们建议使用 [SystemJS 构建产物作为生产环境](https://github.com/systemjs/systemjs#browser-production)，因为它与 Rollup 的系统格式输出很好地集成，并且能够正确处理所有 ES 模块实时绑定和重新导出边缘情况。或者，也可以使用 AMD 加载器。
 
+<<<<<<< HEAD
 ## 我如何在浏览器中运行 Rollup？ {#how-do-i-run-rollup-itself-in-a-browser}
 
 虽然常规的 Rollup 构建依赖于一些 NodeJS 特性，但还有一个仅使用浏览器 API 的浏览器版本可用。你可以通过以下方式安装它：
@@ -203,5 +204,8 @@ rollup
 ```
 
 ## Rollup logo 是谁制作的？太可爱了！ {#who-made-the-rollup-logo-its-lovely}
+=======
+## Who made the Rollup logo? It's lovely.
+>>>>>>> 72858cb1474b81c91902794ab7d28c79f34b8ca8
 
 [Julian Lloyd](https://github.com/jlmakes)!
