@@ -1,44 +1,44 @@
 ---
-title: Running Rollup in a Browser
+title: 在浏览器中运行 Rollup
 ---
 
 # {{ $frontmatter.title }}
 
 [[toc]]
 
-## The browser build
+## 浏览器构建 {#the-browser-build}
 
-While the regular Rollup build relies on some NodeJS builtin libraries, there is also a browser build available that only uses browser APIs. You can install it via
+虽然常规的 Rollup 构建依赖于一些 NodeJS 内置库，但也有一个仅使用浏览器 API 的浏览器构建可用。可以通过以下方式安装：
 
 ```shell
 npm install @rollup/browser
 ```
 
-and in your script, import it via
+在你的脚本中，可以通过以下方式导入：
 
 ```js
 import { rollup } from '@rollup/browser';
 ```
 
-Alternatively, you can import from a CDN, e.g. for the ESM build
+或者，你也可以从 CDN 导入，例如对于 ESM 构建：
 
 ```js
 import * as rollup from 'https://unpkg.com/@rollup/browser/dist/es/rollup.browser.js';
 ```
 
-and for the UMD build
+对于 UMD 构建：
 
 ```html
 <script src="https://unpkg.com/@rollup/browser/dist/rollup.browser.js"></script>
 ```
 
-which will create a global variable `window.rollup`. Note that in each case, you need to make sure that the file `dist/bindings_wasm_bg.wasm` from the `@rollup/browser` package is served next to where the browser build is served.
+这将创建一个全局变量 `window.rollup`。请注意，在每种情况下，你需要确保 `@rollup/browser` 包中的 `dist/bindings_wasm_bg.wasm` 文件与浏览器构建一起提供。
 
-As the browser build cannot access the file system, you either need to provide an [in-memory file system](#using-an-in-memory-file-system) via the [`fs`](../configuration-options/index.md#fs) option, or you need to [provide plugins](#using-plugins-to-resolve-and-load-modules) that resolve and load all modules you want to bundle.
+由于浏览器构建无法访问文件系统，你需要提供一个 [内存文件系统](#using-an-in-memory-file-system) 通过 [`fs`](../configuration-options/index.md#fs) 选项，或者你需要提供 [插件](#using-plugins-to-resolve-and-load-modules) 来解析和加载所有你想要打包的模块。
 
-## Using an in-memory file system
+## 使用内存文件系统 {#using-an-in-memory-file-system}
 
-Rollup allows you to provide an in-memory file system implementation that needs to implement at least a certain sub-set of the NodeJS `fs` API, cf. the [`fs`](../configuration-options/index.md#fs) option. This makes the browser build behave very similar to the NodeJS build and even allows you to use certain plugins that rely on the file system, provided they only access it via the [`this.fs`](../plugin-development/index.md#this-fs) plugin context property. Here is an example that uses [`memfs`](https://www.npmjs.com/package/memfs):
+Rollup 允许你提供一个内存文件系统实现，该实现需要实现 NodeJS `fs` API 的至少一个子集，参见 [`fs`](../configuration-options/index.md#fs) 选项。这使得浏览器构建的行为非常类似于 NodeJS 构建，甚至允许你使用某些依赖于文件系统的插件，前提是它们只能通过 [`this.fs`](../plugin-development/index.md#this-fs) 插件上下文属性访问它。下面是一个使用 [`memfs`](https://www.npmjs.com/package/memfs) 的示例：
 
 ```js twoslash
 /** @type {import('rollup')} */
@@ -61,9 +61,9 @@ rollup
 	.then(({ output }) => console.log(output[0].code));
 ```
 
-## Using plugins to resolve and load modules
+## 使用插件解析和加载模块 {#using-plugins-to-resolve-and-load-modules}
 
-You can also resolve and load all modules via plugins. Here is how you could do this:
+你也可以通过插件解析和加载所有模块。下面是一个示例：
 
 ```js twoslash
 /** @type {import('rollup')} */
@@ -97,7 +97,7 @@ rollup
 	.then(({ output }) => console.log(output[0].code));
 ```
 
-This example only supports two imports, `"main.js"` and `"foo.js"`, and no relative imports. Here is another example that uses absolute URLs as entry points and supports relative imports. In that case, we are just re-bundling Rollup itself, but it could be used on any other URL that exposes an ES module:
+这个示例只支持两个导入，`"main.js"` 和 `"foo.js"`，并且不支持相对导入。下面是一个使用绝对 URL 作为入口文件并支持相对导入的示例。在这种情况下，我们只是重新打包 Rollup 本身，但它可以用于任何其他暴露 ES 模块的 URL：
 
 ```js twoslash
 /** @type {import('rollup')} */
