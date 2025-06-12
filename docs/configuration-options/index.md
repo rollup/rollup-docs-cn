@@ -2851,7 +2851,108 @@ const element = angular.element;
 
 对于每个键的值，是一个数组，其中，第一个数值表示经过的时间，第二个数值表示内存消耗的变化，第三个数值表示此步骤完成后的总内存消耗。这些步骤的顺序是通过 `Object.keys` 确定的。顶层的键以 `#` 开头，包含嵌套步骤的耗时，例如，在上面例子中，耗时 698ms 的 `# BUILD` 步骤包含了耗时 539ms 的 `## parse modules` 步骤。
 
-## 观察选项 {#watch}
+### fs
+
+|        |                                                  |
+| -----: | :----------------------------------------------- |
+| 类型： | `RollupFsModule`                                 |
+| 默认： | NodeJS 中为 `node:fs.promises`，浏览器中无默认值 |
+
+如果想要使用自定义的文件系统模块，可以将此选项设置为一个实现了与 `RollupFsModule` 接口相同 API 的对象。这在想要使用不同的文件系统实现（如 [`memfs`](https://www.npmjs.com/package/memfs)）、想要测试模拟文件系统，或者使用 Rollup 的 [浏览器构建](../browser/index.md) 时非常有用。
+
+```typescript
+interface RollupFsModule {
+	appendFile(
+		path: string,
+		data: string | Uint8Array,
+		options?: {
+			encoding?: BufferEncoding | null;
+			mode?: string | number;
+			flag?: string | number;
+		}
+	): Promise<void>;
+
+	copyFile(
+		source: string,
+		destination: string,
+		mode?: string | number
+	): Promise<void>;
+
+	mkdir(
+		path: string,
+		options?: { recursive?: boolean; mode?: string | number }
+	): Promise<void>;
+
+	mkdtemp(prefix: string): Promise<string>;
+
+	readdir(
+		path: string,
+		options?: { withFileTypes?: boolean }
+	): Promise<(string | RollupDirectoryEntry)[]>;
+
+	readFile(
+		path: string,
+		options?: {
+			encoding?: BufferEncoding | null;
+			flag?: string | number;
+			signal?: AbortSignal;
+		}
+	): Promise<string | Uint8Array>;
+
+	realpath(path: string): Promise<string>;
+
+	rename(oldPath: string, newPath: string): Promise<void>;
+
+	rmdir(path: string, options?: { recursive?: boolean }): Promise<void>;
+
+	stat(path: string): Promise<RollupFileStats>;
+
+	lstat(path: string): Promise<RollupFileStats>;
+
+	unlink(path: string): Promise<void>;
+
+	writeFile(
+		path: string,
+		data: string | ArrayBuffer | ArrayBufferView,
+		options?: {
+			encoding?: BufferEncoding | null;
+			mode?: string | number;
+			flag?: string | number;
+		}
+	): Promise<void>;
+}
+
+type BufferEncoding =
+	| 'ascii'
+	| 'utf8'
+	| 'utf16le'
+	| 'ucs2'
+	| 'base64'
+	| 'base64url'
+	| 'latin1'
+	| 'binary'
+	| 'hex';
+
+export interface RollupDirectoryEntry {
+	isFile(): boolean;
+	isDirectory(): boolean;
+	isSymbolicLink(): boolean;
+	name: string;
+}
+
+interface RollupFileStats {
+	isFile(): boolean;
+	isDirectory(): boolean;
+	isSymbolicLink(): boolean;
+	size: number;
+	mtime: Date;
+	ctime: Date;
+	atime: Date;
+	birthtime: Date;
+}
+```
+
+## watch
 
 |        |                           |
 | -----: | :------------------------ |
@@ -2860,6 +2961,7 @@ const element = angular.element;
 
 ```typescript
 interface WatcherOptions {
+	allowInputInsideOutputPath?: boolean;
 	buildDelay?: number;
 	chokidar?: ChokidarOptions;
 	clearScreen?: boolean;
@@ -2892,7 +2994,17 @@ export default [
 
 这些选项仅在使用 `--watch` 标志或使用 `rollup.watch` 运行 Rollup 时生效。
 
-### watch.buildDelay {#watch-builddelay}
+### watch.allowInputInsideOutputPath
+
+|  |  |
+| --: | :-- |
+| 类型： | `boolean` |
+| CLI： | `--watch.allowInputInsideOutputPath`/`--no-watch.allowInputInsideOutputPath` |
+| 默认： | `false` |
+
+该选项用于决定输入路径是否允许是输出路径的子路径。
+
+### watch.buildDelay
 
 |        |                               |
 | -----: | :---------------------------- |

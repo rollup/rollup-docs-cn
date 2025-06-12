@@ -139,7 +139,8 @@ export default {
 		clearScreen,
 		exclude,
 		include,
-		skipWrite
+		skipWrite,
+		allowInputInsideOutputPath
 	}
 };
 ```
@@ -459,6 +460,7 @@ export default {
 --no-treeshake.unknownGlobalSideEffects 假设未知的全局变量不会抛出异常
 --validate                  验证输出
 --waitForBundleInput        等待打包输入文件
+--watch.allowInputInsideOutputPath 输入路径是否允许是输出路径的子路径
 --watch.buildDelay <number> 节流观察重建
 --no-watch.clearScreen      重建时不要清除屏幕
 --watch.exclude <files>     排除要观察的文件
