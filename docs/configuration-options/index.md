@@ -2851,17 +2851,14 @@ const element = angular.element;
 
 对于每个键的值，是一个数组，其中，第一个数值表示经过的时间，第二个数值表示内存消耗的变化，第三个数值表示此步骤完成后的总内存消耗。这些步骤的顺序是通过 `Object.keys` 确定的。顶层的键以 `#` 开头，包含嵌套步骤的耗时，例如，在上面例子中，耗时 698ms 的 `# BUILD` 步骤包含了耗时 539ms 的 `## parse modules` 步骤。
 
-<<<<<<< HEAD
-## 观察选项 {#watch}
-=======
 ### fs
 
-|          |                                                      |
-| -------: | :--------------------------------------------------- |
-|    Type: | `RollupFsModule`                                     |
-| Default: | `node:fs.promises` in NodeJS, no default in browsers |
+|        |                                                  |
+| -----: | :----------------------------------------------- |
+| 类型： | `RollupFsModule`                                 |
+| 默认： | NodeJS 中为 `node:fs.promises`，浏览器中无默认值 |
 
-If you want to use a custom file system module, you can set this option to an object that implements the same API as the `RollupFsModule` interface. This is useful if you want to use a different file system implementation such as [`memfs`](https://www.npmjs.com/package/memfs), if you want to mock the file system for testing purposes, or if you use the [browser build](../browser/index.md) of Rollup.
+如果想要使用自定义的文件系统模块，可以将此选项设置为一个实现了与 `RollupFsModule` 接口相同 API 的对象。这在想要使用不同的文件系统实现（如 [`memfs`](https://www.npmjs.com/package/memfs)）、想要测试模拟文件系统，或者使用 Rollup 的 [浏览器构建](../browser/index.md) 时非常有用。
 
 ```typescript
 interface RollupFsModule {
@@ -2956,7 +2953,6 @@ interface RollupFileStats {
 ```
 
 ## watch
->>>>>>> 72858cb1474b81c91902794ab7d28c79f34b8ca8
 
 |        |                           |
 | -----: | :------------------------ |
@@ -2998,21 +2994,17 @@ export default [
 
 这些选项仅在使用 `--watch` 标志或使用 `rollup.watch` 运行 Rollup 时生效。
 
-<<<<<<< HEAD
-### watch.buildDelay {#watch-builddelay}
-=======
 ### watch.allowInputInsideOutputPath
 
 |  |  |
 | --: | :-- |
-| Type: | `boolean` |
-| CLI: | `--watch.allowInputInsideOutputPath`/`--no-watch.allowInputInsideOutputPath` |
-| Default: | `false` |
+| 类型： | `boolean` |
+| CLI： | `--watch.allowInputInsideOutputPath`/`--no-watch.allowInputInsideOutputPath` |
+| 默认： | `false` |
 
-Whether the input path is allowed to be a subpath of the output path.
+该选项用于决定输入路径是否允许是输出路径的子路径。
 
 ### watch.buildDelay
->>>>>>> 72858cb1474b81c91902794ab7d28c79f34b8ca8
 
 |        |                               |
 | -----: | :---------------------------- |

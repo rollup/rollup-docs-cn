@@ -119,7 +119,7 @@ export default defineConfig({
 					},
 					{
 						link: '/browser/',
-						text: 'Running Rollup in a Browser'
+						text: '在浏览器中运行 Rollup'
 					},
 					{
 						link: '/faqs/',

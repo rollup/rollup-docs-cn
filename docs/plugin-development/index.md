@@ -1598,11 +1598,11 @@ function myPlugin() {
 
 ### this.fs
 
-|       |                  |
-| ----: | :--------------- |
-| Type: | `RollupFsModule` |
+|        |                  |
+| -----: | :--------------- |
+| 类型： | `RollupFsModule` |
 
-Provides abstract access to the file system. For the `RollupFsModule` type, see the documentation of the [`fs` option](../configuration-options/index.md#fs). If plugins use this instead of directly importing `node:fs`, then they can be used in browser builds that provide an in-memory file system via the `fs` option.
+提供对文件系统的抽象访问。有关 `RollupFsModule` 类型的信息，请参阅 [`fs` 选项](../configuration-options/index.md#fs) 的文档。如果插件使用此选项而不是直接导入 `node:fs`，则它们可以在提供内存文件系统的浏览器构建中使用。
 
 ### this.getCombinedSourcemap
 
