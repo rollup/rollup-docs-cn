@@ -633,6 +633,7 @@ buildWithCache()
 
 ### maxParallelFileOps {#maxparallelfileops}
 
+<<<<<<< HEAD
 |        |                                 |
 | -----: | :------------------------------ |
 | 类型： | `number`                        |
@@ -640,6 +641,15 @@ buildWithCache()
 | 默认： | 20                              |
 
 该选项限制 rollup 在读取模块或写入 chunk 时，同时能打开的文件数量。如果没有限制或者数值足够高，构建可能会失败，显示“EMFILE: Too many open files”（EMFILE：打开的文件数过多）。这取决于操作系统限制的句柄数（open file handles）大小。
+=======
+|          |                                 |
+| -------: | :------------------------------ |
+|    Type: | `number`                        |
+|     CLI: | `--maxParallelFileOps <number>` |
+| Default: | `Infinity`                      |
+
+Limits the number of files rollup will open in parallel when reading modules or writing chunks. Without a limit or with a high enough value, builds can fail with an "EMFILE: too many open files". This depends on how many open file handles the operating system allows. If you set the limit too low and use plugins that rely on the [`this.load`](../plugin-development/index.md#this-load) context function, such as the `commonjs` plugin, then it can happen that builds stall without an error message as it limits the number of parallel `load` calls.
+>>>>>>> 37d1915060e08b84326bee0713444eec7162de88
 
 ### onLog {#onlog}
 
