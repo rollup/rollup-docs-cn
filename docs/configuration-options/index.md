@@ -1355,11 +1355,18 @@ import('external2').then(console.log);
   console.log(ext_default__default.default);
   ```
 
+<<<<<<< HEAD
 - `"defaultOnly"` 与 `"default"` 类似，但有以下几点区别：
 
   - 禁止命名引入。如果遇到这样的引入，Rollup 会抛出一个错误，即使是 `es` 和 `system` 格式。这样可以确保 `es` 版本的代码能够正确引入 Node 中的非内置 CommonJS 模块。
   - 虽然命名空间内再次输出 `export * from 'external';` 不被禁止，但会被忽略掉，并且会导致 Rollup 抛出警告，因为如果没有命名的输出，它们并不会产生影响。
   - 当一个命名空间对象生成时，Rollup 将会使用一个更简单的辅助函数。
+=======
+- `"defaultOnly"` is similar to `"default"` except for the following:
+  - Named imports are forbidden. If such an import is encountered, Rollup throws an error even in `es` and `system` formats. That way it is ensures that the `es` version of the code is able to import non-builtin CommonJS modules in Node correctly.
+  - While namespace reexports `export * from 'external';` are not prohibited, they are ignored and will cause Rollup to display a warning because they would not have an effect if there are no named exports.
+  - When a namespace object is generated, Rollup uses a much simpler helper.
+>>>>>>> d6dd1e7c6ee3f8fcfd77e5b8082cc62387a8ac4f
 
   下面示例代码展示了 Rollup 产生的内容。注意，我们从代码中删除了 `external.bar`，否则，Rollup 会抛出一个错误，因为如上所述，这等同于一个命名引入。
 
