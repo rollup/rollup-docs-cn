@@ -1356,7 +1356,6 @@ import('external2').then(console.log);
   ```
 
 - `"defaultOnly"` 与 `"default"` 类似，但有以下几点区别：
-
   - 禁止命名引入。如果遇到这样的引入，Rollup 会抛出一个错误，即使是 `es` 和 `system` 格式。这样可以确保 `es` 版本的代码能够正确引入 Node 中的非内置 CommonJS 模块。
   - 虽然命名空间内再次输出 `export * from 'external';` 不被禁止，但会被忽略掉，并且会导致 Rollup 抛出警告，因为如果没有命名的输出，它们并不会产生影响。
   - 当一个命名空间对象生成时，Rollup 将会使用一个更简单的辅助函数。
