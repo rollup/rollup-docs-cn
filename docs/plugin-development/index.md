@@ -1427,7 +1427,11 @@ interface EmittedAsset {
 
 当生成代码块或者资源文件时，可以提供 `name` 或者 `fileName`。如果提供了 `fileName`，它将不会被修改，而是直接作为生成文件的名称，如果这样会导致冲突，则会抛出错误。否则，如果提供了 `name`，它将被用作对应的 [`output.chunkFileNames`](../configuration-options/index.md#output-chunkfilenames) 或者 [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) 模式中的 `[name]` 的替换，可能会在文件名的末尾添加一个唯一的数字，以避免冲突。如果既没有提供 `name` 也没有提供 `fileName`，则会使用默认名称。预构建的代码块必须始终有一个 `fileName`。
 
+<<<<<<< HEAD
 你可以通过 `import.meta.ROLLUP_FILE_URL_referenceId` 在任何由 [`load`](#load) 或 [`transform`](#transform) 插件钩子返回的代码中引用生成的文件的 URL。有关更多详细信息和示例，请参见 [File URL](#file-urls)。
+=======
+You can reference the URL of an emitted file in any code returned by a [`load`](#load) or [`transform`](#transform) plugin hook via `import.meta.ROLLUP_FILE_URL_referenceId` (returns a string) or `import.meta.ROLLUP_FILE_URL_OBJ_referenceId` (returns a URL object). See [File URLs](#file-urls) for more details and an example.
+>>>>>>> 747107454f5dbac6a49a7b349526074f0256db75
 
 替换 `import.meta.ROLLUP_FILE_URL_referenceId` 的生成代码可以通过 [`resolveFileUrl`](#resolvefileurl) 插件钩子进行自定义。你也可以使用 [`this.getFileName(referenceId)`](#this-getfilename) 在文件名可用时确定文件名。如果没有显式设置文件名，则
 
@@ -2123,7 +2127,22 @@ export const size = 6;
 
 如果你构建上诉代码，则主块和工作块都将通过共享块从 `config.js` 共享代码。这使我们能够利用浏览器缓存来减少传输数据并加快加载工作块的速度。
 
+<<<<<<< HEAD
 ## 转换器 {#Transformers}
+=======
+You can also use `import.meta.ROLLUP_FILE_URL_OBJ_referenceId` to get a URL object directly instead of a string. This is more efficient when you need the URL object itself, as it avoids creating the object twice:
+
+```js
+// Using ROLLUP_FILE_URL (returns string, requires wrapping in new URL())
+const urlString = import.meta.ROLLUP_FILE_URL_referenceId;
+const urlObject = new URL(urlString);
+
+// Using ROLLUP_FILE_URL_OBJ (returns URL object directly)
+const urlObject = import.meta.ROLLUP_FILE_URL_OBJ_referenceId;
+```
+
+## Transformers
+>>>>>>> 747107454f5dbac6a49a7b349526074f0256db75
 
 转换器插件（即返回 `transform` 函数以进行例如转换非 JS 文件的转换器）应支持 `options.include` 和 `options.exclude`，两者都可以是 minimatch 模式或 minimatch 模式数组。如果省略 `options.include` 或其长度为零，则默认情况下应包括文件；否则，只有 ID 与其中一个模式匹配时才应包括它们。
 
