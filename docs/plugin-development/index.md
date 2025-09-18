@@ -1427,7 +1427,7 @@ interface EmittedAsset {
 
 当生成代码块或者资源文件时，可以提供 `name` 或者 `fileName`。如果提供了 `fileName`，它将不会被修改，而是直接作为生成文件的名称，如果这样会导致冲突，则会抛出错误。否则，如果提供了 `name`，它将被用作对应的 [`output.chunkFileNames`](../configuration-options/index.md#output-chunkfilenames) 或者 [`output.assetFileNames`](../configuration-options/index.md#output-assetfilenames) 模式中的 `[name]` 的替换，可能会在文件名的末尾添加一个唯一的数字，以避免冲突。如果既没有提供 `name` 也没有提供 `fileName`，则会使用默认名称。预构建的代码块必须始终有一个 `fileName`。
 
-你可以通过 `import.meta.ROLLUP_FILE_URL_referenceId` 在任何由 [`load`](#load) 或 [`transform`](#transform) 插件钩子返回的代码中引用生成的文件的 URL。有关更多详细信息和示例，请参见 [File URL](#file-urls)。
+你可以通过 `import.meta.ROLLUP_FILE_URL_referenceId`（返回一个字符串）或 `import.meta.ROLLUP_FILE_URL_OBJ_referenceId`（返回一个 URL 对象），在任何由 [`load`](#load) 或 [`transform`](#transform) 插件钩子返回的代码中引用生成的文件的 URL。有关更多详细信息和示例，请参见 [File URL](#file-urls)。
 
 替换 `import.meta.ROLLUP_FILE_URL_referenceId` 的生成代码可以通过 [`resolveFileUrl`](#resolvefileurl) 插件钩子进行自定义。你也可以使用 [`this.getFileName(referenceId)`](#this-getfilename) 在文件名可用时确定文件名。如果没有显式设置文件名，则
 
@@ -2122,6 +2122,17 @@ export const size = 6;
 ```
 
 如果你构建上诉代码，则主块和工作块都将通过共享块从 `config.js` 共享代码。这使我们能够利用浏览器缓存来减少传输数据并加快加载工作块的速度。
+
+你也可以使用 `import.meta.ROLLUP_FILE_URL_OBJ_referenceId` 直接获取一个 URL 对象，而不是一个字符串。当你需要 URL 对象本身时，这会更高效，因为它避免了重复创建对象：
+
+```js
+// 使用 ROLLUP_FILE_URL（返回字符串，需要通过 new URL() 包装使用）
+const urlString = import.meta.ROLLUP_FILE_URL_referenceId;
+const urlObject = new URL(urlString);
+
+// 使用 ROLLUP_FILE_URL_OBJ（直接返回 URL 对象）
+const urlObject = import.meta.ROLLUP_FILE_URL_OBJ_referenceId;
+```
 
 ## 转换器 {#Transformers}
 
