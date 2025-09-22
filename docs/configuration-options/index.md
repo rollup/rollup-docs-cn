@@ -1440,15 +1440,9 @@ export default {
 | --: | :-- |
 | 类型： | `{ [chunkAlias: string]: string[] } \| ((id: string, {getModuleInfo, getModuleIds}) => string \| void)` |
 
-<<<<<<< HEAD
-该选项允许你创建自定义的公共 chunk。当值为对象形式时，每个属性代表一个 chunk，其中包含列出的模块及其所有依赖，除非他们已经在其他 chunk 中，否则将会是模块图（module graph）的一部分。chunk 的名称由对象属性的键决定。
+该选项允许你创建自定义的公共块。当值为对象形式时，可用于更简单、更安全的手动分块，为函数形式时，可以实现更强大且可控的行为。
 
-请注意，列出的模块本身不一定是模块图的一部分，该特性对于使用 `@rollup/plugin-node-resolve` 包并从中使用深度引用（deep imports）是非常有用的。例如：
-=======
-Allows the creation of custom shared common chunks. The object form can be used for an easier and safer manual chunking, and the function form can be used for a more powerful and controlled behavior.
-
-When using the object form, each property represents a chunk that contains the listed modules and all their dependencies if they are part of the module graph unless they are already in another manual chunk. The name of the chunk will be determined by the property key. Note that it is not necessary for the listed modules themselves to be part of the module graph, which is useful if you are working with `@rollup/plugin-node-resolve` and use deep imports from packages. For instance
->>>>>>> 2029f639f983289619538c60bc14eebc638c6926
+对象形式时，每个属性代表一个包含所列出的模块及其所有依赖项的块（若这些依赖项属于模块图且未被其他手动块包含）。块的名称由属性键决定。需要注意的是，列出的模块本身不一定是模块图的一部分，该特性对于使用 `@rollup/plugin-node-resolve` 包并使用深度引用（deep imports）时非常有用的。例如：
 
 ```javascript
 manualChunks: {
@@ -1456,15 +1450,9 @@ manualChunks: {
 }
 ```
 
-<<<<<<< HEAD
-上述例子中，即使你只是使用 `import get from 'lodash/get'` 形式引入，Rollup 也会将 lodash 的所有模块放到一个自定义 chunk 中。
+上述例子中，即使你只是使用 `import get from 'lodash/get'` 形式引入，Rollup 也会将 lodash 的所有模块合并到一个自定义 chunk 中。
 
 当该选项值为函数形式时，每个被解析的模块都会经过该函数处理。如果函数返回字符串，那么该模块及其所有依赖将被添加到以返回字符串命名的自定义 chunk 中。例如，以下例子会创建一个命名为 `vendor` 的 chunk，它包含所有在 `node_modules` 中的依赖：
-=======
-will merge all lodash modules into a manual chunk even if you are only using imports of the form `import get from 'lodash/get'`.
-
-When using the function form, each resolved module id will be passed to the function. If a string is returned, the module and all its dependencies will be added to the manual chunk with the given name. For instance this will create a `vendor` chunk containing all dependencies inside `node_modules`:
->>>>>>> 2029f639f983289619538c60bc14eebc638c6926
 
 ```javascript twoslash
 // ---cut-start---
@@ -1479,13 +1467,9 @@ function manualChunks(id) {
 }
 ```
 
-<<<<<<< HEAD
-请注意，如果自定义 chunk 在使用相应模块之前触发了副作用，那么它可能改变整个应用的行为。
-=======
-By default, the function form will also merge dependencies of the returned ids into the manualChunk. If you need stricter behavior, you can use [output.onlyExplicitManualChunks](#output-onlyexplicitmanualchunks), which will be the default in Rollup 5.
+默认情况下，函数形式也会将返回ID的依赖项合并到 `manualChunk` 中。如果需要更严格的行为，可以使用 [`output.onlyExplicitManualChunks`](#output-onlyexplicitmanualchunks)，该选项将在 Rollup 5 中成为默认设置。
 
-Be aware that manual chunks can change the behaviour of the application if side effects are triggered before the corresponding modules are actually used.
->>>>>>> 2029f639f983289619538c60bc14eebc638c6926
+请注意，如果自定义 chunk 在使用相应模块之前触发了副作用，那么它可能改变整个应用的行为。
 
 当 `manualChunks` 值为函数形式时，它的第二个参数是一个对象，包含 `getModuleInfo` 函数和 `getModuleIds` 函数，其工作方式与插件上下文中的 [`this.getModuleInfo`](../plugin-development/index.md#this-getmoduleinfo) 和 [`this.getModuleIds`](../plugin-development/index.md#this-getmoduleids) 相同。
 
@@ -3123,23 +3107,20 @@ _使用 [`output.externalImportAttributes`](#output-externalimportattributes) �
 |  CLI： | `--externalImportAssertions`/`--no-externalImportAssertions` |
 | 默认： | `true`                                                       |
 
-<<<<<<< HEAD
 是否在输出中为外部导入添加导入断言，如果输出格式为 `es`。默认情况下，断言来自输入文件，但是插件可以稍后添加或删除断言。例如，`import "foo" assert {type: "json"}` 将导致相同的导入出现在输出中，除非将该选项设置为 `false`。请注意，模块的所有导入都需要具有一致的断言，否则将发出警告。
-=======
-Whether to add import assertions to external imports in the output if the output format is `es`. By default, assertions are taken from the input files, but plugins can add or remove assertions later. E.g. `import "foo" assert {type: "json"}` will cause the same import to appear in the output unless the option is set to `false`. Note that all imports of a module need to have consistent assertions, otherwise a warning is emitted.
 
 ### output.onlyExplicitManualChunks
 
-|       |           |
-| ----: | :-------- |
-| Type: | `boolean` |
+|        |           |
+| -----: | :-------- |
+| 类型： | `boolean` |
 
-If set to true, using the [output.manualChunks](#output-manualchunks) function form won't merge dependencies into the output chunk.
+该选项如果设置为 `true`，使用 [output.manualChunks](#output-manualchunks) 的函数形式时，不会将依赖项合并到输出块中。
 
-For instance, with
+例如，以下项目结构
 
 ```js
-// src/main.js (entry point)
+// src/main.js (入口文件)
 import './manual1';
 import './manual2';
 
@@ -3159,7 +3140,7 @@ console.log('manual2');
 console.log('dep');
 ```
 
-and
+并配置
 
 <!-- prettier-ignore-start -->
 
@@ -3174,7 +3155,6 @@ function manualChunks(id) {
 }
 ```
 
-the dep.js `export const dep = 'dep';` code, won't be merged into the `manual` output chunk. This gives you full control over what code goes into which manual chunks, and if your manual chunking is very granular, this can prevent import graph inaccuracies and help reduce cache invalidation.
+dep.js 中的 `export const dep = 'dep';` 代码将不会被合并到 `manual` 手动分块中。这使你能够完全控制哪些代码进入哪个手动分块。如果您的手动分块非常细粒度，这可以防止导入图的不准确，并帮助减少缓存失效。
 
-Note: although this option is new in Rollup 4, it is marked as deprecated because it will become the new default for the function form in Rollup 5.
->>>>>>> 2029f639f983289619538c60bc14eebc638c6926
+请注意，尽管此选项在 Rollup 4 中是新增的，但它已被标记为已弃用（deprecated），因为在 Rollup 5 中，函数形式将直接采用此行为作为默认设置。
