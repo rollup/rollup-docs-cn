@@ -1440,19 +1440,17 @@ export default {
 | --: | :-- |
 | 类型： | `{ [chunkAlias: string]: string[] } \| ((id: string, {getModuleInfo, getModuleIds}) => string \| void)` |
 
-该选项允许你创建自定义的公共 chunk。当值为对象形式时，每个属性代表一个 chunk，其中包含列出的模块及其所有依赖，除非他们已经在其他 chunk 中，否则将会是模块图（module graph）的一部分。chunk 的名称由对象属性的键决定。
+该选项允许你创建自定义的公共块。当值为对象形式时，可用于更简单、更安全的手动分块，为函数形式时，可以实现更强大且可控的行为。
 
-请注意，列出的模块本身不一定是模块图的一部分，该特性对于使用 `@rollup/plugin-node-resolve` 包并从中使用深度引用（deep imports）是非常有用的。例如：
+对象形式时，每个属性代表一个包含所列出的模块及其所有依赖项的块（若这些依赖项属于模块图且未被其他手动块包含）。块的名称由属性键决定。需要注意的是，列出的模块本身不一定是模块图的一部分，该特性对于使用 `@rollup/plugin-node-resolve` 包并使用深度引用（deep imports）时非常有用的。例如：
 
 ```javascript
-({
-	manualChunks: {
-		lodash: ['lodash']
-	}
-});
+manualChunks: {
+	lodash: ['lodash'];
+}
 ```
 
-上述例子中，即使你只是使用 `import get from 'lodash/get'` 形式引入，Rollup 也会将 lodash 的所有模块放到一个自定义 chunk 中。
+上述例子中，即使你只是使用 `import get from 'lodash/get'` 形式引入，Rollup 也会将 lodash 的所有模块合并到一个自定义 chunk 中。
 
 当该选项值为函数形式时，每个被解析的模块都会经过该函数处理。如果函数返回字符串，那么该模块及其所有依赖将被添加到以返回字符串命名的自定义 chunk 中。例如，以下例子会创建一个命名为 `vendor` 的 chunk，它包含所有在 `node_modules` 中的依赖：
 
@@ -1468,6 +1466,8 @@ function manualChunks(id) {
 	return null;
 }
 ```
+
+默认情况下，函数形式也会将返回ID的依赖项合并到 `manualChunk` 中。如果需要更严格的行为，可以使用 [`output.onlyExplicitManualChunks`](#output-onlyexplicitmanualchunks)，该选项将在 Rollup 5 中成为默认设置。
 
 请注意，如果自定义 chunk 在使用相应模块之前触发了副作用，那么它可能改变整个应用的行为。
 
@@ -3108,3 +3108,53 @@ _使用 [`output.externalImportAttributes`](#output-externalimportattributes) �
 | 默认： | `true`                                                       |
 
 是否在输出中为外部导入添加导入断言，如果输出格式为 `es`。默认情况下，断言来自输入文件，但是插件可以稍后添加或删除断言。例如，`import "foo" assert {type: "json"}` 将导致相同的导入出现在输出中，除非将该选项设置为 `false`。请注意，模块的所有导入都需要具有一致的断言，否则将发出警告。
+
+### output.onlyExplicitManualChunks
+
+|        |           |
+| -----: | :-------- |
+| 类型： | `boolean` |
+
+该选项如果设置为 `true`，使用 [output.manualChunks](#output-manualchunks) 的函数形式时，不会将依赖项合并到输出块中。
+
+例如，以下项目结构
+
+```js
+// src/main.js (入口文件)
+import './manual1';
+import './manual2';
+
+console.log('main');
+
+// src/manual1.js
+import './dep.js';
+
+console.log('manual1');
+
+// src/manual2.js
+import './dep.js';
+
+console.log('manual2');
+
+// src/dep.js
+console.log('dep');
+```
+
+并配置
+
+<!-- prettier-ignore-start -->
+
+```js twoslash
+// ---cut-start---
+/** @type {import('rollup').GetManualChunk} */
+// ---cut-end---
+function manualChunks(id) {
+	if (id.endsWith('manual1.js') && id.endsWith('manual2.js')) {
+		return 'manual';
+	}
+}
+```
+
+dep.js 中的 `export const dep = 'dep';` 代码将不会被合并到 `manual` 手动分块中。这使你能够完全控制哪些代码进入哪个手动分块。如果您的手动分块非常细粒度，这可以防止导入图的不准确，并帮助减少缓存失效。
+
+请注意，尽管此选项在 Rollup 4 中是新增的，但它已被标记为已弃用（deprecated），因为在 Rollup 5 中，函数形式将直接采用此行为作为默认设置。
