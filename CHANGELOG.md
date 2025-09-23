@@ -1,5 +1,29 @@
 # rollup changelog
 
+## 4.52.2
+
+_2025-09-23_
+
+### Bug Fixes
+
+- Fix Android build crashing due to failed dlopen (#6109)
+
+### Pull Requests
+
+- [#6109](https://github.com/rollup/rollup/pull/6109): fix(rust): use prebuilt std when it is available (@cyyynthia)
+
+## 4.52.1
+
+_2025-09-23_
+
+### Bug Fixes
+
+- Opt-out of dynamic import optimization when using top-level await to effectively prevent deadlocks (#6121)
+
+### Pull Requests
+
+- [#6121](https://github.com/rollup/rollup/pull/6121): Simplify top-level await deadlock prevention (@lukastaegert)
+
 ## 4.52.0
 
 _2025-09-19_
