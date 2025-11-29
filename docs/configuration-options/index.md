@@ -1446,7 +1446,7 @@ export default {
 
 ```javascript
 manualChunks: {
-	lodash: ['lodash'];
+	lodash: ['lodash'],
 }
 ```
 
