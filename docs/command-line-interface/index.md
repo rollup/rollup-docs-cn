@@ -374,6 +374,7 @@ export default {
 
 许多选项都有等效的命令行标志。在这些情况下，如果你正在使用配置文件，则此处传递的任何参数都将覆盖配置文件。以下是所有支持的选项列表：
 
+<<<<<<< HEAD
 ```
 -c, --config <filename>     使用此配置文件
 														（如果使用参数但未指定值，则默认为 rollup.config.js）
@@ -472,6 +473,9 @@ export default {
 --watch.onStart <cmd>       在 "START" 事件上运行的 Shell 命令
 --watch.skipWrite           在监视时不要将文件写入磁盘
 ```
+=======
+<<< ../../cli/help.md#options{text}
+>>>>>>> fe42b2d7ea3154fbfb23e68a500db55d5f8e2957
 
 以下标志仅通过命令行界面可用。所有其他标志都对应并覆盖其配置文件等效项，请参阅[选项大列表](../configuration-options/index.md)获取详细信息。
 
