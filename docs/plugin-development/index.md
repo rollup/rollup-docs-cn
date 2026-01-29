@@ -337,30 +337,31 @@ flowchart TB
 
 |  |  |
 | --: | :-- |
-| 类型： | `(id: string) => LoadResult` |
+| 类型： | `(id: string, options: Options) => LoadResult` |
 | 类别： | async, first |
 | 上一个钩子： | 已解析加载的 id 的 [`resolveId`](#resolveid) 或 [`resolveDynamicImport`](#resolvedynamicimport)。此外，此钩子可以通过调用 [`this.load`](#this-load) 来从插件钩子中的任何位置触发预加载与 id 对应的模块 |
 | 下一个钩子： | 如果未使用缓存，或者没有具有相同 `code` 的缓存副本，则为 [`transform`](#transform)，否则为 [`shouldTransformCachedModule`](#shouldtransformcachedmodule) |
 
 ```typescript
+type Options = {
+	attributes: Record<string, string>;
+};
+
 type LoadResult = string | null | SourceDescription;
 
 interface SourceDescription {
 	code: string;
 	map?: string | SourceMap;
 	ast?: ESTree.Program;
-	attributes?: { [key: string]: string } | null;
 	meta?: { [plugin: string]: any } | null;
 	moduleSideEffects?: boolean | 'no-treeshake' | null;
 	syntheticNamedExports?: boolean | string | null;
 }
 ```
 
-定义一个自定义加载器。返回 `null` 将推迟到其他 `load` 函数（最终是从文件系统加载的默认行为）。为了防止在某些情况下（例如，此钩子已经使用 [`this.parse`](#this-parse) 生成了 AST）产生额外的解析开销，此钩子可以选择返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个标准的 ESTree AST，每个节点都有 `start` 和 `end` 属性。如果转换不移动代码，则可以通过将 `map` 设置为 `null` 来保留现有的源映射。否则，你可能需要生成源映射。请参阅 [源代码转换](#source-code-transformations) 部分。
+定义一个自定义加载器。`options.attributes` 包含导入此模块时使用的导入属性，由第一个解析此模块的 `resolveId` 钩子或第一个导入中存在的属性确定。返回 `null` 将推迟到其他 `load` 函数（最终是从文件系统加载的默认行为）。为了防止在某些情况下（例如，此钩子已经使用 [`this.parse`](#this-parse) 生成了 AST）产生额外的解析开销，此钩子可以选择返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个标准的 ESTree AST，每个节点都有 `start` 和 `end` 属性。如果转换不移动代码，则可以通过将 `map` 设置为 `null` 来保留现有的源映射。否则，你可能需要生成源映射。请参阅 [源代码转换](#source-code-transformations) 部分。
 
 如果 `moduleSideEffects` 返回 `false`，并且没有其他模块从该模块导入任何内容，则即使该模块具有副作用，该模块也不会包含在产物中。如果返回 `true`，则 Rollup 将使用其默认算法包含模块中具有副作用的所有语句（例如修改全局或导出变量）。如果返回 `"no-treeshake"`，则将关闭此模块的除屑优化，并且即使该模块为空，也将在生成的块之一中包含它。如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由第一个解析此模块的 `resolveId` 钩子，[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `true` 确定。`transform` 钩子可以覆盖此设置。
-
-`attributes` 包括导入此模块时使用的导入属性。目前，它们不会影响产物模块的呈现，而是用于文档目的。如果返回 `null` 或省略标志，则 `attributes` 将由第一个解析此模块的 `resolveId` 钩子或此模块的第一个导入中存在的断言确定。`transform` 钩子可以覆盖此设置。
 
 有关 `syntheticNamedExports` 选项的影响，请参见 [合成命名导出](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将由第一个解析此模块的 `resolveId` 钩子确定，或者最终默认为 `false`。`transform` 钩子可以覆盖此设置。
 
@@ -470,7 +471,10 @@ function plugin2() {
 type ResolveDynamicImportHook = (
 	specifier: string | AstNode,
 	importer: string,
-	options: { attributes: Record<string, string> }
+	options: {
+		attributes: Record<string, string>;
+		importerAttributes: Record<string, string>;
+	}
 ) => ResolveIdResult;
 ```
 
@@ -483,6 +487,8 @@ type ResolveDynamicImportHook = (
 为动态导入定义自定义解析器。返回 `false` 表示应将导入保留，不要传递给其他解析器，从而使其成为外部导入。与 [`resolveId`](#resolveid) 钩子类似，你还可以返回一个对象，将导入解析为不同的 id，同时将其标记为外部导入。
 
 `attributes` 告诉你导入中存在哪些导入属性。即 `import("foo", {assert: {type: "json"}})` 将传递 `attributes: {type: "json"}`。
+
+`importerAttributes` 表示导入模块的导入属性。
 
 如果动态导入作为字符串参数传递，则从此钩子返回的字符串将被解释为现有模块 id，而返回 `null` 将推迟到其他解析器，最终到达 `resolveId`。
 
@@ -508,6 +514,7 @@ type ResolveIdHook = (
 	source: string,
 	importer: string | undefined,
 	options: {
+		importerAttributes: Record<string, string> | undefined;
 		attributes: Record<string, string>;
 		custom?: { [plugin: string]: any };
 		isEntry: boolean;
@@ -536,6 +543,8 @@ import { foo } from '../bar.js';
 这个 source就是 `"../bar.js"`.
 
 `importer` 是导入模块的解析完全后的 id。在解析入口点时，`importer` 通常为 `undefined`。这里的一个例外是通过 [`this.emitFile`](#this-emitfile) 生成的入口点，这里可以提供一个 `importer` 参数。
+
+`importerAttributes` 是导入模块的导入属性。在解析入口点时，`importerAttributes` 通常为 `undefined`。
 
 对于这些情况，`isEntry` 选项将告诉你我们正在解析用户定义的入口点、已产出的块，还是是否为 [`this.resolve`](#this-resolve) 上下文函数提供了 `isEntry` 参数。
 
@@ -667,6 +676,7 @@ function externalizeDependencyPlugin() {
 ```typescript
 type ShouldTransformCachedModuleHook = (options: {
 	ast: AstNode;
+	attributes: Record<string, string>;
 	code: string;
 	id: string;
 	meta: { [plugin: string]: any };
@@ -685,26 +695,29 @@ type ShouldTransformCachedModuleHook = (options: {
 
 |  |  |
 | --: | :-- |
-| 类型: | `(code: string, id: string) => TransformResult` |
+| 类型: | `(code: string, id: string, options: Options) => TransformResult` |
 | 类别: | async, sequential |
 | 上一个钩子: | [`load`](#load)，用于加载当前处理的文件。如果使用缓存并且该模块有一个缓存副本，则为 [`shouldTransformCachedModule`](#shouldtransformcachedmodule)，如果插件为该钩子返回了 `true` |
 | 下一个钩子: | [`moduleParsed`](#moduleparsed)，一旦文件已被处理和解析 |
 
 ```typescript
+type Options = {
+	attributes: Record<string, string>;
+};
+
 type TransformResult = string | null | Partial<SourceDescription>;
 
 interface SourceDescription {
 	code: string;
 	map?: string | SourceMap;
 	ast?: ESTree.Program;
-	attributes?: { [key: string]: string } | null;
 	meta?: { [plugin: string]: any } | null;
 	moduleSideEffects?: boolean | 'no-treeshake' | null;
 	syntheticNamedExports?: boolean | string | null;
 }
 ```
 
-可以被用来转换单个模块。为了防止额外的解析开销，例如，这个钩子已经使用 [`this.parse`](#this-parse) 生成了一个 AST，这个钩子可以选择返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个标准的 ESTree AST，每个节点都有 `start` 和 `end` 属性。如果转换不移动代码，你可以通过将 `map` 设置为 `null` 来保留现有的 sourcemaps。否则，你可能需要生成源映射。请参阅 [源代码转换](#source-code-transformations) 部分。
+可以被用来转换单个模块。`options.attributes` 包含导入此模块时使用的导入属性，由第一个解析此模块的 `resolveId` 钩子或第一个导入中存在的属性确定。为了防止额外的解析开销，例如，这个钩子已经使用 [`this.parse`](#this-parse) 生成了一个 AST，这个钩子可以选择返回一个 `{ code, ast, map }` 对象。`ast` 必须是一个标准的 ESTree AST，每个节点都有 `start` 和 `end` 属性。如果转换不移动代码，你可以通过将 `map` 设置为 `null` 来保留现有的 sourcemaps。否则，你可能需要生成源映射。请参阅 [源代码转换](#source-code-transformations) 部分。
 
 请注意，在观察模式下或明确使用缓存时，当重新构建时，此钩子的结果会被缓存，仅当模块的 `code` 发生更改或上次触发此钩子时添加了通过 `this.addWatchFile` 或 `this.emitFile` 添加的文件时，才会再次触发该模块的钩子。
 
@@ -719,8 +732,6 @@ interface SourceDescription {
 如果返回 `"no-treeshake"`，则将关闭此模块的除屑优化，并且即使为空，它也将包含在生成的块之一中。
 
 如果返回 `null` 或省略标志，则 `moduleSideEffects` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子、[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `true` 确定。
-
-`attributes` 包括了导入的属性，这些属性在导入此模块时使用。目前，它们不会影响产物模块的呈现，而是用于文档目的。如果返回 `null` 或省略标志，则 `attributes` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子或此模块的第一个导入中存在的属性确定。
 
 有关 `syntheticNamedExports` 选项的影响，请参见 [合成命名导出](#synthetic-named-exports)。如果返回 `null` 或省略标志，则 `syntheticNamedExports` 将由加载此模块的 `load` 钩子、解析此模块的第一个 `resolveId` 钩子、[`treeshake.moduleSideEffects`](../configuration-options/index.md#treeshake-modulesideeffects) 选项或最终默认为 `false` 确定。
 
@@ -1098,6 +1109,7 @@ type renderDynamicImportHook = (options: {
 	chunk: PreRenderedChunkWithFileName;
 	targetChunk: PreRenderedChunkWithFileName;
 	getTargetChunkImports: () => DynamicImportTargetChunk[] | null;
+	targetModuleAttributes: Record<string, string>;
 }) => { left: string; right: string } | null;
 
 type PreRenderedChunkWithFileName = PreRenderedChunk & { fileName: string };
@@ -1124,7 +1136,7 @@ interface ImportedExternalChunk {
 
 这个钩子函数提供了对动态导入渲染的精细控制，它通过替换导入表达式参数左侧（`import(`）和右（`)`）侧的代码实现这一功能。如果返回 `null`，则会降级到其他同类型的钩子函数，最终渲染出特定格式的默认值。
 
-`format` 是渲染的输出格式，`moduleId` 是进行动态导入的模块的 id。如果导入可以被解析为内部或外部 id，那么 `targetModuleId` 将被设置为这个 id，否则它将是 `null`。如果动态导入包含了一个非字符串表达式，这个表达式被 [`resolveDynamicImport`](#resolvedynamicimport) 钩子函数解析为一个替换字符串，那么 `customResolution` 将包含那个字符串。`chunk` 和 `targetChunk` 分别提供了执行导入的块和被导入的块（目标块）的额外信息。`getTargetChunkImports` 返回一个数组，包含了被目标块导入的块。如果目标块未解析或是外部的，`targetChunk` 将为 null，`getTargetChunkImports` 也将返回 null。
+`format` 是渲染的输出格式，`moduleId` 是进行动态导入的模块的 id。如果导入可以被解析为内部或外部 id，那么 `targetModuleId` 将被设置为这个 id，`targetModuleAttributes` 将被设置为应用于此解析模块的导入属性，否则 `targetModuleId` 将是 `null`，`targetModuleAttributes` 将是一个空对象。如果动态导入包含了一个非字符串表达式，这个表达式被 [`resolveDynamicImport`](#resolvedynamicimport) 钩子函数解析为一个替换字符串，那么 `customResolution` 将包含那个字符串。`chunk` 和 `targetChunk` 分别提供了执行导入的块和被导入的块（目标块）的额外信息。`getTargetChunkImports` 返回一个数组，包含了被目标块导入的块。如果目标块未解析或是外部的，`targetChunk` 将为 null，`getTargetChunkImports` 也将返回 null。
 
 `PreRenderedChunkWithFileName` 类型与 `PreRenderedChunk` 类型相同，只是多了一个 `fileName` 字段，这个字段包含了块的路径和文件名。如果块文件名格式包含了哈希，`fileName` 可能会包含一个占位符。
 
@@ -1258,6 +1270,7 @@ import('./lib.js');
 
 ```typescript
 type ResolveFileUrlHook = (options: {
+	attributes: Record<string, string>;
 	chunkId: string;
 	fileName: string;
 	format: InternalModuleFormat;
@@ -1271,6 +1284,7 @@ type ResolveFileUrlHook = (options: {
 
 为此，除了 CommonJS 和 UMD 之外的所有格式都假定它们在浏览器环境中运行，其中 `URL` 和 `document` 可用。如果失败或要生成更优化的代码，则可以使用此钩子自定义此行为。为此，可以使用以下信息：
 
+- `attributes`：引用此文件的模块的导入属性。
 - `chunkId`：引用此文件的块的 ID。如果块文件名包含哈希，则此 ID 将包含占位符。如果最终出现在生成的代码中，Rollup 将使用实际文件名替换此占位符。
 - `fileName`：产出文件的路径和文件名，相对于 `output.dir`，没有前导的 `./`。同样，如果这是一个将在其名称中具有哈希的块，则它将包含占位符。
 - `format`：呈现的输出格式。
@@ -1298,7 +1312,7 @@ function resolveToDocumentPlugin() {
 
 |  |  |
 | --: | :-- |
-| 类型: | `(property: string \| null, {chunkId: string, moduleId: string, format: string}) => string \| null` |
+| 类型: | `(property: string \| null, {attributes: Record<string, string>, chunkId: string, moduleId: string, format: string}) => string \| null` |
 | 类别: | sync, first |
 | 上一个钩子: | 当前块中每个动态导入表达式的 [`renderDynamicImport`](#renderdynamicimport) |
 | 下一个钩子: | 当前块的 [`banner`](#banner), [`footer`](#footer), [`intro`](#intro), [`outro`](#outro) 并行处理 |
@@ -1307,7 +1321,7 @@ function resolveToDocumentPlugin() {
 
 默认情况下，对于除 ES 模块以外的格式，Rollup 将 `import.meta.url` 替换为尝试匹配此行为的代码，返回当前块的动态 URL。请注意，除 CommonJS 和 UMD 之外的所有格式都假定它们在浏览器环境中运行，其中`URL`和`document`可用。对于其他属性，`import.meta.someProperty`
 
-这种行为可以通过这个钩子进行更改，包括 ES 模块。对于每个 `import.meta<.someProperty>` 的出现，都会调用这个钩子，并传入属性的名称或者如果直接访问 `import.meta` 则为 `null`。例如，以下代码将使用原始模块相对路径到当前工作目录的解析 `import.meta.url`，并在运行时再次将此路径解析为当前文档的基本 URL：
+这种行为可以通过这个钩子进行更改，包括 ES 模块。对于每个 `import.meta<.someProperty>` 的出现，都会调用这个钩子，并传入属性的名称或者如果直接访问 `import.meta` 则为 `null`。`attributes` 参数包含模块的导入属性。例如，以下代码将使用原始模块相对路径到当前工作目录的解析 `import.meta.url`，并在运行时再次将此路径解析为当前文档的基本 URL：
 
 ```js twoslash
 // ---cut-start---
@@ -1906,7 +1920,8 @@ type Resolve = (
 	options?: {
 		skipSelf?: boolean;
 		isEntry?: boolean;
-		attributes?: { [key: string]: string };
+		importerAttributes?: Record<string, string>;
+		attributes?: Record<string, string>;
 		custom?: { [plugin: string]: any };
 	}
 ) => Promise<ResolvedId | null>;
@@ -1924,9 +1939,11 @@ type Resolve = (
 
 你还可以通过 `custom` 选项传递插件特定选项的对象，有关详细信息，请参见 [自定义解析器选项](#custom-resolver-options)。
 
-你在这里传递的 `isEntry` 值将传递给处理此调用的 [`resolveId`](#resolveid) 钩子，否则如果有导入器，则传递 `false`，如果没有，则传递 `true`。
+你在这里传递的 `isEntry` 值将传递给处理此调用的 [`resolveId`](#resolveid) 钩子，否则如果有导入模块，则传递 `false`，如果没有，则传递 `true`。
 
-如果为 `assertions` 传递对象，则它将模拟使用断言解析导入，例如 `assertions: {type: "json"}` 模拟解析 `import "foo" assert {type: "json"}`。这将传递给处理此调用的任何 [`resolveId`](#resolveid) 钩子，并最终成为返回的对象的一部分。
+如果传递 `importerAttributes` 对象，它将假设导入模块的导入属性是该对象中的属性。
+
+如果为 `attributes` 传递对象，则它将模拟使用断言解析导入，例如 `attributes: {type: "json"}` 模拟解析 `import "foo" assert {type: "json"}`。这将传递给处理此调用的任何 [`resolveId`](#resolveid) 钩子，并最终成为返回的对象的一部分。
 
 在从 `resolveId` 钩子调用此函数时，你应始终检查是否有意义将 `isEntry`、`custom` 和 `assertions` 选项传递下去。
 
@@ -2225,6 +2242,89 @@ console.log(__synthetic);
 ```
 
 当用作入口点时，只有显式导出将被公开。对于 `syntheticNamedExports` 的字符串值，即使在示例中的合成回退导出 `__synthetic` 也不会被公开。但是，如果值为 `true`，则默认导出将被公开。这是 `syntheticNamedExports: true` 和 `syntheticNamedExports: 'default'` 之间唯一的显着区别。
+
+## 导入属性 {#import-attributes}
+
+ECMAScript 标准允许在导入上指定 [导入属性](https://github.com/tc39/proposal-import-attributes) 以自定义模块的加载方式。例如：
+
+```js
+import data from './data.json' with { type: 'json' };
+import('./utils.js').then(utils => utils.process(data));
+```
+
+Rollup 在插件钩子中提供对这些属性的访问，允许插件根据导入属性以不同的方式处理模块。
+
+### 在插件中访问导入属性 {#accessing-import-attributes-in-plugins}
+
+当导入带有属性的模块时，这些属性会在多个钩子中提供给插件：
+
+- 在 [`resolveId`](#resolveid) 钩子中，`options.attributes` 包含导入属性，`options.importerAttributes` 包含导入模块的属性。
+- 在 [`load`](#load) 钩子中，`options.attributes` 包含首次导入模块时使用的导入属性。
+- 在 [`transform`](#transform) 钩子中，`options.attributes` 包含导入属性。
+- 在 [`shouldTransformCachedModule`](#shouldtransformcachedmodule) 钩子中，`attributes` 字段包含导入属性。
+- 在 [`resolveDynamicImport`](#resolvedynamicimport) 钩子中，`options.attributes` 包含动态导入的导入属性，`options.importerAttributes` 包含导入模块的属性。
+- 在 [`renderDynamicImport`](#renderdynamicimport) 钩子中，`targetModuleAttributes` 包含已解析动态导入目标的导入属性。
+- 在 [`resolveFileUrl`](#resolvefileurl) 钩子中，`options.attributes` 包含引用此文件的模块的导入属性。
+- 在 [`resolveImportMeta`](#resolveimportmeta) 钩子中，`options.attributes` 包含模块的导入属性。
+- 在 [`moduleParsed`](#moduleparsed) 钩子中，`moduleInfo.attributes` 包含导入属性。
+
+### 使用导入属性自定义模块处理 {#using-import-attributes-to-customize-module-handling}
+
+一个常见的用例是根据导入属性以不同的方式处理 JSON 或样式表等资源：
+
+```js twoslash
+import { resolve, dirname } from 'node:path';
+import { readFile } from 'node:fs/promises';
+
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
+function customAssetsPlugin() {
+	return {
+		name: 'custom-assets',
+		resolveId(source, importer, options) {
+			if (options.attributes.type === 'json') {
+				return resolve(dirname(importer), source);
+			}
+		},
+		async load(id, options) {
+			if (options.attributes.type === 'json') {
+				const content = await readFile(id, 'utf-8');
+				return `export default ${content}`;
+			}
+			return null;
+		}
+	};
+}
+```
+
+### Passing attributes when resolving modules
+
+你可以在通过 [`this.resolve`](#this-resolve) 手动解析模块时传递 `attributes` 参数，以模拟解析带有特定属性的导入：
+
+```js twoslash
+// ---cut-start---
+/** @returns {import('rollup').Plugin} */
+// ---cut-end---
+function proxyPlugin() {
+	return {
+		name: 'proxy',
+		async resolveId(source, importer, options) {
+			// 检查如何使用特定属性解析
+			const jsonResolution = await this.resolve(source, importer, {
+				...options,
+				attributes: { type: 'json' }
+			});
+
+			if (jsonResolution && !jsonResolution.external) {
+				// 特殊处理 JSON 导入
+				return source + '?treated-as-json';
+			}
+			return null;
+		}
+	};
+}
+```
 
 ## 插件间通信 {#inter-plugin-communication}
 
