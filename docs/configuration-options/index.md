@@ -822,7 +822,22 @@ interface PreRenderedChunk {
 }
 ```
 
+<<<<<<< HEAD
 该选项用于对代码分割中产生的 chunk 自定义命名，其值也可以是一个函数，对每个 chunk 调用以返回匹配模式。这种模式支持以下的占位符：
+=======
+The `PreRenderedChunk` type provides information about the chunk being generated:
+
+- `exports`: The list of exported bindings from the chunk.
+- `facadeModuleId`: The module id of the entry point this chunk is a facade for, or `null` if this is not a facade.
+- `isDynamicEntry`: `true` if this chunk is the target of dynamic `import()` expressions.
+- `isEntry`: `true` if this chunk is an entry point (either from the `input` option or emitted via `this.emitFile`).
+- `isImplicitEntry`: `true` if this chunk was emitted with [`implicitlyLoadedAfterOneOf`](../plugin-development/index.md#this-emitfile) set, indicating it will only be loaded as an entry point if at least one of the specified modules have already been loaded.
+- `moduleIds`: The list of module ids included in this chunk.
+- `name`: The name of this chunk used for the `[name]` placeholder.
+- `type`: Always `'chunk'`.
+
+The pattern to use for naming shared chunks created when code-splitting, or a function that is called per chunk to return such a pattern. Patterns support the following placeholders:
+>>>>>>> 74559c007feee669ef9c5978c0c713e496122f6f
 
 - `[format]`：输出（output）选项中定义的格式（format），例如 `es` 或 `cjs`。
 - `[hash]`：仅基于最终生成的 chunk 内容的哈希值，其中包括 [`renderChunk`](../plugin-development/index.md#renderchunk) 中的转换部分和其依赖文件哈希值。你也可以通过例如 `[hash:10]` 设置一个特定的哈希值长度。默认情况下，它会生成一个 base-64 的哈希值。如果你需要减少字符集的大小，可以查看 [`output.hashCharacters`](#output-hashcharacters)。
@@ -2821,11 +2836,19 @@ const element = angular.element;
 | CLI： | `--experimentalMinChunkSize <size>` |
 | 默认: | `1`                                 |
 
+<<<<<<< HEAD
 该选项用于为代码分割设置一个以字节为单位的最小 chunk 大小。当该值设置为默认值 `1` 时，Rollup 将尝试将不包含代码（仅包含导入和重新导出）的块合并到其他 chunk 中。仅当合并不会改变任何入口加载时执行的副作用时，才会执行合并。对于值为 `1` 的情况，仅允许执行不增加任何入口加载的代码量的合并。
+=======
+Set a minimal chunk size target in Byte for code-splitting setups. When this value is set to the default of `1`, Rollup will try to merge chunks that do not contain code except imports and reexports into other chunks. A merge will only be performed if it does not change what side effects are executed when any entry is loaded. For the value of `1`, only merges are permitted that do not increase the amount of code loaded for any entry.
+>>>>>>> 74559c007feee669ef9c5978c0c713e496122f6f
 
 较大的值将尝试将低于限制的任何 chunk 合并到其他 chunk 中。在这种情况下，可能会加载一些不必要的代码，不过也是可以接受的。同时该算法进行合并时总是尽可能地减少不必要的代码。
 
+<<<<<<< HEAD
 不幸的是，由于块的渲染插件（如最小化压缩工具）运行之前，chunk 大小是在测量之前进行的，这意味着您应该给出足够高的限额。在计算大小时，它也将考虑对顶层语句的除屑优化。
+=======
+Unfortunately, due to the way chunking works, chunk size is measured before any chunk rendering plugins like minifiers ran, which means you should use a high enough limit to take this into account. It will take tree-shaking of top-level statements into account when calculating the size.
+>>>>>>> 74559c007feee669ef9c5978c0c713e496122f6f
 
 ### perf {#perf}
 
