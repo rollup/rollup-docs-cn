@@ -822,6 +822,17 @@ interface PreRenderedChunk {
 }
 ```
 
+`PreRenderedChunk` 类型包含了 chunk 生成过程中的相关信息：
+
+- `exports`: chunk 导出的所有成员列表
+- `facadeModuleId`: 当 chunk 作为入口模块的外观模块（facade）时，返回该入口模块的 id；否则为 `null`
+- `isDynamicEntry`: 标识该 chunk 是否为动态导入 `import()` 的目标产物
+- `isEntry`: 标识该 chunk 是否为入口 chunk（通过 `input` 配置项指定，或通过 `this.emitFile` 方法生成）
+- `isImplicitEntry`: 标识该 chunk 是否设置了 [`implicitlyLoadedAfterOneOf`](../plugin-development/index.md#this-emitfile)，即该 chunk 仅在指定的某个模块加载后才会作为入口加载
+- `moduleIds`: chunk 内包含的所有模块 id 列表
+- `name`: chunk 的名称，可在输出文件名的 `[name]` 占位符中使用
+- `type`: 类型标识，固定为 `'chunk'`
+
 该选项用于对代码分割中产生的 chunk 自定义命名，其值也可以是一个函数，对每个 chunk 调用以返回匹配模式。这种模式支持以下的占位符：
 
 - `[format]`：输出（output）选项中定义的格式（format），例如 `es` 或 `cjs`。
