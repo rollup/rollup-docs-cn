@@ -1,5 +1,21 @@
 {
-  "decisions": {},
+  "decisions": {
+    "1112706|mocha>diff": {
+      "decision": "ignore",
+      "madeAt": 1772773494226,
+      "expiresAt": 1775365485778
+    },
+    "1113686|mocha>diff>serialize-javascript": {
+      "decision": "ignore",
+      "madeAt": 1772778003517,
+      "expiresAt": 1775369996393
+    },
+    "1113686|@rollup/plugin-terser>serialize-javascript": {
+      "decision": "ignore",
+      "madeAt": 1772778003517,
+      "expiresAt": 1775369996393
+    }
+  },
   "rules": {},
   "version": 1
 }
