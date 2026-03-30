@@ -58,7 +58,13 @@ rollup -i src/main.js ... -e foo,bar,baz
 
 当创建 `iife` 或 `umd` 格式的 bundle 时，你需要通过 [`output.globals`](#output-globals) 选项提供全局变量名，以替换掉外部引入。
 
+<<<<<<< HEAD
 如果一个相对引入，即以 `./` 或 `../` 开头，被标记为 `external`，rollup 将在内部将该模块 ID 解析为绝对路径，以便引入的不同外部模块可以合并。当写入生成的 bundle 后，这些引入模块将再次被转换为相对引入。例如：
+=======
+Note that [source phase imports](../es-module-syntax/index.md#source-phase-import) (`import source x from 'y'`) are required to be external. Rollup will raise an error if a source phase import resolves to a module that is not external.
+
+If a relative import, i.e. starting with `./` or `../`, is marked as "external", rollup will internally resolve the id to an absolute file system location so that different imports of the external module can be merged. When the resulting bundle is written, the import will again be converted to a relative import. Example:
+>>>>>>> ae871d762f6bbeb4320d28fe179211168f27a434
 
 ```js
 // 输入
