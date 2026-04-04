@@ -66,23 +66,19 @@ import('./modules.js').then(({ default: DefaultExport, NamedExport }) => {
 
 这对于代码分解应用程序和动态使用模块非常有用。
 
-<<<<<<< HEAD
-## 导出 {#exporting}
-=======
-### Source Phase Import
+### Source Phase 导入 {#source-phase-import}
 
-Import the Source Phase representation of a module without executing it, using the [Source Phase Imports Proposal](https://github.com/tc39/proposal-source-phase-imports).
+使用 [Source Phase Imports 提案](https://github.com/tc39/proposal-source-phase-imports) 导入模块的 Source Phase 表示，而不执行它。
 
-This is useful for importing compiled WebAssembly modules through the module system without relying on the fetch API:
+这对于通过模块系统导入编译好的 WebAssembly 模块非常有用，而无需依赖 fetch API：
 
 ```js
 import source myModule from './module.wasm';
 ```
 
-Source phase imports must be [external](../configuration-options/index.md#external) — Rollup will raise an error if a source phase import resolves to a non-external module. They are preserved as `import source` declarations in `es` output format. Other output formats (`cjs`, `amd`, `iife`, `umd`, `system`) do not support source phase imports and will raise an error if one is present.
+Source phase 导入必须是[外部的](../configuration-options/index.md#external) —— 如果 source phase 导入解析到非外部模块，Rollup 将抛出错误。在 `es` 输出格式中，它们会被保留为 `import source` 声明。其他输出格式（`cjs`、`amd`、`iife`、`umd`、`system`）不支持 source phase 导入，如果存在则会抛出错误。
 
-## Exporting
->>>>>>> ae871d762f6bbeb4320d28fe179211168f27a434
+## 导出 {#exporting}
 
 ### 具名导出 {#named-exports}
 
