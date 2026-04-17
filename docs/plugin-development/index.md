@@ -1190,7 +1190,11 @@ function retainImportExpressionPlugin() {
 }
 ```
 
+<<<<<<< HEAD
 当进行动态导入时，浏览器会获取并解析请求的模块。如果目标模块被发现有导入，并且这些导入还未被获取，浏览器需要进行更多的网络请求才能执行该模块。这将导致额外一轮网络往返的延迟。对于静态模块，Rollup 会提升转移依赖（[`hoistTransitiveDependencies`](../configuration-options/index.md#output-hoisttransitiveimports)），以防止这种情况发生。然而，目前还没有自动为动态导入执行依赖提升的操作。
+=======
+When a dynamic import occurs, the browser will fetch the requested module and parse it. If the target module is discovered to have imports and they have not already been fetched, the browser must perform more network requests before it can execute the module. This will incur the latency of an additional network round trip. For static modules, Rollup will hoist transitive dependencies ([`hoistTransitiveDependencies`](../configuration-options/index.md#output-hoisttransitiveimports)) to prevent this from occurring. However, dependency hoisting is currently not automatically performed for dynamic imports.
+>>>>>>> 1fa79d0150e86c224c8c77ee37e97aab420689bd
 
 以下的插件可以实现类似于动态导入预加载的功能：
 
