@@ -544,7 +544,11 @@ import { foo } from '../bar.js';
 
 `importer` 是导入模块的解析完全后的 id。在解析入口点时，`importer` 通常为 `undefined`。这里的一个例外是通过 [`this.emitFile`](#this-emitfile) 生成的入口点，这里可以提供一个 `importer` 参数。
 
+<<<<<<< HEAD
 `importerAttributes` 是导入模块的导入属性。在解析入口点时，`importerAttributes` 通常为 `undefined`。
+=======
+The `importerAttributes` are the import attributes of the importing module. When resolving entry points, `importerAttributes` will usually be `undefined`.
+>>>>>>> 87222dd3e454875ea086990febd02d9a3b3a8d82
 
 对于这些情况，`isEntry` 选项将告诉你我们正在解析用户定义的入口点、已产出的块，还是是否为 [`this.resolve`](#this-resolve) 上下文函数提供了 `isEntry` 参数。
 
