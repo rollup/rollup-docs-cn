@@ -1,5 +1,22 @@
 # rollup changelog
 
+## 4.60.4
+
+_2026-05-14_
+
+### Bug Fixes
+
+- Improve stability of chunk hashes (#6362)
+
+### Pull Requests
+
+- [#6362](https://github.com/rollup/rollup/pull/6362): fix: stabilize chunk assignment across parallel file reads (@sonukapoor, @Sonu Kapoor, @TrickyPi, @lukastaegert)
+- [#6370](https://github.com/rollup/rollup/pull/6370): fix(deps): update minor/patch updates (@renovate[bot])
+- [#6371](https://github.com/rollup/rollup/pull/6371): chore(deps): update dependency lru-cache to v11 (@renovate[bot], @lukastaegert)
+- [#6372](https://github.com/rollup/rollup/pull/6372): chore(deps): update react monorepo to v19 (major) (@renovate[bot])
+- [#6373](https://github.com/rollup/rollup/pull/6373): chore(deps): lock file maintenance (@renovate[bot], @lukastaegert)
+- [#6375](https://github.com/rollup/rollup/pull/6375): Resolve vulnerabilities (@lukastaegert)
+
 ## 4.60.3
 
 _2026-05-04_
