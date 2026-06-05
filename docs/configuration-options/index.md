@@ -2594,7 +2594,33 @@ styled()(); // 去除
 styled().div(); // 去除
 ```
 
+<<<<<<< HEAD
 #### treeshake.moduleSideEffects {#treeshake-modulesideeffects}
+=======
+::: warning
+
+If you pass arguments to such a pure function, those arguments are still checked for direct side effects like mutating a variable or calling a global function, in which case the call to the pure function is retained. But be aware that we do not check if those arguments are called and whether such a call could have side effects.
+
+```js
+// rollup.config.js
+export default {
+	treeshake: {
+		manualPureFunctions: ['lib.nested']
+	}
+	// ...
+};
+
+import lib from 'lib';
+
+lib.nested(console.log('effect')); // retained
+lib.nested(() => console.log('effect')); // will be removed
+lib.nested.forEach(() => console.log('effect')); // will also be removed
+```
+
+:::
+
+#### treeshake.moduleSideEffects
+>>>>>>> f2f58c4afe4b5879063612791f12c312c6ac56f5
 
 |  |  |
 | --: | :-- |
