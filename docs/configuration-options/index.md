@@ -1813,7 +1813,11 @@ export default {
 | --: | :-- |
 | 类型： | `boolean \| (relativeSourcePath: string, sourcemapPath: string) => boolean` |
 
+<<<<<<< HEAD
 该选项决定是否忽略 sourcemap 中列出的源文件，用于填充 [`x_google_ignoreList` source map 扩展](https://developer.chrome.com/articles/x-google-ignore-list/)。`relativeSourcePath` 是生成的 `.map` 文件到相应源文件的相对路径，而 `sourcemapPath` 是生成的 sourcemap 文件的绝对路径。
+=======
+A predicate to decide whether or not to ignore-list source files in a sourcemap, used to populate the [`x_google_ignoreList` source map extension](https://developer.chrome.com/docs/devtools/x-google-ignore-list). `relativeSourcePath` is a relative path from the generated `.map` file to the corresponding source file while `sourcemapPath` is the fully resolved path of the generated sourcemap file.
+>>>>>>> ff0a94b908e92745136bbd34ddebf7e1bbae1f59
 
 ```js twoslash
 import path from 'node:path';
@@ -2594,7 +2598,33 @@ styled()(); // 去除
 styled().div(); // 去除
 ```
 
+<<<<<<< HEAD
 #### treeshake.moduleSideEffects {#treeshake-modulesideeffects}
+=======
+::: warning
+
+If you pass arguments to such a pure function, those arguments are still checked for direct side effects like mutating a variable or calling a global function, in which case the call to the pure function is retained. But be aware that we do not check if those arguments are called and whether such a call could have side effects.
+
+```js
+// rollup.config.js
+export default {
+	treeshake: {
+		manualPureFunctions: ['lib.nested']
+	}
+	// ...
+};
+
+import lib from 'lib';
+
+lib.nested(console.log('effect')); // retained
+lib.nested(() => console.log('effect')); // will be removed
+lib.nested.forEach(() => console.log('effect')); // will also be removed
+```
+
+:::
+
+#### treeshake.moduleSideEffects
+>>>>>>> ff0a94b908e92745136bbd34ddebf7e1bbae1f59
 
 |  |  |
 | --: | :-- |

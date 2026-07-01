@@ -61,17 +61,18 @@
       "description": "this restriction should not be updated by renovate."
     },
     {
-      "matchManagers": [
-        "rust-toolchain"
+      "matchDatasources": [
+        "rust-version"
       ],
       "enabled": false,
-      "description": "rust-toolchain.toml is managed manually."
+      "description": "Rust toolchain is managed manually."
     },
     {
       "matchPackageNames": [
         "@inquirer/prompts",
         "@rollup/plugin-terser",
         "@types/node",
+        "concurrently",
         "react",
         "react-dom",
         "typescript",

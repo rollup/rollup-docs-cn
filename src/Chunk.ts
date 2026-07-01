@@ -653,18 +653,15 @@ export default class Chunk {
 		if (this.renderedChunkInfo) {
 			return this.renderedChunkInfo;
 		}
+		const renderedDependencies = this.getRenderedDependencies();
 		return (this.renderedChunkInfo = {
 			...this.getPreRenderedChunkInfo(),
 			dynamicImports: this.getDynamicDependencies().map(resolveFileName),
 			fileName: this.getFileName(),
 
 			implicitlyLoadedBefore: Array.from(this.implicitlyLoadedBefore, resolveFileName),
-			importedBindings: getImportedBindingsPerDependency(
-				this.getRenderedDependencies(),
-				resolveFileName
-			),
-
-			imports: Array.from(this.dependencies, resolveFileName),
+			importedBindings: getImportedBindingsPerDependency(renderedDependencies, resolveFileName),
+			imports: Array.from(renderedDependencies.keys(), resolveFileName),
 			modules: this.renderedModules,
 			referencedFiles: this.getReferencedFiles()
 		});
@@ -697,8 +694,8 @@ export default class Chunk {
 		// for static and dynamic entry points, add transitive dependencies to this
 		// chunk's dependencies to avoid loading latency
 		if (hoistTransitiveImports && !preserveModules && facadeModule !== null) {
-			for (const dep of dependencies) {
-				if (dep instanceof Chunk) this.inlineChunkDependencies(dep);
+			for (const dependency of dependencies) {
+				if (dependency instanceof Chunk) this.inlineChunkDependencies(dependency);
 			}
 		}
 	}
@@ -912,11 +909,11 @@ export default class Chunk {
 						if (!chunk || format !== 'es') {
 							continue;
 						}
-						const chunkDep = this.renderedDependencies!.get(chunk)!;
-						if (!chunkDep) {
+						const chunkDependency = this.renderedDependencies!.get(chunk)!;
+						if (!chunkDependency) {
 							continue;
 						}
-						const { imports, reexports } = chunkDep;
+						const { imports, reexports } = chunkDependency;
 						const importedByReexported = reexports?.find(
 							({ reexported }) => reexported === exportName
 						);
@@ -1249,6 +1246,20 @@ export default class Chunk {
 		for (const dependency of this.dependencies) {
 			const imports = importSpecifiers.get(dependency) || null;
 			const reexports = reexportSpecifiers.get(dependency) || null;
+			if (
+				imports === null &&
+				reexports === null &&
+				dependency instanceof ExternalChunk &&
+				!dependency.moduleSideEffects &&
+				!this.outputOptions.hoistTransitiveImports
+			) {
+				// A side-effect-free external dependency without imported or
+				// re-exported bindings can only be present because chunk assignment
+				// placed otherwise unrelated modules into this chunk. When transitive
+				// import hoisting is disabled, rendering it would emit a spurious
+				// side effect import, see https://github.com/rollup/rollup/issues/6111
+				continue;
+			}
 			const namedExportsMode =
 				dependency instanceof ExternalChunk || dependency.exportMode !== 'default';
 			const importPath = dependency.getImportPath(fileName);
@@ -1286,11 +1297,11 @@ export default class Chunk {
 	}
 
 	private inlineChunkDependencies(chunk: Chunk): void {
-		for (const dep of chunk.dependencies) {
-			if (this.dependencies.has(dep)) continue;
-			this.dependencies.add(dep);
-			if (dep instanceof Chunk) {
-				this.inlineChunkDependencies(dep);
+		for (const dependency of chunk.dependencies) {
+			if (this.dependencies.has(dependency)) continue;
+			this.dependencies.add(dependency);
+			if (dependency instanceof Chunk) {
+				this.inlineChunkDependencies(dependency);
 			}
 		}
 	}
