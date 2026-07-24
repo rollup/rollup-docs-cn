@@ -1813,7 +1813,7 @@ export default {
 | --: | :-- |
 | 类型： | `boolean \| (relativeSourcePath: string, sourcemapPath: string) => boolean` |
 
-该选项决定是否忽略 sourcemap 中列出的源文件，用于填充 [`x_google_ignoreList` source map 扩展](https://developer.chrome.com/articles/x-google-ignore-list/)。`relativeSourcePath` 是生成的 `.map` 文件到相应源文件的相对路径，而 `sourcemapPath` 是生成的 sourcemap 文件的绝对路径。
+该选项决定是否忽略 sourcemap 中列出的源文件，用于填充 [`x_google_ignoreList` source map 扩展](https://developer.chrome.com/docs/devtools/x-google-ignore-list)。`relativeSourcePath` 是生成的 `.map` 文件到相应源文件的相对路径，而 `sourcemapPath` 是生成的 sourcemap 文件的绝对路径。
 
 ```js twoslash
 import path from 'node:path';
@@ -2593,6 +2593,28 @@ styled?.div(); // 去除
 styled()(); // 去除
 styled().div(); // 去除
 ```
+
+::: warning
+
+如果向这类纯函数传入参数，Rollup 仍会检查这些参数是否有直接副作用，例如修改变量或调用全局函数；如果存在这类副作用，对纯函数的调用就会被保留。但请注意，Rollup 不会检查这些参数是否会被调用，也不会检查这样的调用是否可能产生副作用。
+
+```js
+// rollup.config.js
+export default {
+	treeshake: {
+		manualPureFunctions: ['lib.nested']
+	}
+	// ...
+};
+
+import lib from 'lib';
+
+lib.nested(console.log('effect')); // 保留
+lib.nested(() => console.log('effect')); // 将被移除
+lib.nested.forEach(() => console.log('effect')); // 也将被移除
+```
+
+:::
 
 #### treeshake.moduleSideEffects {#treeshake-modulesideeffects}
 
