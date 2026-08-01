@@ -2449,10 +2449,7 @@ interface TreeshakingOptions {
 }
 
 type ModuleSideEffectsOption =
-	| boolean
-	| 'no-external'
-	| string[]
-	| HasModuleSideEffects;
+	boolean | 'no-external' | string[] | HasModuleSideEffects;
 type HasModuleSideEffects = (id: string, external: boolean) => boolean;
 ```
 
@@ -2625,6 +2622,8 @@ lib.nested.forEach(() => console.log('effect')); // 也将被移除
 | 默认： | `true` |
 
 如果该选项的值为 `false`，则假定像改变全局变量或不执行检查就记录等行为一样，没有引入任何内容的模块和外部依赖没有其他副作用。对于外部依赖，该选项将影响未使用的引入：
+
+Rollup itself does not read a package's `sideEffects` field. When packages are resolved with [@rollup/plugin-node-resolve](https://github.com/rollup/plugins/tree/master/packages/node-resolve), the plugin can read `sideEffects` from `package.json` and set the per-module [`moduleSideEffects`](../plugin-development/index.md#resolveid) flag for modules in that package. You can achieve the same kind of package-aware behavior in Rollup core by making `treeshake.moduleSideEffects` a function. Be careful when setting this option to `false` globally, because it can remove setup modules, polyfills or styles that rely on import side effects.
 
 ```javascript
 // 输入文件
