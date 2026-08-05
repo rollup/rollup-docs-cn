@@ -2449,10 +2449,7 @@ interface TreeshakingOptions {
 }
 
 type ModuleSideEffectsOption =
-	| boolean
-	| 'no-external'
-	| string[]
-	| HasModuleSideEffects;
+	boolean | 'no-external' | string[] | HasModuleSideEffects;
 type HasModuleSideEffects = (id: string, external: boolean) => boolean;
 ```
 
@@ -2625,6 +2622,8 @@ lib.nested.forEach(() => console.log('effect')); // 也将被移除
 | 默认： | `true` |
 
 如果该选项的值为 `false`，则假定像改变全局变量或不执行检查就记录等行为一样，没有引入任何内容的模块和外部依赖没有其他副作用。对于外部依赖，该选项将影响未使用的引入：
+
+Rollup 本身不会读取包的 `sideEffects` 字段。使用 [@rollup/plugin-node-resolve](https://github.com/rollup/plugins/tree/master/packages/node-resolve) 解析包时，该插件可以从 `package.json` 读取 `sideEffects`，并为包中的模块设置逐模块的 [`moduleSideEffects`](../plugin-development/index.md#resolveid) 标志。通过将 `treeshake.moduleSideEffects` 设置为函数，你也可以在 Rollup 核心中实现同类的包感知行为。全局将此选项设置为 `false` 时需谨慎，因为这可能移除依赖导入副作用的初始化模块、polyfill 或样式。
 
 ```javascript
 // 输入文件

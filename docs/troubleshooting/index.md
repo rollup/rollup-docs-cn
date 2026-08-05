@@ -54,7 +54,7 @@ Rollup 的静态分析将随着时间的推移而改进，但它永远不会在�
 
 导入声明必须在被导入的模块中有相应的导出声明。例如，如果你在一个模块中有 `import a from './a.js'`，而 a.js 没有 `export default` 声明，或者 `import {foo} from './b.js'`，而 b.js 没有导出 `foo`，那么 Rollup 就不能打包这些代码。
 
-此错误经常发生在由 [rollup-plugin-commonjs](https://github.com/rollup/rollup-plugin-commonjs) 转换的 CommonJS 模块中，此包已被弃用，且不再维护，请使用 [@rollup/plugin-commonjs](https://github.com/rollup/plugins/tree/master/packages/commonjs#custom-named-exports)。
+此错误经常出现在 CommonJS 模块中。旧的 [rollup-plugin-commonjs](https://github.com/rollup/rollup-plugin-commonjs) 包已被弃用且不再维护。请使用 [@rollup/plugin-commonjs](https://github.com/rollup/plugins/tree/master/packages/commonjs)，它会自动检测具名导出。如果导入仍然失败，请参阅该插件 README 中的 [`defaultIsModuleExports`](https://github.com/rollup/plugins/tree/master/packages/commonjs#defaultismoduleexports) 等选项。
 
 ## Error: "this is undefined" {#error-this-is-undefined}
 

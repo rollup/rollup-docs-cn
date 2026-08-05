@@ -239,9 +239,7 @@ export default commandLineArgs => {
 	delete commandLineArgs.input;
 	return {
 		input: 'src/entries/' + inputBase,
-		output: {
-			/* ... */
-		}
+		output: {/* ... */}
 	};
 };
 ```
@@ -255,9 +253,7 @@ export default commandLineArgs => {
 /**
  * @type {import('rollup').RollupOptions}
  */
-const config = {
-	/* 你的配置 */
-};
+const config = {/* 你的配置 */};
 export default config;
 ```
 
@@ -267,9 +263,7 @@ export default config;
 // rollup.config.js
 import { defineConfig } from 'rollup';
 
-export default defineConfig({
-	/* 你的配置 */
-});
+export default defineConfig({/* 你的配置 */});
 ```
 
 除了 `RollupOptions` 和封装了该类型的 `defineConfig` 辅助函数之外，以下类型也可能会很有用：
@@ -283,9 +277,7 @@ export default defineConfig({
 ```typescript twoslash
 import type { RollupOptions } from 'rollup';
 
-const config: RollupOptions = {
-	/* 你的配置 */
-};
+const config: RollupOptions = {/* 你的配置 */};
 export default config;
 ```
 
