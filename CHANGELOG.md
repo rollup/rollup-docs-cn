@@ -1,5 +1,56 @@
 # rollup changelog
 
+## 4.63.1
+
+_2026-08-28_
+
+### Bug Fixes
+
+- Revert function return value tracking until the most recent issue is understood (#6490)
+
+### Pull Requests
+
+- [#6489](https://github.com/rollup/rollup/pull/6489): fix(deps): update minor/patch updates (@renovate[bot])
+- [#6490](https://github.com/rollup/rollup/pull/6490): Revert improve function return value tracking (@lukastaegert)
+
+## 4.63.0
+
+_2026-08-25_
+
+### Features
+
+- Allow to analyze function return values in many more cases (#6065)
+
+### Pull Requests
+
+- [#6065](https://github.com/rollup/rollup/pull/6065): feat: improve function return value tracking (@cyyynthia, @lukastaegert)
+- [#6482](https://github.com/rollup/rollup/pull/6482): Remove unused rendered module sources map (@yoominho91, @irontaek, @lukastaegert)
+- [#6483](https://github.com/rollup/rollup/pull/6483): chore(deps): update minor/patch updates (@renovate[bot])
+- [#6484](https://github.com/rollup/rollup/pull/6484): fix(deps): update swc monorepo (major) (@renovate[bot], @lukastaegert)
+- [#6485](https://github.com/rollup/rollup/pull/6485): chore(deps): lock file maintenance (@renovate[bot], @lukastaegert)
+- [#6486](https://github.com/rollup/rollup/pull/6486): chore(deps): lock file maintenance (@renovate[bot])
+
+## 4.62.5
+
+_2026-08-20_
+
+### Bug Fixes
+
+- Resolve an issue where compact mode could result in invalid module concatenations (#6468)
+
+### Pull Requests
+
+- [#6468](https://github.com/rollup/rollup/pull/6468): Keep the semicolon added after a replaced default export (@Jaybhade, @lukastaegert)
+- [#6469](https://github.com/rollup/rollup/pull/6469): fix(deps): update minor/patch updates (@renovate[bot])
+- [#6470](https://github.com/rollup/rollup/pull/6470): fix(deps): update swc monorepo (major) (@renovate[bot])
+- [#6471](https://github.com/rollup/rollup/pull/6471): chore(deps): lock file maintenance (@renovate[bot])
+- [#6472](https://github.com/rollup/rollup/pull/6472): chore(deps): update dependency eslint-plugin-unicorn to v73 (@renovate[bot])
+- [#6476](https://github.com/rollup/rollup/pull/6476): chore(deps): update dtolnay/rust-toolchain digest to 4360b52 (@renovate[bot])
+- [#6477](https://github.com/rollup/rollup/pull/6477): fix(deps): update minor/patch updates (@renovate[bot])
+- [#6478](https://github.com/rollup/rollup/pull/6478): chore(deps): lock file maintenance (@renovate[bot])
+- [#6479](https://github.com/rollup/rollup/pull/6479): chore(deps): lock file maintenance (@renovate[bot])
+- [#6480](https://github.com/rollup/rollup/pull/6480): chore(deps): lock file maintenance (@renovate[bot])
+
 ## 4.62.4
 
 _2026-08-01_
