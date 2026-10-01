@@ -1,5 +1,79 @@
 # rollup changelog
 
+## 4.63.5
+
+_2026-09-24_
+
+### Bug Fixes
+
+- Fix an issue where watch mode would hang instead of terminating when closing via Ctrl+C (#6521)
+- Avoid starting overlapping watch mode runs when plugins invalidate files at the wrong time (#6526)
+- Fix many edge cases where watch mode events were not properly emitted to listeners, especially when errors occur (#6526)
+
+### Pull Requests
+
+- [#6520](https://github.com/rollup/rollup/pull/6520): Lock file maintenance (@renovate[bot], @lukastaegert)
+- [#6521](https://github.com/rollup/rollup/pull/6521): Terminate watch mode via natural process exit when possible (@lukastaegert)
+- [#6523](https://github.com/rollup/rollup/pull/6523): Protect cc pin against renovate lock file maintenance (@lukastaegert)
+- [#6525](https://github.com/rollup/rollup/pull/6525): docs: fix typos 'interations' and 'coresponding' (@haimingZZ)
+- [#6526](https://github.com/rollup/rollup/pull/6526): fix(watch): prevent overlapping runs and other run lifecycle bugs (@lukastaegert)
+
+## 4.63.4
+
+_2026-09-19_
+
+### Bug Fixes
+
+- Ensure meta information of the cached module is exposed in `shouldTransformCachedModule` (#6442)
+- Do not create invalid code if import attribute values contain special characters (#6502)
+
+### Pull Requests
+
+- [#6429](https://github.com/rollup/rollup/pull/6429): ci: collect Rust coverage from JS tests in dedicated job (@lukastaegert)
+- [#6442](https://github.com/rollup/rollup/pull/6442): fix: expose cached module meta during cache checks (@ychampion, @lukastaegert)
+- [#6496](https://github.com/rollup/rollup/pull/6496): docs: name the parameter runHook actually takes (@darkdi, @lukastaegert)
+- [#6502](https://github.com/rollup/rollup/pull/6502): Escape quotes and backslashes in import attribute values (@dylanpulver, @lukastaegert)
+- [#6517](https://github.com/rollup/rollup/pull/6517): Improve agent instructions (@lukastaegert)
+- [#6518](https://github.com/rollup/rollup/pull/6518): fix(deps): update minor/patch updates (@renovate[bot])
+- [#6519](https://github.com/rollup/rollup/pull/6519): Request Copilot code review via workflow (@lukastaegert)
+
+## 4.63.3
+
+_2026-09-14_
+
+### Bug Fixes
+
+- Make sure that the internal shims for basename and extname in the browser build fully match NodeJS (#6473)
+- Always report and recover from failures on invalidation in watch mode (#6506)
+- Respect windows line terminators when tree-shaking in situations where line-breaks need to be removed to prevent automatic semicolon insertion (#6514)
+
+### Pull Requests
+
+- [#6473](https://github.com/rollup/rollup/pull/6473): fix(browser): match node's basename and extname (@luantaraschi, @lukastaegert)
+- [#6506](https://github.com/rollup/rollup/pull/6506): fix(watch): await the rerun so listener failures surface as ERROR events (@yoominho91, @irontaek, @lukastaegert)
+- [#6514](https://github.com/rollup/rollup/pull/6514): Remove the whole CRLF pair when suppressing ASI (@NgoQuocViet2001)
+- [#6515](https://github.com/rollup/rollup/pull/6515): chore(deps): lock file maintenance (@renovate[bot])
+
+## 4.63.2
+
+_2026-09-12_
+
+### Bug Fixes
+
+- Fix a bug when filtering logs for nested properties via the CLI (#6511)
+
+### Pull Requests
+
+- [#6498](https://github.com/rollup/rollup/pull/6498): chore(deps): lock file maintenance (@renovate[bot])
+- [#6503](https://github.com/rollup/rollup/pull/6503): fix(deps): update minor/patch updates (@renovate[bot])
+- [#6504](https://github.com/rollup/rollup/pull/6504): chore(deps): update dependency eslint-plugin-unicorn to v74 (@renovate[bot])
+- [#6505](https://github.com/rollup/rollup/pull/6505): pin mocha to v11 (@renovate[bot], @lukastaegert)
+- [#6508](https://github.com/rollup/rollup/pull/6508): docs: fix AGENTS.md 'Generated files' rule to reference real paths (@Larslllllll, @lukastaegert)
+- [#6510](https://github.com/rollup/rollup/pull/6510): chore(deps): lock file maintenance (@renovate[bot])
+- [#6511](https://github.com/rollup/rollup/pull/6511): Fix nested log filters for primitive values (@jakezwang, @lukastaegert)
+- [#6512](https://github.com/rollup/rollup/pull/6512): chore(deps): update dtolnay/rust-toolchain digest to 6bed076 (@renovate[bot], @lukastaegert)
+- [#6513](https://github.com/rollup/rollup/pull/6513): fix(deps): update minor/patch updates (@renovate[bot], @lukastaegert)
+
 ## 4.63.1
 
 _2026-08-28_
