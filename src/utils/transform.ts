@@ -3,13 +3,13 @@ import type Module from '../Module';
 import type {
 	DecodedSourceMapOrMissing,
 	EmittedFile,
-	ExistingRawSourceMap,
 	LoggingFunctionWithPosition,
 	NormalizedInputOptions,
 	Plugin,
 	PluginContext,
 	RollupError,
 	SourceDescription,
+	SourceMapInput,
 	TransformModuleJSON,
 	TransformPluginContext,
 	TransformResult
@@ -56,7 +56,7 @@ export default async function transform(
 		plugin: Plugin
 	): string {
 		let code: string;
-		let map: string | ExistingRawSourceMap | { mappings: '' } | null | undefined;
+		let map: SourceMapInput | undefined;
 		if (typeof result === 'string') {
 			code = result;
 		} else if (result && typeof result === 'object') {
@@ -100,7 +100,7 @@ export default async function transform(
 		(handler: LoggingFunctionWithPosition): LoggingFunctionWithPosition =>
 		(log, pos) => {
 			log = normalizeLog(log);
-			if (pos) augmentCodeLocation(log, pos, currentSource, id);
+			if (pos != null) augmentCodeLocation(log, pos, currentSource, id);
 			log.id = id;
 			log.hook = 'transform';
 			handler(log);
@@ -140,7 +140,7 @@ export default async function transform(
 						pos?: number | { column: number; line: number }
 					): never {
 						if (typeof error_ === 'string') error_ = { message: error_ };
-						if (pos) augmentCodeLocation(error_, pos, currentSource, id);
+						if (pos != null) augmentCodeLocation(error_, pos, currentSource, id);
 						error_.id = id;
 						error_.hook = 'transform';
 						return pluginContext.error(error_);

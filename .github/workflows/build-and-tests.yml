@@ -33,7 +33,7 @@ jobs:
       - name: Checkout Commit
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24.10.0
       - name: Install and Cache Node Dependencies
@@ -146,6 +146,15 @@ jobs:
             # There are compile issues when using the cache with Android
             cache-cargo: false
           - host: ubuntu-latest
+            target: x86_64-linux-android
+            # napi-rs only configures the NDK compiler and linker for arm and aarch64 Android
+            setup: |
+              ndk_bin="$ANDROID_NDK_LATEST_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin"
+              echo "CC_x86_64_linux_android=$ndk_bin/x86_64-linux-android24-clang" >> "$GITHUB_ENV"
+              echo "CXX_x86_64_linux_android=$ndk_bin/x86_64-linux-android24-clang++" >> "$GITHUB_ENV"
+              echo "CARGO_TARGET_X86_64_LINUX_ANDROID_LINKER=$ndk_bin/x86_64-linux-android24-clang" >> "$GITHUB_ENV"
+            cache-cargo: false
+          - host: ubuntu-latest
             target: riscv64gc-unknown-linux-gnu
             setup: |
               sudo apt-get update
@@ -211,7 +220,7 @@ jobs:
       - name: Checkout Commit
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         if: ${{ matrix.settings.target != 'x86_64-pc-windows-gnu' }}
         with:
           node-version: 24.10.0
@@ -228,7 +237,7 @@ jobs:
           path-type: inherit
           release: false
       - name: Install Toolchain
-        uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
         with:
           toolchain: nightly-2025-07-25
           components: ${{ matrix.settings.build-std && 'rust-src' || '' }}
@@ -250,7 +259,7 @@ jobs:
         with:
           version: 0.14.1
       - name: Install cargo-zigbuild
-        uses: taiki-e/install-action@4cef1412cce204788f482e778a0b9187f9626a29 # v2.87.21
+        uses: taiki-e/install-action@5488ac5a951645ce95062214902ac4b6bc1a1037 # v2.87.32
         if: ${{ matrix.settings.cross == 'zig' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -325,14 +334,14 @@ jobs:
             rust/target/
           key: ${{ matrix.settings.target }}-cargo-${{ matrix.settings.host }}-${{ hashFiles('rust/Cargo.lock') }}
       - name: Upload wasm artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: bindings-${{ matrix.settings.name }}
           path: ${{ matrix.settings.path }}
           if-no-files-found: error
         if: ${{ matrix.settings.is-wasm-build }}
       - name: Upload napi artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: bindings-${{ matrix.settings.target }}
           path: ${{ env.APP_NAME }}.*.node
@@ -366,7 +375,7 @@ jobs:
         uses: ./.github/actions/install-and-cache-node-deps
 
       - name: Build (OpenBSD)
-        uses: cross-platform-actions/action@e0b9770014ba65d5e0815f15b74031c3a635f641 # v1.6.0
+        uses: cross-platform-actions/action@82668f1fbd89d9c99487604f822cbf6716f124d3 # v1.7.0
         with:
           operating_system: ${{ matrix.os.name }}
           architecture: ${{ matrix.os.architecture }}
@@ -386,7 +395,7 @@ jobs:
           key: x86_64-unknown-openbsd-cargo-ubuntu-latest-${{ hashFiles('rust/Cargo.lock') }}
 
       - name: Upload napi artifact
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: bindings-x86_64-unknown-openbsd
           path: ${{ env.APP_NAME }}.*.node
@@ -423,6 +432,8 @@ jobs:
             distro: ubuntu_latest
             target: s390x-unknown-linux-gnu
             use-nvm: true
+            # big-endian: also check that the WASM build produces the same output as the native one
+            smoke-test-wasm: true
           # I could not find a way to install Node without compiling from source
           #          - arch: riscv64
           #            distro: ubuntu_latest
@@ -437,10 +448,21 @@ jobs:
       - name: Build JS
         run: npm run build:cjs
       - name: Download napi artifacts
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: bindings-${{ matrix.settings.target }}
           path: dist/
+      - name: Download wasm-node artifact
+        if: ${{ matrix.settings.smoke-test-wasm }}
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: bindings-wasm-node
+          path: dist-wasm/
+      - name: Build wasm-node dist
+        if: ${{ matrix.settings.smoke-test-wasm }}
+        run: |
+          cp -r dist/. dist-wasm/
+          cp native.wasm.js dist-wasm/native.js
       - name: Run Smoke Test
         uses: uraimo/run-on-arch-action@fa1f3e7de95534497266c7265950b5188355fbfb # v3.2.1
         with:
@@ -451,7 +473,7 @@ jobs:
             case "${{ matrix.settings.distro }}" in
               ubuntu*)
                 apt-get update -y
-                apt-get install -y curl git
+                apt-get install -y curl git libatomic1
                 if [[ -z "${{ matrix.settings.use-nvm }}" ]]; then
                   curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
                   apt-get install -y nodejs
@@ -477,6 +499,13 @@ jobs:
             node dist-build/bin/rollup --config rollup.config.ts --configPlugin typescript --configTest --forceExit
             cp dist-build/rollup.*.node dist/
             dist/bin/rollup --version | grep -E 'rollup v[0-9]+\.[0-9]+\.[0-9]+'
+            if [[ -n "${{ matrix.settings.smoke-test-wasm }}" ]]; then
+              node dist-wasm/bin/rollup --version | grep -E 'rollup v[0-9]+\.[0-9]+\.[0-9]+'
+              printf 'export const value = -1.5 + 1e-310;\nexport const text = `héllo ${value}`;\n' > smoke.js
+              dist/bin/rollup smoke.js --format es --silent > smoke-native.js
+              node dist-wasm/bin/rollup smoke.js --format es --silent > smoke-wasm.js
+              diff smoke-native.js smoke-wasm.js
+            fi
 
   test:
     name: Test Node ${{ matrix.node }} (${{ matrix.settings.target }})
@@ -516,7 +545,7 @@ jobs:
       - name: Checkout Commit
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: ${{ matrix.node }}
           check-latest: true
@@ -551,7 +580,7 @@ jobs:
       - name: Checkout Commit
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24.10.0
       - name: Install and Cache Node Dependencies
@@ -562,7 +591,7 @@ jobs:
         # ships the linux-x64 prebuild that node-gyp-build loads at runtime.
         run: npm install --no-save --ignore-scripts weak-napi@2.0.2
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
         with:
           toolchain: nightly-2025-07-25
           components: llvm-tools-preview
@@ -578,7 +607,7 @@ jobs:
             coverage-and-additional-tests-cargo-ubuntu-latest
             coverage-cargo-ubuntu-latest
       - name: Install cargo-llvm-cov
-        uses: taiki-e/install-action@4cef1412cce204788f482e778a0b9187f9626a29 # v2.87.21
+        uses: taiki-e/install-action@5488ac5a951645ce95062214902ac4b6bc1a1037 # v2.87.32
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
@@ -634,7 +663,7 @@ jobs:
           # Necessary to find the commits included in the release
           fetch-depth: 0
       - name: Setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24.10.0
           registry-url: 'https://registry.npmjs.org'

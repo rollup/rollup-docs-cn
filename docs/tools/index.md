@@ -229,12 +229,14 @@ gulp.task('build', () => {
 			plugins: [rollupTypescript()]
 		})
 		.then(bundle => {
-			return bundle.write({
-				file: './dist/library.js',
-				format: 'umd',
-				name: 'library',
-				sourcemap: true
-			});
+			return bundle
+				.write({
+					file: './dist/library.js',
+					format: 'umd',
+					name: 'library',
+					sourcemap: true
+				})
+				.finally(() => bundle.close());
 		});
 });
 ```
@@ -252,16 +254,26 @@ gulp.task('build', async function () {
 		plugins: [rollupTypescript()]
 	});
 
-	await bundle.write({
-		file: './dist/library.js',
-		format: 'umd',
-		name: 'library',
-		sourcemap: true
-	});
+	try {
+		await bundle.write({
+			file: './dist/library.js',
+			format: 'umd',
+			name: 'library',
+			sourcemap: true
+		});
+	} finally {
+		await bundle.close();
+	}
 });
 ```
 
+<<<<<<< HEAD
 ## Deno {#deno}
+=======
+Both examples close the bundle after writing so plugins can clean up their resources via the [`closeBundle`](../plugin-development/index.md#closebundle) hook. Using `finally` ensures that this also happens if writing the bundle fails.
+
+## Deno
+>>>>>>> 62282b4649a8d84484e77138ce2049d05ee5cfb0
 
 如果你想要在 Deno 中使用 Rollup，你可以通过 [esm.sh](https://esm.sh/) 这样做：
 

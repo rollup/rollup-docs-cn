@@ -69,8 +69,8 @@ export interface ExistingDecodedSourceMap {
 	readonly mappings: SourceMapSegment[][];
 	names: string[];
 	sourceRoot?: string | undefined;
-	sources: string[];
-	sourcesContent?: string[] | undefined;
+	sources: (string | null)[];
+	sourcesContent?: (string | null)[] | undefined;
 	version: number;
 	x_google_ignoreList?: number[] | undefined;
 }
@@ -80,8 +80,8 @@ export interface ExistingRawSourceMap {
 	mappings: string;
 	names: string[];
 	sourceRoot?: string | undefined;
-	sources: string[];
-	sourcesContent?: string[] | undefined;
+	sources: (string | null)[];
+	sourcesContent?: (string | null)[] | undefined;
 	version: number;
 	x_google_ignoreList?: number[] | undefined;
 }
@@ -105,7 +105,17 @@ export interface SourceMap {
 	toUrl(): string;
 }
 
-export type SourceMapInput = ExistingRawSourceMap | string | null | { mappings: '' };
+export type SourceMapInput =
+	ExistingRawSourceMap | IndexSourceMap | string | null | { mappings: '' };
+
+export interface IndexSourceMap {
+	file?: string | undefined;
+	sections: {
+		map: ExistingRawSourceMap | IndexSourceMap;
+		offset: { column: number; line: number };
+	}[];
+	version: number;
+}
 
 interface ModuleOptions {
 	attributes: Record<string, string>;

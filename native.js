@@ -56,7 +56,8 @@ const isMusl = () => {
 const bindingsByPlatformAndArch = {
 	android: {
 		arm: { base: 'android-arm-eabi' },
-		arm64: { base: 'android-arm64' }
+		arm64: { base: 'android-arm64' },
+		x64: { base: 'android-x64' }
 	},
 	darwin: {
 		arm64: { base: 'darwin-arm64' },
@@ -116,6 +117,10 @@ const requireWithFriendlyError = id => {
 					`You can download it from ${msvcDownloadLink}`,
 				{ cause: error }
 			);
+		}
+
+		if (error instanceof Error && error.code === 'ERR_DLOPEN_FAILED') {
+			throw error;
 		}
 
 		throw new Error(
