@@ -229,12 +229,14 @@ gulp.task('build', () => {
 			plugins: [rollupTypescript()]
 		})
 		.then(bundle => {
-			return bundle.write({
-				file: './dist/library.js',
-				format: 'umd',
-				name: 'library',
-				sourcemap: true
-			});
+			return bundle
+				.write({
+					file: './dist/library.js',
+					format: 'umd',
+					name: 'library',
+					sourcemap: true
+				})
+				.finally(() => bundle.close());
 		});
 });
 ```
@@ -252,14 +254,20 @@ gulp.task('build', async function () {
 		plugins: [rollupTypescript()]
 	});
 
-	await bundle.write({
-		file: './dist/library.js',
-		format: 'umd',
-		name: 'library',
-		sourcemap: true
-	});
+	try {
+		await bundle.write({
+			file: './dist/library.js',
+			format: 'umd',
+			name: 'library',
+			sourcemap: true
+		});
+	} finally {
+		await bundle.close();
+	}
 });
 ```
+
+这两个示例都会在写入后关闭 `bundle`，使插件可以通过 [`closeBundle`](../plugin-development/index.md#closebundle) 钩子清理资源。使用 `finally` 可确保即使写入失败，也会关闭 `bundle`。
 
 ## Deno {#deno}
 
