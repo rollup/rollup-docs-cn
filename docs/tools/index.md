@@ -267,13 +267,9 @@ gulp.task('build', async function () {
 });
 ```
 
-<<<<<<< HEAD
-## Deno {#deno}
-=======
-Both examples close the bundle after writing so plugins can clean up their resources via the [`closeBundle`](../plugin-development/index.md#closebundle) hook. Using `finally` ensures that this also happens if writing the bundle fails.
+这两个示例都会在写入后关闭 `bundle`，使插件可以通过 [`closeBundle`](../plugin-development/index.md#closebundle) 钩子清理资源。使用 `finally` 可确保即使写入失败，也会关闭 `bundle`。
 
-## Deno
->>>>>>> 18b5cb60e55926f6d917cc1aeb17fd81d0da5cc6
+## Deno {#deno}
 
 如果你想要在 Deno 中使用 Rollup，你可以通过 [esm.sh](https://esm.sh/) 这样做：
 

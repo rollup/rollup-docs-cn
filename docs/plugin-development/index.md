@@ -932,11 +932,7 @@ function augmentWithDatePlugin() {
 
 如果插件想要在监视模式下保留资源，则可以在此钩子中检查 [`this.meta.watchMode`](#this-meta) 并在 [`closeWatcher`](#closewatcher) 中执行必要的监视模式清理。
 
-<<<<<<< HEAD
-如果在构建过程或执行 `buildEnd` 钩子时发生错误，那么这个错误会作为第一个参数传递给这个钩子。
-=======
-If an error occurs during build or the `buildEnd` hook, it is passed to this hook as first argument. If `closeBundle` also throws an error, Rollup reports the earlier error. Errors from `closeBundle` are still reported when calling `bundle.close()` after a successful build.
->>>>>>> 18b5cb60e55926f6d917cc1aeb17fd81d0da5cc6
+如果在构建过程或执行 `buildEnd` 钩子时发生错误，那么这个错误会作为第一个参数传递给这个钩子。如果 `closeBundle` 也抛出错误，Rollup 会报告先前的错误。如果构建成功后调用 `bundle.close()` 时 `closeBundle` 抛出错误，该错误仍会被报告。
 
 ### footer
 
@@ -1251,7 +1247,7 @@ import('./lib.js');
 
 当 rollup 在`bundle.generate()`或`bundle.write()`期间遇到错误时调用。将错误传递给此钩子。要在生成成功完成时得到通知，请使用`generateBundle`钩子。
 
-If a `renderError` hook itself fails, Rollup reports both the original rendering error and the hook failure together. The combined error retains the original error's code and plugin metadata.
+如果 `renderError` 钩子自身执行失败，Rollup 会同时报告原始渲染错误和该钩子产生的错误。组合后的错误仍保留原始错误的 `code` 和插件元数据。
 
 ### renderStart
 
@@ -2192,11 +2188,7 @@ function transformCodePlugin(options = {}) {
 
 ### 源代码转换 {#source-code-transformations}
 
-<<<<<<< HEAD
-如果插件转换源代码，则应自动生成 sourcemap，除非有特定的 `sourceMap: false` 选项。Rollup 仅关心 `mappings` 属性（其他所有内容都会自动处理）。[magic-string](https://github.com/Rich-Harris/magic-string) 提供了一种简单的方法来为添加或删除代码片段等基本转换生成这样的映射。
-=======
-If a plugin transforms source code, it should generate a sourcemap automatically, unless there's a specific `sourceMap: false` option. Rollup only cares about the `mappings` property (or, for an index source map, its `sections`); everything else is handled automatically. [magic-string](https://github.com/Rich-Harris/magic-string) provides a simple way to generate such a map for elementary transformations like adding or removing code snippets.
->>>>>>> 18b5cb60e55926f6d917cc1aeb17fd81d0da5cc6
+如果插件转换源代码，则应自动生成 sourcemap，除非有特定的 `sourceMap: false` 选项。Rollup 仅关心 `mappings` 属性（对于索引 sourcemap，则是 `sections` 属性）；其他所有内容都会自动处理。[magic-string](https://github.com/Rich-Harris/magic-string) 提供了一种简单的方法来为添加或删除代码片段等基本转换生成这样的映射。
 
 如果没有生成 sourcemap 的意义（例如 [rollup-plugin-string](https://github.com/TrySound/rollup-plugin-string)），则返回一个空的 sourcemap：
 
