@@ -76,6 +76,24 @@ const _pluginHookFilters: rollup.Plugin = {
 	}
 };
 
+const _indexSourcemapPlugin: rollup.Plugin = {
+	load() {
+		return {
+			code: '',
+			map: {
+				sections: [
+					{
+						map: { mappings: 'AAAA', names: [], sources: ['a.js'], version: 3 },
+						offset: { column: 0, line: 0 }
+					}
+				],
+				version: 3
+			}
+		};
+	},
+	name: 'test'
+};
+
 const _amdOutputOptions: rollup.OutputOptions['amd'][] = [
 	{},
 	{
@@ -129,3 +147,13 @@ const _amdOutputOptions: rollup.OutputOptions['amd'][] = [
 		basePath: ''
 	}
 ];
+
+const _nullSourcesPlugin: rollup.Plugin = {
+	load() {
+		return {
+			code: '',
+			map: { mappings: 'AAAA', names: [], sources: [null], sourcesContent: [null], version: 3 }
+		};
+	},
+	name: 'test'
+};
